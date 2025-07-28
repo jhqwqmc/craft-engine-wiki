@@ -1,0 +1,56 @@
+---
+title: 🟰 Item Models
+id: models
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+## Introduction
+
+Since version 1.21.4, Minecraft has started supporting more complex item models. This allows you to create more dynamic variants for items. This document is specifically for version 1.21.4 and above. For older versions, the plugin will downgrade the corresponding model files (note: this is not 100% compatible with older versions, as many conditions and model types do not exist in older versions).
+
+<UrlCard
+  url="../../getting_start/item_model_display"
+  title="Getting Start | Tutorial"
+  subtitle="🏹 Item Model Display"
+/>
+
+:::info
+If you discover that CraftEngine lacks some features in latest Minecraft version, you might submit an issue on GitHub to bring this to the attention of the developers.
+:::
+
+## Legacy Model
+
+**Legacy Model** specifically refers to the item model format used in versions 1.21.3 and earlier. You can specify the legacy item model format using the legacy-model section. However, in most cases, you don’t need to do this because the plugin will automatically convert 1.21.4 item models into the legacy format whenever possible. You should only use this configuration section if there are issues with the legacy model format.
+
+```yaml
+items#topaz_gears:
+  default:topaz_rod:
+    material: fishing_rod
+    item-model: default:topaz_rod
+    custom-model-data: 1000
+    settings:
+      tags:
+        - "default:topaz_tools"
+    data:
+      item-name: "<!i><#FF8C00><i18n:item.topaz_rod>"
+      tooltip-style: minecraft:topaz
+    model:
+      template: default:model/simplified_fishing_rod_2d
+      arguments:
+        path: minecraft:item/custom/topaz_rod
+        cast_path: minecraft:item/custom/topaz_rod_cast
+    # If you specify a model in the legacy-model section, 
+    # the plugin will use your manually defined model instead of 
+    # relying on the auto-converted legacy format.
+    legacy-model:
+      path: minecraft:item/custom/topaz_rod
+      overrides:
+        - path: minecraft:item/custom/topaz_rod_cast
+          predicate: 
+            cast: 1
+```
+
+:::tip
+If you don't require support for versions above 1.21.4, you may configure only the legacy-model section and omit the model section entirely.
+:::

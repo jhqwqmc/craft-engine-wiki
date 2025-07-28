@@ -1,0 +1,26 @@
+---
+title: 🪻 Bush Block
+id: bush_block
+---
+
+**Bush Block** is a type of block behavior that must grow on specific supporting blocks. If the block beneath it is destroyed, or if it is found to be in an invalid position, it will either break or drop as an item.
+
+```yaml
+blocks:
+  default:fairy_flower:
+    behavior:
+      type: bush_block
+      stackable: false
+      blacklist: false # use blacklist mode
+      delay: 0
+      bottom-blocks:
+        - custom:xxx
+        - minecraft:stone
+      bottom-block-tags:
+        - minecraft:dirt
+        - minecraft:farmland
+```
+
+![](/img/bush_block_1.png)
+
+![](/img/bush_block_2.png)

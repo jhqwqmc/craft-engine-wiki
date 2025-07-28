@@ -1,0 +1,169 @@
+---
+title: 🐚 Commands
+id: commands
+---
+
+## Basic Commands
+
+### reload
+
+`/ce reload [all/recipe/config/pack]`
+
+This command lets you reload plugin resources. If you don't type any argument, it defaults to `/ce reload config`.
+
+### upload
+
+`/ce upload`
+
+This command forces the resource pack upload process to start manually.
+
+### item
+
+`/ce item browser`
+
+This command opens the plugin's item browser. You can just type `/ce` as a shortcut.
+
+![](/img/commands_15.png)
+
+`/ce item get [item-id] (count)`
+
+Get specific quantity of an item
+
+`/ce item give [player] [item-id] (count)`
+
+Give specific quantity of an item
+
+`/ce item search-recipe/search-usage [player] [item-id]`
+
+Query the recipe or use of an item
+
+![](/img/commands_16.png)
+
+## Feature Commands
+
+### send-pack
+
+`/ce feature send-pack [player]`
+
+This command will send a resource pack to the specified player(s).
+
+### totem-animation
+
+`/ce feature totem-animation [player] [item-id]`
+
+This command plays the Totem of Undying animation for the player.
+
+![](/img/commands_14.png)
+
+
+## Debug Commands
+
+### appearance-state-usage
+
+`/ce debug appearance-state-usage [block_type]`
+
+The command is used to retrieve the usage status of excess appearances for a specified block type. The red sections indicate states that are already in use, while the green sections represent available, unused states. When you hover your mouse over these sections, you can view the specific states and identify which custom states are using them.
+
+<div style={{textAlign: 'center'}}>
+  <img src="/img/commands_1.png" alt="" />
+</div>
+
+<div style={{textAlign: 'center'}}>
+  <img src="/img/commands_2.png" alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>appearance state in use</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+  <img src="/img/commands_2.png" alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>free state</p>
+</div>
+
+### real-state-usage
+
+`/ce debug real-state-usage [block_type]`
+
+This command is similar to the one mentioned above, but the key difference lies in its function to inspect the available real states. When you register additional real states in the `additional-real-blocks.yml` file, the number of real states may exceed the number of available appearances.
+
+<div style={{textAlign: 'center'}}>
+  <img src="/img/commands_4.png" alt="" />
+</div>
+
+<div style={{textAlign: 'center'}}>
+  <img src="/img/commands_5.png" alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>real state in use</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+  <img src="/img/commands_6.png" alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>free state</p>
+</div>
+
+
+:::warning
+In the image below, the upper section displays the available appearance states for oak leaves, while the lower section shows the available real states for oak leaves. \
+You can use the command to experience the difference between them.
+
+```sh
+/ce debug appearance-state-usage minecraft:oak_leaves
+```
+
+```sh
+/ce debug real-state-usage minecraft:oak_leaves
+```
+
+![](/img/commands_7.png)
+
+:::
+
+
+### item-data
+
+`/ce debug item-data`
+
+This command allows you to inspect the item data (such as NBT or components) of the item you are currently holding.
+
+![](/img/commands_8.png)
+
+
+### get-block-internal-id
+
+`/ce debug get-block-internal-id [custom_block_state]`
+
+This command is used to retrieve the server-side real block name corresponding to a custom block, and is commonly utilized in tools like WorldEdit and data packs.
+
+![](/img/commands_9.png)
+![](/img/commands_10.png)
+
+
+:::tip
+
+**Q:** Why must the real block IDs be used in the datapack instead of names like default:plam_log?
+
+**A:** Because the configuration file is only loaded after the server starts, while datapacks are loaded much earlier during server initialization. The server cannot recognize a non-existent block ID at this stage. To ensure that pre-registered custom blocks can adapt to the latest user configurations, CraftEngine employs a container-style dynamic binding solution.
+
+:::
+
+
+### get-block-state-registry-id
+
+`/ce debug get-block-state-registry-id [real_block_state]`
+
+This command is used to obtain the registry ID of the corresponding block state (not commonly used).
+
+![](/img/commands_11.png)
+
+### target-block
+
+`/ce debug target-block [--this]`
+
+The 'target-block' is used to inspect the data of the block that the mouse is pointing at (or use the '--this' flag to obtain the current position). It includes the actual block ID and the CraftEngine block state. If the block has custom tags, they will also be displayed.
+
+![](/img/commands_12.png)
+
+### is-section-injected
+
+`/ce debug is-section-injected`
+
+This method checks whether the current chunk has been injected. A return value of false indicates an abnormal condition that requires investigation.
+
+![](/img/commands_13.png)

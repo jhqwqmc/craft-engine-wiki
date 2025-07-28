@@ -1,0 +1,16 @@
+---
+title: 🪓 Strippable Block
+id: strippable_block
+---
+
+**Strippable Block** is a type of block that can be stripped by right-clicking with an axe, and it is primarily used for tree logs.
+
+```yaml
+blocks:
+  default:palm_log:
+    behavior:
+      type: strippable_block
+      stripped: default:stripped_palm_log
+```
+
+![](/img/strippable_block.png)

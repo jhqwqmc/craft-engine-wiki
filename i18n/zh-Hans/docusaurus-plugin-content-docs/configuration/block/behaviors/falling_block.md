@@ -1,0 +1,23 @@
+---
+title: 🟨 Falling Block
+id: falling_block
+---
+
+**Falling Block** will become a falling entity when there are no blocks beneath it.
+
+```yml
+blocks:
+  default:falling_block_example:
+    behavior:
+      type: falling_block
+      hurt-amount: -1 # Optional
+      max-hurt: -1 # Optional
+```
+
+![](/img/falling_block.png)
+
+:::info
+
+The options `hurt-amount` and `max-hurt` are optional, but they must be configured in pair. Their effect is to determine the damage inflicted on entities when struck by a falling block.
+
+:::

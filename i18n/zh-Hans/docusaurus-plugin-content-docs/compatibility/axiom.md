@@ -1,0 +1,16 @@
+---
+title: ⚛️ Axiom
+id: axiom
+---
+
+First, ensure your server has [axiom-paper](https://modrinth.com/plugin/axiom-paper-plugin) installed.
+
+Then download and install the [craft-engine-client-mod](https://github.com/Xiao-MoMi/craft-engine-client-mod/releases).
+
+After launching the client. You need to copy the corresponding files from the server plugin's configuration folder to the client's **mod config folder**, then restart your client to apply the changes.
+
+![](/img/axiom_1.png)
+
+For the server, simply enable the **`generate-mod-assets`** option in config.yml, and it will automatically generate client-side resources compatible with the mod.
+
+![](/img/axiom_2.webp)

@@ -1,0 +1,14 @@
+---
+title: 🪑 Furniture
+id: furniture
+---
+
+:::caution
+
+The furniture system will undergo a major refactor in version 0.0.62, introducing more advanced furniture features.
+
+The new wiki will be updated after the 0.0.62 release. For now, please refer to the old wiki for documentation.
+
+https://mo-mi.gitbook.io/xiaomomi-plugins/craftengine/plugin-wiki/craftengine/add-new-contents/entities/furniture
+
+:::
