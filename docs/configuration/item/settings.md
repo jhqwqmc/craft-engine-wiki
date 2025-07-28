@@ -204,3 +204,13 @@ This controls if the items listed in repairable component can fix this item in a
 ```yaml
 respect-repairable-component: false
 ```
+
+### dye-color
+
+This determines what color it provides in the dyeing recipe.
+
+```yaml
+dye-color: 255,140,0
+```
+
+![](/img/item_settings_10.png)
