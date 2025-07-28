@@ -40,7 +40,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           editUrl:
-            'https://github.com/Xiao-MoMi/craft-engine-wiki/',
+            'https://github.com/Xiao-MoMi/craft-engine-wiki/edit/main/',
           routeBasePath: '/'
         },
         blog: false,
