@@ -114,7 +114,7 @@ conditions: []
 
 ### apply\_bonus
 
-Increase the quantity of the dropped items based on the given enchantments and formulas. Refer to [#formula](#formula "mention") for more info.
+Increase the quantity of the dropped items based on the given enchantments and formulas. Refer to [formula](#️-formula) for more info.
 
 ```yaml
 type: apply_bonus
