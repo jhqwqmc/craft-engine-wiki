@@ -1,0 +1,14 @@
+---
+title: 🌿 Grass Block
+id: grass_block
+---
+
+**Grass Block** allows you to perform bonemeal on them to grow grass and flowers. Don't forget to add tag `minecraft:dirt` to your blocks otherwise grass won't survive on them.
+
+```yml
+blocks:
+  default:grass_block:
+    behavior:
+      type: grass_block
+      feature: minecraft:grass_bonemeal
+```

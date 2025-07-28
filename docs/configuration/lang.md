@@ -1,0 +1,75 @@
+---
+title: 🌍 Language
+id: lang
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+## Overview
+
+Here, "language" specifically refers to the client-side language setting. This means any text content dynamically adapts to the player's current client language in real time.
+
+<UrlCard
+  url="https://minecraft.wiki/w/Resource_pack#Language"
+  title="Language"
+/>
+
+In CraftEngine, you only need to configure your language-dependent content in the following format:
+
+```yaml
+lang:
+  en_us:
+    item.custom.palm_leaves: Palm Leaves
+    item.custom.palm_log: Palm Log
+```
+
+:::tip
+
+In the absence of language files, Minecraft will default to using `en_us`. Therefore, it is highly recommended to configure en\_us if you are creating a **new** translation key.
+
+If you wish to overwrite all the languages, use "all" as the language.
+
+```yaml
+lang:
+  all:
+    container.inventory: ""
+```
+
+:::
+
+:::info
+
+To render client side translation, please insert [https://docs.advntr.dev/minimessage/format.html#translatable](https://docs.advntr.dev/minimessage/format.html#translatable)
+
+Example:
+```yml
+items:
+  custom:translate:
+    material: paper
+    data:
+      item-name: "<lang:item.custom.palm_log>"
+```
+:::
+
+## Translate Blocks
+
+In addition to custom translation keys, CraftEngine provides built-in shortcut translations for block names, ensuring compatibility with:
+
+- CraftEngine Mod (client-side)
+- Server-side block translation plugins
+
+The configuration method is very simple. Just add the `block_name:` prefix before the regular block ID, and the plugin will automatically convert it to the corresponding real block ID.
+
+Example: `block_name:default:chinese_lantern` -> `block.craftengine.note_block_13`
+
+```yaml
+lang:
+  en_us:
+    block_name:default:chinese_lantern: Chinese Lantern
+    block_name:default:netherite_anvil: Netherite Anvil
+    block_name:default:topaz_ore: Topaz Ore
+  zh_cn:
+    block_name:default:chinese_lantern: 灯笼
+    block_name:default:netherite_anvil: 下界合金砧
+    block_name:default:topaz_ore: 黄玉矿石
+```

@@ -1,0 +1,126 @@
+---
+title: ⚙️ Configuration
+id: configuration
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+## Introduction
+
+The **configuration** here specifically refers to the <Highlight color="#1877F2">**configuration**</Highlight> folder within each package under the <Highlight color="#1877F2">**resources**</Highlight> directory. Configuration files are stored in the following folder and support both JSON and YML formats. You may create unlimited subdirectories within the configuration folder.
+
+## Pro Tips
+
+### Section Identifier
+
+CraftEngine introduced this feature to address certain pain points in YAML configuration—particularly when you need to define multiple configurations of the same type within a single file. In YAML configuration, the following format is not allowed:
+
+```yaml
+items:
+  default:topaz_helmet:
+    template: default:topaz_armor
+    arguments:
+      part: helmet
+      slot: head
+blocks:
+  default:topaz_ore:
+    ...more
+items:
+  default:topaz_boots:
+    template: default:topaz_armor
+    arguments:
+      part: boots
+      slot: feet
+```
+
+Therefore, you need to add `# + any identifier` after the configuration section name, which allows you to configure multiple sections of the same type within a single YAML file.
+
+```yaml
+items#0:
+  default:topaz_helmet:
+    template: default:topaz_armor
+    arguments:
+      part: helmet
+      slot: head
+blocks:
+  default:topaz_ore:
+    ...more
+items#1:
+  default:topaz_boots:
+    template: default:topaz_armor
+    arguments:
+      part: boots
+      slot: feet
+```
+
+### Section Delimiters
+
+By using `::`, you can split a standard key into a structured mapping key with complex hierarchies. For example, the following two configurations are equivalent:
+
+```yaml
+# Single-line format  
+key::subkey::nested_key: value  
+
+# Expanded format  
+key:  
+  subkey:  
+    nested_key: value  
+```
+
+:::info
+
+This helps reduce the number of lines required for configuration in certain scenarios, making the overall setup more concise and visually cleaner.
+
+:::
+
+
+### Version-Based Configs
+
+:::tip
+
+For regular users, this option holds little significance. However, if you're a resource pack creator, you can use this to specify that certain settings only apply to particular versions.
+
+:::
+
+Craftengine supports three different version specification formats, which are:
+
+1. Fixed version: `$$1.21.4`
+2. Version range: `$$1.20.1~1.21.4`
+3. Version comparison: `$$>=1.21.4`, `$$<1.21.8`
+
+They can be used as value selectors or for parameter overriding/merging.
+
+#### **Example 1: Value Selection**
+
+```yaml
+items:
+  default:topaz_trident:
+    material: trident
+    client-bound-material:
+      $$1.20.1~1.21.1: bow
+      $$1.21.2~1.21.3: honey_bottle
+    custom-model-data: 1001
+    data:
+      item-name: <!i><#FF8C00><i18n:item.topaz_trident>
+      components:
+        minecraft:max_damage: 300
+```
+
+#### **Example 2: Block Merging**
+
+```yaml
+items:
+  default:topaz_trident:
+    material: trident
+    custom-model-data: 1001
+    data:
+      item-name: <!i><#FF8C00><i18n:item.topaz_trident>
+      components:
+        minecraft:max_damage: 300
+    $$>=1.21.2:
+      client-bound-data:
+        components:
+          minecraft:consumable:
+            consume_seconds: 128000
+            animation: spear
+```
