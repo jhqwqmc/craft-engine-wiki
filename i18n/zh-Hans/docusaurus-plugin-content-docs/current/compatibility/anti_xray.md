@@ -1,9 +1,9 @@
 ---
-title: ✈️ Paper Anti Xray
+title: ✈️ Paper反矿透
 id: anti_xray
 ---
 
-CraftEngine natively supports Paper's anti-Xray feature. You just need to obtain the real block IDs of the corresponding blocks and fill them in, and it will take effect.
+CraftEngine 原生支持 Paper 的反矿透功能。你只需要获取对应方块的真实方块 ID 并填写进去，即可生效。
 
 ```yaml
 anticheat:
@@ -21,5 +21,5 @@ anticheat:
 
 :::tip
 
-Click [**here**](../reference/commands.md#get-block-internal-id) to learn how to obtain the real block ID of a custom block.
+点击[**这里**](../reference/commands.md#get-block-internal-id)了解如何获取自定义方块的真实方块 ID。
 :::

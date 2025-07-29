@@ -1,53 +1,53 @@
 ---
-title: 🏷️ Block Tags
+title: 🏷️ 方块标签
 id: block_tags
 ---
 
 :::info
 
-Below are some commonly used block tags. You can use any tag without restrictions. However, whether certain tags take effect depends on how Minecraft implements these mechanics.
+以下是一些常用的方块标签。你可以自由使用任意标签，但某些标签是否生效取决于 Minecraft 对这些机制的具体实现。
 
 :::
 
-## Mineable
+## 可挖掘
 
 ### minecraft:mineable/axe
 
-Allows axes to mine faster
+让斧挖掘得更快
 
 ### minecraft:mineable/hoe
 
-Allows hoes to mine faster
+让锄挖掘得更快
 
 ### minecraft:mineable/pickaxe
 
-Allows pickaxes to mine faster
+让镐挖掘得更快
 
 ### minecraft:mineable/shovel
 
-Allows shovels to mine faster
+让锹挖掘得更快
 
 ### minecraft:sword\_efficient
 
-Allows swords to mine faster
+让剑挖掘得更快
 
-## Special Mechanism
+## 特殊机制
 
 ### minecraft:climbable
 
-Whether to allow players to climb (client-side)
+是否允许玩家攀爬（客户端）
 
 ### minecraft:beacon\_base\_blocks
 
-Whether it can be used as a base for a beacon
+是否可以用作信标的底座
 
 ### minecraft:fall\_damage\_resetting
 
-Whether to reset fall damage
+是否重置摔落伤害
 
 ### minecraft:soul\_fire\_base\_blocks
 
-Whether the fire above the block is soul fire
+方块上方的火是否是灵魂火
 
 ### minecraft:infiniburn\_overworld
 
@@ -55,12 +55,12 @@ Whether the fire above the block is soul fire
 
 ### minecraft:infiniburn\_end
 
-Can the flame burn permanently in the corresponding dimension?
+在对应维度中，火会在使用该标签的方块上无限燃烧
 
 ### minecraft:enchantment\_power\_provider
 
-Whether this block can provide enchantment level
+这个方块是否能提供附魔等级
 
 ### minecraft:replaceable\_by\_trees
 
-Whether trees can replace this block when they grow
+当树木生长时，是否可以替换这个方块

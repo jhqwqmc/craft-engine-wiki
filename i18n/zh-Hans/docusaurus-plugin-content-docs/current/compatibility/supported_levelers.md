@@ -1,5 +1,5 @@
 ---
-title: 👔 Supported Levelers
+title: 👔 支持的等级系统
 id: supported_levelers
 ---
 

@@ -1,55 +1,55 @@
 ---
-title: 🅿️ PlaceholderAPI
+title: 🅿️ 占位符
 id: placeholderapi
 ---
 
 ## %image\_%
 
-The `image` placeholder is used to return the original Unicode characters and their associated font for the image corresponding to a given ID.
+`image` 占位符用于根据给定的 ID 返回对应图像的原始 Unicode 字符及其关联字体。
 
 :::caution
-Both `row` and `column` are optional, but when you use one of them, they must be used in pairs.
+`row` 和 `column` 都是可选的，但如果使用其中一个，就必须同时使用另一个。
 :::
 
 ### %image\_mm\_namespace:id\:\[row]:\[column]%
 
-Return an image in `minimessage` format.
+返回 `minimessage` 格式的图像。
 
 ![](/img/placeholderapi_1.png)
 
 ### %image\_md\_namespace:id\:\[row]:\[column]%
 
-Return an image in `minedown` format.
+返回 `minedown` 格式的图像。
 
 ![](/img/placeholderapi_2.png)
 
 ### %image\_raw\_namespace:id\:\[row]:\[column]%
 
-Return an the raw image character.
+返回原始图像字符
 
 ![](/img/placeholderapi_3.png)
 
 ## %shift\_%
 
-The `shift` placeholder is used to obtain the character for offset, typically employed for aligning menu titles and similar operations.
+`shift`占位符用于获取**偏移字符**，常用于菜单标题对齐等操作。
 
 ### %shift\_mm\_value%
 
-Return shift characters in `minimessage` format.
+返回 `minimessage` 格式的偏移字符  
 
 ### %shift\_md\_value%
 
-Return shift characters in `minedown` format.
+返回 `minedown` 格式的偏移字符  
 
 ### %shift\_raw\_value%
 
-Return raw shift characters
+返回原始偏移字符
 
 :::tip
 
-**If you need to display images using PlaceholderAPI in other plugins, ensure they support MiniMessage or Minedown formatting and properly send text components.**
-(I emphasize this because some poorly designed plugins forcibly convert rich text into legacy color codes.)
+**如果你需要在其他插件中使用占位符显示图片，务必确保这些插件支持 MiniMessage 或 MineDown 格式，并能正确发送文本组件。**
+(我之所以强调这一点，是因为有些设计不佳的插件会强制将富文本转换为旧版的颜色代码。)
 
-Alternatively, you can display custom images through CraftEngine's packet interception. Please refer to [**this page**](../configuration/image.md#compatibility-with-other-plugins) for details.
+另外，你也可以通过 CraftEngine 的数据包拦截功能来显示自定义图片。具体细节请参考[**此页面**](../configuration/image.md#compatibility-with-other-plugins)。
 
 :::

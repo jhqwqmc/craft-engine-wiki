@@ -3,14 +3,14 @@ title: ⚛️ Axiom
 id: axiom
 ---
 
-First, ensure your server has [axiom-paper](https://modrinth.com/plugin/axiom-paper-plugin) installed.
+首先，确保你的服务器已安装 [axiom-paper](https://modrinth.com/plugin/axiom-paper-plugin)。
 
-Then download and install the [craft-engine-client-mod](https://github.com/Xiao-MoMi/craft-engine-client-mod/releases).
+然后下载并安装 [craft-engine-client-mod](https://github.com/Xiao-MoMi/craft-engine-client-mod/releases)。
 
-After launching the client. You need to copy the corresponding files from the server plugin's configuration folder to the client's **mod config folder**, then restart your client to apply the changes.
+启动客户端后，需要将服务器插件配置文件夹中的对应文件复制到客户端的 **模组配置文件夹**，然后重启客户端以应用更改。
 
 ![](/img/axiom_1.png)
 
-For the server, simply enable the **`generate-mod-assets`** option in config.yml, and it will automatically generate client-side resources compatible with the mod.
+对于服务器，只需在 config.yml 中启用 **`generate-mod-assets`** 选项，它就会自动生成与模组兼容的客户端资源。
 
 ![](/img/axiom_2.webp)

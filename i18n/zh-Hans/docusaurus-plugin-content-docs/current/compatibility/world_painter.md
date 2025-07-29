@@ -6,5 +6,5 @@ id: world_painter
 ![](/img/worldpainter_1.jpg)![](/img/worldpainter_2.png)
 
 :::tip
-Click [**here**](../reference/commands.md#get-block-internal-id) to learn how to obtain the real block ID of a custom block.
+点击[**这里**](../reference/commands.md#get-block-internal-id)了解如何获取自定义方块的真实方块 ID。
 :::

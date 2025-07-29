@@ -5,6 +5,6 @@ id: asp
 
 :::info
 
-CraftEngine features native slime world format integration - no configuration needed!
+CraftEngine 原生集成了 Slime World 格式，无需任何额外配置即可使用！
 
 :::

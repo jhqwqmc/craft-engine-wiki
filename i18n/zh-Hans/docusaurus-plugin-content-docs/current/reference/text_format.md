@@ -1,5 +1,5 @@
 ---
-title: ✏️ Text Format
+title: ✏️ 文本格式
 id: text_format
 ---
 

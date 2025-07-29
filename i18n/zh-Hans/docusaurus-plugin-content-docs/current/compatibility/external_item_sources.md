@@ -1,5 +1,5 @@
 ---
-title: 📦️ External Item Sources
+title: 📦️ 外部物品来源
 id: external_item_sources
 ---
 

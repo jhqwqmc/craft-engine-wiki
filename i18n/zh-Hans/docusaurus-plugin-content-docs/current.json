@@ -339,6 +339,10 @@
     "message": "🪑 家具",
     "description": "教程侧边栏中'家具'类别的标签"
   },
+  "sidebar.tutorialSidebar.category.⌨️ API": {
+    "message": "⌨️ 应用程序编程接口",
+    "description": "教程侧边栏中'应用程序编程接口'类别的标签"
+  },
   "sidebar.tutorialSidebar.category.🛜 Set Up Pack Host": {
     "message": "🛜 配置资源包托管",
     "description": "教程侧边栏中'配置资源包托管'文档项的标签"

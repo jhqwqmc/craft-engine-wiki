@@ -1,6 +1,6 @@
 ---
-title: 📒 Reference
+title: 📒 参考
 id: reference
 ---
 
-Reference content is usually refered by other main pages to keep individual pages from getting too complicated. It can also be shared across multiple docs. For example, stuff like events, conditions etc. are common to items, furniture, blocks and others.
+参考内容通常被其他主页面引用，以避免单个页面过于复杂。同时，这些内容也可以在多个文档间共享。例如，事件、条件等内容是物品、家具、方块等功能的公共部分。

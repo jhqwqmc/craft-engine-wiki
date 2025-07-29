@@ -8,6 +8,7 @@ import Highlight from '@site/src/components/Highlight';
 import DiffViewer from '@site/src/components/DiffViewer';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Comment from '@site/src/components/Comment';
 
 在开始之前，请确保您的资源包托管已完全设置好。记住——每次模型编辑都需要更新资源包才能生效。否则，运行 `/ce reload all` 时，您不会立即看到变化。
 
@@ -123,11 +124,11 @@ import TabItem from '@theme/TabItem';
 
 :::
 
-### What is Texture / Atlas?
+### 什么是纹理/纹理图集?
 
-Models define shapes, but textures bring color! Textures refer to image files specifically in PNG format (with the .png file extension). The use of alternative image formats such as JPG/JPEG or GIF is not permitted.
+模型定义形状，而纹理赋予色彩！纹理指的是图像文件，它们必须是 PNG 格式（文件扩展名为 .png）。不允许使用其他图像格式，如 JPG/JPEG 或 GIF。
 
- Here's where they go:
+以下是它们的存放位置：
 
 <PluginFileTree
     initialTreeData={[
@@ -138,7 +139,7 @@ Models define shapes, but textures bring color! Textures refer to image files sp
             {
             id: "minecraft",
             name: "minecraft",
-            hoverText: "Default Minecraft assets use the 'minecraft' namespace. You may use either this or your own namespace, but avoid naming conflicts with vanilla models.",
+            hoverText: "原版 Minecraft 资源使用 'minecraft' 命名空间。你可以使用这个命名空间，也可以使用自己的命名空间，但请避免与原版模型发生命名冲突。",
             children: [
                 {
                 id: "textures",
@@ -189,36 +190,36 @@ Models define shapes, but textures bring color! Textures refer to image files sp
 
 :::caution
 
-**Texture paths are stricter than model paths!**
+**纹理路径比模型路径更严格！**
 
-While models might work even if you misplace their JSON files (e.g., outside /item/ or /block/), textures must be in the correct folder due to Minecraft’s texture atlas system.
+即使模型的 JSON 文件放错了目录（例如，放在 /item/ 或 /block/ 之外）也可能正常工作，但纹理必须放置在正确的文件夹中，这是因为 Minecraft 的纹理图集系统。
 
-Let me simplify how textures work in Minecraft:
+让我简化一下 Minecraft 中纹理的运作方式：
 
-Minecraft combines multiple textures into one giant image (called an atlas) to boost performance. However, not all textures are model textures (e.g., pumpkin head masks, rain/snow environment textures, etc.). Therefore, an atlas file must be used to define which textures are eligible for loading.
+Minecraft 将多个纹理合并成一张巨大的图像（称为纹理图集）以提升性能。然而，并非所有纹理都是模型纹理（例如，雕刻南瓜面具、雨/雪环境纹理等）。因此，必须使用纹理图集文件来定义哪些纹理可以被加载。
 
 ![](/img/minecraft_textures_atlas_blocks.png_0.png)
 
-By default, Minecraft uses the following texture atlases `(minecraft/atlases/blocks.json)`: 
+默认情况下，Minecraft 使用以下纹理图集（`minecraft/atlases/blocks.json`）：
 
 ```json
 {
     "sources": [
         { "type": "directory", "source": "block", "prefix": "block/" }, 
         { "type": "directory", "source": "item", "prefix": "item/" },
-        ...more
+        ...更多内容
     ]
 }
 ```
 
-This is why Minecraft can only load textures located within the block and item directories by default. If you attempt to reference textures from an unsupported path (e.g., `textures/custom`), the engine will fail to load them, resulting in the purple-and-black checkered pattern.
+这就是为什么 Minecraft 默认只能加载位于 `block` 和 `item` 目录下的纹理文件。  如果你尝试引用来自不受支持路径的纹理（例如 `textures/custom`），游戏引擎将无法加载它们，从而导致出现显示为紫黑相间的方格。
 
 ![](/img/out_of_atlas.png)
 
 <details>
-  <summary>Custom Atlas Tutorial</summary>
+  <summary>自定义纹理图集教程</summary>
 
-To create an atlas path, you simply need to add a file to your resource pack at the following path: `resourcepack/assets/minecraft/atlases/blocks.json`. Below is a simple example that adds the custom path to the atlas:
+要创建纹理图集路径，您只需在资源包的以下路径添加一个文件：`resourcepack/assets/minecraft/atlases/blocks.json`。以下是一个将自定义路径添加到纹理图集的简单示例：
 
 ```json
 {
@@ -234,39 +235,40 @@ To create an atlas path, you simply need to add a file to your resource pack at 
 
 :::warning
 
-**Model Texture Size Requirements for Minecraft**
+**Minecraft 模型纹理尺寸要求**
 
-For model textures only, the width and height must be powers of 2 (e.g., 16, 32, 64, 128) to ensure correct rendering. This restriction does not apply to font textures (e.g., rank.png, GUI elements, HUD icons, etc.), which can use arbitrary dimensions.
+对于模型纹理，宽度和高度必须是 2 的幂（例如，16、32、64、128），以确保正确渲染。此限制不适用于字体纹理（例如，rank.png、GUI 元素、HUD 图标等），这些纹理可以使用任意尺寸。
 
-Valid Examples: \
-✅ 16×16 (Vanilla default) \
-✅ 32×32 (Common for HD textures) \
-✅ 64×64, 64×128 (Higher-resolution packs)
+有效示例：\
+✅ 16×16（原版默认）\
+✅ 32×32（高清纹理常用）\
+✅ 64×64、64×128（更高分辨率的资源包）
 
-Invalid Examples: \
-❌ 7×7, 13×13, 19×19 (Non-power-of-2 dimensions) \
-❌ 17×32 (Mixed valid/invalid dimensions)
+无效示例：\
+❌ 7×7、13×13、19×19（非 2 的幂尺寸）\
+❌ 17×32（混合有效/无效尺寸）
 
 **Never place font/GUI textures (e.g., rank.png, HUD elements) in the same directory as model textures (e.g., block/, item/).** Even if these textures are not directly used in models, Minecraft's texture atlas system will automatically include them when generating combined sprite sheets. This can lead to unintended visual degradation(mipmap-level):
+**切勿将字体/GUI 纹理（例如，rank.png、HUD 元素）放置在与模型纹理（例如，block/、item/）相同的目录中。** 即使这些纹理未直接用于模型，Minecraft 的纹理图集系统在生成组合精灵表时会自动包含它们。这可能导致意外的视觉降级（mipmap级别）：
 
 <details>
-  <summary>Mipmap Level 4 VS Mimap Level 0</summary>
+  <summary>Mipmap级别4和级别0的差异对比</summary>
 
-    ![Mipmap Level 4](/img/mipmap_4.png)
+    ![Mipmap级别4](/img/mipmap_4.png)
 
-    ![Mipmap Level 0](/img/mipmap_0.png)
+    ![Mipmap级别0](/img/mipmap_0.png)
 
 </details>
 
 :::
 
-## Create Model File
+## 创建模型文件
 
-Let's now create the first model file! You can create models either through [BlockBench](https://www.blockbench.net/) or by configuring them in CraftEngine. I'll divide this section into two separate tutorials. I highly recommend trying both approaches to gain a deeper understanding of how the model system works.
+现在让我们创建第一个模型文件！您可以通过 [BlockBench](https://www.blockbench.net/) 或在 CraftEngine 中配置来创建模型。我将本节分为两个独立教程。强烈建议你都尝试一遍，以更深入地了解模型系统的工作原理。
 
-<a href={require('/img/toxic_sword.png').default} download>Download Tutorial Sword Texture</a>
+<a href={require('/img/toxic_sword.png').default} download>点击下载教程用的剑纹理</a>
 
-Place the downloaded PNG image into the folder structure shown below. Then, we'll proceed to create the model.
+将下载的 PNG 图像放入下面显示的文件夹结构中。然后，我们将开始创建模型。
 
 <PluginFileTree
     initialTreeData={[
@@ -308,39 +310,39 @@ Place the downloaded PNG image into the folder structure shown below. Then, we'l
     ]}
 />
 
-### Create Model with BlockBench
+### 使用 BlockBench 创建模型
 
-As a server developer, you don't need advanced modeling skills. You only need to master basic model editing and importing! Treat the following tutorial as a playground and experiment freely.
+作为服务器开发者，你并不需要掌握复杂的建模技巧。你只需要掌握基础的模型编辑和导入方法即可！把下面的教程当成一个练习场，自由尝试和探索。
 
-![](/img/blockbench_1.png)
+![](/img/i18n/zh-Hans/blockbench_1.png)
 
-![](/img/blockbench_2.png)
+![](/img/i18n/zh-Hans/blockbench_2.png)
 
 :::tip
 
-First, save the model using Ctrl+S to your resource pack folder before proceeding with any edits. In this tutorial, I saved the JSON file to:
+首先，在进行任何编辑之前，使用 Ctrl+S 将模型保存到您的资源包文件夹中。在本教程中，我将 JSON 文件保存到：
 `/resources/tutorial/resourcepack/assets/tutorial/models/item/`
 
 :::
 
-![](/img/blockbench_3.png)
+![](/img/i18n/zh-Hans/blockbench_3.png)
 
 
 :::tip
 
-Create a basic cube and apply the toxic_sword texture `resourcepack/assets/tutorial/textures/item/toxic_sword.png`. Experiment with simple adjustments—treat this as a casual practice session. In the following example, I created an unconventional sword-shaped block. While unusual, the key takeaway is that this represents a fully custom model.
+创建一个基础立方体，并应用 toxic_sword 纹理 `resourcepack/assets/tutorial/textures/item/toxic_sword.png`。尝试做一些简单的调整——将其视为一次轻松的练习。在下面的示例中，我创建了一个不寻常的剑形方块。尽管造型奇特，但关键点在于这是一个完全自定义的模型。
 
 :::
 
-![](/img/blockbench_4.png)
+![](/img/i18n/zh-Hans/blockbench_4.png)
 
-![](/img/blockbench_5.png)
+![](/img/i18n/zh-Hans/blockbench_5.png)
 
-Now let's open the model JSON file we just created using a professional text editor. Your JSON structure should generally match mine.
+现在让我们使用专业的文本编辑器打开刚刚创建的模型 JSON 文件。你的 JSON 结构应该与我的基本一致。
 
 :::caution
 
-Always save model JSON files within a complete resource pack structure. Otherwise, BlockBench cannot infer the correct resource pack hierarchy, resulting in texture paths that Minecraft cannot resolve. If your `textures` entry differs significantly from mine, this is likely the cause.
+始终将模型 JSON 文件保存在完整的资源包目录结构中。否则，BlockBench 将无法推断出正确的资源包层级结构，导致生成的纹理路径在 Minecraft 中无法解析。如果你的 `textures` 字段与我的差异很大，这很可能就是原因。
 
 :::
 
@@ -350,7 +352,7 @@ Always save model JSON files within a complete resource pack structure. Otherwis
   "credit": "Made with Blockbench",
   "textures": {
     "0": "tutorial:item/toxic_sword",
-    "particle": "tutorial:item/toxic_sword" // refers to visual effects for block destruction, eating, etc.
+    "particle": "tutorial:item/toxic_sword" // 指的是方块破坏、进食等的粒子效果。译者注：json不支持注释记得删掉这个注释
   },
   "elements": [
     {
@@ -371,24 +373,24 @@ Always save model JSON files within a complete resource pack structure. Otherwis
 
 :::info
 
-When using third-party resource packs, modifying model texture paths may cause missing texture errors. In such cases, open the model in BlockBench and reconfigure the texture paths. Otherwise, the model will appear as a purple-black error block.
+使用第三方资源包时，修改模型纹理路径可能会导致纹理缺失错误。在这种情况下，打开 BlockBench 重新配置纹理路径。否则，模型将显示为紫黑色的错误方块。
 
-Alternatively, you can directly modify the `textures` entry in the JSON file using a text editor. Note that resource locations automatically ignore prefixes like `models & textures`. Here, `tutorial:item/toxic_sword` corresponds to the actual texture path: `assets/tutorial/textures/item/toxic_sword.png`.
+或者，您可以直接使用文本编辑器修改 JSON 文件中的 `textures` 条目。请注意，资源位置会自动忽略像 `models` 和 `textures` 这样的前缀。在此，`tutorial:item/toxic_sword` 对应实际纹理路径是 `assets/tutorial/textures/item/toxic_sword.png`。
 
 :::
 
-Now let's return to CraftEngine's configuration and assign our newly created model to the sword item. To ensure consistency with the expected results, I've uploaded my configuration file <a href={require('/file/tutorial_1.zip').default} download>here</a> for your reference. Please cross-check if your result differs.
+现在让我们回到 CraftEngine 的配置，将新创建的模型分配给剑物品。为了确保与预期结果一致，我已将我的配置文件上传至<a href={require('/file/i18n/zh-Hans/tutorial_1.zip').default} download>此处</a>供您参考。如果你发现实际效果与教程不同，请参考该文件进行比对排查。
 
 ```yaml
 items:
   tutorial:toxic_sword:
     material: diamond_sword
     data:
-      item-name: "<#3CB371>Toxic Sword"
+      item-name: "<#3CB371>剧毒之剑"
     model:
-      type: minecraft:model # Don't focus too much on the type here as we'll explain it in detail later.
+      type: minecraft:model # 不要过于关注这里的类型，我们稍后会详细解释。
       path: tutorial:item/toxic_sword
-    # If you are running on a server below 1.21.2, add custom-model-data here for backwards compatibility
+    # 如果您需要兼容的客户端版本低于 1.21.2，请在此添加 custom-model-data 以确保向后兼容
     custom-model-data: 1000
 ```
 
@@ -396,14 +398,14 @@ items:
 
 :::tip
 
-Don't forget to run `/ce reload all` to apply the resource pack changes.
+别忘了运行 `/ce reload all` 以应用资源包更改。
 
 :::
 
 <details>
-  <summary>What is CustomModelData?</summary>
+  <summary>什么是自定义模型数据？</summary>
 
-    CustomModelData is a data component that enables unique model variations for items sharing the same base material. For items with identical base materials, you must assign distinct CustomModelData values to differentiate their models. Example:
+    自定义模型数据是一种数据组件，用于为共享相同<Comment text="译者注：也就是 material">基础物品</Comment>的自定义物品启用独特的模型变体。对于具有相同<Comment text="译者注：也就是 material">基础物品</Comment>的自定义物品，您必须分配不同的自定义模型数据值来区分它们的模型。例如：
 
     ```yaml
     items:
@@ -415,7 +417,7 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
         custom-model-data: 1001
     ```
 
-    However, this restriction does not apply to items with different base materials. For example:
+    然而，这一限制不适用于具有不同<Comment text="译者注：也就是 material">基础物品</Comment>的自定义物品。例如：
 
     ```yaml
     items:
@@ -430,11 +432,11 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
 </details>
 
 <details>
-  <summary>What is ItemModel?</summary>
+  <summary>什么是物品模型?</summary>
 
-  ItemModel, introduced in 1.21.2, is a data component with better rendering efficiency than CustomModelData, reducing client-side performance overhead. Normally, you don’t need to manually specify the model path (item-model), as the plugin auto-generates it.
+  物品模型是 1.21.2 中引入的数据组件，相较于自定义模型数据具有更高的渲染效率，可减少客户端性能开销。通常，您无需手动指定模型路径（item-model），因为插件会自动生成。
 
-  However, if your server requires broad version compatibility (e.g., 1.20–1.21.8) and optimal rendering for newer clients, configure both:
+  然而，如果您的服务器需要广泛的版本兼容性（例如 1.20–1.21.8）并为较新客户端提供最佳渲染效果，请同时配置两者：
 
   ```yaml
   items:
@@ -446,9 +448,9 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
 
 </details>
 
-### Generate Model with CraftEngine
+### 使用 CraftEngine 生成模型
 
-Now let's try CraftEngine's model generation feature. Note: If you've completed the previous BlockBench tutorial, delete the model JSON file created earlier. As the title "Generate" indicates, we won't be using BlockBench-created models for this section.
+现在我们来尝试 CraftEngine 提供的模型生成功能。注意：如果你已经完成了前面的 BlockBench 教程，请删除之前创建的模型 JSON 文件。正如标题所说，“生成”意味着这一节中我们不会使用 BlockBench 创建的模型。
 
 <DiffViewer>
 {`
@@ -456,7 +458,7 @@ items:
     tutorial:toxic_sword:
       material: diamond_sword
       data:
-        item-name: "<#3CB371>Toxic Sword"
+        item-name: "<#3CB371>剧毒之剑"
       model:
         path: tutorial:item/toxic_sword
 +     generation:
@@ -468,21 +470,20 @@ items:
 
 :::tip
 
-When using the generation configuration within a path-defined section, the plugin switches from read mode to write mode. This will generate the corresponding JSON model file at the specified path.
+在路径定义的配置部分中使用生成配置时，插件会从读取模式切换到写入模式。这将在指定路径生成相应的 JSON 模型文件。
 
 :::
 
-Let me explain the purpose of each parameter and where to obtain them:
+让我为你解释每个参数的用途以及如何获取它们：
 
 <Tabs>
   <TabItem value="parent" label="👨‍🦱 parent" default>
-    > Loads a different model from the given path, in form of a resource location
+    > 从给定路径加载另一个模型，格式为命名空间ID
 
-    The parent field can not only reference the default models provided by vanilla Minecraft but can also point to your custom models. You can view all available Minecraft models on this [website](https://misode.github.io/assets/model/)
+    parent 字段不仅可以引用 Minecraft 原版提供的默认模型，还可以指向你自定义的模型。你可以在这个[网站](https://misode.github.io/assets/model/)查看所有可用的 Minecraft 模型。
+    在 Minecraft 中，大多数模型（物品、工具，甚至方块）都使用基于父模型的生成方式，而不是独立建模。你在至少 80% 的配置中都会用到这种方式。
 
-    In Minecraft, most models (items, tools, and even blocks) utilize parent-based generation rather than independent modeling. You'll likely use this model generation approach in at least 80% of your configurations.
-
-    **Think of a parent model as a prebuilt 3D template** — you only need to supply texture parameters to make it functional.
+    **可以把父模型看作是一个预构建的 3D 模板** —— 你只需要提供纹理参数就能让它工作。
 
     ```yaml
     generation:
@@ -511,26 +512,26 @@ Let me explain the purpose of each parameter and where to obtain them:
 
     ![](/img/model_generation_3.png)
 
-    You may wonder why the first two models use `layer0` while the third uses `all`.
+    你可能会好奇，为什么前两个模型使用 `layer0`，而第三个用的是 `all`。
 
-    **To explore further, press 🖼️ textures to continue the tutorial.**
+    **想进一步了解，请点击 🖼️ textures 标签继续教程。**
 
   </TabItem>
   <TabItem value="textures" label="🖼️ textures">
-    > Holds the textures of the model, in form of a resource location or can be another texture variable.
+    > 设置模型的纹理路径，可使用命名空间ID或其他纹理变量。
 
-    To determine the exact texture parameters:
+    要确定确切的纹理参数：
 
-    1. Inspect the parent model’s JSON structure.
-    2. If the parent itself inherits another model (e.g., minecraft:item/generated extends a base template), recursively check all upstream textures.
+    1. 检查父模型的 JSON 结构。
+    2. 如果父模型本身也继承了其他模型（例如 minecraft:item/generated 继承自一个基础模板），则需要递归检查所有上游纹理参数。
 
-    **All vanilla Minecraft models are available on [GitHub](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/assets/minecraft/models).**
+    **所有原版 Minecraft 模型都可以在 [GitHub](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/assets/minecraft/models) 上找到。**
 
-    Let's examine this example to understand texture overriding. For this scenario, you have two approaches to assign textures:
+    让我们通过这个例子来理解纹理覆盖。对于这种情况，你有两种方法来分配纹理：
 
     ![](/img/model_generation_textures.png)
 
-    Use cube_all’s shorthand
+    使用 cube_all 的简写方式
     ```yaml
     generation:
       parent: "minecraft:block/cube_all"
@@ -538,8 +539,8 @@ Let me explain the purpose of each parameter and where to obtain them:
         "all": "minecraft:block/custom/block_texture"
     ```
 
-    Override cube (parent of cube_all) \
-    This is actually an inappropriate example. A better approach would be to directly set the parent as `cube` rather than `cube_all`.
+    覆盖 cube（cube_all 的父模型） \
+    这个例子实际上不太合适，更好的方法是直接把 parent 设置为 `cube` 而不是 `cube_all`。
 
     ```yaml
     generation:
@@ -556,14 +557,14 @@ Let me explain the purpose of each parameter and where to obtain them:
 
   </TabItem>
   <TabItem value="display" label="🎨 display">
-    > Holds the different places where item models are displayed.
-    > - rotation: Specifies the rotation of the model according to the scheme [x, y, z].
-    > - translation: Specifies the position of the model according to the scheme [x, y, z]. If the value is greater than 80, it is displayed as 80. If the value is less than -80, it is displayed as -80.
-    > - scale: Specifies the scale of the model according to the scheme [x, y, z]. If the value is greater than 4, it is displayed as 4.
+    > 模型在不同显示模式下的渲染变换。
+    > - rotation: 使模型相对于对应轴进行旋转，以度为单位，格式为 [x, y, z].
+    > - translation: 使模型相对于对应轴进行平移，以“像素”（方块的16分之一）为单位，格式为 [x, y, z]. 不小于 -80 且不大于 80 ，超出部分被钳制。
+    > - scale: 使模型相对于对应轴进行缩放，格式为 [x, y, z]. 不小于 -4 且不大于 4 ，超出部分被钳制
   
-    Available values: `thirdperson_righthand`, `thirdperson_lefthand`, `firstperson_righthand`, `firstperson_lefthand`, `gui`, `head`, `ground`, or `fixed`. 
+    可用的显示位置: `thirdperson_righthand`、`thirdperson_lefthand`、`firstperson_righthand`、`firstperson_lefthand`、`gui`、`head`、`ground`、`fixed`。
     
-    This configuration is rarely used, as in most cases you can more intuitively adjust the model display mode directly in Blockbench.
+    此配置很少使用，因为在大多数情况下，你可以更直观地直接在 Blockbench 中调整模型显示模式。
 
     ```yaml
     items:
@@ -574,8 +575,8 @@ Let me explain the purpose of each parameter and where to obtain them:
           type: minecraft:model
           path: "minecraft:item/custom/big_apple"
           generation:
-            parent: "minecraft:item/apple" # inherits apple's model
-            # displays a big apple in gui
+            parent: "minecraft:item/apple" # 继承苹果模型
+            # 在 GUI 中显示一个大苹果
             display:
               gui:
                 scale: 2,2,2
@@ -584,7 +585,7 @@ Let me explain the purpose of each parameter and where to obtain them:
   </TabItem>
 
   <TabItem value="gui-light" label="💡 gui-light">
-    Can be `front` or `side`. If set to `side`, the model is rendered like a block. If set to `front`, model is shaded like a flat item. Defaults to `side`.
+    可以设置为 `front` 或 `side`。如果设置为 `side` 则使用 3D 模型的光照，如果设置为 `front` 则使用扁平物品光照。默认值为 `side`。
 
     ![](/img/gui_light.png)
 
@@ -595,8 +596,8 @@ Let me explain the purpose of each parameter and where to obtain them:
         custom-model-data: 1000
         model:
           type: minecraft:special
-          # The model here is a parameter required for minecraft:special models
-          # and is unrelated to the outer model. We will cover special models in detail in future tutorials.
+          # 这里的 model 是 minecraft:special 模型所需的参数
+          # 与外部 model 无关。我们将在未来的教程中详细介绍 special 模型。
           model:
             type: minecraft:player_head
           path: minecraft:item/custom/gui_head_size_1
@@ -613,6 +614,6 @@ Let me explain the purpose of each parameter and where to obtain them:
 </Tabs>
 
 
-## Debugging
+## 调试
 
-If your model appears as a purple-black cube or fails to render properly, first check your server console—CraftEngine will log most potential errors there. Alternatively, inspect the client logs to diagnose resource pack loading issues.
+如果你的模型显示为紫黑色方块或无法正确渲染，首先请检查你的服务器控制台——CraftEngine 会在那里记录大多数潜在错误。另外，也可以检查客户端日志来诊断资源包加载问题。
