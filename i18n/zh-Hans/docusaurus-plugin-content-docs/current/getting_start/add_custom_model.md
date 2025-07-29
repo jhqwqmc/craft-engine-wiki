@@ -1,5 +1,5 @@
 ---
-title: 🌌 Add Custom Model
+title: 🌌 添加自定义模型
 id: add_custom_model
 ---
 
@@ -9,20 +9,20 @@ import DiffViewer from '@site/src/components/DiffViewer';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Before diving in, make sure your resource pack host is fully set up. Remember - every model edit requires a resource pack update to take effect. Otherwise, you won't see the changes right away when you do `/ce reload all`.
+在开始之前，请确保您的资源包托管已完全设置好。记住——每次模型编辑都需要更新资源包才能生效。否则，运行 `/ce reload all` 时，您不会立即看到变化。
 
 
-## Preparation
+## 准备工作
 
-### What is Resource location
+### 什么是命名空间ID
 
-> Resource locations are a way to declare and specify game objects in Minecraft, which can identify built-in and user-defined objects without potential ambiguity or conflicts.
+> 命名空间ID 是 Minecraft 中用于声明和指定游戏对象的一种方式，可以无歧义或冲突地识别内置和用户定义的对象。
 
-When setting up item IDs, model paths, or texture paths, you'll need to follow these naming rules: https://minecraft.wiki/w/Resource_location#Legal_characters
+在设置物品 ID、模型路径或纹理路径时，您需要遵循以下命名规则：https://zh.minecraft.wiki/w/%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4ID#%E5%90%88%E6%B3%95%E5%AD%97%E7%AC%A6
 
 :::tip
 
-Let's do a quick test! Which of these five resource locations are actually valid?
+让我们来做一个快问快答！以下这五个命名空间ID中，哪些是实际有效的呢？
 
 1. `MyFirst:golden_sword`
 2. `minecraft:steel furnace`
@@ -31,23 +31,23 @@ Let's do a quick test! Which of these five resource locations are actually valid
 5. `test:tutorial_book`
 
 <details>
-  <summary>Answers</summary>
-  1. ❌️ uppercase letters aren't allowed
-  2. ❌️ spaces are not allowed
+  <summary>答案</summary>
+  1. ❌️ 不允许使用大写字母
+  2. ❌️ 不允许使用空格
   3. ✔️
-  4. ❌️ `$` is not a valid letter
+  4. ❌️ `$` 不是有效字符
   5. ✔️
 </details>
 
 :::
 
-### What is Model?
+### 什么是模型？
 
-> Models are three-dimensional shapes used in Minecraft that are used to display objects encountered in the game.
+> 模型是 Minecraft 中用于显示游戏中遇到的物体的几何结构。
 
-Whether it's **blocks** or **items**, they all need a model. Even if something looks like just a simple texture, it still requires a basic model. These model files all end with `.json`, and you can open/edit most of them in [BlockBench](https://www.blockbench.net/).
+无论是**方块**还是**物品**，它们都需要一个模型。即使某些东西看起来只是简单的纹理，它仍然需要一个基本模型。这些模型文件都以 `.json` 结尾，您可以在 [BlockBench](https://www.blockbench.net/) 中打开/编辑大多数模型文件。
 
-Here's a quick file structure to show where models should go:
+以下是一个快速展示模型存放位置的文件结构：
 
 <PluginFileTree
     initialTreeData={[
@@ -58,7 +58,7 @@ Here's a quick file structure to show where models should go:
             {
             id: "minecraft",
             name: "minecraft",
-            hoverText: "Default Minecraft assets use the 'minecraft' namespace. You may use either this or your own namespace, but avoid naming conflicts with vanilla models.",
+            hoverText: "原版 Minecraft 资源使用 'minecraft' 命名空间。你可以使用这个命名空间，也可以使用自己的命名空间，但请避免与原版模型发生命名冲突。",
             children: [
                 {
                 id: "models",
@@ -109,17 +109,17 @@ Here's a quick file structure to show where models should go:
 
 :::info
 
-When making resource packs, I highly recommend following Minecraft's structure:
+在制作资源包时，我强烈建议遵循 Minecraft 的结构：
 
-- Put item models in `/models/item/`
-- Place block models in `/models/block/`
+- 将物品模型放在 `/models/item/` 中
+- 将方块模型放在 `/models/block/` 中
 
-Keeping this organization makes your pack more standardized and easier to work with!
+保持这种组织结构能让你的资源包更加标准化且更容易管理！
 
-To avoid conflicts with Minecraft's default assets, you have two great options:
+为了避免与 Minecraft 的默认资源发生冲突，你有两个很好的选择：
 
-- Create subfolders like /models/item/custom/
-- Or better yet, use your own namespace (e.g. mypack:item/sword)
+- 创建子文件夹，如 /models/item/custom/
+- 或者更好的是，使用你自己的命名空间（例如 mypack:item/sword）
 
 :::
 

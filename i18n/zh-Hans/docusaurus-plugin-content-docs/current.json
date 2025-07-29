@@ -1,342 +1,382 @@
 {
   "version.label": {
-    "message": "Next",
-    "description": "The label for version current"
+    "message": "下一个版本",
+    "description": "当前版本的标签"
   },
   "sidebar.tutorialSidebar.category.📗 Introduction": {
-    "message": "📗 Introduction",
-    "description": "The label for category 📗 Introduction in sidebar tutorialSidebar"
+    "message": "📗 介绍",
+    "description": "教程侧边栏中'介绍'类别的标签"
   },
   "sidebar.tutorialSidebar.category.👋 Getting Started": {
-    "message": "👋 Getting Started",
-    "description": "The label for category 👋 Getting Started in sidebar tutorialSidebar"
+    "message": "👋 入门指南",
+    "description": "教程侧边栏中'入门指南'类别的标签"
   },
   "sidebar.tutorialSidebar.category.⚙️ Configuration": {
-    "message": "⚙️ Configuration",
-    "description": "The label for category ⚙️ Configuration in sidebar tutorialSidebar"
+    "message": "⚙️ 配置",
+    "description": "教程侧边栏中'配置'类别的标签"
   },
   "sidebar.tutorialSidebar.category.🗡️ Item": {
-    "message": "🗡️ Item",
-    "description": "The label for category 🗡️ Item in sidebar tutorialSidebar"
+    "message": "🗡️ 物品",
+    "description": "教程侧边栏中'物品'类别的标签"
   },
   "sidebar.tutorialSidebar.category.🟰 Item Models": {
-    "message": "🟰 Item Models",
-    "description": "The label for category 🟰 Item Models in sidebar tutorialSidebar"
+    "message": "🟰 物品模型",
+    "description": "教程侧边栏中'物品模型'类别的标签"
   },
   "sidebar.tutorialSidebar.category.🕹️ Item Behaviors": {
-    "message": "🕹️ Item Behaviors",
-    "description": "The label for category 🕹️ Item Behaviors in sidebar tutorialSidebar"
+    "message": "🕹️ 物品行为",
+    "description": "教程侧边栏中'物品行为'类别的标签"
   },
   "sidebar.tutorialSidebar.category.🧱 Block": {
-    "message": "🧱 Block",
-    "description": "The label for category 🧱 Block in sidebar tutorialSidebar"
+    "message": "🧱 方块",
+    "description": "教程侧边栏中'方块'类别的标签"
   },
   "sidebar.tutorialSidebar.category.🔣 Block States": {
-    "message": "🔣 Block States",
-    "description": "The label for category 🔣 Block States in sidebar tutorialSidebar"
+    "message": "🔣 方块状态",
+    "description": "教程侧边栏中'方块状态'类别的标签"
   },
   "sidebar.tutorialSidebar.category.🕹️ Block Behaviors": {
-    "message": "🕹️ Block Behaviors",
-    "description": "The label for category 🕹️ Block Behaviors in sidebar tutorialSidebar"
+    "message": "🕹️ 方块行为",
+    "description": "教程侧边栏中'方块行为'类别的标签"
   },
   "sidebar.tutorialSidebar.category.📒 Reference": {
-    "message": "📒 Reference",
-    "description": "The label for category 📒 Reference in sidebar tutorialSidebar"
+    "message": "📒 参考",
+    "description": "教程侧边栏中'参考'类别的标签"
   },
   "sidebar.tutorialSidebar.category.✏️ Text Format": {
-    "message": "✏️ Text Format",
-    "description": "The label for category ✏️ Text Format in sidebar tutorialSidebar"
+    "message": "✏️ 文本格式",
+    "description": "教程侧边栏中'文本格式'类别的标签"
   },
   "sidebar.tutorialSidebar.category.🤝 Compatibility": {
-    "message": "🤝 Compatibility",
-    "description": "The label for category 🤝 Compatibility in sidebar tutorialSidebar"
+    "message": "🤝 兼容性",
+    "description": "教程侧边栏中'兼容性'类别的标签"
   },
   "sidebar.tutorialSidebar.doc.☄️ Exclusive Features": {
-    "message": "☄️ Exclusive Features",
-    "description": "The label for the doc item ☄️ Exclusive Features in sidebar tutorialSidebar, linking to the doc intro/exclusive_feature"
+    "message": "☄️ 独家功能",
+    "description": "教程侧边栏中'独家功能'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🥕 Simply Better": {
-    "message": "🥕 Simply Better",
-    "description": "The label for the doc item 🥕 Simply Better in sidebar tutorialSidebar, linking to the doc intro/simply_better"
+    "message": "🥕 简而不凡",
+    "description": "教程侧边栏中'简而不凡'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🚧 Under Development": {
-    "message": "🚧 Under Development",
-    "description": "The label for the doc item 🚧 Under Development in sidebar tutorialSidebar, linking to the doc intro/under_development"
+    "message": "🚧 开发中",
+    "description": "教程侧边栏中'开发中'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.💎 First Item": {
-    "message": "💎 First Item",
-    "description": "The label for the doc item 💎 First Item in sidebar tutorialSidebar, linking to the doc getting_start/create_first_item"
-  },
-  "sidebar.tutorialSidebar.doc.🛜 Set Up Pack Host": {
-    "message": "🛜 Set Up Pack Host",
-    "description": "The label for the doc item 🛜 Set Up Pack Host in sidebar tutorialSidebar, linking to the doc getting_start/set_up_host"
+    "message": "💎 首个物品",
+    "description": "教程侧边栏中'首个物品'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🌌 Add Custom Model": {
-    "message": "🌌 Add Custom Model",
-    "description": "The label for the doc item 🌌 Add Custom Model in sidebar tutorialSidebar, linking to the doc getting_start/add_custom_model"
+    "message": "🌌 添加自定义模型",
+    "description": "教程侧边栏中'添加自定义模型'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🏹 Item Model Display": {
-    "message": "🏹 Item Model Display",
-    "description": "The label for the doc item 🏹 Item Model Display in sidebar tutorialSidebar, linking to the doc getting_start/item_model_display"
+    "message": "🏹 物品模型展示",
+    "description": "教程侧边栏中'物品模型展示'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🔢 Item Data": {
-    "message": "🔢 Item Data",
-    "description": "The label for the doc item 🔢 Item Data in sidebar tutorialSidebar, linking to the doc configuration/item/data"
+    "message": "🔢 物品数据",
+    "description": "教程侧边栏中'物品数据'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🔧 Item Settings": {
-    "message": "🔧 Item Settings",
-    "description": "The label for the doc item 🔧 Item Settings in sidebar tutorialSidebar, linking to the doc configuration/item/settings"
+    "message": "🔧 物品设置",
+    "description": "教程侧边栏中'物品设置'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.📐 Model": {
-    "message": "📐 Model",
-    "description": "The label for the doc item 📐 Model in sidebar tutorialSidebar, linking to the doc configuration/item/models/model"
+    "message": "📐 模型",
+    "description": "教程侧边栏中'模型'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🧩 Composite": {
-    "message": "🧩 Composite",
-    "description": "The label for the doc item 🧩 Composite in sidebar tutorialSidebar, linking to the doc configuration/item/models/composite"
+    "message": "🧩 组合",
+    "description": "按照数组次序依次渲染物品模型映射"
   },
   "sidebar.tutorialSidebar.doc.⚖️ Condition": {
-    "message": "⚖️ Condition",
-    "description": "The label for the doc item ⚖️ Condition in sidebar tutorialSidebar, linking to the doc configuration/item/models/condition"
+    "message": "⚖️ 布尔条件型",
+    "description": "根据指定的物品堆叠，计算给定的谓词，选择物品模型映射"
   },
   "sidebar.tutorialSidebar.doc.📡 Range Dispatch": {
-    "message": "📡 Range Dispatch",
-    "description": "The label for the doc item 📡 Range Dispatch in sidebar tutorialSidebar, linking to the doc configuration/item/models/range_dispatch"
+    "message": "📡 值调配型",
+    "description": "根据指定的物品堆叠，计算数值并查找数值区间，选择物品模型映射"
   },
   "sidebar.tutorialSidebar.doc.✅ Select": {
-    "message": "✅ Select",
-    "description": "The label for the doc item ✅ Select in sidebar tutorialSidebar, linking to the doc configuration/item/models/select"
+    "message": "✅ 枚举条件型",
+    "description": "根据指定的物品堆叠，计算属性值并查找枚举，选择物品模型映射"
   },
   "sidebar.tutorialSidebar.doc.👻 Special": {
-    "message": "👻 Special",
-    "description": "The label for the doc item 👻 Special in sidebar tutorialSidebar, linking to the doc configuration/item/models/special"
+    "message": "👻 特殊模型",
+    "description": "使用指定的硬编码渲染器渲染物品"
   },
   "sidebar.tutorialSidebar.doc.🧱 Block Item": {
-    "message": "🧱 Block Item",
-    "description": "The label for the doc item 🧱 Block Item in sidebar tutorialSidebar, linking to the doc configuration/item/behaviors/block_item"
+    "message": "🧱 方块物品",
+    "description": "教程侧边栏中'方块物品'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🌊 Liquid Collision Block Item": {
-    "message": "🌊 Liquid Collision Block Item",
-    "description": "The label for the doc item 🌊 Liquid Collision Block Item in sidebar tutorialSidebar, linking to the doc configuration/item/behaviors/liquid_collision_block_item"
+    "message": "🌊 液体碰撞方块物品",
+    "description": "教程侧边栏中'液体碰撞方块物品'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.2️⃣ Double High Block Item": {
-    "message": "2️⃣ Double High Block Item",
-    "description": "The label for the doc item 2️⃣ Double High Block Item in sidebar tutorialSidebar, linking to the doc configuration/item/behaviors/double_high_block_item"
+    "message": "2️⃣ 双层方块物品",
+    "description": "教程侧边栏中'双层方块物品'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🪑 Furniture Item": {
-    "message": "🪑 Furniture Item",
-    "description": "The label for the doc item 🪑 Furniture Item in sidebar tutorialSidebar, linking to the doc configuration/item/behaviors/furniture_item"
+    "message": "🪑 家具物品",
+    "description": "教程侧边栏中'家具物品'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🪹 Compostable Item": {
-    "message": "🪹 Compostable Item",
-    "description": "The label for the doc item 🪹 Compostable Item in sidebar tutorialSidebar, linking to the doc configuration/item/behaviors/compostable_item"
+    "message": "🪹 可堆肥物品",
+    "description": "教程侧边栏中'可堆肥物品'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🔧 Block Settings": {
-    "message": "🔧 Block Settings",
-    "description": "The label for the doc item 🔧 Block Settings in sidebar tutorialSidebar, linking to the doc configuration/block/settings"
+    "message": "🔧 方块设置",
+    "description": "教程侧边栏中'方块设置'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.ℹ️ Properties": {
-    "message": "ℹ️ Properties",
-    "description": "The label for the doc item ℹ️ Properties in sidebar tutorialSidebar, linking to the doc configuration/block/states/properties"
+    "message": "ℹ️ 属性",
+    "description": "教程侧边栏中'属性'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.💦 Concrete Powder Block": {
-    "message": "💦 Concrete Powder Block",
-    "description": "The label for the doc item 💦 Concrete Powder Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/concrete_powder_block"
+    "message": "💦 混凝土粉末方块",
+    "description": "教程侧边栏中'混凝土粉末方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🟨 Falling Block": {
-    "message": "🟨 Falling Block",
-    "description": "The label for the doc item 🟨 Falling Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/falling_block"
+    "message": "🟨 可下落方块",
+    "description": "教程侧边栏中'可下落方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🍁 Leaves Block": {
-    "message": "🍁 Leaves Block",
-    "description": "The label for the doc item 🍁 Leaves Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/leaves_block"
+    "message": "🍁 树叶方块",
+    "description": "教程侧边栏中'树叶方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🎍 Vertical Crop Block": {
-    "message": "🎍 Vertical Crop Block",
-    "description": "The label for the doc item 🎍 Vertical Crop Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/vertical_crop_block"
+    "message": "🎍 垂直作物方块",
+    "description": "教程侧边栏中'垂直作物方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🌽 Crop Block": {
-    "message": "🌽 Crop Block",
-    "description": "The label for the doc item 🌽 Crop Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/crop_block"
+    "message": "🌽 农作物方块",
+    "description": "教程侧边栏中'作物方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🌴 Sapling Block": {
-    "message": "🌴 Sapling Block",
-    "description": "The label for the doc item 🌴 Sapling Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/sapling_block"
+    "message": "🌴 树苗方块",
+    "description": "教程侧边栏中'树苗方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🪻 Bush Block": {
-    "message": "🪻 Bush Block",
-    "description": "The label for the doc item 🪻 Bush Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/bush_block"
+    "message": "🪻 灌木方块",
+    "description": "教程侧边栏中'灌木方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🪓 Strippable Block": {
-    "message": "🪓 Strippable Block",
-    "description": "The label for the doc item 🪓 Strippable Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/strippable_block"
+    "message": "🪓 可剥离方块",
+    "description": "教程侧边栏中'可剥离方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🚟 Hanging Block": {
-    "message": "🚟 Hanging Block",
-    "description": "The label for the doc item 🚟 Hanging Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/hanging_block"
+    "message": "🚟 悬挂方块",
+    "description": "教程侧边栏中'悬挂方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🌿 Grass Block": {
-    "message": "🌿 Grass Block",
-    "description": "The label for the doc item 🌿 Grass Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/grass_block"
+    "message": "🌿 草方块",
+    "description": "教程侧边栏中'草方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🌊 On Liquid Block": {
-    "message": "🌊 On Liquid Block",
-    "description": "The label for the doc item 🌊 On Liquid Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/on_liquid_block"
+    "message": "🌊 液面方块",
+    "description": "教程侧边栏中'液面方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🤽 Near Liquid Block": {
-    "message": "🤽 Near Liquid Block",
-    "description": "The label for the doc item 🤽 Near Liquid Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/near_liquid_block"
+    "message": "🤽 邻液方块",
+    "description": "教程侧边栏中'邻液方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.💡 Lamp Block": {
-    "message": "💡 Lamp Block",
-    "description": "The label for the doc item 💡 Lamp Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/lamp_block"
+    "message": "💡 灯方块",
+    "description": "教程侧边栏中'灯方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🥪 Stackable Block": {
-    "message": "🥪 Stackable Block",
-    "description": "The label for the doc item 🥪 Stackable Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/stackable_block"
+    "message": "🥪 可堆叠方块",
+    "description": "教程侧边栏中'可堆叠方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🏗️ Sturdy Base Block": {
-    "message": "🏗️ Sturdy Base Block",
-    "description": "The label for the doc item 🏗️ Sturdy Base Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/sturdy_base_block"
+    "message": "🏗️ 稳固基底方块",
+    "description": "教程侧边栏中'稳固基底方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🪟 Trapdoor Block": {
-    "message": "🪟 Trapdoor Block",
-    "description": "The label for the doc item 🪟 Trapdoor Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/trapdoor_block"
+    "message": "🪟 活板门方块",
+    "description": "教程侧边栏中'活板门方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🚪 Door Block": {
-    "message": "🚪 Door Block",
-    "description": "The label for the doc item 🚪 Door Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/door_block"
+    "message": "🚪 门方块",
+    "description": "教程侧边栏中'门方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🪵 Fence Gate Block": {
-    "message": "🪵 Fence Gate Block",
-    "description": "The label for the doc item 🪵 Fence Gate Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/fence_gate_block"
+    "message": "🪵 栅栏门方块",
+    "description": "教程侧边栏中'栅栏门方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🎢 Stairs Block": {
-    "message": "🎢 Stairs Block",
-    "description": "The label for the doc item 🎢 Stairs Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/stairs_block"
+    "message": "🎢 楼梯方块",
+    "description": "教程侧边栏中'楼梯方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.➖️ Slab Block": {
-    "message": "➖️ Slab Block",
-    "description": "The label for the doc item ➖️ Slab Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/slab_block"
+    "message": "➖️ 台阶方块",
+    "description": "教程侧边栏中'台阶方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.⬜️ Pressure Plate Block": {
-    "message": "⬜️ Pressure Plate Block",
-    "description": "The label for the doc item ⬜️ Pressure Plate Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/pressure_plate_block"
+    "message": "⬜️ 压力板方块",
+    "description": "教程侧边栏中'压力板方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.2️⃣ Double High Block": {
-    "message": "2️⃣ Double High Block",
-    "description": "The label for the doc item 2️⃣ Double High Block in sidebar tutorialSidebar, linking to the doc configuration/block/behaviors/double_high_block"
+    "message": "2️⃣ 双层方块",
+    "description": "教程侧边栏中'双层方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
-    "message": "🫑 Block Entities",
-    "description": "The label for the doc item 🫑 Block Entities in sidebar tutorialSidebar, linking to the doc configuration/block/entities"
+    "message": "🫑 方块实体",
+    "description": "教程侧边栏中'方块实体'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.📂 Category": {
-    "message": "📂 Category",
-    "description": "The label for the doc item 📂 Category in sidebar tutorialSidebar, linking to the doc configuration/category"
+    "message": "📂 分类",
+    "description": "教程侧边栏中'分类'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.😀 Emoji": {
-    "message": "😀 Emoji",
-    "description": "The label for the doc item 😀 Emoji in sidebar tutorialSidebar, linking to the doc configuration/emoji"
+    "message": "😀 表情",
+    "description": "教程侧边栏中'表情'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.⚔️ Equipment": {
-    "message": "⚔️ Equipment",
-    "description": "The label for the doc item ⚔️ Equipment in sidebar tutorialSidebar, linking to the doc configuration/equipment"
+    "message": "⚔️ 装备",
+    "description": "教程侧边栏中'装备'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.㊙️ Font": {
-    "message": "㊙️ Font",
-    "description": "The label for the doc item ㊙️ Font in sidebar tutorialSidebar, linking to the doc configuration/font"
+    "message": "㊙️ 字体",
+    "description": "教程侧边栏中'字体'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🖼️ Image": {
-    "message": "🖼️ Image",
-    "description": "The label for the doc item 🖼️ Image in sidebar tutorialSidebar, linking to the doc configuration/image"
+    "message": "🖼️ 图像",
+    "description": "教程侧边栏中'图像'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🌍 I18n": {
-    "message": "🌍 I18n",
-    "description": "The label for the doc item 🌍 I18n in sidebar tutorialSidebar, linking to the doc configuration/i18n"
+    "message": "🌍 国际化",
+    "description": "教程侧边栏中'国际化'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🌍 Language": {
-    "message": "🌍 Language",
-    "description": "The label for the doc item 🌍 Language in sidebar tutorialSidebar, linking to the doc configuration/lang"
+    "message": "🌍 语言",
+    "description": "教程侧边栏中'语言'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🍳 Recipe": {
-    "message": "🍳 Recipe",
-    "description": "The label for the doc item 🍳 Recipe in sidebar tutorialSidebar, linking to the doc configuration/recipe"
+    "message": "🍳 配方",
+    "description": "教程侧边栏中'配方'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🔊 Sound": {
-    "message": "🔊 Sound",
-    "description": "The label for the doc item 🔊 Sound in sidebar tutorialSidebar, linking to the doc configuration/sound"
+    "message": "🔊 音效",
+    "description": "教程侧边栏中'音效'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.💽 Jukebox Song": {
-    "message": "💽 Jukebox Song",
-    "description": "The label for the doc item 💽 Jukebox Song in sidebar tutorialSidebar, linking to the doc configuration/jukebox_song"
+    "message": "💽 唱片机曲目",
+    "description": "教程侧边栏中'唱片机曲目'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🗃️ Vanilla Loot": {
-    "message": "🗃️ Vanilla Loot",
-    "description": "The label for the doc item 🗃️ Vanilla Loot in sidebar tutorialSidebar, linking to the doc configuration/vanilla_loot"
+    "message": "🗃️ 原版战利品",
+    "description": "教程侧边栏中'原版战利品'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🏷️ Block Tags": {
-    "message": "🏷️ Block Tags",
-    "description": "The label for the doc item 🏷️ Block Tags in sidebar tutorialSidebar, linking to the doc reference/block_tags"
+    "message": "🏷️ 方块标签",
+    "description": "教程侧边栏中'方块标签'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🔗 Chain Arguments": {
-    "message": "🔗 Chain Arguments",
-    "description": "The label for the doc item 🔗 Chain Arguments in sidebar tutorialSidebar, linking to the doc reference/text_format/chain_arguments"
+    "message": "🔗 链式参数",
+    "description": "教程侧边栏中'链式参数'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🔢 Number Format": {
-    "message": "🔢 Number Format",
-    "description": "The label for the doc item 🔢 Number Format in sidebar tutorialSidebar, linking to the doc reference/number_format"
+    "message": "🔢 数字格式",
+    "description": "教程侧边栏中'数字格式'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.📄 Template System": {
-    "message": "📄 Template System",
-    "description": "The label for the doc item 📄 Template System in sidebar tutorialSidebar, linking to the doc reference/template"
+    "message": "📄 模板系统",
+    "description": "教程侧边栏中'模板系统'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.⚔️ File Conflict": {
-    "message": "⚔️ File Conflict",
-    "description": "The label for the doc item ⚔️ File Conflict in sidebar tutorialSidebar, linking to the doc reference/file_conflict"
+    "message": "⚔️ 文件冲突",
+    "description": "教程侧边栏中'文件冲突'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🪇 Events": {
-    "message": "🪇 Events",
-    "description": "The label for the doc item 🪇 Events in sidebar tutorialSidebar, linking to the doc reference/events"
+    "message": "🪇 事件",
+    "description": "教程侧边栏中'事件'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.⚖️ Conditions": {
-    "message": "⚖️ Conditions",
-    "description": "The label for the doc item ⚖️ Conditions in sidebar tutorialSidebar, linking to the doc reference/conditions"
+    "message": "⚖️ 条件",
+    "description": "教程侧边栏中'条件'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🎲 Loot Table": {
-    "message": "🎲 Loot Table",
-    "description": "The label for the doc item 🎲 Loot Table in sidebar tutorialSidebar, linking to the doc reference/loot_table"
+    "message": "🎲 战利品表",
+    "description": "教程侧边栏中'战利品表'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🐚 Commands": {
-    "message": "🐚 Commands",
-    "description": "The label for the doc item 🐚 Commands in sidebar tutorialSidebar, linking to the doc reference/commands"
+    "message": "🐚 命令",
+    "description": "教程侧边栏中'命令'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.✈️ Paper Anti Xray": {
-    "message": "✈️ Paper Anti Xray",
-    "description": "The label for the doc item ✈️ Paper Anti Xray in sidebar tutorialSidebar, linking to the doc compatibility/anti_xray"
+    "message": "✈️ Paper反矿透",
+    "description": "教程侧边栏中'Paper反矿透'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🟢 Advanced Slime Paper": {
-    "message": "🟢 Advanced Slime Paper",
-    "description": "The label for the doc item 🟢 Advanced Slime Paper in sidebar tutorialSidebar, linking to the doc compatibility/asp"
+    "message": "🟢 AdvancedSlimePaper",
+    "description": "教程侧边栏中'AdvancedSlimePaper'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🖌️ World Painter": {
-    "message": "🖌️ World Painter",
-    "description": "The label for the doc item 🖌️ World Painter in sidebar tutorialSidebar, linking to the doc compatibility/world_painter"
+    "message": "🖌️ WorldPainter",
+    "description": "教程侧边栏中'WorldPainter'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.👔 Supported Levelers": {
-    "message": "👔 Supported Levelers",
-    "description": "The label for the doc item 👔 Supported Levelers in sidebar tutorialSidebar, linking to the doc compatibility/supported_levelers"
+    "message": "👔 支持的等级系统",
+    "description": "教程侧边栏中'支持的等级系统'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.📦️ External Item Sources": {
-    "message": "📦️ External Item Sources",
-    "description": "The label for the doc item 📦️ External Item Sources in sidebar tutorialSidebar, linking to the doc compatibility/external_item_sources"
+    "message": "📦️ 外部物品来源",
+    "description": "教程侧边栏中'外部物品来源'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🅿️ PlaceholderAPI": {
-    "message": "🅿️ PlaceholderAPI",
-    "description": "The label for the doc item 🅿️ PlaceholderAPI in sidebar tutorialSidebar, linking to the doc compatibility/placeholderapi"
+    "message": "🅿️ 占位符",
+    "description": "教程侧边栏中'占位符'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.⚛️ Axiom": {
     "message": "⚛️ Axiom",
-    "description": "The label for the doc item ⚛️ Axiom in sidebar tutorialSidebar, linking to the doc compatibility/axiom"
+    "description": "教程侧边栏中'Axiom'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.category.🪑 Furniture": {
+    "message": "🪑 家具",
+    "description": "教程侧边栏中'家具'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.🛜 Set Up Pack Host": {
+    "message": "🛜 配置资源包托管",
+    "description": "教程侧边栏中'配置资源包托管'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Self hosting": {
+    "message": "自托管",
+    "description": "教程侧边栏中'自托管'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Lobfile": {
+    "message": "Lobfile",
+    "description": "教程侧边栏中'Lobfile'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.External": {
+    "message": "外部托管",
+    "description": "教程侧边栏中'外部托管'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.OneDrive": {
+    "message": "OneDrive",
+    "description": "教程侧边栏中'OneDrive'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Dropbox": {
+    "message": "Dropbox",
+    "description": "教程侧边栏中'Dropbox'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Alist": {
+    "message": "Alist",
+    "description": "教程侧边栏中'Alist'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Gitlab": {
+    "message": "Gitlab",
+    "description": "教程侧边栏中'Gitlab'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.category.S3": {
+    "message": "简单存储服务",
+    "description": "教程侧边栏中'简单存储服务'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Cloudflare R2": {
+    "message": "Cloudflare R2",
+    "description": "教程侧边栏中'Cloudflare R2'文档项的标签"
   }
 }

@@ -1,0 +1,463 @@
+---
+title: 🔢 Item Data
+id: data
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+## Introduction
+
+Item Data refers to the <Highlight color="#3c5cb3ff">**NBT**</Highlight> (Named Binary Tag) of an item in older versions, or the item <Highlight color="#3c5cb3ff">**Components**</Highlight> in version 1.20.5 and above. Through this data, we can customize various aspects of an item such as its name, description, attributes, and other functionalities provided by **vanilla Minecraft**.
+
+## Compatibility with Other Plugins
+
+If you want a CraftEngine item to retain the data of an external plugin's item, follow this configuration:
+
+```yml
+items:
+  default:example_item:
+    data:
+      external:
+        plugin: neigeitems
+        id: example_item
+```
+
+:::info
+
+Support plugins can be found on [**this page**](../../compatibility/external_item_sources.md). 
+
+For plugins that use ResourceLocation for items, just use `namespace:path` as id. For example:
+
+```yaml
+id: test_namespace:test/my_path
+```
+
+For plugins like MMOItems that include types, you need to use a colon `:` to separate the type from the ID. For example:
+
+```yaml
+id: MATERIAL:IRON_INGOT
+```
+
+:::
+
+## Hard-coded Data
+
+:::tip
+Hardcoded data, in this context, means that the configuration formats are provided and maintained by plugin, which ensures compatibility across different versions. These formats are defined by the plugin, so they may differ from the standard NBT (Named Binary Tag) or Components formats used by the game itself. The advantage of this approach is that the plugin handles all the maintenance, including version compatibility, so you do not need to worry about changes or updates between game versions.
+:::
+
+### item-name
+
+Determines the default name of this item, unlike the `custom-name`, this name can't be erased using an anvil, won't be italicized, and does not show in some labels, such as banner markers and item frames.
+
+```yaml
+items:
+  default:topaz_rod:
+    data:
+      item-name: "<!i><#FF8C00>Topaz Rod" # we use <!i> here because 1.20.4 and below
+                                          # don't have item_name component
+```
+
+### custom-name
+
+Used to specify the item's custom name, like you can in an anvil.
+
+```yaml
+items:
+  default:topaz_rod:
+    data:
+      custom-name: "<!i><#FF8C00>Topaz Rod"
+```
+
+### lore
+
+Determines the displayed description of the item.
+
+```yml
+items:
+  default:topaz_rod:
+    data:
+      lore: 
+        - "What a shiny rod!"
+```
+
+### unbreakable
+
+Determines whether the item is unbreakable.
+
+```yml
+items:
+  default:topaz_rod:
+    data:
+      unbreakable: true
+```
+
+### enchantment
+
+Determines the enchantments of the item.
+
+```yaml
+items:
+  default:topaz_rod:
+    data:
+      enchantment:
+        minecraft:sharpness: 1
+        custom:enchant: 3
+```
+
+:::tip
+When the item type is an enchanted book, any enchantments will automatically be converted to stored enchantments.
+:::
+
+### dyed-color
+
+Determines the color of the item
+
+```yml
+items:
+  default:sofa:
+    data:
+      dyed-color: 255,255,255
+```
+
+### custom-model-data
+
+```yaml
+items:
+  default:sofa:
+    data:
+      custom-model-data: 100
+```
+
+:::caution
+To ensure backward compatibility, custom-model-data in this context only supports integer values. If you want to use newer version features, you should use `components` instead.
+:::
+
+### hide-tooltip
+
+Hides any tooltips provided by the specified **components** on this item. This works for all versions as plugin handles the cross version compatibility. Formerly known as `HideFlags`.
+
+```yaml
+items:
+  default:sofa:
+    data:
+      hide-tooltip:
+        - dyed_color
+        - enchantments
+        - attribute_modifiers
+```
+
+### attribute-modifiers
+
+Applies [attribute modifiers](https://minecraft.wiki/w/Attribute#Modifiers) onto items.
+
+```yaml
+items:
+  default:sofa:
+    data:
+      attribute-modifiers:
+        - type: attack_speed
+          amount: 1.0
+          operation: add_value # add_value, add_multiplied_base, add_multiplied_total
+          id: namespace:custom_attribute # Optional
+          slot: any # any, hand, armor, mainhand, offhand, head, chest, legs, feet or body
+          display: # 1.21.5
+            type: override
+            value: <yellow>Attack Speed +1
+```
+
+:::tip
+
+You can safely use the latest attribute names on legacy versions as plugin will help you convert them.
+Lastest attribute names can be found on https://minecraft.wiki/w/Attribute
+
+:::
+
+### food (1.20.5+)
+
+```yaml
+items:
+  default:magic_apple:
+    material: apple
+    data:
+      food: 
+        nutrition: 5
+        saturation: 3.5
+        can-always-eat: false
+```
+
+:::tip
+
+For setting food-related properties in older Minecraft versions, please refer to [food](settings.md#food).
+
+:::
+
+### jukebox-playable (1.21+)
+
+One jukebox song to play when inserted into a jukebox. 
+
+```yaml
+items:
+  default:music_stick:
+    material: stick
+    data:
+      jukebox-playable: default:credits_music
+```
+
+### item-model (1.21.2+)
+
+Defines the item model of this item.
+
+```yaml
+items:
+  default:music_stick:
+    data:
+      item-model: default:music_stick
+```
+
+### tooltip-style (1.21.2+)
+
+Determines the tooltip style of the item.
+
+```yml
+items:
+  default:topaz_rod:
+    data:
+      tooltip-style: minecraft:topaz #namespace:tooltip_style_id
+```
+
+:::tip
+To create a tooltip style, you must place the texture in the directory as follows: https://minecraft.wiki/w/Data_component_format/tooltip_style
+:::
+
+### trim
+
+Apply a decorative alteration to a tool or armor
+
+```yaml
+trim:
+  pattern: eye # https://minecraft.wiki/w/Smithing#Trimming
+  material: iron # https://minecraft.wiki/w/Smithing#Material
+```
+
+### equippable (1.21.2+)
+
+If present, this item can be equipped in the specified slot.
+
+```yml
+equippable:
+  # The slot to put the item on
+  slot: head # HEAD / CHEST / LEGS / FEET / BODY / MAIN_HAND / OFF_HAND / SADDLE
+
+  # Optional Arguments
+  # The directory this refers to is assets/<namespace>/equipment/<id>.json
+  asset-id: minecraft:topaz
+  # The resource location of the overlay texture to use when equipped. The directory this refers to is assets/<namespace>/textures/<id>.
+  camera-overlay: namespace:id
+  # Whether the item can be dispensed by using a dispenser.
+  dispensable: true
+  # Whether this item is damaged when the wearing entity is damaged.
+  damage-on-hurt: true
+  # Whether the item can be equipped into the relevant slot by right-clicking.
+  swappable: true
+  # >= 1.21.5
+  # Whether this item can be equipped onto a target mob by pressing use on it (as long as this item can be equipped on the target at all)
+  equip-on-interact: true
+```
+
+## Customizable Data
+
+:::caution
+Customizable Data is not maintained by plugins, and its format can change with updates to Minecraft, particularly with the frequent recent changes to Components.
+:::
+
+### NBT (1.20-1.20.4)
+
+:::warning
+Since NBT (Named Binary Tag) has become outdated, it will not be discussed in detail here. https://minecraft.wiki/w/Item_format/Before_1.20.5
+:::
+
+```yaml
+items:
+  default:topaz_rod:
+    data:
+      nbt:
+        CustomModelData: 1000
+```
+
+### Components (1.20.5+)
+
+The format for custom Components strictly adheres to the [Minecraft Wiki](https://minecraft.wiki/w/Data_component_format) guidelines. Below, I will guide you through a few examples to help you become familiar with how to configure custom components. The examples here are arranged in order of increasing difficulty, from simple to advanced. We recommend studying them one by one to ensure a smooth learning curve.
+
+<details>
+  <summary>max_damage [★]</summary>
+
+    ![](/img/item_data_1.png)
+
+    From the image, we can see that max_damage accepts an `I` (which stands for an integer type parameter). Therefore, in our configuration, we simply need to use a numerical value directly.
+    ```yaml
+    items:
+    guide:test:
+        data:
+        components:
+            minecraft:max_damage: 128
+    ```
+</details>
+
+<details>
+  <summary>food [★★]</summary>
+
+    ![](/img/item_data_2.png)
+
+    From the image, we can see that food requires three parameters: nutrition of type `int`, saturation of type `float`, and can_always_eat of type `boolean`.
+
+    ```yaml
+    items:
+      guide:test:
+        data:
+          components:
+            minecraft:food:
+              nutrition: 4
+              saturation: 2.0
+              can_always_eat: false
+    ```
+</details>
+
+<details>
+  <summary>block_state [★★]</summary>
+
+    ![](/img/item_data_3.png)
+
+    According to the description here, we need to provide **key-value** pairs where the value must be a **string** type.
+
+    ```yaml
+    items:
+      default:palm_leaves:
+        data:
+          components:
+            minecraft:block_state:
+              distance: '1'
+              persistent: 'false'
+              waterlogged: 'false'
+    ```
+</details>
+
+<details>
+  <summary>instrument [★★★]</summary>
+
+    ![](/img/item_data_4.png)
+
+    When an option supports multiple data types, you can simply choose the appropriate type based on your specific needs.
+
+    ```yaml
+    items:
+      guide:horn:
+        material: goat_horn
+        data:
+          components:
+            minecraft:instrument: "seek_goat_horn"
+    ```
+    ```yaml
+    items:
+      guide:horn:
+        material: goat_horn
+        data:
+          components:
+            minecraft:instrument:
+              description:
+                text: "Custom Instrument"
+                color: "red"
+              sound_event: minecraft:block.note_block.bell
+              use_duration: 1
+              range: 16
+    ```
+</details>
+
+<details>
+  <summary>fireworks [★★★★]</summary>
+
+    ![](/img/item_data_5.png)
+
+    ```yaml
+    items:
+      guide:firework:
+        material: firework_rocket
+        data:
+          components:
+            minecraft:fireworks:
+              flight_duration: 3
+              explosions:
+                - shape: small_ball
+                  colors: [11223344]
+                  fade_colors: [0]
+                  has_trail: true
+                  has_twinkle: true
+    ```
+</details>
+
+
+### Remove Components (1.20.5+)
+
+Removes the component from the item.
+
+```yaml
+items:
+  test:item:
+    data:
+      remove-components:
+        - minecraft:equippable
+```
+
+## Client Bound Data
+
+The client-bound-data exists exclusively on the client side, with no server-side components involved. Using the client-side item component, you can effortlessly update item descriptions in real time—including properties like item_model and custom_model_data. Additionally, unlike other plugins, CraftEngine items remain permanently unaltered in creative mode!
+
+:::info
+Simply add a `client-bound-data` section in your configuration area, then move (cut/paste) the required data from the original `data` section into it
+
+```yaml
+items:
+  default:topaz_rod:
+    client-bound-data:
+      item-name: "<!i><#FF8C00>I'm not Topaz Rod"
+    data:
+      item-name: "<!i><#FF8C00>Topaz Rod"
+```
+
+:::
+
+:::tip
+client-bound-data is quite useful for players in adventure mode, allowing them to break certain real custom blocks on serverside.
+
+```yaml
+items:
+  default:topaz_pickaxe:
+    material: golden_pickaxe
+    custom-model-data: 1000
+    settings:
+      tags:
+        - "default:topaz_tools"
+    client-bound-data:
+      components:
+        # client side block state
+        can_break:
+          blocks: minecraft:note_block
+          state:
+            "instrument": "hat"
+            "note": "0"
+            "powered": "false"
+    data:
+      item-name: "<!i><#FF8C00><i18n:item.topaz_pickaxe>"
+      tooltip-style: minecraft:topaz
+      components:
+        minecraft:max_damage: 64
+        # server side block state
+        can_break:
+          blocks: "craftengine:note_block_1"
+    model:
+      template: default:model/simplified_handheld
+      arguments:
+        path: "minecraft:item/custom/topaz_pickaxe"
+```
+
+:::

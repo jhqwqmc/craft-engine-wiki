@@ -1,0 +1,30 @@
+---
+title: Alist
+id: alist
+---
+
+```yaml
+resource-pack:
+  delivery:
+    hosting:
+      - type: alist
+        use-environment-variables: false
+        disable-upload: false
+        api-url: ""
+        username: ""
+        password: ""
+        file-password: ""
+        otp-code: ""
+        upload-path: "server_resource_pack.zip"
+        # Optional proxy
+        proxy:
+          host: "127.0.0.1"
+          port: 7890
+```
+
+<details>
+  <summary>Enviroment Variables</summary>
+  - CE_ALIST_USERNAME
+  - CE_ALIST_PASSWORD
+  - CE_ALIST_FILE_PASSWORD
+</details>
