@@ -1,19 +1,19 @@
 ---
-title: ⚙️ Configuration
+title: ⚙️ 配置
 id: configuration
 ---
 
 import Highlight from '@site/src/components/Highlight';
 
-## Introduction
+## 简介
 
-The **configuration** here specifically refers to the <Highlight color="#1877F2">**configuration**</Highlight> folder within each package under the <Highlight color="#1877F2">**resources**</Highlight> directory. Configuration files are stored in the following folder and support both JSON and YML formats. You may create unlimited subdirectories within the configuration folder.
+这里的**配置**特指每个包下 <Highlight color="#1877F2">**resources**</Highlight> 目录中的 <Highlight color="#1877F2">**configuration**</Highlight> 文件夹。配置文件存储在该文件夹中，并且支持 JSON 和 YML 格式。你可以在 configuration 文件夹中创建任意数量的子目录。
 
-## Pro Tips
+## 专业提示
 
-### Section Identifier
+### 区块标识符
 
-CraftEngine introduced this feature to address certain pain points in YAML configuration—particularly when you need to define multiple configurations of the same type within a single file. In YAML configuration, the following format is not allowed:
+CraftEngine 引入了此功能，以解决 YAML 配置中的一些痛点——特别是在单个文件中需要定义多个相同类型的配置时。在 YAML 配置中，以下格式是不允许的：
 
 ```yaml
 items:
@@ -33,7 +33,7 @@ items:
       slot: feet
 ```
 
-Therefore, you need to add `# + any identifier` after the configuration section name, which allows you to configure multiple sections of the same type within a single YAML file.
+因此，你需要在配置区块名称后面添加 `# + 任意标识符`，这让你能够在单个 YAML 文件中配置多个相同类型的区块。
 
 ```yaml
 items#0:
@@ -53,15 +53,15 @@ items#1:
       slot: feet
 ```
 
-### Section Delimiters
+### 区块分隔符
 
-By using `::`, you can split a standard key into a structured mapping key with complex hierarchies. For example, the following two configurations are equivalent:
+通过使用 `::`，你可以将一个标准键拆分为具有复杂层级结构的映射键。例如，以下两种配置是等效的：
 
 ```yaml
-# Single-line format  
-key::subkey::nested_key: value  
+# 单行格式
+key::subkey::nested_key: value
 
-# Expanded format  
+# 展开格式
 key:  
   subkey:  
     nested_key: value  
@@ -69,28 +69,28 @@ key:
 
 :::info
 
-This helps reduce the number of lines required for configuration in certain scenarios, making the overall setup more concise and visually cleaner.
+这有助于在某些情况下减少配置所需的行数，使整体设置更简洁、视觉上更清晰。
 
 :::
 
 
-### Version-Based Configs
+### 基于版本的配置
 
 :::tip
 
-For regular users, this option holds little significance. However, if you're a resource pack creator, you can use this to specify that certain settings only apply to particular versions.
+对于普通用户来说，此选项意义不大。然而，如果您是资源包创作者，可以使用此功能指定某些设置仅适用于特定版本。
 
 :::
 
-Craftengine supports three different version specification formats, which are:
+CraftEngine 支持三种不同的版本指定格式，分别是：
 
-1. Fixed version: `$$1.21.4`
-2. Version range: `$$1.20.1~1.21.4`
-3. Version comparison: `$$>=1.21.4`, `$$<1.21.8`
+1. 固定版本：`$$1.21.4`
+2. 版本范围：`$$1.20.1~1.21.4`
+3. 版本比较：`$$>=1.21.4`, `$$<1.21.8`
 
-They can be used as value selectors or for parameter overriding/merging.
+它们可用于值选择或参数覆写与合并。
 
-#### **Example 1: Value Selection**
+#### **示例 1：值选择**
 
 ```yaml
 items:
@@ -106,7 +106,7 @@ items:
         minecraft:max_damage: 300
 ```
 
-#### **Example 2: Block Merging**
+#### **示例 2：区块合并**
 
 ```yaml
 items:

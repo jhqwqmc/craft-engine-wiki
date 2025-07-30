@@ -1,15 +1,15 @@
 ---
-title: 📄 Template System
+title: 📄 模板系统
 id: template
 ---
 
-## Introduction
+## 简介
 
-The plugin boasts an exceptionally high degree of customization, but it's impossible to configure it without providing any settings. Even a very brief option requires a line in your YAML file. With numerous such options, a configuration file can become excessively long. Therefore, the plugin has introduced a template system, allowing you to define a base template and use parameters and overrides to fill in or overwrite certain parameters, significantly simplifying the process and reducing the time spent on repetitive configurations.
+该插件拥有极高的可自定义性，但完全无预设的配置难以实现。即便最简单的选项也需在YAML中单独声明。当此类参数过多时，配置文件会变得冗长。为此，插件引入了模板系统，您可先定义基础模板，再通过参数和覆写机制来简化配置流程，大幅减少重复性操作耗时。
 
-## How it works?
+## 它是如何工作的？
 
-To configure a template, you need to use templates as the root key in your YAML file. The first thing under templates is your template's name. In the example below, the template is called namespace:my_first_template. Everything under that name is the actual template content.
+配置模板时，需以 `templates` 作为 YAML 文件的根键。 `templates` 下的首个元素即为模板名称（如下例中 **`namespace:my_first_template`** ），该名称下方的所有内容构成实际模板配置。
 
 ```yaml
 templates:
@@ -23,25 +23,25 @@ templates:
       hello: world
 ```
 
-Check out this quick animation to see how the plugin applies the template:
+观看这段快速动画了解插件如何应用模板：
 
-![](/img/template_1.gif)
+![](/img/i18n/zh-Hans/template_1.gif)
 
 :::info
 
-`namespace:template_id` serves as the unique identifier for your template. This name must be used whenever referencing or invoking this template elsewhere.
+`namespace:template_id` 作为模板的唯一标识符，在后续调用时必须使用该完整名称。
 
 :::
 
 :::tip
 
-The configuration area under `namespace:template_id` is entirely customizable, as long as it adheres to YAML syntax. You have complete freedom to define it according to your needs.
+`namespace:template_id` 下方的配置部分完全可自定义，只需符合YAML语法规范即可自由定义。
 
 :::
 
-## Multiple Templates
+## 多模板
 
-You can combine multiple templates by setting up the `template` as a list.
+您可以通过将 `template` 设置为列表来组合多个模板。
 
 ```yaml
 items:
@@ -54,15 +54,15 @@ items:
 
 :::warning
 
-Heads up: If two templates have the same setting, the one below will overwrite the one above. But if the setting is a list, they’ll merge into one combined list instead.
+注意：若两个模板存在相同配置项，下方的模板会覆盖上方配置。但当配置项为列表类型时，它们将合并为统一列表。
 
 :::
 
-![](/img/template_2.gif)
+![](/img/i18n/zh-Hans/template_2.gif)
 
-## Arguments
+## 参数
 
-You can define parameters in template using `${xxx}`, like `${nutrition}` or `${saturation}`.  Then, when calling the template, use the `arguments` section to set the parameter values. Here's a quick example:
+在模板中可使用 `${xxx}` 定义参数（如 `${nutrition}` 或 `${saturation}` ），调用时通过 `arguments` 节点传入具体值。示例：
 
 ```yaml
 templates:
@@ -80,32 +80,32 @@ items:
       saturation: 2.5
 ```
 
-![](/img/template_3.gif)
+![](/img/i18n/zh-Hans/template_3.gif)
 
 :::info
 
-If you need to use curly braces `{}` as normal text (not as parameters), just escape them with a backslash like `\{` or `\}`. 
+若需将花括号 `{}` 作为普通文本使用（而非参数标识），只需使用反斜杠转义：`\{` 或 `\}`。
 
-`\${Hello world}`
+`\${你好世界}`
 
 :::
 
 :::tip
 
-To set default values for parameters, add `:-` after the parameter name - for example:
+为参数设置默认值时，在参数名后添加 `:-` 即可，例如：
 
 - `${nutrition:-1}`
 - `${saturation:-2.5d}`
 - `${map:-{aa:bb,cc:ddd}}`
 - `${string:-"1234"}`
 
-The default values follow Minecraft's SNBT format (the same format used when specifying NBT data in commands).
+默认值采用Minecraft的SNBT格式（与指令中指定NBT数据时的格式相同）。
 
 :::
 
-## Overrides
+## 覆写
 
-Overrides completely replace whatever's in the specified config path—including lists and maps. No merging, just a full swap.
+覆写会完全替换指定配置路径下的所有内容（包括列表和映射），不进行合并操作，直接整体替换。
 
 ```yaml
 items:
@@ -118,11 +118,11 @@ items:
       material: bread
 ```
 
-![](/img/template_4.gif)
+![](/img/i18n/zh-Hans/template_4.gif)
 
-## Merges
+## 合并
 
-Merges deeply combines two config sections, including all lists - nothing gets left behind. Basically, merges function almost exactly like multiple templates.
+深度合并会完整整合两个配置部分（包括所有列表项），其运作逻辑与多重模板几乎完全一致。
 
 ```yaml
 items:
@@ -137,11 +137,11 @@ items:
           can-always-eat: true
 ```
 
-## Tips
+## 小提示
 
 :::tip
 
-You can use parameters within configuration keys despite the feature being rarely needed.
+虽然不常用，你也可以在配置键中使用参数。
 
 ```yaml
 templates:
@@ -149,7 +149,7 @@ templates:
     "${argument}": value
 ```
 
-You can also use parameters within template lists, overrides, and merges.
+你也可以在模板列表、覆写和合并中使用参数。
 
 ```yaml
 templates:

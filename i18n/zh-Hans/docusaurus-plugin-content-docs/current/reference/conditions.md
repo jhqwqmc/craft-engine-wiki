@@ -1,10 +1,10 @@
 ---
-title: ⚖️ Conditions
+title: ⚖️ 条件
 id: conditions
 ---
 
 :::tip
-Adding `!` before a condition type inverts its logic. For instance:
+在条件类型前添加 `!` 可反转判断逻辑，例如：
 
 ```yaml
 type: "!permission"
@@ -12,9 +12,9 @@ permission: "craftengine.admin"
 ```
 :::
 
-### any\_of
+### any_of
 
-Satisfy any one of the conditions.
+满足任意条件即可。
 
 ```yaml
 type: any_of
@@ -23,9 +23,9 @@ terms:
   - type: xxx
 ```
 
-### all\_of
+### all_of
 
-All conditions must be satisfied.
+所有条件都必须满足。
 
 ```yaml
 type: all_of
@@ -36,7 +36,7 @@ terms:
 
 ### inverted
 
-Negate the result value of the current condition.
+对当前条件的结果值取反。
 
 ```yaml
 type: inverted
@@ -44,30 +44,30 @@ term:
   type: xxx
 ```
 
-### falling\_block
+### falling_block
 
-Check whether the drop was caused by the block falling.
+检测掉落物是否由下落的方块掉落
 
 ```yaml
 type: falling_block
 ```
 
-### survives\_explosion
+### survives_explosion
 
-Detect whether it is possible to survive the explosion.
+以 `1/爆炸半径` 的概率返回成功。需要上下文提供参数进行检测，若未提供则总是通过。
 
 ```yaml
 type: survives_explosion
 ```
 
-### match\_item
+### match_item
 
-Match the item in hand.
+检查手持物品。
 
 ```yaml
 type: match_item
 id: "minecraft:iron_pickaxe"
-regex: false # whether to use regex matching
+regex: false # 是否使用正则表达式匹配
 ```
 
 ```yaml
@@ -75,12 +75,12 @@ type: match_item
 id: 
   - "minecraft:iron_pickaxe"
   - "minecraft:stone_pickaxe"
-regex: false # whether to use regex matching
+regex: false # 是否使用正则表达式匹配
 ```
 
-### match\_block\_property
+### match_block_property
 
-Match the block state property
+检查方块状态。
 
 ```yaml
 type: match_block_property
@@ -90,16 +90,16 @@ properties:
 
 ### enchantment
 
-Detect the enchantments on the item in hand.
+检测手中物品的魔咒。
 
 ```yaml
 type: enchantment
 predicate: minecraft:silk_touch>=1 # > >= = < <=
 ```
 
-### table\_bonus
+### table_bonus
 
-Provide different success probabilities at various enchantment levels.
+以魔咒等级为索引，从列表中挑选概率通过。
 
 ```yaml
 type: table_bonus
@@ -120,7 +120,7 @@ value: 0.1 # 10%
 
 ### permission
 
-Checks if the player has the permission
+检查玩家是否拥有权限
 
 ```yaml
 type: permission
@@ -129,7 +129,7 @@ permission: "craftengine.admin"
 
 ### expression
 
-Checks if the expression returns `true`
+检查表达式是否返回 `true`
 
 ```yaml
 type: expression
@@ -137,19 +137,19 @@ type: expression
 expression: "<papi:farming_level> >= 10"
 ```
 
-### string\_equals
+### string_equals
 
-Determines if the two values are equal
+判断这两个值是否相等
 
 ```yaml
 type: string_equals
 value1: "<arg:player.name>"
-value2: "Player_A"
+value2: "玩家A" # 译者注：在正常 Minecraft 服务端是不允许使用中文作为玩家名称的这里仅作为演示
 ```
 
-### string\_contains
+### string_contains
 
-Determines if value1 contains value2
+判断 value1 是否包含 value2
 
 ```yaml
 type: string_contains
@@ -157,9 +157,9 @@ value1: "<arg:player.name>"
 value2: "A"
 ```
 
-### string\_regex
+### string_regex
 
-Determines if value matches the pattern
+判断 value 是否符合指定正则表达式
 
 ```yaml
 type: string_regex
@@ -167,9 +167,9 @@ value: "<arg:player.name>"
 regex: "[a-Z]"
 ```
 
-### is\_null
+### is_null
 
-Checks if the argument is null
+检查参数是否为空
 
 ```yaml
 type: is_null
@@ -178,16 +178,16 @@ argument: "player.main_hand_item"
 
 ### hand
 
-Checks the interaction hand
+检查交互手
 
 ```yaml
 type: hand
 hand: main_hand # off_hand
 ```
 
-### on\_cooldown
+### on_cooldown
 
-Checks if player is on cooldown (use `set_cooldown` function to set cooldown for player)
+检查玩家是否处于冷却时间（使用 `set_cooldown` 函数为玩家设置冷却）
 
 ```yaml
 type: on_cooldown
@@ -195,7 +195,7 @@ id: my_cooldown_id
 ```
 
 :::info
-Example usage
+示例用法
 
 ```yaml
 events:
@@ -213,5 +213,5 @@ events:
 :::
 
 :::info
-More conditions are coming...
+更多条件即将到来...
 :::

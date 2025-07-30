@@ -1,25 +1,27 @@
 ---
-title: ⌨️ 应用程序编程接口
+title: ⌨️ API
 id: api
 ---
 
-## Repository
+## 依赖库
 
-Add CraftEngine API to your project:
+将 CraftEngine API 添加到你的项目：
 
 ```kotlin
 repositories {
     maven("https://repo.momirealms.net/releases/")
+    // maven("https://repo-momi.gtemc.cn/releases/") // 译者注：如果你的网络环境受限可以使用国内镜像依赖库
+    // maven("https://repo.gtemc.net/releases/") // 译者注：如果你的主依赖库爆炸了可以临时切换到镜像依赖库
 }
 ```
 ```kotlin
 dependencies {
-    compileOnly("net.momirealms:craft-engine-core:{version}") // replace "{version}" with the plugin version
-    compileOnly("net.momirealms:craft-engine-bukkit:{version}") // for instance 0.0.60
+    compileOnly("net.momirealms:craft-engine-core:{version}") // 将 "{version}" 替换为插件版本
+    compileOnly("net.momirealms:craft-engine-bukkit:{version}") // 例如 0.0.60
 }
 ```
 
-Make sure to add CraftEngine as a dependency for your plugin:
+请确保将 CraftEngine 添加为你的插件的依赖项：
 
 ```yaml
 softdepend:
@@ -28,30 +30,32 @@ softdepend:
 
 :::caution
 
-**Be Aware with Changes**
+**注意变更**
 
-Only the contents under the `api` package are considered stable. Other methods of interacting with the plugin are unstable and subject to change, especially during the current beta phase.
+仅 `api` 包下的内容被认为是稳定的。其他与插件交互的方法不稳定，特别是在当前 beta 阶段，可能会发生变化。
 
-The content available at the following link is considered stable and covers 90% of API usage requirements:
+以下链接中提供的内容被认为是稳定的，并涵盖了 90% 的 API 使用需求：
 https://github.com/Xiao-MoMi/craft-engine/tree/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/api
 
 :::
 
 :::info
 
-If you're eager to start registering your own block behaviors, you can reference some of our built-in implementations as examples.
+如果您急于开始注册自己的方块行为，可以参考我们的一些内置实现作为示例。
 https://github.com/Xiao-MoMi/craft-engine/tree/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/behavior
+
+译者注：你也可以参考这个项目 https://github.com/jhqwqmc/craft-engine-blocks/ 直接使用此公共模板创建。
 
 :::
 
-## Some Development Conventions
+## 一些开发规范
 
-### Naming
+### 命名
 
-1. IDs for new types: Use lowercase letters with underscores (e.g., `my_plugin:test_function`).
-2. Config parameters: If users need to pass values in config files, use hyphens (`-`) for keys (better readability).
+1. 新类型的 ID：使用小写字母加下划线（例如，`my_plugin:test_function`）。
+2. 配置参数：如果用户需要在配置文件中传递值，键使用连字符（`-`）以提高可读性。
 
-Example:
+示例:
 
 ```yaml
 type: my_plugin:test_function
@@ -59,22 +63,22 @@ send-to-all: true
 message: "Test TeST tEST"
 ```
 
-### Block Events
+### 方块事件
 
-Please avoid directly using events like `CustomBlockBreakEvent`. Instead, you should:
+请避免直接使用如 `CustomBlockBreakEvent` 的事件。相反，您应该：
 
-1. Listen to the corresponding Bukkit event (e.g., BlockBreakEvent).
-2. Retrieve the BlockData from the event.
-3. Convert it to a custom block using the `CraftEngineBlocks` class for further processing.
+1. 监听对应的 Bukkit 事件（例如，BlockBreakEvent）。
+2. 从事件中获取 BlockData。
+3. 使用 `CraftEngineBlocks` 类将其转换为自定义方块进行进一步处理。
 
-Using Bukkit events allows you to achieve everything you need in a more comprehensive way, without requiring additional learning.
+使用 Bukkit 事件可以以更全面的方式实现您的需求，无需额外学习。
 
-### Regarding Registration
+### 关于注册
 
-When registering new block behaviors, item behaviors, or host types and etc, please first check if there are corresponding constant classes available (e.g., BlockBehaviors, ItemBehaviors). It is strongly recommended to use the register methods provided within these classes for your registrations.
+当注册新的方块行为、物品行为或托管类型等时，请首先检查是否有相应的常量类可用（例如：BlockBehaviors, ItemBehaviors）。强烈建议使用这些类中提供的注册方法进行你的注册。
 
 :::info
 
-The API documentation will undergo restructuring after the official release to include more advanced examples.
+API 文档将在正式发布后进行重写，以包含更多高级示例。
 
 :::

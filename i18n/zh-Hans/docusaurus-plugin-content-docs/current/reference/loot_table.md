@@ -1,19 +1,19 @@
 ---
-title: 🎲 Loot Table
+title: 🎲 战利品表
 id: loot_table
 ---
 
-## Introduction
+## 简介
 
-Under `loots`, there must be a `pools` list, which represents the loot pools. Each loot pool consists of four parts:&#x20;
+在 `loots` 配置中必须包含 `pools` 列表，每个列表代表一个战利品池。每个战利品池由四部分组成：
 
-`rolls` determines how many times the pool is rolled\
-`conditions` represent the conditions for the loot\
-`entries` denote the actual loot items \
-`functions` are the post-processing functions, such as modifying the quantity of the loot, NBT data, and so on
+`rolls` 决定该池的抽取次数\
+`conditions` 为掉落条件判定\
+`entries` 表示实际掉落的物品\
+`functions` 是后处理函数（如修改数量/NBT数据等）
 
 :::info
-If you are well-acquainted with vanilla data packs, you will find this structure very familiar. The plugin employs this format and modifies it to facilitate a swift and smooth transition into the CraftEngine loot system.
+若您熟悉原版数据包，会发现此结构与原版高度一致。插件采用该格式并加以改良，便于快速过渡至CraftEngine战利品体系。
 :::
 
 ```yaml
@@ -29,12 +29,12 @@ loot:
       functions: []
 ```
 
-## ☘️ Entry
+## ☘️ 条目
 
-The 'entry' specifies the actual contents of the drop, but in certain scenarios, it can also represent a choice among possible drops.
+'entry' 用于指定实际掉落的物品，但在某些情况下也可表示多个可能掉落项中的选择。
 
 :::tip
-All `entry` sections are capable of using `functions` and `conditions`.
+所有 `entry` 配置部分均可使用 `functions` 和 `conditions` 功能。
 
 ```yaml
 type: item
@@ -46,16 +46,16 @@ conditions: []
 
 ### item
 
-Set the type of the dropped item, which can be a custom item.
+设置掉落物品类型，支持自定义物品。
 
 ```yaml
 type: item
 item: "minecraft:apple"
 ```
 
-### furniture\_item
+### furniture_item
 
-Sets the item to the original furniture item when placed, otherwise uses the fallback item.
+将物品设置为放置时的原始家具物品，否则使用备用物品。
 
 ```yaml
 type: furniture_item
@@ -64,7 +64,7 @@ item: "default:fallback_item"
 
 ### exp
 
-Drop a certain amount of experience.
+掉落给定数量的经验值。
 
 ```yaml
 type: exp
@@ -73,7 +73,7 @@ count: 1
 
 ### alternatives
 
-Find the first `entry` from the given list that meets the `conditions`.
+从给定列表中找到第一个满足 `conditions` 的 `entry`。
 
 ```yaml
 type: alternatives
@@ -98,12 +98,12 @@ children:
           max: "${max_exp}"
 ```
 
-## 🔧 Function
+## 🔧 函数
 
-The role of the `function` is to perform additional operations on the item after its type has been set, such as adjusting the quantity. It can also handle concurrent operations like dropping experience or other extras.
+`function` 的作用是在物品类型设定后执行额外操作，例如调整数量。它还可以处理并发操作，如掉落经验值或其他附加内容。
 
 :::tip
-All `function` sections support the use of `conditions`.
+所有的 `function` 部分都支持使用 `conditions`。
 
 ```yaml
 type: set_count
@@ -112,9 +112,9 @@ conditions: []
 ```
 :::
 
-### apply\_bonus
+### apply_bonus
 
-Increase the quantity of the dropped items based on the given enchantments and formulas. Refer to [formula](#️-formula) for more info.
+根据给定的魔咒和公式增加掉落物品的数量。更多信息请参考[公式](#️-公式)。
 
 ```yaml
 type: apply_bonus
@@ -123,46 +123,46 @@ formula:
   type: ore_drops
 ```
 
-### set\_count
+### set_count
 
-Set the count of the item.
+设置该物品的数量。
 
 ```yaml
 type: set_count
 count: 10
-add: true  # add or set
+add: true  # 添加或设置
 ```
 
-### explosion\_decay
+### explosion_decay
 
-Determines whether the quantity of this item diminishes upon explosion. In vanilla Minecraft, explosions often result in fewer blocks being dropped than originally present, which is due to the implementation of this function.
+如果物品是因为方块被爆炸破坏而产生，执行该函数的每个物品有1/爆炸半径的概率消失，堆叠的物品会被分为多个单独的物品计算；否则此物品修饰器不做任何处理。
 
 ```yaml
 type: explosion_decay
 ```
 
-### drop\_exp
+### drop_exp
 
-Drop a certain amount of experience.
+掉落一定数量的经验值。
 
 ```yaml
 type: drop_exp
 count: 1
 ```
 
-## ➕️ Formula
+## ➕️ 公式
 
-### ore\_drops
+### ore_drops
 
-The same drop algorithm used in vanilla Minecraft.
+和原版 Minecraft 一样的矿物掉落随机算法
 
 ```yaml
 type: ore_drops
 ```
 
-### binomial\_with\_bonus\_count
+### binomial_with_bonus_count
 
-The same binomial drop algorithm used in vanilla Minecraft. `extra` means a few extra attempts to drop the item, and `probability` represents the probability of success each time. The enchantment level will increase the number of attempts.
+和原版 Minecraft 相同的二项分布随机数算法。`extra` 表示额外计算的次数。二项分布计算的n为魔咒等级与额外计算次数之和。`probability` 代表二项分布中的概率p。
 
 ```yaml
 type: binomial_with_bonus_count

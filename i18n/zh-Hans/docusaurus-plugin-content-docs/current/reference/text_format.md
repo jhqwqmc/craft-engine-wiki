@@ -5,68 +5,68 @@ id: text_format
 
 ## MiniMessage
 
-When configuring item names, descriptions, GUIs, etc., for the plugin, please use the MiniMessage format. [https://docs.advntr.dev/minimessage/format.html](https://docs.advntr.dev/minimessage/format.html)
+在配置插件中的物品名称、提示框中所显示的描述信息、GUI 等内容时，请使用 MiniMessage 格式。[https://docs.advntr.dev/minimessage/format.html](https://docs.advntr.dev/minimessage/format.html)
 
-> Any meaningful token can be escaped in the locations where they have influence. In plain text, tag open characters (`<`) can be escaped with a leading backslash (`\`). Within quoted strings, the opening quote character can be escaped (`'` or `"`). In either place, the escape character can be escaped in places where it would otherwise be relevant. Unquoted tag arguments cannot have escapes, for simplicity. In locations where escaping is not supported, the literal escape character will be passed through. In locations where escaping _is_ supported but a literal escape character is desired, the escape character can itself be escaped to produce a `\`.
+> 任何有意义的标签都可以在其生效的位置被转义。在纯文本中，标签起始字符（`<`）可以通过前置反斜杠（`\`）进行转义。在带引号的字符串中，起始引号字符（`'` 或 `"`）也可以被转义。在这两种情况下，转义符本身也可以被转义以输出字面上的反斜杠。为简单起见，未加引号的标签参数不能使用转义字符。在不支持转义的上下文中，转义字符会作为普通字符原样输出。在支持转义的上下文中，如需输出反斜杠，应通过双反斜杠（`\\`）来实现。
 
-## Extra Tags
+## 附加标签
 
-These are additional tags provided by the plugin.
+以下是插件提供的其他可用标签。
 
 :::tip
-`[_argument_]` means Optional
+`[_参数_]` 表示该参数是可选的。
 :::
 
 :::info
-You can surround your arguments with `'`  & `"` for instance `<papi:'exp_multiplier':'1'>`
+你可以用 `'` 或 `"` 将参数包裹起来，例如 `<papi:'exp_multiplier':'1'>`
 
-You can also use **nested** tags for instance `<expr:'0.##':'<papi:exp_multiplier:1> * 10'>`
+你也可以使用**嵌套**标签，例如 `<expr:'0.##':'<papi:exp_multiplier:1> * 10'>`
 :::
 
 :::info
-You'll notice that some tags start with "**viewer\_**". This is because, in certain scenarios, a text might be constructed by multiple contextual entities. For example, consider the following configuration:
+你可能会注意到，一些标签以 "**viewer\_**" 开头。这是因为在某些场景下，一段文本可能由多个上下文实体共同构建。例如以下示例配置：
 
 ```yaml
-message: -| 
-  Hi, <viewer_arg:player.name>. 
-  Did you notice that <arg:player.name> interacted a custom block?
+message: -|
+  嗨，<viewer_arg:player.name>。
+  你有没有注意到 <arg:player.name> 与一个自定义方块进行了交互？
 ```
 
-If **Player A** interacts with the custom block and triggers a message broadcast, then **Player B** receiving this message would see:\
-`"Hi, B. Did you notice that A interacted a custom block?"`
+当**玩家A**与自定义方块交互并触发消息广播时，**玩家B**接收到的消息将显示为：\
+"嗨，B。你有没有注意到 A 与一个自定义方块进行了交互？"
 :::
 
-### \<shift:\_pixels\_>
+### \<shift:\_像素值\_>
 
-`shift` allows you to directly use the plugin's offset characters.
+`shift` 允许你直接使用插件的偏移字符。
 
 ```yaml
-item-name: "<!i><shift:-100><#FF8C00>Topaz Rod"
+item-name: "<!i><shift:-100><#FF8C00>黄玉钓竿"
 ```
 
-![](/img/text_format_1.png)
+![](/img/i18n/zh-Hans/text_format_1.png)
 
-### \<papi:\_placeholder\_:\[\_default\_value\_]>
+### \<papi:\_占位符\_:\[\_默认值\_]>
 
-### \<viewer\_papi:\_placeholder\_:\[\_default\_value\_]>
+### \<viewer\_papi:\_占位符\_:\[\_默认值\_]>
 
-### \<rel\_papi:\_placeholder\_:\[\_default\_value\_]>
+### \<rel\_papi:\_占位符\_:\[\_默认值\_]>
 
-`papi` allows to use placeholders provided by `PlaceholderAPI`.&#x20;
+`papi` 允许你使用由 `PlaceholderAPI` 提供的占位符。
 
 :::tip
 
-**rel\_papi**  refers to relational placeholders
+**rel\_papi** 指的是关系型占位符。
 
 :::
 
 ```yaml
-item-name: "<!i><#FF8C00><papi:player_name>'s Topaz Rod"
+item-name: "<!i><#FF8C00><papi:player_name>的黄玉钓竿"
 ```
 
-![](/img/text_format_2.png)
+![](/img/i18n/zh-Hans/text_format_2.png)
 
-You can also specify a default value to make it available in more places **without causing errors** for example:
+你还可以通过指定默认值，让这些标签**在更多场景下安全使用**而不会报错，例如：
 
 ```yaml
 functions:
@@ -77,25 +77,25 @@ functions:
       max: "<papi:exp_multiplier:1> * 5"
 ```
 
-### \<image:\_namespace\_:\_id\_:\[\_row\_]:\[\_column\_]>
+### \<image:\_命名空间\_:\_路径\_:\[\_行\_]:\[\_列\_]>
 
-`image` allows to use images registered in the plugin
-
-```yaml
-item-name: "<!i><white><image:default:icons><#FF8C00> Topaz Rod"
-```
-
-![](/img/text_format_3.png)
+`image` 允许你使用插件中已注册的图片。
 
 ```yaml
-item-name: "<!i><white><image:default:icons:0:1><#FF8C00> Topaz Rod"
+item-name: "<!i><white><image:default:icons><#FF8C00>黄玉钓竿"
 ```
 
-![](/img/text_format_4.png)
+![](/img/i18n/zh-Hans/text_format_3.png)
 
-### \<i18n:\_id\_>
+```yaml
+item-name: "<!i><white><image:default:icons:0:1><#FF8C00>黄玉钓竿"
+```
 
-Searching for translations applicable to the current language.
+![](/img/i18n/zh-Hans/text_format_4.png)
+
+### \<i18n:\_标识符\_>
+
+查找适用于当前服务端语言的翻译。
 
 ```yaml
 internal:cooking_info:
@@ -109,9 +109,9 @@ internal:cooking_info:
       - "<!i><gray><i18n:internal.cooking_info.1>"
 ```
 
-### \<expr:\_format\_:\_expression\_>
+### \<expr:\_格式\_:\_表达式\_>
 
-Perform some math operations
+进行一些数学运算
 
 ```yaml
 item-name: "<!i><#FF8C00><expr:0.##:'70 / 8'>"
@@ -125,71 +125,73 @@ item-name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
 
 :::tip
 
-**Useful links**
+**常用链接**
 
-[https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html)
+[（英文） https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html)
+
+[（中文） https://doc.qzxdp.cn/jdk/17/zh/api/java.base/java/text/DecimalFormat.html](https://doc.qzxdp.cn/jdk/17/zh/api/java.base/java/text/DecimalFormat.html)
 
 [https://ezylang.github.io/EvalEx/references/references.html](https://ezylang.github.io/EvalEx/references/references.html)
 
 :::
 
-### \<arg:\_index\_>
+### \<arg:\_索引\_>
 
-Only used for files under `translations`, representing indexed parameters.
+仅用于 `translations` 目录下的文件，表示索引参数。
 
-### \<arg:\_id\_>
+### \<arg:\_标识符\_>
 
-### \<viewer\_arg:\_id\_>
+### \<viewer\_arg:\_标识符\_>
 
-The is a named parameter. Its value can come from two possible sources:
+这是一个命名参数。其值可以来自两个可能的来源：
 
-1. **Context-specific arguments** – These are parameters explicitly passed in the current context.
-
-```yaml
-internal.cooking_info.0: "Time: <arg:cooking_time>ticks"
-internal.cooking_info.1: "Experience: <arg:cooking_experience>"
-```
-
-2. **Common arguments**
+1. **上下文特定的参数** – 这些是在当前上下文中明确传递的参数。
 
 ```yaml
-<arg:random>  # generates a random number between 0 and 1
-<arg:last_random>  # gets the last random number
+internal.cooking_info.0: "时间：<arg:cooking_time>刻"
+internal.cooking_info.1: "经验：<arg:cooking_experience>"
 ```
 
-3. **Context subjects** – If the context subject (e.g., a player) provides parameters. Check this page for more:
+2. **通用参数**
+
+```yaml
+<arg:random>  # 生成一个 0 到 1 之间的随机数
+<arg:last_random>  # 获取上一个随机数
+```
+
+3. **上下文主体** – 如果上下文主体（例如，一个玩家）提供了参数。查看此页面了解更多：
 
 :::tip
 
-In certain cases, multiple **context subjects** may coexist. By accessing parameters from different context subjects, you can precisely control the scope and behavior of functions.
+在某些情况下，多个**上下文主体**可能同时存在。通过访问不同上下文主体的参数，您可以精确控制函数的范围和行为。
 
 ```yaml
-# spawns the particle at the location of the block
+# 在方块的位置生成粒子
 - type: particle
   x: '<arg:block.x> + 0.5'
   y: '<arg:block.y> + 0.5'
   z: '<arg:block.z> + 0.5'
   ...
-# spawns the particle at the location of the player
+# 在玩家的位置生成粒子
 - type: particle
   x: '<arg:player.x>'
   y: '<arg:player.y>'
   z: '<arg:player.z>'
   ...
-# broadcast the message
+# 广播消息
 - type: message
   target: 'all'
   message:
-    - "Hello <viewer_arg:player.name>! This message is from <arg:player.name>."
-    - "<arg:player.name> just interacted a <arg:block.owner> block!"
+    - "你好，<viewer.arg:player.name>！这条消息来自 <arg:player.name>。"
+    - "<arg:player.name> 刚刚与 <arg:block.owner> 方块进行了交互！"
 ```
 
 :::
 
-### \<global:\_id\_:\[args...]>
+### \<global:\_标识符\_:\[参数...]>
 
-global variable defined in configs
+在配置中定义的全局变量。
 
 ```yaml
-item-name: "<global:rare_tag> Rare spear"
+item-name: "<global:rare_tag> 稀有三叉戟"
 ```

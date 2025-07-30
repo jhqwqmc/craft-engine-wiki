@@ -1,107 +1,107 @@
 ---
-title: 🐚 Commands
+title: 🐚 命令
 id: commands
 ---
 
-## Basic Commands
+## 基础命令
 
 ### reload
 
 `/ce reload [all/recipe/config/pack]`
 
-This command lets you reload plugin resources. If you don't type any argument, it defaults to `/ce reload config`.
+此命令允许你重载插件资源。如果你不输入任何参数，它将默认为 `/ce reload config`。
 
 ### upload
 
 `/ce upload`
 
-This command forces the resource pack upload process to start manually.
+此命令强制手动启动资源包上传过程。
 
 ### item
 
 `/ce item browser`
 
-This command opens the plugin's item browser. You can just type `/ce` as a shortcut.
+此命令会打开插件的物品浏览器。你也可以直接输入 `/ce` 作为快捷方式。
 
 ![](/img/commands_15.png)
 
-`/ce item get [item-id] (count)`
+`/ce item get [物品标识符] (数量)`
 
-Get specific quantity of an item
+获取指定数量的物品
 
-`/ce item give [player] [item-id] (count)`
+`/ce item give [玩家] [物品标识符] (数量)`
 
-Give specific quantity of an item
+基于指定数量的物品
 
-`/ce item search-recipe/search-usage [player] [item-id]`
+`/ce item search-recipe/search-usage [玩家] [物品标识符]`
 
-Query the recipe or use of an item
+查询物品的配方或用途
 
 ![](/img/commands_16.png)
 
-## Feature Commands
+## 功能命令
 
 ### send-pack
 
-`/ce feature send-pack [player]`
+`/ce feature send-pack [玩家]`
 
-This command will send a resource pack to the specified player(s).
+此命令将向指定玩家发送一个资源包。
 
 ### totem-animation
 
-`/ce feature totem-animation [player] [item-id]`
+`/ce feature totem-animation [玩家] [物品标识符]`
 
-This command plays the Totem of Undying animation for the player.
+此命令为玩家播放不死图腾动画。
 
 ![](/img/commands_14.png)
 
 
-## Debug Commands
+## 调试命令
 
 ### appearance-state-usage
 
-`/ce debug appearance-state-usage [block_type]`
+`/ce debug appearance-state-usage [方块类型]`
 
-The command is used to retrieve the usage status of excess appearances for a specified block type. The red sections indicate states that are already in use, while the green sections represent available, unused states. When you hover your mouse over these sections, you can view the specific states and identify which custom states are using them.
+该命令用于查询指定方块类型的外观方块状态使用情况。红色部分表示已被占用的方块状态，绿色部分则代表可用、未被占用的方块状态。当你将鼠标悬停在这些部分上时，可以查看具体方块状态，并识别哪些自定义方块状态正在使用它们。
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/commands_1.png" alt="" />
+  <img src={require('/img/commands_1.png').default} alt="" />
 </div>
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/commands_2.png" alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>appearance state in use</p>
+  <img src={require('/img/commands_2.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被占用的外观方块状态</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/commands_2.png" alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>free state</p>
+  <img src={require('/img/commands_3.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>未被占用的方块状态</p>
 </div>
 
 ### real-state-usage
 
-`/ce debug real-state-usage [block_type]`
+`/ce debug real-state-usage [方块类型]`
 
-This command is similar to the one mentioned above, but the key difference lies in its function to inspect the available real states. When you register additional real states in the `additional-real-blocks.yml` file, the number of real states may exceed the number of available appearances.
+此命令与前面提到的命令相似，但主要区别在于它用于检查可用的真实方块状态。当你在 `additional-real-blocks.yml` 文件中注册额外的真实方块状态时，真实方块状态的数量可能会超过可用外观方块状态的数量。
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/commands_4.png" alt="" />
+  <img src={require('/img/commands_4.png').default} alt="" />
 </div>
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/commands_5.png" alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>real state in use</p>
+  <img src={require('/img/commands_5.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被占用的真实方块状态</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/commands_6.png" alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>free state</p>
+  <img src={require('/img/commands_6.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>未被占用的方块状态</p>
 </div>
 
 
 :::warning
-In the image below, the upper section displays the available appearance states for oak leaves, while the lower section shows the available real states for oak leaves. \
-You can use the command to experience the difference between them.
+在下图中，上方区域显示了橡树树叶的可用外观方块状态，而下方区域则显示了橡树树叶的可用真实方块状态。\
+你可以使用这两个命令来体验它们之间的区别。
 
 ```sh
 /ce debug appearance-state-usage minecraft:oak_leaves
@@ -120,16 +120,16 @@ You can use the command to experience the difference between them.
 
 `/ce debug item-data`
 
-This command allows you to inspect the item data (such as NBT or components) of the item you are currently holding.
+此命令允许你检查当前手持物品的物品数据（例如 NBT 或组件）。
 
-![](/img/commands_8.png)
+![](/img/i18n/zh-Hans/commands_8.png)
 
 
 ### get-block-internal-id
 
-`/ce debug get-block-internal-id [custom_block_state]`
+`/ce debug get-block-internal-id [自定义方块状态]`
 
-This command is used to retrieve the server-side real block name corresponding to a custom block, and is commonly utilized in tools like WorldEdit and data packs.
+此命令用于查找自定义方块对应的服务器端侧真实方块ID，常用于 WorldEdit 和数据包等工具中。
 
 ![](/img/commands_9.png)
 ![](/img/commands_10.png)
@@ -137,18 +137,18 @@ This command is used to retrieve the server-side real block name corresponding t
 
 :::tip
 
-**Q:** Why must the real block IDs be used in the datapack instead of names like default:plam_log?
+**问：** 为什么数据包中必须使用真实方块ID，而不是像 default:palm_log 这样的名称？
 
-**A:** Because the configuration file is only loaded after the server starts, while datapacks are loaded much earlier during server initialization. The server cannot recognize a non-existent block ID at this stage. To ensure that pre-registered custom blocks can adapt to the latest user configurations, CraftEngine employs a container-style dynamic binding solution.
+**答：** 因为配置文件在服务器启动后才加载，而数据包在服务器初始化阶段就已加载。此时服务器无法识别未注册的方块ID。为确保预注册的自定义方块能适配最新用户配置，CraftEngine采用了容器式动态绑定方案。
 
 :::
 
 
 ### get-block-state-registry-id
 
-`/ce debug get-block-state-registry-id [real_block_state]`
+`/ce debug get-block-state-registry-id [真实方块状态]`
 
-This command is used to obtain the registry ID of the corresponding block state (not commonly used).
+此命令用于获取对应方块状态的注册ID（不常用）。
 
 ![](/img/commands_11.png)
 
@@ -156,7 +156,7 @@ This command is used to obtain the registry ID of the corresponding block state 
 
 `/ce debug target-block [--this]`
 
-The 'target-block' is used to inspect the data of the block that the mouse is pointing at (or use the '--this' flag to obtain the current position). It includes the actual block ID and the CraftEngine block state. If the block has custom tags, they will also be displayed.
+'target-block' 命令用于检查鼠标指向的方块数据（或使用 '--this' 标志获取当前位置）。它包括真实方块 ID 和 CraftEngine 方块状态。如果方块拥有自定义标签，那么也会显示这些标签。
 
 ![](/img/commands_12.png)
 
@@ -164,6 +164,6 @@ The 'target-block' is used to inspect the data of the block that the mouse is po
 
 `/ce debug is-section-injected`
 
-This method checks whether the current chunk has been injected. A return value of false indicates an abnormal condition that requires investigation.
+此命令用于检查当前区块是否已被注入。返回值为 false 表示存在异常情况，需要进行调查。
 
 ![](/img/commands_13.png)

@@ -74,7 +74,7 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 
 ### item
 
-| paramter            | type    | description                       |
+| parameter            | type    | description                       |
 | ------------------- | ------- | --------------------------------- |
 | id                  | string  | the id of the item                |
 | custom\_model\_data | int     | the custom model data of the item |

@@ -9,7 +9,7 @@ The plugin boasts an exceptionally high degree of customization, but it's imposs
 
 ## How it works?
 
-To configure a template, you need to use templates as the root key in your YAML file. The first thing under templates is your template's name. In the example below, the template is called namespace:my_first_template. Everything under that name is the actual template content.
+To configure a `template`, you need to use `templates` as the root key in your YAML file. The first thing under templates is your template's name. In the example below, the template is called **`namespace:my_first_template`**. Everything under that name is the actual template content.
 
 ```yaml
 templates:

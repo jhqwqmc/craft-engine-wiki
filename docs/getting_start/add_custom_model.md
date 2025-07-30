@@ -250,7 +250,7 @@ Invalid Examples: \
 **Never place font/GUI textures (e.g., rank.png, HUD elements) in the same directory as model textures (e.g., block/, item/).** Even if these textures are not directly used in models, Minecraft's texture atlas system will automatically include them when generating combined sprite sheets. This can lead to unintended visual degradation(mipmap-level):
 
 <details>
-  <summary>Mipmap Level 4 VS Mimap Level 0</summary>
+  <summary>Mipmap Level 4 VS Mipmap Level 0</summary>
 
     ![Mipmap Level 4](/img/mipmap_4.png)
 

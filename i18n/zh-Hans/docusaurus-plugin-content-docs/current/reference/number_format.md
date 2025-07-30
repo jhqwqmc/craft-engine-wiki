@@ -1,17 +1,17 @@
 ---
-title: 🔢 Number Format
+title: 🔢 数字格式
 id: number_format
 ---
 
 :::caution
 
-These number formats work in most places, except for the early-developed item-data stuff. We'll try to redesign the number support during the next item system refactor, to better handle randomized items.
+这些数字格式在大多数地方都适用，除了早期开发的物品数据部分。我们将在下一次物品系统重构时尝试重新设计数字支持，以便更好地处理随机化物品。
 
 :::
 
-### constant
+### 常量
 
-Provide a fixed numerical value.
+提供一个固定的数值。
 
 ```yaml
 type: constant
@@ -19,7 +19,7 @@ value: 1
 ```
 
 :::tip
-In most cases, you can use the following abbreviated notation.
+在大多数情况下，您可以使用以下简写形式。
 
 ```yaml
 count:
@@ -34,9 +34,9 @@ count: 1
 ```
 :::
 
-### uniform
+### 均匀随机数
 
-Provide a random number within the given range.
+在给定范围内提供一个随机数。
 
 ```yaml
 type: uniform
@@ -45,7 +45,7 @@ max: 3
 ```
 
 :::tip
-In most cases, you can use the following abbreviated notation.
+在大多数情况下，您可以使用以下简写形式。
 
 ```yaml
 count:
@@ -60,7 +60,7 @@ count:
 count: 1~3
 ```
 
-Both `min` and `max` also support the nested use of `number provider`.&#x20;
+`min` 和 `max` 也都支持嵌套使用 `提供数字的标签`.
 
 ```yaml
 count:
@@ -73,7 +73,7 @@ count:
 ```
 :::
 
-### expression
+### 表达式
 
 [https://ezylang.github.io/EvalEx/references/references.html](https://ezylang.github.io/EvalEx/references/references.html)
 
@@ -83,7 +83,7 @@ expression: "20 + 70 / 2"
 ```
 
 :::tip
-In most cases, you can use the following abbreviated notation.
+在大多数情况下，您可以使用以下简写形式。
 
 ```yaml
 count:

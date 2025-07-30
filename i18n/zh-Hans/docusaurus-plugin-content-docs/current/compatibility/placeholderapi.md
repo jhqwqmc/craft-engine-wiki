@@ -11,19 +11,19 @@ id: placeholderapi
 `row` 和 `column` 都是可选的，但如果使用其中一个，就必须同时使用另一个。
 :::
 
-### %image\_mm\_namespace:id\:\[row]:\[column]%
+### %image\_mm\_命名空间:路径\:\[行]:\[列]%
 
 返回 `minimessage` 格式的图像。
 
 ![](/img/placeholderapi_1.png)
 
-### %image\_md\_namespace:id\:\[row]:\[column]%
+### %image\_md\_命名空间:路径\:\[行]:\[列]%
 
 返回 `minedown` 格式的图像。
 
 ![](/img/placeholderapi_2.png)
 
-### %image\_raw\_namespace:id\:\[row]:\[column]%
+### %image\_raw\_命名空间:路径\:\[行]:\[列]%
 
 返回原始图像字符
 
@@ -33,15 +33,15 @@ id: placeholderapi
 
 `shift`占位符用于获取**偏移字符**，常用于菜单标题对齐等操作。
 
-### %shift\_mm\_value%
+### %shift\_mm\_数值%
 
 返回 `minimessage` 格式的偏移字符  
 
-### %shift\_md\_value%
+### %shift\_md\_数值%
 
 返回 `minedown` 格式的偏移字符  
 
-### %shift\_raw\_value%
+### %shift\_raw\_数值%
 
 返回原始偏移字符
 

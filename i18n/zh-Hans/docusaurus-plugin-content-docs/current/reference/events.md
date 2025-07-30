@@ -1,14 +1,14 @@
 ---
-title: 🪇 Events
+title: 🪇 事件
 id: events
 ---
 
-## Introduction
+## 简介
 
-The `events` section determines which item/furniture/block will execute predefined behaviors during specific events. Under the `events` section, you need to specify an event trigger, such as `"right_click"` for a right-click action. Below the event trigger, you must pass a list of actions with their corresponding types. For example, `command` executes a specific command.
+`events` 部分决定了哪些物品/家具/方块将在特定事件中执行预定义行为。在 `events` 部分下，您需要指定一个事件触发器，例如 `"right_click"` 表示右键点击动作。在事件触发器下方，您必须传递一个动作列表及其对应的类型。例如，`command` 用于执行特定命令。
 
 ```yaml
-# format 1
+# 格式1
 events:
   right_click:
     - type: command
@@ -19,7 +19,7 @@ events:
     - type: command
       command: say 2
       conditions: []
-# format 2
+# 格式2
 events:
   - on: right_click
     functions:
@@ -33,16 +33,16 @@ events:
         conditions: []
 ```
 
-## 🧨 Event Triggers
+## 🧨 事件触发器
 
-### items
+### 物品
 
 * break
 * right\_click
 * left\_click
 * consume
 
-### blocks
+### 方块
 
 * break
 * place
@@ -50,14 +50,14 @@ events:
 * left\_click
 * step
 
-### Furniture
+### 家具
 
 * break
 * place
 * right\_click
 
 :::caution
-Please note that the corresponding events should be placed in the appropriate configuration area. For example, if you want to execute a command when interacting with a piece of furniture, the correct approach is to place the `events` under the `furniture` section, not under your item section.
+请注意：事件需配置在正确的区域。例如若需实现家具交互时执行指令，应将 `events` 置于 `furniture` 部分而非物品部分下。
 
 ```yaml
 items:
@@ -74,87 +74,87 @@ items:
 ```
 :::
 
-## 🔧 Functions
+## 🔧 函数
 
-### cancel\_event
+### 取消事件
 
-Cancels the original event.
+取消原始事件。
 
 ```yaml
 type: cancel_event
 ```
 
-### run
+### 运行
 
-Runs a list of functions in order. It's useful for functions that share the same conditions.
+按顺序运行一系列函数。这对于共享相同条件的函数非常有用。
 
 ```yaml
 type: run
-delay: 0 # optional; number; [default: 0]
-functions: # required; maplist
+delay: 0 # 可选; 数字; [默认值: 0]
+functions: # 必填; 映射列表
   - type: command
   - type: message
 ```
 
-### command
+### 命令
 
-Runs a command as a player or console.
+以玩家或控制台身份运行命令。
 
 ```yaml
 type: command
-command: "say hello <arg:player.name>" # required; stringlist/string
-target: "self" # optional; enum[all,self]/player selector; [default: self]
-as-player: false # optional; [default: false]
+command: "say 你好 <arg:player.name>" # 必填; 字符串列表/字符串
+target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
+as-player: false # 可选; [默认值: false]
 ```
 
-### message
+### 消息
 
-Sends a message/system actionbar message
+发送消息或系统动作栏消息
 
 ```yaml
 type: message
-message: "Hello <papi:player_name>" # required; string list/string
-target: "self" # optional; enum[all,self]/player selector
-overlay: false # optional; [default: false]; false = chat box / true = actionbar
+message: "你好 <papi:player_name>" # 必填; 字符串列表/字符串
+target: "self" # 可选; 枚举[all,self]/玩家选择器
+overlay: false # 可选; [默认值: false]; false = 聊天框 / true = 动作栏
 ```
 
-### actionBar
+### 动作栏消息
 
-Sends an actionbar
+发送一条动作栏消息
 
 ```yaml
 type: actionbar
-actionbar: "This is an action bar"  # required; string
-target: "self" # optional; enum[all,self]/player selector; [default: self]
+actionbar: "这是一个动作栏消息"  # 必填; 字符串
+target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
 ```
 
-### Title
+### 屏幕标题消息
 
-Sends a title
+发送一条屏幕标题消息
 
 ```yaml
 type: title
-title: "<red>Title</red>"  # required; string
-subtitle: "<Yellow>Subtitle</yellow>" # required; string
-fade-in: 20 # optional; number; [default: 10]
-stay: 10 # optional; number; [default: 20]
-fade-out: 10 # optional; number; [default: 5]
+title: "<red>标题</red>"  # 必填; 字符串
+subtitle: "<Yellow>副标题</yellow>" # 必填; 字符串
+fade-in: 20 # 可选; 数字; [默认值: 10]
+stay: 10 # 可选; 数字; [默认值: 20]
+fade-out: 10 # 可选; 数字; [默认值: 5]
 ```
 
-### open\_window
+### 打开窗口
 
-Opens a gui window
+打开一个图形用户界面窗口
 
 ```yaml
 type: open_window #
-gui-type: anvil # required; enum[anvil, enchantment, grindstone, loom, smithing, crafting, cartography];
-title: "Super Anvil"  # optional; string
-target: "self" # optional; enum[all,self]/player selector; [default: self]
+gui-type: anvil # 必填; 枚举[anvil, enchantment, grindstone, loom, smithing, crafting, cartography];
+title: "Super Anvil"  # 可选; 字符串
+target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
 ```
 
-### place\_block
+### 放置方块
 
-Places a block
+放置一个方块
 
 ```yaml
 type: place_block
@@ -164,9 +164,9 @@ y: <arg:block.block_y>
 z: <arg:block.block_z>
 ```
 
-### drop\_loot
+### 掉落战利品
 
-Drops loots based on the give loot table
+根据给定的战利品表掉落物品
 
 ```yaml
 type: drop_loot
@@ -177,59 +177,59 @@ loot:
   pools: ...
 ```
 
-### update\_interaction\_tick
+### 更新交互游戏刻
 
-Updates the tick when the last interaction ends
+更新最后一次交互结束时的游戏刻
 
 ```yaml
 type: update_interaction_tick
 ```
 
-### set\_count
+### 设置物品数量
 
-Sets the count of the current item in this event
+设置此事件中当前物品的数量
 
 ```yaml
 type: set_count
-add: true # Default: false
+add: true # 默认值: false
 count: -1
-target: "self" # optional; enum[all,self]/player selector
+target: "self" # 可选; 枚举[all,self]/玩家选择器
 ```
 
-### set\_food
+### 设置饥饿值
 
-Sets the food level (0\~20) of the player
+设置玩家的饥饿值（0~20）
 
 ```yaml
 type: set_food
 add: true
 food: 4
-target: "self" # optional; enum[all,self]/player selector
+target: "self" # 可选; 枚举[all,self]/玩家选择器
 ```
 
-### set\_saturation
+### 设置饱和度
 
-Sets the saturation(0\~10) of the player
+设置玩家的饱和度（0~10）
 
 ```yaml
 type: set_saturation
 add: true
 saturation: 2.5
-target: "self" # optional; enum[all,self]/player selector
+target: "self" # 可选; 枚举[all,self]/玩家选择器
 ```
 
-### swing\_hand
+### 挥手
 
-Swings the hand involved in this event or the hand specified in config
+挥动此事件中涉及的手，或配置中指定的手
 
 ```yaml
 type: swing_hand
-hand: main_hand # Optional Argument
+hand: main_hand # 可选参数
 ```
 
-### particle
+### 粒子效果
 
-Spawns a particle
+生成一个粒子效果
 
 ```yaml
 type: particle
@@ -243,113 +243,113 @@ offset-y: 0.3
 offset-z: 0.3
 speed: 0
 
-# The following arguments are only effective
-# when the particles are of a certain type.
+# 以下参数仅在粒子为特定类型时才有效。
 
-# item
+# 带物品粒子选项的粒子类型：item
 item: default:chinese_lantern
 
-# block/falling_dust/dust_pillar/block_crumble/block_marker
+# 带方块粒子选项的粒子类型：block、block_marker、falling_dust、dust_pillar 和 block_crumble
 block-state: default:plam_log[axis=y]
 
-# charge
+# 带幽匿块充能粒子选项的粒子类型：sculk_charge
 charge: 1.5
 
-# shriek
+# 带尖啸粒子选项的粒子类型：shriek
 shriek: 1
 
-# dust
+# 带粉末粒子选项的粒子类型：dust
 color: 255,255,255
 scale: 1.0
 
-# dust_color_transition
+# 带粉末颜色过渡选项的粒子类型：dust_color_transition
 from: 255,255,255
 to: 0,0,0
 scale: 4.0
 
-# vibration
+# 带振动粒子选项的粒子类型：vibration
 target-x: 0
 target-y: 1
 target-z: 0
 arrival-time: 10
 
-# trail
+# 带目标颜色粒子选项的粒子类型：trail
 target-x: 0
 target-y: 1
 target-z: 0
 duration: 10
 ```
 
-### potion\_effect
+### 状态效果
 
-Adds a potion effect
+添加一个状态效果
 
 ```yaml
 type: potion_effect
 potion-effect: minecraft:blindness
-duration: 20  # Default: 20
-amplifier: 0   # Default: 0
-ambient: false # from beacon
+duration: 20  # 默认值: 20
+amplifier: 0   # 默认值: 0
+ambient: false # 是否来自信标
 particles: true
 ```
 
-### remove\_potion\_effect
+### 移除状态效果
 
-Removes a potion effect
+移除一个状态效果
 
 ```yaml
 type: remove_potion_effect
-potion-effect: minecraft:blindness # Optional if 'all' is true
-all: false  # Default: false
+potion-effect: minecraft:blindness # 如果 'all' 为 true 则为可选
+all: false  # 默认值: false
 ```
 
-### leveler\_exp
+### 等级经验
 
-Adds skill/job experience
+添加技能/职业经验
 
 ```yaml
 type: leveler_exp
-plugin: AuraSkills  # The leveler plugin
-leveler: fishing  # the job/skill id
-count: 10  # the amount of exp to give
+plugin: AuraSkills  # 经验值插件
+leveler: fishing  # 职业/技能 ID
+count: 10  # 给予的经验值数量
 ```
 
-### set\_cooldown
+### 设置冷却时间
 
-Sets cooldown for player
+为玩家设置冷却时间
 
 ```yaml
 type: set_cooldown
 time: 1m30s
 id: my_cooldown_id
-add: false  # Default: false  (Whether to accumulate cooldown time)
+add: false  # 默认值: false (是否累加冷却时间)
 ```
 
-### remove\_cooldown
+### 移除冷却时间
 
-Removes cooldown for player
+为玩家移除冷却时间
 
 ```yaml
 type: remove_cooldown
-id: my_cooldown_id  # Optional if 'all' is true
-all: false  # Default: false
+id: my_cooldown_id  # 如果 'all' 为 true 则为可选
+all: false  # 默认值: false
 ```
 
-### play\_sound
+### 播放声音
 
-Plays a sound
+播放一个声音
 
 ```yaml
 type: play_sound
 sound: minecraft:xxxx.xxx
-x: <arg:position.x>
-y: <arg:position.y>
-z: <arg:position.z>
+x: <arg:position.x> # 如果使用了 'target' 参数则为可选
+y: <arg:position.y> # 如果使用了 'target' 参数则为可选
+z: <arg:position.z> # 如果使用了 'target' 参数则为可选
+target: "self" # 可选; 枚举[all,self]/玩家选择器
 pitch: 1
 volume: 1
 source: master
 ```
 
 :::info
-More functions are coming...
+更多函数即将到来...
 :::

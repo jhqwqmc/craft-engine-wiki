@@ -342,9 +342,10 @@ Plays a sound
 ```yaml
 type: play_sound
 sound: minecraft:xxxx.xxx
-x: <arg:position.x>
-y: <arg:position.y>
-z: <arg:position.z>
+x: <arg:position.x> # Optional if 'target' is specified
+y: <arg:position.y> # Optional if 'target' is specified
+z: <arg:position.z> # Optional if 'target' is specified
+target: "self" # optional; enum[all,self]/player selector
 pitch: 1
 volume: 1
 source: master

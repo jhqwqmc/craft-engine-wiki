@@ -1,93 +1,93 @@
 ---
-title: 🔗 Chain Arguments
+title: 🔗 链式参数
 id: chain_arguments
 ---
 
-## Introduction
+## 简介
 
-**Chain Arguments** represent a dot-notation syntax (connected by `.`) used to access object-related parameters in a hierarchical manner.
+**链式参数**使用点表示法（通过 `.` 连接），以层级结构访问与对象相关的参数。
 
-For example, in an interaction event where we can access the player instance, we can retrieve additional parameters through this object.
+举个例子，在一个交互事件中，如果我们能够访问到玩家实例，就可以通过这个对象来获取额外的参数。
 
-By chaining property accessors like:
+通过链式属性访问器，例如：
 
-* `player.world` → Gets the player's current world
-* `world.name` → Gets the name of that world
+* `player.world` → 获取玩家当前所在的世界
+* `world.name` → 获取该世界的名称
 
-We can combine them into a parameter tag format like `<arg:player.world.name>`. This tag will dynamically return the name of the world the player is currently in.
+我们可以将它们组合成一个参数标签格式，如 `<arg:player.world.name>`。这个标签将动态返回玩家当前所在世界的名称。
 
-## Objects
+## 对象
 
 ### player
 
-| parameter        | type                             | description                      |
-| ---------------- | -------------------------------- | -------------------------------- |
-| x                | double                           | the x coordinate of the player   |
-| y                | double                           | the y coordinate of the player   |
-| z                | double                           | the z coordinate of the player   |
-| block\_x         | int                              | the x coordinate of the player   |
-| block\_y         | int                              | the y coordinate of the player   |
-| block\_z         | int                              | the z coordinate of the player   |
-| name             | string                           | the name of the player           |
-| uuid             | uuid                             | the uuid of the player           |
-| is\_flying       | boolean                          | check the fly state              |
-| is\_sneaking     | boolean                          | check the sneak state            |
-| gamemode         | string                           | the gamemode of the player       |
-| main\_hand\_item | [#item](#item)         | the item in main hand            |
-| off\_hand\_item  | [#item](#item)         | the item in off hand             |
-| world            | [#world](#world)       | the world where the player is in |
-| position         | [#position](#position) | the position of the player       |
+| 参数               | 类型                     | 描述         |
+|------------------|------------------------|------------|
+| x                | 双精度浮点数                 | 玩家的 x 坐标   |
+| y                | 双精度浮点数                 | 玩家的 y 坐标   |
+| z                | 双精度浮点数                 | 玩家的 z 坐标   |
+| block\_x         | 整数                     | 玩家的 x 坐标   |
+| block\_y         | 整数                     | 玩家的 y 坐标   |
+| block\_z         | 整数                     | 玩家的 z 坐标   |
+| name             | 字符串                    | 玩家的名称      |
+| uuid             | 通用唯一识别码                | 玩家的通用唯一识别码 |
+| is\_flying       | 布尔                     | 检查是否处于飞行状态 |
+| is\_sneaking     | 布尔                     | 检查是否处于潜行状态 |
+| gamemode         | 字符串                    | 玩家的游戏模式    |
+| main\_hand\_item | [#item](#item)         | 主手中的物品     |
+| off\_hand\_item  | [#item](#item)         | 副手中的物品     |
+| world            | [#world](#world)       | 玩家所在的世界    |
+| position         | [#position](#position) | 玩家的位置      |
 
 ### block
 
-| parameter    | type                                    | description                     |
-| ------------ | --------------------------------------- | ------------------------------- |
-| x            | double                                  | the x coordinate of the block   |
-| y            | double                                  | the y coordinate of the block   |
-| z            | double                                  | the z coordinate of the block   |
-| block\_x     | int                                     | the x coordinate of the block   |
-| block\_y     | int                                     | the y coordinate of the block   |
-| block\_z     | int                                     | the z coordinate of the block   |
-| world        | [#world](#world)              | the world where the block is in |
-| block\_state | block\_state                  | the blockstate of the block     |
-| position     | [#position](#position)        | the position of the block       |
+| 参数           | 类型                     | 描述       |
+|--------------|------------------------|----------|
+| x            | 双精度浮点数                 | 方块的 x 坐标 |
+| y            | 双精度浮点数                 | 方块的 y 坐标 |
+| z            | 双精度浮点数                 | 方块的 z 坐标 |
+| block\_x     | 整数                     | 方块的 x 坐标 |
+| block\_y     | 整数                     | 方块的 y 坐标 |
+| block\_z     | 整数                     | 方块的 z 坐标 |
+| world        | [#world](#world)       | 方块所在的世界  |
+| block\_state | block\_state           | 方块的方块状态  |
+| position     | [#position](#position) | 方块的位置    |
 
 ### world
 
-| parameter | type   | description           |
-| --------- | ------ | --------------------- |
-| name      | string | the name of the world |
-| uuid      | uuid   | the uuid of the world |
-| time      | long   | the time of the world |
+| 参数   | 类型      | 描述         |
+|------|---------|------------|
+| name | 字符串     | 世界的名称      |
+| uuid | 通用唯一识别码 | 世界的通用唯一识别码 |
+| time | 长整数     | 世界的时间      |
 
 ### position
 
-| parameter | type                       | description      |
-| --------- | -------------------------- | ---------------- |
-| x         | double                     | the x coordinate |
-| y         | double                     | the y coordinate |
-| z         | double                     | the z coordinate |
-| block\_x  | int                        | the x coordinate |
-| block\_y  | int                        | the y coordinate |
-| block\_z  | int                        | the z coordinate |
-| world     | [#world](#world) | the world        |
+| 参数       | 类型               | 描述   |
+|----------|------------------|------|
+| x        | 双精度浮点数           | x 坐标 |
+| y        | 双精度浮点数           | y 坐标 |
+| z        | 双精度浮点数           | z 坐标 |
+| block\_x | 整数               | x 坐标 |
+| block\_y | 整数               | y 坐标 |
+| block\_z | 整数               | z 坐标 |
+| world    | [#world](#world) | 世界   |
 
 ### item
 
-| paramter            | type    | description                       |
-| ------------------- | ------- | --------------------------------- |
-| id                  | string  | the id of the item                |
-| custom\_model\_data | int     | the custom model data of the item |
-| is\_custom          | boolean | checks if the item is custom      |
+| 参数                  | 类型  | 描述           |
+|---------------------|-----|--------------|
+| id                  | 字符串 | 物品的标识符       |
+| custom\_model\_data | 整数  | 物品的自定义模型数据   |
+| is\_custom          | 布尔  | 检查物品是否为自定义物品 |
 
 ### furniture
 
-| parameter    | type                             | description                       |
-| ------------ | -------------------------------- | --------------------------------- |
-| id           | string                           | the id of the furniture           |
-| uuid         | uuid                             | the uuid of the furniture         |
-| anchor\_type | string                           | the anchor type of the furniture  |
-| x            | double                           | the x coordinate of the furniture |
-| y            | double                           | the y coordinate of the furniture |
-| z            | double                           | the z coordinate of the furniture |
-| position     | [#position](#position) | the position of the furniture     |
+| 参数           | 类型                     | 描述         |
+|--------------|------------------------|------------|
+| id           | 字符串                    | 家具的标识符     |
+| uuid         | 通用唯一识别码                | 家具的通用唯一识别码 |
+| anchor\_type | 字符串                    | 家具的附着面类型   |
+| x            | 双精度浮点数                 | 家具的 x 坐标   |
+| y            | 双精度浮点数                 | 家具的 y 坐标   |
+| z            | 双精度浮点数                 | 家具的 z 坐标   |
+| position     | [#position](#position) | 家具的位置      |

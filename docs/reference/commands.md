@@ -65,16 +65,16 @@ This command plays the Totem of Undying animation for the player.
 The command is used to retrieve the usage status of excess appearances for a specified block type. The red sections indicate states that are already in use, while the green sections represent available, unused states. When you hover your mouse over these sections, you can view the specific states and identify which custom states are using them.
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/commands_1.png" alt="" />
+  <img src={require('/img/commands_1.png').default} alt="" />
 </div>
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/commands_2.png" alt="" />
+  <img src={require('/img/commands_2.png').default} alt="" />
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>appearance state in use</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/commands_2.png" alt="" />
+  <img src={require('/img/commands_3.png').default} alt="" />
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>free state</p>
 </div>
 
