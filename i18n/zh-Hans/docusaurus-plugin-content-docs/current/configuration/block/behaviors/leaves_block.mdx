@@ -1,15 +1,15 @@
 ---
-title: 🍁 Leaves Block
+title: 🍁 树叶方块
 id: leaves_block
 ---
 
-| Property Name | Property Type | Required |
-|---------|---------|---------|
-| distance    | int   | yes   |
-| persistent     | boolean   | yes   |
-| waterlogged   | boolean   | no   |
+| 属性名称        | 属性类型    | 是否必需 |
+|-------------|---------|------|
+| distance    | int     | 是    |
+| persistent  | boolean | 是    |
+| waterlogged | boolean | 否    |
 
-**Leaves blocks** are blocks that naturally decay after detaching from the tree trunk. When `persistent` is set to true, they will never decay. The `distance` property determines the maximum allowed distance from the trunk.
+**树叶方块**是与树干分离后会自然枯萎的方块。当 `persistent` 设为 true 时将永远不会枯萎。`distance` 属性决定树叶允许离树干的最大距离。
 
 ```yml
 blocks:
@@ -22,6 +22,6 @@ blocks:
 
 :::tip
 
-You can increase or decrease the distance value as needed. For particularly large trees, to prevent leaf decay, you can set the distance to 10 or higher. In the vanilla game, the maximum distance for leaves is 7.
+可根据需要调整 distance 数值。对于特别大型的树木，为防止树叶衰败可将 distance 设为 10 或更高。原版游戏中树叶最大距离为 7。
 
 :::

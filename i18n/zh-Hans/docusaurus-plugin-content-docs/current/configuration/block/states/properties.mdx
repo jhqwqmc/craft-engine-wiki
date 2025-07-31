@@ -1,19 +1,19 @@
 ---
-title: ℹ️ Properties
+title: ℹ️ 属性
 id: properties
 ---
 
-## Types
+## 类型
 
 :::tip
 
-The `default` option is optional.
+`default` 选项是可选的。
 
 :::
 
 ### boolean
 
-A property of type `boolean` can only have two possible values: `true` or `false`.
+`boolean` 类型的属性只有两种可能值：`true` 或 `false`。
 
 ```yaml
 properties:
@@ -24,7 +24,7 @@ properties:
 
 ### int
 
-A property of type `int` can take any integer value within the specified range.
+`int` 类型的属性可以取指定范围内的任何整数值。
 
 ```yaml
 properties:
@@ -36,7 +36,7 @@ properties:
 
 ### string
 
-A property of type `string` can only take values from a predefined set of options.
+`string` 类型的属性只能从预定义的选项集合中取值。
 
 ```yaml
 properties:
@@ -138,20 +138,20 @@ properties:
     default: straight
 ```
 
-## Hard-coded Names
+## 硬编码名称
 
 :::info
 
-In addition to the names mentioned below, some names are determined by the behavior of the block. For example, the sapling behavior requires a property named `age`.
+除了下面提到的名称外，一些名称由方块的行为决定。例如，树苗行为需要一个名为 `age` 的属性。
 
 :::
 
 ### waterlogged
 
-waterlogged determines whether this block can contain water.
+`waterlogged` 决定该方块是否可以包含水。
 
 :::warning
-Note: When using waterlogged state, ensure that the corresponding visual block also contains water; otherwise, the client will fail to render the water properly.
+注意：当使用 `waterlogged` 状态时，请确保对应的视觉方块状态也包含水，否则客户端将无法正确渲染水。
 :::
 
 ```yaml
@@ -163,7 +163,7 @@ properties:
 
 ### facing
 
-When a block has this hardcoded property name, its placement orientation will automatically adapt.
+当方块具有此硬编码属性名称时，其放置方向将自动适应。
 
 ```yaml
 properties:
@@ -174,7 +174,7 @@ properties:
 
 ### facing\_clockwise
 
-Unlike the above, it will be rotated 90 degrees when placed
+与上述不同的是，方块放置时将旋转 90 度。
 
 ```yaml
 properties:

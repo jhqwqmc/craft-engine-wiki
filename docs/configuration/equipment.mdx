@@ -8,7 +8,7 @@ import Highlight from '@site/src/components/Highlight';
 ## Introduction
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/equipment_1.png" alt="" />
+  <img src={require('/img/equipment_1.png').default} alt="" />
 </div>
 
 CraftEngine offers two ways to create custom equipment. One method is based on **Trim** (for Minecraft 1.20+), and the other uses the **Equippable component** (introduced in 1.21.2).
@@ -46,7 +46,7 @@ equipments:
 The image below demonstrates the mapping between configurations and actual texture paths. If a layer type contains hyphens ("-"), you must replace them with underscores ("_") in the path. Example `humanoid-leggings` -> `humanoid_leggings`
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/equipment_3.png" alt="" />
+  <img src={require('/img/equipment_3.png').default} alt="" />
 </div>
 
 

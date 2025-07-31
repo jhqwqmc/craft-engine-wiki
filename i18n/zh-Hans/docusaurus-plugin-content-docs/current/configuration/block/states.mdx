@@ -1,18 +1,18 @@
 ---
-title: 🔣 Block States
+title: 🔣 方块状态
 id: states
 ---
 
-## Introduction
+## 简介
 
-In Minecraft's block system, each block has one or more block states. For example, wood has a facing direction, and leaves have different distances. These states determine how the block behaves and appears in the game.
+在 Minecraft 的方块系统中，每个方块都带有一个或多个方块状态。例如，木头有朝向，树叶有不同的距离。这些方块状态决定了方块在游戏中的行为和外观。
 
 
 ![](/img/block_states_1.png)
 
-## Single-State Block
+## 单状态方块
 
-Most blocks only require a single state to function properly. The example below shows how to configure a single-state block.
+大多数方块仅需一个方块状态即可正常运行。以下示例展示了如何配置单状态方块。
 
 ```yaml
 blocks:
@@ -29,7 +29,7 @@ blocks:
             "side": "minecraft:block/custom/chinese_lantern"
 ```
 
-### Internal Id
+### 内部标识符
 
 ```yaml
 blocks:
@@ -38,41 +38,41 @@ blocks:
       id: 15
 ```
 
-The **id** represents a unique identifier for blocks. For example, `15` in this case would correspond to `craftengine:note_block_15`. 
+`id` 代表方块的**唯一标识符**。例如，本例中的 `15` 将对应于 `craftengine:note_block_15`。
 
 :::caution
-The **15** in `id: 15` is completely unrelated to the **15** in `state: note_block:15`. I will explain it later.
+`id: 15` 中的 **15** 与 `state: note_block:15` 中的 **15** 完全不相关。我稍后会解释。
 :::
 
 :::info
 
-The maximum number of **id** is determined by the sum of two factors:
+方块**标识符**的最大数量取决于两个因素的总和：
 
-1. **Available Block Appearance States**: These are defined in the `mappings.yml` file. For a single block type, the more free block states you "release," the higher the number of available appearance states.
-2. **Additionally Registered Real States**: These are added via the `additional-real-blocks.yml` file. This configuration allows you to manually register extra real serverside states for specific blocks, further increasing the total pool of internal IDs.
+1. **可用的外观方块状态**：这些在 `mappings.yml` 文件中定义。对于单一的方块类型，你“释放”的**空闲方块状态越多，可用的外观方块状态数量就越多**。
+2. **额外注册的真实方块状态**：这些通过 `additional-real-blocks.yml` 文件添加。此配置允许你为特定方块**手动注册额外的服务器端侧真实方块状态**，进一步增加内部标识符的总量。
 
 :::
 
-### Visual State
+### 视觉方块状态
 
 ```yaml
 blocks:
   default:chinese_lantern:
     state: note_block:15
 ```
-The `state` refers to the visual appearance seen by clients. These states are the vanilla block states we freed in the **mappings.yml** file. The maximum number of available states is determined by the Minecraft version and is strictly limited. `note_block:15` refers to the **16th** released note_block block state (zero-indexed).
+`state` 指的是**客户端看到的视觉外观**。这些方块状态是我们通过 **mappings.yml** 文件释放的**原版方块状态**。可用方块状态的最大数量由 Minecraft 版本决定，并且受到严格限制。`note_block:15` 指的是**第 16 个**（从零开始计数）被释放的音符盒方块状态。
 
 ![](/img/block_states_2.png)![](/img/block_states_3.png)
 
 :::tip
 
-You can configure state like this if you want to precisely control the appearance state in use.
+如果您想精确控制使用中的外观方块状态，可以像这样配置方块状态。
 ```yaml
 state: minecraft:note_block[instrument=hat,note=0,powered=false]
 ```
 :::
 
-### Model
+### 模型
 
 ```yaml
 blocks:
@@ -87,17 +87,17 @@ blocks:
             "side": "minecraft:block/custom/chinese_lantern"
 ```
 
-The `model` determines which 3D model will replace the released vanilla block state. In addition to standard block models, CraftEngine allows further configuration of randomized models and model rotation.
+`model` 决定了哪个 3D 模型将替换被释放的原版方块状态。除了标准的方块模型外，CraftEngine 还允许进一步配置随机模型和模型旋转。
 
 :::caution
 
-If you are unsure how to configure properties like `path` and `generation`, you should complete [Tutorial](../../getting_start.mdx) firstly.
+如果你不确定如何配置 `path` 和 `generation` 等属性，你应该首先完成[教程](../../getting_start.mdx)。
 
 :::
 
-#### Weighted Models
+#### 加权模型
 
-To achieve randomized models, just provide model paths in a list format:
+要实现随机模型，只需以列表格式提供模型路径即可：
 
 ```yaml
 state:
@@ -110,13 +110,13 @@ state:
       weight: 2
 ```
 
-> weight: Sets the probability of the model for being used in the game, defaults to 1 (=100%). If more than one model is used for the same variant, the probability is calculated by dividing the individual model's weight by the sum of the weights of all models. (For example, if three models are used with weights 1, 1, and 2, then their combined weight would be 4 (1+1+2). The probability of each model being used would then be determined by dividing each weight by 4: 1/4, 1/4 and 2/4, or 25%, 25% and 50%, respectively.)
+> weight：设置模型在游戏中被选用的权重。默认为1（即100%）。如果候选模型指定了一个模型选择列表，游戏会根据方块所在的位置计算应该选择什么模型，如果方块位置一致选择的模型也就一致。模型列表内一个模型被选中的概率由weight决定：假设第一个模型的weight为w1，第二个模型的weight为w2，以此类推直到第n个模型，那么总权重为W=w1+w2+w3+...+wn，选中第n个模型的概率就是wn/W。举例来说，如果第一个模型权重为1，第二个模型权重为2，第三个模型权重为1，则选中第一个模型的概率为25%，选中第二个模型的概率为50%，选中第三个模型的概率为25%。
 
 ![](/img/block_states_4.png)
 
-#### Rotation
+#### 旋转
 
-If you need to create a piece of wood with three different orientations, all you need to do is specify the x and y properties. 
+如果你需要创建一块具有三种不同方向的木头，你只需指定 x 和 y 属性即可。
 
 ```yaml
 model:
@@ -126,35 +126,35 @@ model:
   uvlock: false
 ```
 
-> x: Rotation of the model on the x-axis in increments of 90 degrees.\
-> y: Rotation of the model on the y-axis in increments of 90 degrees.\
-> uvlock: Can be true or false (default). Locks the rotation of the texture of a block, if set to true. This way the texture does not rotate with the block when using the x and y-tags above.
+> x: 模型相对于X轴的旋转，单位为度，必须为90的倍数。\
+> y: 模型相对于Y轴的旋转，单位为度，必须为90的倍数。\
+> uvlock: 是否锁定方块纹理的旋转方向，默认为false。如果设置为 true，则锁定方块材质的旋转。这样，使用上面的 x 和 y 属性时，材质不会随方块旋转。
 
-## Multi-State Block
+## 多状态方块
 
 :::warning
 
-The following content may become difficult to understand. I will explain it in as much detail as possible. Please make sure to read it **word by word**.
+接下来的内容可能会比较难懂。我会尽可能详细地解释，请务必**逐字逐句**仔细阅读。
 
 :::
 
-The first step in creating a multi-state block is to define the type of state **property** for that block. In this example, I've set an `axis` property.
+创建多状态方块的第一步是为该方块定义状态**属性**的类型。在此示例中，我设置了一个 `axis` 属性。
 
 ```yaml
 blocks:
   default:palm_log:
     states: # state(s)
       properties:
-        axis:             # Property name
-          type: axis      # Data type
-          default: y      # Default value
+        axis:             # 属性名称
+          type: axis      # 数据类型
+          default: y      # 默认值
 ```
 
-### Property 
+### 属性
 
-The property name is almost arbitrary, but I recommend using lowercase letters. However, the plugin hardcodes certain names for special placement behaviors. For example, when a property is named `axis`, the plugin will automatically align its orientation during placement. This entire process is fully automated.
+属性名称几乎可以随意选择，但我建议使用小写字母。不过，插件会为特殊的放置行为硬编码某些名称。例如，当属性名为 `axis` 时，插件在放置时会自动对齐其方向。这一过程是完全自动化的。
 
-In the following example, since the property is named `custom_axis`, the plugin will NOT apply rotation during placement. No matter how you place it, the block will always use the state `custom_axis=y` when placed.
+在下面的示例中，由于属性名为 `custom_axis`，插件在放置时不会应用旋转。无论你如何放置，方块在放置时将始终使用 `custom_axis=y` 状态。
 
 ```yaml
 custom_axis:
@@ -164,13 +164,13 @@ custom_axis:
 
 :::tip
 
-You can find detailed information about property types and the plugin's hardcoded property names on [ℹ️ Properties](states/properties.mdx).
+您可以在[ℹ️ 属性](states/properties.mdx)中找到有关属性类型和插件硬编码属性名称的详细信息。
 
 :::
 
-### Appearance
+### 外观
 
-In the second step, we need to configure the possible visual appearances for the custom block. For example, a log block requires three orientations, so we need to assign three vanilla states as its visual representations.
+在第二步中，我们需要配置自定义方块的可能视觉外观。例如，一个木头方块需要三种方向，因此我们需要指定三种原版方块状态作为其视觉表现。
 
 ```yaml
 blocks:
@@ -211,17 +211,17 @@ blocks:
 
 :::info
 
-In the configuration above, `axisX`, `axisZ`, and `axisY` are arbitrary names. You can use any descriptive terms that clearly represent the visual states, as long as they are unique.
+在上述配置中，`axisX`、`axisZ` 和 `axisY` 可以任意名称。您可以使用任何能清晰表示视觉状态的描述性术语，只要它们是唯一的即可。
 
-The configuration of `state` and `model(s)` follows the same rules as single-state blocks. If you're unsure about any details, please refer back to the relevant documentation.
+`state` 和 `model(s)` 的配置遵循与单状态方块相同的规则。如果您对任何细节不确定，请参阅相关文档。
 
 :::
 
-### Variant
+### 变体
 
-Now for the final step: We need to combine all custom properties, list all possible combinations, and assign internal block IDs to each. If you're unfamiliar with **internal ID**, please review the relevant documentation.
+在最后一步中，我们需要组合所有自定义属性，列出所有可能的组合，并为每个组合分配内部方块标识符。如果您不熟悉 **内部标识符**，请参阅相关文档。
 
-For properties and their values, use `=` to connect them (e.g., `axis=y`). When multiple properties appear together, separate them with commas (e.g., `axis=y,age=7`).
+对于属性及其值，使用 `=` 连接它们（例如，`axis=y`）。当多个属性一起出现时，用逗号分隔（例如，`axis=y,age=7`）。
 
 ```yaml
 blocks:
@@ -229,7 +229,7 @@ blocks:
     states:
       variants:
         axis=x:
-          appearance: axisX # refers to the appearance name we just defined in the "appearances"
+          appearance: axisX # 指的是我们在“appearances”中刚刚定义的外观名称。
           id: 0
         axis=y:
           appearance: axisY
@@ -240,7 +240,7 @@ blocks:
 ```
 
 <details>
-  <summary>Full Config</summary>
+  <summary>完整配置</summary>
 
 ```yml
 blocks:
@@ -297,7 +297,7 @@ blocks:
 
 :::tip
 
-To customize block settings for specific states, add configuration like this:
+要为特定状态自定义方块设置，请添加如下配置：
 
 ```yaml
 variants:
@@ -310,42 +310,42 @@ variants:
 
 :::
 
-## Feeling confused?
+## 懵逼了？
 
-However, you might also be confused about the relationship between `id` and `state` — why do I need to configure two parameters? Aside from making the configuration more complicated, what’s the actual purpose of this? 
+您可能会对 `id` 和 `state` 之间的关系感到困惑——为什么需要配置这两个参数？除了使配置更复杂之外，这么做的实际目的是什么？
 
-To understand why, you need to look at how CraftEngine implements custom blocks at a fundamental level. Let’s start by discussing the principles behind the plugin.
+要理解原因，您需要了解 CraftEngine 在底层是如何实现自定义方块的。让我们从讨论插件背后的原理开始。
 
-### Unused States
+### 未使用的方块状态
 
-First, let me ask you a simple question: How many different appearances does a vanilla leaves block have? I believe you’ll quickly figure out the answer: two states — waterlogged and non-waterlogged.
+首先，让我问你一个简单的问题：原版树叶有多少种不同的外观？我相信你会很快得出答案：两种方块状态——含水和不含水。
 
-But do you know how many block states a single type of leaves block needs to maintain on the server side?
+但你知道服务器端需要为单一类型的树叶维护多少种方块状态吗？
 
 <details>
-  <summary>Answer</summary>
+  <summary>答案</summary>
 
-  The correct number is **28**. Did you get it right?
+  正确答案是 **28**。你答对了吗？
 
-  But how is this number calculated? Let's enable debug mode (F3) and hover the cursor over a leaves block. You'll notice several key-value pairs listed under the block ID - these represent the block's properties. Alternatively, you could use a debug stick to examine these.
+  但这个数字是怎么计算出来的呢？让我们按下F3打开调试屏幕，然后将视角对准树叶并且确保处在你的方块交互距离内。你会注意到在方块命名空间ID下列出了几个键值对——这些代表了方块的属性。或者，你可以使用调试棒来检查这些属性。
 
   ![](/img/block_states_6.png)
-  
-  - waterlogged: 2 states (true/false).
-  - persistent: 2 states (true/false).
-  - distance: 7 states (values 1 to 7).
 
-  Therefore, the total number of possible leaves block states is `2 × 2 × 7 = 28`.
+  - waterlogged：2 种状态（true/false）。
+  - persistent：2 种状态（true/false）。
+  - distance：7 种状态（值从 1 到 7）。
+
+  因此，树叶可能的状态总数是 `2 × 2 × 7 = 28`。
 
   ![](/img/block_states_5.png)
 
 </details>
 
-Then you'll realize - wow! With so many leaves block states but only two visual variants, couldn't we repurpose those extra states for custom block appearances? Exactly! This is where the `mappings.yml` file comes into play. Through `mappings.yml`, we can **map seemingly identical block states to share the same visual representation**. This clever approach frees up those redundant states for our custom block implementations.
+然后你会意识到——哇！树叶方块有这么多状态，但只有两种视觉变体，我们能否将那些多余的状态重新用于自定义方块外观？正是如此！这就是 `mappings.yml` 文件发挥作用的地方。通过 `mappings.yml`，我们可以**将看似相同的方块状态映射为共享相同的视觉表现的方块状态**。这种巧妙的方法释放了那些冗余状态，供我们的自定义方块实现使用。
 
 ### mappings.yml
 
-Below is an excerpt from the default mappings.yml configuration. It maps all oak leaves with distance=1-7 to distance=7 and persistent=true. This means every vanilla leaves block in the world is technically converted to distance=7, persistent=true leaves by the plugin - yet you can't visually tell the difference because they appear identical.
+以下是默认 mappings.yml 配置的摘录。它将所有 distance=1-7 的橡树树叶映射到 distance=7 且 persistent=true。这意味着世界中的每个原版橡树树叶在技术上都被插件转换为 distance=7、persistent=true 的橡树树叶——但你无法从视觉上分辨差异，因为它们看起来完全相同。
 
 ```yml
 "minecraft:oak_leaves[distance=1,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
@@ -363,12 +363,12 @@ Below is an excerpt from the default mappings.yml configuration. It maps all oak
 "minecraft:oak_leaves[distance=6,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
 ```
 
-### Id & State
+### 标识符与方块状态
 
-Now, let's return to the **id** and **state** we just discussed. The state refers to the "unused" block states we released in mappings.yml, while the **id** represents the actual block states existing on the server side. We need to establish a bridge between these two parameters with **packet magics**, so that the new blocks actually existing on the server will be mapped to those freed vanilla states, thereby appearing as custom blocks.
+现在，让我们回到刚刚讨论的 **id** 和 **state**。方块状态指的是我们在 mappings.yml 中释放的“未使用”方块状态，而 **id** 代表服务器端实际存在的方块状态。我们需要通过 **数据包魔法** 在这两个参数之间建立一座桥梁，以便服务器上实际存在的新方块能够映射到那些释放的原版方块状态，从而表现为自定义方块。
 
-### Not Enough Real Block States
+### 真实方块状态不足
 
-By default, the plugin generates and releases a number of real block states equal to the available freed visual states. However, in some cases, we may need special mechanics that require more real block states but fewer visual states. In such scenarios, multiple real states will be mapped to the same visual state, resulting in the issue mentioned in the title: "Not Enough Real Blocks".
+默认情况下，插件会生成并释放与可用视觉方块状态数量相等的真实方块状态。然而，在某些情况下，我们可能需要特殊机制，这些机制需要更多的真实方块状态但只需要较少的视觉方块状态。在这种场景下，多个真实方块状态将被映射到相同的视觉方块状态，从而导致标题中提到的“真实方块不足”问题。
 
-To resolve this, you will need to use the `additional-real-blocks.yml` file to register additional real blocks.
+为了解决这个问题，您需要使用 `additional-real-blocks.yml` 文件来注册额外的真实方块。

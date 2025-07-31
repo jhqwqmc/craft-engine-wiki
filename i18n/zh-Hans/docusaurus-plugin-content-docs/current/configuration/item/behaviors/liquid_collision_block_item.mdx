@@ -1,11 +1,11 @@
 ---
-title: 🌊 Liquid Collision Block Item
+title: 🌊 液体碰撞方块物品
 id: liquid_collision_block_item
 ---
 
-## Introduction
+## 简介
 
-**Liquid Collision Block Item** checks for collisions with fluids. It is suitable for creating blocks that can be placed on the surface of water or lava. All other configuration options are identical to those of Block Item.
+**液体碰撞方块物品**会检查交互是否与液体、冰、霜冰或含水方块碰撞。它适用于创建可以放置在水源或熔岩表面的方块。所有其他配置选项与方块物品的配置相同。
 
 ```yaml
 items:
@@ -13,6 +13,6 @@ items:
     material: paper
     behavior:
       type: liquid_collision_block_item
-      offset-y: 1 # the position to place block on
+      offset-y: 1 # 放置方块的位置
       block: default:reed
 ```

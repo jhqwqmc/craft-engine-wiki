@@ -129,7 +129,7 @@ id: commands
 
 `/ce debug get-block-internal-id [自定义方块状态]`
 
-此命令用于查找自定义方块对应的服务器端侧真实方块ID，常用于 WorldEdit 和数据包等工具中。
+此命令用于查找自定义方块对应的服务器端侧真实方块命名空间ID，常用于 WorldEdit 和数据包等工具中。
 
 ![](/img/commands_9.png)
 ![](/img/commands_10.png)
@@ -137,9 +137,9 @@ id: commands
 
 :::tip
 
-**问：** 为什么数据包中必须使用真实方块ID，而不是像 default:palm_log 这样的名称？
+**问：** 为什么数据包中必须使用真实方块命名空间ID，而不是像 default:palm_log 这样的名称？
 
-**答：** 因为配置文件在服务器启动后才加载，而数据包在服务器初始化阶段就已加载。此时服务器无法识别未注册的方块ID。为确保预注册的自定义方块能适配最新用户配置，CraftEngine采用了容器式动态绑定方案。
+**答：** 因为配置文件在服务器启动后才加载，而数据包在服务器初始化阶段就已加载。此时服务器无法识别未注册的方块命名空间ID。为确保预注册的自定义方块能适配最新用户配置，CraftEngine采用了容器式动态绑定方案。
 
 :::
 
@@ -148,7 +148,7 @@ id: commands
 
 `/ce debug get-block-state-registry-id [真实方块状态]`
 
-此命令用于获取对应方块状态的注册ID（不常用）。
+此命令用于获取对应方块状态的注册标识符（不常用）。
 
 ![](/img/commands_11.png)
 
@@ -156,7 +156,7 @@ id: commands
 
 `/ce debug target-block [--this]`
 
-'target-block' 命令用于检查鼠标指向的方块数据（或使用 '--this' 标志获取当前位置）。它包括真实方块 ID 和 CraftEngine 方块状态。如果方块拥有自定义标签，那么也会显示这些标签。
+'target-block' 命令用于检查鼠标指向的方块数据（或使用 '--this' 标志获取当前位置）。它包括真实方块命名空间ID和 CraftEngine 方块状态。如果方块拥有自定义标签，那么也会显示这些标签。
 
 ![](/img/commands_12.png)
 

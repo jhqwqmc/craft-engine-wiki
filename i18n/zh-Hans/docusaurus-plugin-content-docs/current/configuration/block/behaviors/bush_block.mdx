@@ -1,9 +1,9 @@
 ---
-title: 🪻 Bush Block
+title: 🪻 灌木方块
 id: bush_block
 ---
 
-**Bush Block** is a type of block behavior that must grow on specific supporting blocks. If the block beneath it is destroyed, or if it is found to be in an invalid position, it will either break or drop as an item.
+**灌木方块**是一种必须在特定支撑方块上生长的行为类型。若下方方块被破坏或处于无效位置，该方块将会破坏或掉落为物品。
 
 ```yaml
 blocks:
@@ -11,7 +11,7 @@ blocks:
     behavior:
       type: bush_block
       stackable: false
-      blacklist: false # use blacklist mode
+      blacklist: false # 使用黑名单模式
       delay: 0
       bottom-blocks:
         - custom:xxx

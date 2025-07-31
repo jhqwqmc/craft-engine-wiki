@@ -1,14 +1,14 @@
 ---
-title: 🔧 Block Settings
+title: 🔧 方块设置
 id: settings
 ---
 
-## Overview
+## 概览
 
-The settings define the basic properties shared by blocks. You can enable all of them simultaneously. Below is an example containing all possible settings types:
+这些设置定义了方块的基础属性，你可以同时启用它们全部。以下是包含所有可用设置类型的示例：
 
 <details>
-  <summary>Example</summary>
+  <summary>示例</summary>
 
 ```yaml
 blocks:
@@ -52,100 +52,100 @@ blocks:
 ```
 </details>
 
-## Stable Settings
+## 稳定设置
 
-### hardness
+### 硬度
 
-Determines how long it takes the player to destroy this block (Default: 2.0)
+决定了挖掘这个方块需要的挖掘时间。（默认值：2.0）
 
 ```yaml
 hardness: 0.5
 ```
 
-### resistance
+### 爆炸抗性
 
-Determines the probability of the block surviving the explosion (Default: 2.0)
+决定了方块在爆炸中吸收和阻止爆炸破坏方块传播的强度。（默认值：2.0）
 
 ```yaml
 resistance: 0.5
 ```
 
-### is-randomly-ticking
+### 随机刻
 
-Determines whether the block state accepts random ticks, which is relevant for some block behaviors, such as leaves. (Default: false)
+决定方块状态是否接受随机刻，这与某些方块行为有关，例如树叶。（默认值：false）
 
 ```yaml
 is-randomly-ticking: true
 ```
 
-### push-reaction
+### 活塞推动行为
 
-Determines how the block reacts to piston pushes. Please note that some reactions may not work well with certain block types due to client visual sync issues. This problem will be fixed in future versions. (Default: NORMAL)
+决定方块在受到活塞推动时的反应。请注意，由于客户端视觉同步问题，某些反应可能与某些方块类型不兼容。这个问题将在未来版本中得到修复。（默认值：NORMAL）
 
-* NORMAL   Pistons can push and pull this block normally.
-* DESTROY   Blocks pushed by pistons are destroyed instantly.
-* BLOCK   Pistons cannot move this block.
-* IGNORE  Seems to behave like PUSH\_ONLY but can stick to sticky blocks
-* PUSH\_ONLY   Blocks can be pushed by pistons, but cannot be retracted. Do not stick to sticky blocks.
+* NORMAL     可推动，可拉动
+* DESTROY    被推动破坏，不可拉动
+* BLOCK      不可推动，不可拉动
+* IGNORE     似乎像 PUSH_ONLY 一样工作，但可以粘附在粘性方块上
+* PUSH\_ONLY 可推动，不可拉动
 
 ```yaml
 push-reaction: NORMAL
 ```
 
-### map-color
+### 地图颜色
 
-Determines what color the block is displayed on the map. Available colors can be found on [https://minecraft.wiki/w/Map\_item\_format](https://minecraft.wiki/w/Map_item_format#Color_table) (Default: 0)
+决定了地图在表示此方块时会使用的颜色的基色。可用颜色可以在 [https://zh.minecraft.wiki/w/地图存储格式#地图基色](https://zh.minecraft.wiki/w/地图存储格式#地图基色) 查找。（默认值：0）
 
 ```yaml
 map-color: 36
 ```
 ![](/img/block_settings_1.png)
 
-### burnable
+### 熔岩可燃性
 
-Determines whether this block can be ignited by the environment (Default: false)
+决定了熔岩是否可以在该方块上生成火。（默认值：false）
 
 ```yaml
 burnable: true
 ```
 
-![](/img/block_settings_2.png)
+![](/img/i18n/zh-Hans/block_settings_2.png)
 
-### fire-spread-chance
+### 烧毁几率
 
-Determines how long the block can burn. A longer burn time means a greater chance of spreading fire to surrounding blocks. (Default: 0)
+影响火与其相邻时破坏该方块的几率和速率。方块烧毁几率为正数时，其所有表面均可燃烧，否则只有其完整的上表面可以燃烧。（默认值：0）
 
 ```yaml
 fire-spread-chance: 100  # 0-100
 ```
 
-### burn-chance
+### 引燃几率
 
-Determines the probability of being ignited (Default: 0)
+影响火在其附近时传播到该方块表面上的几率和速率。引燃几率为正数的方块被称为可燃方块。（默认值：0）
 
 ```yaml
 burn-chance: 30  # 0-100
 ```
 
-### item
+### 物品
 
-Determines the item that this block corresponds to. This is usually used to get blocks in creative mode with middle click. (Default: null)
+决定方块对于的物品是什么。通常在创造模式使用鼠标中键点击来获取方块。（默认值：null）
 
 ```yaml
 item: default:xxx_block_item
 ```
 
-### replaceable
+### 可替代
 
-Determines whether to replace the block at its original location when the player uses a block to interact with this block (Default: false)
+决定了方块是否可以被其他方块通过放置被直接替代掉，影响方块物品放置出方块的方式。（默认值：false）
 
 ```yaml
 replaceable: false
 ```
 
-### is-redstone-conductor
+### 红石导体
 
-Determines whether this block is a redstone signal conductor (Default: UNDEFINED)
+决定了方块在红石信号传播中的影响。具有红石导体属性的方块被称为红石导体。（默认值：未定义）
 
 ```yaml
 is-redstone-conductor: true
@@ -153,33 +153,33 @@ is-redstone-conductor: true
 
 ![](/img/block_settings_3.png)
 
-### is-suffocating
+### 窒息生物
 
-Determines whether the player will take suffocation damage (Default: UNDEFINED)
+决定了生物视平线处于其中时会发生窒息的方块。（默认值：未定义）
 
 ```yaml
 is-suffocating: true
 ```
 
-### is-view-blocking
+### 视野阻挡
 
-Whether to block the line of sight. However, this option is useless for players, but it will affect some entity mechanisms on the server. (Default: UNDEFINED)
+会使视平线处于其中的非旁观模式玩家渲染阻挡视线的效果。绝大多数窒息方块都是视野阻挡方块。但是，此选项对玩家毫无用处，但是它将影响服务器上的某些实体机制。（默认值：未定义）
 
 ```yaml
 is-view-blocking: true
 ```
 
-### sounds
+### 音效
 
-Determines the sound of the block in various situations (Default: null)
+决定方块在各种情况下的音效。（默认值：null）
 
-* fall    When the player falls on this block
-* hit    When the player digs this block
-* break    When the player breaks this block
-* step    When the player walks on this block
-* place    When the player places this block
-* land   When the block falls on ground (For falling blocks)
-* destroy   When the block falls on ground and break (For falling blocks)
+* fall 当玩家带有坠落伤害时坠落在方块上时
+* hit 当玩家挖掘方块时
+* break 当玩家破坏方块时
+* step 当玩家在方块上行走时
+* place 当玩家放置方块时
+* land 当下落的方块落地且变为方块
+* destroy 当下落的方块落地且未能变为方块
 
 ```yaml
 sounds:
@@ -193,37 +193,37 @@ sounds:
 ```
 
 :::info
-You can configure like this to precisely control the volume and pitch
+您可以像这样配置以精确控制音量和音高
 
 ```yaml
 sounds:
   break:
     id: minecraft:block.deepslate.break
     pitch: 0.5
-    volume: 0.25~0.3 # ranged value is also supported
+    volume: 0.25~0.3 # 范围值也支持
   step: minecraft:block.deepslate.step
 ```
 :::
 
-### require-correct-tools
+### 需要合适挖掘工具
 
-Determines if correct tool is required for the drops (Default: false)
+决定了是否需要合适挖掘工具才能有效的挖掘这个方块（默认值：false）
 
 ```yaml
 require-correct-tools: false
 ```
 
-### respect-tool-component
+### 尊重 tool 组件
 
-Decides if `minecraft:tool` component's `correct_for_drops` option should work as `correct-tools` below (Default: false)
+决定 `minecraft:tool` 组件的 `correct_for_drops` 选项是否应像下面的 `correct-tools` 一样工作。（默认值：false）
 
 ```yaml
 respect-tool-component: false
 ```
 
-### correct-tools
+### 合适挖掘工具
 
-Determines the correct tool required to mine this block, otherwise no item will be dropped (Default: null)
+决定了什么物品可以有效地挖掘这个方块。（默认值：null）
 
 ```yaml
 correct-tools:
@@ -236,20 +236,20 @@ correct-tools:
 ```
 
 :::tip
-If `correct-tools` is set, `require-correct-tools` would be true
+如果设置了 `correct-tools`，那么 `require-correct-tools` 默认为 `true`。
 :::
 
-### incorrect-tool-dig-speed
+### 挖掘惩罚
 
-Slows down the dig speed if the tool is incorrect (Default: 0.3)
+决定了如果不使用合适挖掘工具的挖掘速度是正常的多少倍（默认值：0.3）
 
 ```yaml
 incorrect-tool-dig-speed: 0.3 # 0~1
 ```
 
-### tags
+### 标签
 
-Tags determine the properties of many blocks. For example, using `minecraft:mineable/axe` will make your blocks mine faster with an axe. (Default: null) [🏷️ Block Tags](../../reference/block_tags.mdx)
+标签决定了许多方块的属性。例如，使用 `minecraft:mineable/axe` 会让你的方块用斧挖掘时更快。（默认值：null）[🏷️ 方块标签](../../reference/block_tags.mdx)
 
 ```yaml
 tags:
@@ -259,74 +259,74 @@ tags:
   - minecraft:completes_find_tree_tutorial
 ```
 
-### client-bound-tags
+### 客户端侧标签
 
-This would only work for vanilla blocks
+这只适用于原版方块
 
 ```yaml
 client-bound-tags:
   - minecraft:beacon_base_blocks
 ```
 
-### instrument
+### 乐器
 
-Determines what instrument the note block will play when it is above this block. (Default: harp)
+决定了方块被放在音符盒下时，音符盒使用的乐器类型。（默认值：harp）
 
 ```yaml
 instrument: BASEDRUM
 ```
 
-### fluid-state&#x20;
+### 流体状态
 
-Decides the fluid state of this block state (Default: empty)
+决定了方块状态的包含的流体状态。（默认值：empty）
 
 ```yaml
-fluid-state: water
+fluid-state: water # empty/water
 ```
 
-### support-shape
+### 支撑形状
 
-Determines the support shape provided by the block. By default, custom blocks will use the **support-shape** of their corresponding visual state. However, you can manually specify the **support-shape** of a vanilla block here instead.
+决定了方块提供的**支撑形状**。默认情况下，自定义方块会使用其对应视觉状态的**支撑形状**。但是，你可以在这里手动指定一个原版方块的**支撑形状**来代替。
 
 ```yaml
 support-shape: minecraft:stone
 ```
 
-## Unstable Settings
+## 不稳定设置
 
 :::caution
-The remaining block settings are all related to the light system. CraftEngine has implemented partial light effects as much as possible without affecting server performance. Visual issues with the light system on the client side are normal and in most cases I can't fix them.
+剩余的方块设置都与**光照系统**有关。CraftEngine 已尽可能在不影响服务器性能的情况下实现了部分光照效果。客户端光照系统的视觉问题属于正常现象，在大多数情况下我也无法修复。
 
-The block's occlusion of **skylight** is entirely determined by the **client-side** and **cannot be fixed** by sending packets from the server. Therefore, the **block-light** and **can-occlude** settings **only affect block-emitted light**, not skylight.
+方块对**天空光照**的遮挡完全由**客户端决定**，**无法通过服务器发送数据包来修复**。因此，`block-light` 和 `can-occlude` 设置**仅影响方块自身发出的光**，不影响天空光照。
 :::
 
-### luminance
+### 亮度
 
-Determines the light intensity of the block (Default: 0)
+决定方块的光照等级。（默认值：0）
 
 ```yaml
 luminance: 15
 ```
 
-### can-occlude
+### 阻挡光线
 
-Determines whether this block can block light. This also determines whether the block can turn below block into another type. (For instance grass\_block -> dirt) (Default: undefined)
+决定方块是否能阻挡光线。这也会决定该方块是否能将下方的方块转换为另一种类型（例如，草方块变为泥土）。（默认值：未定义）
 
 ```yaml
 can-occlude: false
 ```
 
-### block-light
+### 散射光照
 
-Determines how much light level is reduced after passing through this block (Default: undefined)
+决定光线穿过此方块后降低的光照等级。（默认值：未定义）
 
 ```yaml
 block-light: 0
 ```
 
-### propagate-skylight
+### 传播天空光照
 
-Determines whether natural light can pass through this block.
+决定天空光照能否穿过该方块。
 
 ```yaml
 propagate-skylight: true

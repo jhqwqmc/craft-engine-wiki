@@ -1,22 +1,22 @@
 ---
-title: 🌽 Crop Block
+title: 🌽 农作物方块
 id: crop_block
 ---
 
-| Property Name | Property Type | Required |
-|---------|---------|---------|
-| age    | int   | yes   |
+| 属性名称 | 属性类型 | 是否必需 |
+|------|------|------|
+| age  | int  | 是    |
 
-**Crop Block** is a type of block that grows over time. When receiving random ticks, it has a chance to advance to the next growth stage. However, if the plant lacks sufficient light, it will either stop growing or drop as an item. 
+**农作物方块**是一种会随时间生长的方块类型。当接收到随机刻时，它有概率进入下一生长阶段。但若光照不足，农作物将停止生长或掉落为物品。
 
 ```yml
 blocks:
   default:ender_pearl_flower:
     behavior:
       type: crop_block
-      grow-speed: 0.25  # 0~1, the chance of growing on random tick
-      light-requirement: 9  # light requirement for this crop
-      is-bone-meal-target: true # default true
+      grow-speed: 0.25  # 0~1 随机刻生长概率
+      light-requirement: 9  # 该农作物需要的光照条件
+      is-bone-meal-target: true # 默认 true
       bone-meal-age-bonus:
         type: uniform
         min: 1

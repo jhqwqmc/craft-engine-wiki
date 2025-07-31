@@ -1,17 +1,17 @@
 ---
-title: 😀 Emoji
+title: 😀 表情
 id: emoji
 ---
 
 :::caution
 
-Emoji creation requires existing image configurations. Please consult the [🖼️ Image](image.mdx) page if you're unfamiliar with this process.
+创建表情需要现有图像配置。若您不熟悉此流程，请参考[🖼️ 图像](image.mdx)页面。
 
 :::
 
-Creating emojis is incredibly simple—you just need to fill in a few easy-to-understand parameters. However, unlike other plugins, CraftEngine grants you greater customization freedom, especially when it comes to the feedback content of emojis. You can use custom text styles, variables, mathematical operations, and more.
+创建表情非常简单——只需填写几个简单易懂的参数。但与其他插件不同，CraftEngine 为您提供了更高的自定义自由度，特别是在表情反馈内容方面。您可以使用自定义文本样式、变量、数学运算等功能。
 
-Here's a basic emoji configuration example:
+基础表情配置示例：
 
 ```yaml
 emoji:
@@ -25,48 +25,48 @@ emoji:
 
 :::tip
 
-`<arg:emoji>` is a context-specific parameter used to return the image representation of the corresponding emoji. \
-`<arg:keyword>` will return the first available keyword
+`<arg:emoji>` 是上下文相关参数，用于返回对应表情的图像表示。\
+`<arg:keyword>` 将返回首个可用的关键词
 
 :::
 
-In the following example, players can retrieve their current coordinates by typing `:pos:`. While CraftEngine offers extreme customization for emoji content (especially with MiniMessage), this flexibility also makes it more complex to learn—particularly for users unfamiliar with advanced text formatting.
+在以下示例中，玩家可通过输入 `:pos:` 获取当前坐标。虽然 CraftEngine 为表情内容提供了高度客制化能力（特别是 MiniMessage 支持），但这种灵活性也使其学习起来更加复杂——尤其是对于不熟悉高级文本格式的用户而言。
 
 ```yaml
 emoji:
   default:emoji_location:
     permission: emoji.location
-    content: "<hover:show_text:'Use <yellow>\"<arg:keyword>\"</yellow> to send the \"<arg:emoji>\" emoji'><!shadow><white><arg:emoji></white></!shadow><bold>Current coordinates: <papi:player_x>,<papi:player_y>,<papi:player_z></bold></hover>"
+    content: "<hover:show_text:'使用<yellow>\"<arg:keyword>\"</yellow>来发送表情\"<arg:emoji>\"'><!shadow><white><arg:emoji></white></!shadow><bold>当前坐标：<papi:player_x>,<papi:player_y>,<papi:player_z></bold></hover>"
     image: "default:icons:0:0"
     keywords:
       - ":pos:"
 ```
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/emoji_1.png" alt="" />
+  <img src={require('/img/i18n/zh-Hans/emoji_1.png').default} alt="" />
 </div>
 
 :::tip
 
-To improve readability when dealing with complex configurations, I've added multi-line support for formatting. CraftEngine will automatically merge these lines into a single string during processing, making it easier to write and maintain intricate setups without sacrificing functionality.
+为提升复杂配置的可读性，我们新增了多行格式支持。CraftEngine在处理时会自动合并为单行字符串，使复杂配置的编写和维护更简便，同时保持完整功能。
 
 ```yaml
 content:
-- <hover:show_text:'Use <yellow>"<arg:keyword>"</yellow> to send the "<arg:emoji>" emoji'>
+- <hover:show_text:'使用<yellow>"<arg:keyword>"</yellow>来发送表情"<arg:emoji>"'>
 - <!shadow><white><arg:emoji></white></!shadow>
-- "<bold>Current coordinates: <papi:player_x>,<papi:player_y>,<papi:player_z></bold>"
+- "<bold>当前坐标：<papi:player_x>,<papi:player_y>,<papi:player_z></bold>"
 - </hover>
 ```
 :::
 
 :::info
 
-CraftEngine implements emojis using Paper's modern chat component API. Any chat plugin still relying on Bukkit's legacy chat events will almost certainly be incompatible with emoji rendering.
+CraftEngine 使用 Paper 的现代聊天组件 API 实现表情功能。任何仍依赖 Bukkit 旧版聊天事件的聊天插件几乎都无法兼容表情渲染。
 
-Known compatible chat plugins: [**TrChat**](https://github.com/TrPlugins/TrChat)
+已知兼容的聊天插件：[**TrChat**](https://github.com/TrPlugins/TrChat)
 
 <details>
-  <summary>Developer Guide</summary>
+  <summary>开发者指南</summary>
 
   ```java
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -90,7 +90,7 @@ public class ChatListener implements Listener {
     public void onAsyncChat(AsyncChatEvent event) {
         Component chatMessage = event.message();
         Component formattedChatMessage = MiniMessage.miniMessage().deserialize(CHAT_FORMAT, new PlayerTagResolver(event.getPlayer()), new ChatMessageTagResolver(chatMessage));
-        // do further process
+        // 执行后续处理
     }
 
     public static class PlayerTagResolver implements TagResolver {

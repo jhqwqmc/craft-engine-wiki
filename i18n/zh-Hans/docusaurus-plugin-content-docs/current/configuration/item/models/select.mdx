@@ -1,21 +1,21 @@
 ---
-title: ✅ Select
+title: ✅ 枚举条件型
 id: select
 ---
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## Introdcution
+## 简介
 
 <UrlCard
-  url="https://minecraft.wiki/w/Items_model_definition#select"
-  title="✅ Select"
+  url="https://zh.minecraft.wiki/w/物品模型映射#select"
+  title="✅ 枚举条件型"
 />
 
-Render an item model based on discrete property.
+枚举条件型物品模型映射类型。此物品模型映射类型会先计算物品堆叠内给定的一个枚举属性，游戏会使用枚举属性值对应的物品模型映射。如果没有匹配的枚举值，则使用回落物品模型映射。
 
 :::caution
-When using `minecraft:select`, you need to specify a **property** type. `cases` represent a list of scenarios to match against, while `fallback` represents the item model object that will be used if no valid entry is found. It is optional, but if not provided, a "missing" error model will be rendered.
+使用 `minecraft:select` 时，你需要指定一个**枚举属性**类型。`cases` 表示枚举值和对应的物品模型映射。枚举值不能重复出现，否则游戏将报错`Duplicate case conditions: <重复的枚举值列表>`，而 `fallback` 则表示回落物品模型映射。如果读取结果不匹配任何一个枚举值，则使用此映射。如果此项不存在，且读取结果不匹配任何一个枚举值，则使用无效模型。
 :::
 
 ```yaml
@@ -38,9 +38,9 @@ items:
         path: "minecraft:item/custom/model_3"
 ```
 
-## Properties
+## 枚举属性
 
-Check [https://minecraft.wiki/w/Items\_model\_definition#select](https://minecraft.wiki/w/Items_model_definition#select) for the explanation of each argument.
+请查看 [https://zh.minecraft.wiki/w/物品模型映射#select](https://zh.minecraft.wiki/w/物品模型映射#select) 以获取每个参数的解释。
 
 ### minecraft\:charge\_type
 

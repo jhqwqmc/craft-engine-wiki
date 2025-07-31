@@ -1,29 +1,29 @@
 ---
-title: 🕹️ Block Behaviors
+title: 🕹️ 方块行为
 id: behaviors
 ---
 
-## Introduction
+## 简介
 
-Block behavior refers to a block's unique mechanics and physics. Some block behaviors work based on some properties. For example:
-- Crop blocks need an `age` property to track growth stages
-- Doors require a `hinge` property to determine left/right part
+方块行为指的是方块独特的机制和物理特性。某些方块行为依赖于特定属性工作，例如：
+- 作物方块需要 `age` 属性来追踪生长阶段
+- 门需要 `hinge` 属性来确定左右部分
 
-In subsequent pages, you'll find a table header like this one, specifying the property names and types required by this block behavior.
+在后续页面中，你会看到类似这样的表格，其中列出了该方块行为所需的属性名称和类型。
 
-| Property Name | Property Type | Required |
-|---------|---------|---------|
-| facing   | direction   | yes   |
-| waterlogged   | boolean   | no   |
+| 属性名称         | 属性类型      | 是否必需 |
+|-------------|-----------|------|
+| facing      | direction | 是    |
+| waterlogged | boolean   | 否    |
 
 :::info
 
-Future versions may support custom property names, but the current implementation uses hardcoded names for simpler configuration.
+后续版本可能会支持自定义属性名，但当前实现使用硬编码名称以简化配置。
 :::
 
-## Composite Behaviors
+## 复合行为
 
-You can combine multiple behaviors to create composite behaviors. Below are examples of single-behavior and multi-behavior blocks.
+你可以组合多个行为来创建复合行为。以下是单行为和多行为方块的示例：
 
 ```yaml
 blocks:
@@ -45,12 +45,12 @@ blocks:
 
 :::warning
 
-Please note: combining some block behaviors may cause unexpected conflicts. If you run into problems, please contact support and we will try to resolve any conflicts.
+请注意：组合某些方块行为可能会导致意外冲突。如果遇到问题，请联系技术支持，我们将尽力解决这些冲突问题。
 
 :::
 
 :::caution
 
-When combining multiple block behaviors, you must also merge their required properties.
+在组合多个方块行为时，必须同时合并它们所需的属性。
 
 :::

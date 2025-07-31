@@ -1,15 +1,15 @@
 ---
-title: 🚪 Door Block
+title: 🚪 门方块
 id: door_block
 ---
 
-| Property Name | Property Type | Required |
-|---------|---------|---------|
-| open    | boolean   | yes   |
-| powered    | boolean   | yes   |
-| half    | double_block_half   | yes   |
-| facing     | horizontal_direction   | yes   |
-| hinge     | hinge   | yes   |
+| 属性名称    | 属性类型                 | 是否必需 |
+|---------|----------------------|------|
+| open    | boolean              | 是    |
+| powered | boolean              | 是    |
+| half    | double_block_half    | 是    |
+| facing  | horizontal_direction | 是    |
+| hinge   | hinge                | 是    |
 
 ```yaml
 blocks:
@@ -27,12 +27,12 @@ blocks:
 
 :::tip
 
-You can create at most 25 new doors
+最多可创建 25 种新门
 
 :::
 
 :::warning
 
-Custom doors cannot be interacted with by villagers or zombies, even if you add the relevant block tags. This is because door opening/closing is hardcoded in Minecraft, and support for this may only be added in future versions.
+自定义门无法被村民或僵尸交互（即使添加相关方块标签），因为门的开关逻辑在 Minecraft 中属于硬编码，该功能可能仅在后续版本中支持。
 
 :::

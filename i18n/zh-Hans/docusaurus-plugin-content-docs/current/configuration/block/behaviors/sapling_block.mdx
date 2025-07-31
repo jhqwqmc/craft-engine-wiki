@@ -1,21 +1,21 @@
 ---
-title: 🌴 Sapling Block
+title: 🌴 树苗方块
 id: sapling_block
 ---
 
-| Property Name | Property Type | Required |
-|---------|---------|---------|
-| stage    | int   | yes   |
+| 属性名称  | 属性类型 | 是否必需 |
+|-------|------|------|
+| stage | int  | 是    |
 
-Once a `configured feature` is specified, the **Sapling Block** can grow into the designated tree configuration during a random tick event.
+当指定 `configured_feature` 后，**树苗方块**可在随机刻事件中生长为指定的树木配置。
 
 ```yaml
 blocks:
   default:palm_sapling:
     behavior:
       type: sapling_block
-      # This requires you to register a custom tree configuration with data pack
-      # To prevent errors, we use tree feature from vanilla here
+      # 需通过数据包注册自定义树木配置
+      # 为防止错误，此处使用原版树木地物
       feature: minecraft:fancy_oak
       bone-meal-success-chance: 0.45
       grow-speed: 0.7  # (0-1)
@@ -25,6 +25,6 @@ blocks:
 
 :::tip
 
-The more stage values a sapling has, the longer its required growth time.
+树苗的生长阶段值越多，所需的生长时间越长。
 
 :::

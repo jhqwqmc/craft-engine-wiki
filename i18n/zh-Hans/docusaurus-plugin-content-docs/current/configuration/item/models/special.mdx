@@ -1,21 +1,21 @@
 ---
-title: 👻 Special
+title: 👻 特殊模型
 id: special
 ---
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## Introdcution
+## 简介
 
 <UrlCard
-  url="https://minecraft.wiki/w/Items_model_definition#special"
-  title="👻 Special"
+  url="https://zh.minecraft.wiki/w/物品模型映射#special"
+  title="👻 特殊模型"
 />
 
-Render a special model.
+调用游戏的硬编码渲染器渲染物品堆叠。物品堆叠渲染时的渲染变换、粒子纹理变量等可以从物品模型中获取。
 
 :::caution
-When using `minecraft:special`, you need to specify a speical model type. `path` argument is required for the base model rendering.
+当使用 `minecraft:special` 时，你需要指定一个**硬编码渲染器**。`path` 参数是基础模型渲染所必需的。
 :::
 
 ```yaml
@@ -29,29 +29,29 @@ items:
         kind: player
 ```
 
-## Special Models
+## 硬编码渲染器
 
-Check [https://minecraft.wiki/w/Items\_model\_definition#special](https://minecraft.wiki/w/Items_model_definition#special) for the explanation of each argument.
+请查看 [https://zh.minecraft.wiki/w/物品模型映射#special](https://zh.minecraft.wiki/w/物品模型映射#special) 以获取每个参数的解释。
 
 ### minecraft\:trident
 
-> Render a trident.
+>  	渲染三叉戟
 
 ### minecraft\:conduit
 
-> Render conduit.
+> 渲染潮涌核心
 
 ### minecraft\:shield
 
-> Render a shield. Uses patterns from `minecraft:banner_patterns` component and color from `minecraft:base_color` component.
+> 渲染盾牌，底色和图案取决于`base_color`和`banner_patterns`组件
 
 ### minecraft\:decorated\_pot
 
-> Render a decorated pot. Uses values from `minecraft:pot_decorations` component.
+> 渲染饰纹陶罐，四个面取决于`pot_decorations`组件
 
 ### minecraft\:hanging\_sign
 
-> Renders a hanging sign.
+> 根据指定的纹理渲染悬挂式告示牌。
 
 ```yaml
 model:
@@ -62,7 +62,7 @@ model:
 
 ### minecraft\:standing\_sign
 
-> Renders a standing sign.
+> 根据指定的纹理渲染告示牌。
 
 ```yaml
 model:
@@ -73,7 +73,7 @@ model:
 
 ### minecraft\:head
 
-> Render a head. \[Uses profile from `minecraft:profile` component when applicable. (1.21.4-1.21.5)]
+> 按照指定的头颅类型渲染生物头颅。 \[当适用时，使用 `minecraft:profile` 组件中的玩家游戏档案信息。(1.21.4-1.21.5)]
 
 ```yaml
 model:
@@ -85,7 +85,7 @@ model:
 
 ### minecraft\:player\_head (1.21.6+)
 
-> Render a head. Uses profile from `minecraft:profile` component when applicable.
+> 渲染玩家的头，皮肤取决于`profile`组件
 
 ```yaml
 model:
@@ -94,7 +94,7 @@ model:
 
 ### minecraft\:chest
 
-> Render a single chest.
+> 根据指定的纹理和开合程度渲染箱子。
 
 ```yaml
 model:
@@ -105,7 +105,7 @@ model:
 
 ### minecraft\:shulker\_box
 
-> Render a shulker box.
+> 根据指定的纹理、开合程度和方向渲染潜影盒。
 
 ```yaml
 model:
@@ -117,7 +117,7 @@ model:
 
 ### minecraft\:bed
 
-> Render a whole bed.
+> 根据指定的纹理渲染床。
 
 ```yaml
 model:
@@ -127,7 +127,7 @@ model:
 
 ### minecraft\:banner
 
-> Render a banner with patterns from `minecraft:banner_patterns` component.
+> 根据底色和`banner_patterns`物品堆叠组件渲染旗帜。
 
 ```yaml
 model:
