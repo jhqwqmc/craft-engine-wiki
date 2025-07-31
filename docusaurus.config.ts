@@ -39,8 +39,12 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl:
-            'https://github.com/Xiao-MoMi/craft-engine-wiki/edit/main/',
+          editUrl: ({ locale, docPath }) => {
+            const baseUrl = 'https://github.com/Xiao-MoMi/craft-engine-wiki/edit/main/';
+            return locale === 'en'
+                ? `${baseUrl}docs/${docPath}`
+                : `${baseUrl}i18n/${locale}/docusaurus-plugin-content-docs/current/${docPath}`;
+          },
           routeBasePath: '/'
         },
         blog: false,
