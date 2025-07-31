@@ -1,0 +1,51 @@
+---
+title: 🛜 Self hosting
+id: self
+---
+
+import DiffViewer from '@site/src/components/DiffViewer';
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#1877F2">**Basic Solution**</Highlight>
+
+The good part? It's completely free - just needs your existing server. Perfect for testing and development. But unless you've got killer bandwidth, don't use this for production environments. Resource pack downloads will hog your server's connection and might lag out other players.
+
+<DiffViewer>
+{`
+resource-pack:
+    delivery:
+      hosting:
+        - type: "self"
+-       ip: "localhost"
++       ip: "Your Server Ip" # for instance 111.222.333.444
+          port: 8163
+          protocol: "http"
+          deny-non-minecraft-request: true
+          one-time-token: true
+          rate-limit:
+            max-requests: 5
+            reset-interval: 20 # seconds
+`}
+</DiffViewer>
+
+:::info
+
+The `deny-non-minecraft-request` setting blocks all requests from non-Minecraft clients. \
+As for `one-time-token`, it generates a single-use, time-limited download link for each player.
+
+You can avoid using IPv4 addresses for resource pack URLs by setting a full/complete URL instead.
+```yaml
+- type: "self"
+  ip: "111.222.333.444"
+  port: 8163
+  url: "https://mydomain.com:8163/"
+  ...more options
+```
+
+:::
+
+:::caution
+
+Don't use `https` if you don't have an SSL certificate.
+
+:::

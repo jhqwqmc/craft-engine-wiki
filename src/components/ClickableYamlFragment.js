@@ -1,9 +1,7 @@
 // src/components/ClickableYamlFragment.js
-import React from 'react';
+import React, {useEffect} from 'react';
 import styles from './ClickableYamlFragment.module.css';
 import CodeBlock from '@theme/CodeBlock';
-// 引入 Docusaurus 的 useColorMode hook
-import { useColorMode } from '@docusaurus/theme-common';
 
 // 辅助函数：将十六进制颜色转换为 RGBA 字符串
 function hexToRgba(hex, transparentValue) { // transparentValue 现在是必传的
@@ -18,8 +16,6 @@ function hexToRgba(hex, transparentValue) { // transparentValue 现在是必传�
 
 function ClickableYamlFragment({ yamlContent, to, title, highlightColor }) {
   const hasLink = !!to;
-  // 获取当前主题模式
-  const { colorMode } = useColorMode(); 
 
   const handleClick = () => {
     if (hasLink) {
@@ -31,7 +27,10 @@ function ClickableYamlFragment({ yamlContent, to, title, highlightColor }) {
   const colorToUse = highlightColor || defaultColor;
 
   // 根据颜色模式调整透明度，深色模式下通常需要更低的透明度以避免刺眼
-  const isDarkTheme = colorMode === 'dark';
+  let isDarkTheme = false;
+  useEffect(() => {
+    isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
+  })
   const shadowLightAlpha = isDarkTheme ? 0.04 : 0.08; // 深色模式更淡
   const shadowMediumAlpha = isDarkTheme ? 0.15 : 0.2; // 深色模式更淡
   const shadowStrongAlpha = isDarkTheme ? 0.25 : 0.3; // 深色模式更淡

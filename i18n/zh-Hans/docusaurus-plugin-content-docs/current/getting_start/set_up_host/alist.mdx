@@ -1,0 +1,30 @@
+---
+title: Alist
+id: alist
+---
+
+```yaml
+resource-pack:
+  delivery:
+    hosting:
+      - type: alist
+        use-environment-variables: false
+        disable-upload: false
+        api-url: ""
+        username: ""
+        password: ""
+        file-password: ""
+        otp-code: ""
+        upload-path: "server_resource_pack.zip"
+        # 可选代理配置
+        proxy:
+          host: "127.0.0.1"
+          port: 7890
+```
+
+<details>
+  <summary>可用环境变量</summary>
+  - CE_ALIST_USERNAME
+  - CE_ALIST_PASSWORD
+  - CE_ALIST_FILE_PASSWORD
+</details>

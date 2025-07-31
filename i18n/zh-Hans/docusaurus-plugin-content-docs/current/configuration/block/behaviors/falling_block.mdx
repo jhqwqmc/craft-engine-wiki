@@ -1,0 +1,23 @@
+---
+title: 🟨 可下落方块
+id: falling_block
+---
+
+**可下落方块**会在下方无支撑方块时变为下落的方块
+
+```yml
+blocks:
+  default:falling_block_example:
+    behavior:
+      type: falling_block
+      hurt-amount: -1 # 可选
+      max-hurt: -1 # 可选
+```
+
+![](/img/falling_block.png)
+
+:::info
+
+`hurt-amount` 和 `max-hurt` 为可选配置项，但必须一起使用。它们的作用是决定下落的方块击中实体时造成的伤害值
+
+:::

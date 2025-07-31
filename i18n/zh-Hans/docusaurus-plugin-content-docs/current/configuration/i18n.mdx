@@ -1,0 +1,55 @@
+---
+title: 🌍 国际化
+id: i18n
+---
+
+国际化主要用于**服务端**本地化。如需**客户端**本地化方案，请查阅[🌍 语言](lang.mdx)。通常普通用户无需使用国际化功能，该功能主要面向提供多语言支持的公共模型和资源包创作者设计。
+
+:::info
+
+语言的国家和地区标识为可选项（如 "en_us" 可简写为 "en"）。插件会优先查找针对特定国家和地区的语言版本，若不存在则查找通用语言版本，若仍未找到则默认使用英语 (en) 作为回退语言。
+
+:::
+
+```yaml
+i18n:
+  en:
+    item.chinese_lantern: "Chinese Lantern"
+    item.fairy_flower: "Fairy Flower"
+    item.bench: "Bench"
+    item.table_lamp: "Table Lamp"
+    item.wooden_chair: "Wooden Chair"
+  zh_cn:
+    item.chinese_lantern: "灯笼"
+    item.fairy_flower: "仙灵花"
+    item.bench: "长椅"
+    item.table_lamp: "台灯"
+    item.wooden_chair: "木椅"
+```
+
+:::info
+
+如需渲染服务端翻译文本，请插入[**i18n**](../reference/text_format.mdx#i18n_标识符_)标签。
+
+示例：
+```yml
+items:
+  custom:chinese_lantern:
+    material: paper
+    data:
+      item-name: "<i18n:item.chinese_lantern>"
+```
+:::
+
+:::tip
+
+你可在国际化配置区块内嵌套使用其他标签。
+
+```yaml
+i18n:
+  en:
+    internal.cooking_info.0: "Time: <arg:cooking_time>ticks"
+    internal.cooking_info.1: "Experience: <arg:cooking_experience>"
+```
+
+:::

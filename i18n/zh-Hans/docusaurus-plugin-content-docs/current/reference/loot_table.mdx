@@ -1,0 +1,171 @@
+---
+title: 🎲 战利品表
+id: loot_table
+---
+
+## 简介
+
+在 `loots` 配置中必须包含 `pools` 列表，每个列表代表一个战利品池。每个战利品池由四部分组成：
+
+`rolls` 决定该池的抽取次数\
+`conditions` 为掉落条件判定\
+`entries` 表示实际掉落的物品\
+`functions` 是后处理函数（如修改数量/NBT数据等）
+
+:::info
+若您熟悉原版数据包，会发现此结构与原版高度一致。插件采用该格式并加以改良，便于快速过渡至CraftEngine战利品体系。
+:::
+
+```yaml
+loot:
+  functions: []
+  pools:
+    - rolls: 1
+      conditions:
+        - type: survives_explosion
+      entries:
+        - type: item
+          item: "minecraft:apple"
+      functions: []
+```
+
+## ☘️ 条目
+
+'entry' 用于指定实际掉落的物品，但在某些情况下也可表示多个可能掉落项中的选择。
+
+:::tip
+所有 `entry` 配置部分均可使用 `functions` 和 `conditions` 功能。
+
+```yaml
+type: item
+item: "minecraft:apple"
+functions: []
+conditions: []
+```
+:::
+
+### item
+
+设置掉落物品类型，支持自定义物品。
+
+```yaml
+type: item
+item: "minecraft:apple"
+```
+
+### furniture_item
+
+将物品设置为放置时的原始家具物品，否则使用备用物品。
+
+```yaml
+type: furniture_item
+item: "default:fallback_item"
+```
+
+### exp
+
+掉落给定数量的经验值。
+
+```yaml
+type: exp
+count: 1
+```
+
+### alternatives
+
+从给定列表中找到第一个满足 `conditions` 的 `entry`。
+
+```yaml
+type: alternatives
+children:
+  - type: item
+    item: "${ore_block}"
+    conditions:
+      - type: enchantment
+        predicate: minecraft:silk_touch>=1
+  - type: item
+    item: "${ore_drop}"
+    functions:
+      - type: apply_bonus
+        enchantment: minecraft:fortune
+        formula:
+          type: ore_drops
+      - type: explosion_decay
+      - type: drop_exp
+        count:
+          type: uniform
+          min: "${min_exp}"
+          max: "${max_exp}"
+```
+
+## 🔧 函数
+
+`function` 的作用是在物品类型设定后执行额外操作，例如调整数量。它还可以处理并发操作，如掉落经验值或其他附加内容。
+
+:::tip
+所有的 `function` 部分都支持使用 `conditions`。
+
+```yaml
+type: set_count
+count: 10
+conditions: []
+```
+:::
+
+### apply_bonus
+
+根据给定的魔咒和公式增加掉落物品的数量。更多信息请参考[公式](#️-公式)。
+
+```yaml
+type: apply_bonus
+enchantment: minecraft:fortune
+formula:
+  type: ore_drops
+```
+
+### set_count
+
+设置该物品的数量。
+
+```yaml
+type: set_count
+count: 10
+add: true  # 添加或设置
+```
+
+### explosion_decay
+
+如果物品是因为方块被爆炸破坏而产生，执行该函数的每个物品有1/爆炸半径的概率消失，堆叠的物品会被分为多个单独的物品计算；否则此物品修饰器不做任何处理。
+
+```yaml
+type: explosion_decay
+```
+
+### drop_exp
+
+掉落一定数量的经验值。
+
+```yaml
+type: drop_exp
+count: 1
+```
+
+## ➕️ 公式
+
+### ore_drops
+
+和原版 Minecraft 一样的矿物掉落随机算法
+
+```yaml
+type: ore_drops
+```
+
+### binomial_with_bonus_count
+
+和原版 Minecraft 相同的二项分布随机数算法。`extra` 表示额外计算的次数。二项分布计算的n为魔咒等级与额外计算次数之和。`probability` 代表二项分布中的概率p。
+
+```yaml
+type: binomial_with_bonus_count
+extra: 3
+probability: 0.5
+```

@@ -1,0 +1,127 @@
+---
+title: 📡 值调配型
+id: range_dispatch
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+## 简介
+
+<UrlCard
+  url="https://zh.minecraft.wiki/w/物品模型映射#range_dispatch"
+  title="📡 值调配型"
+/>
+
+根据数值属性渲染物品模型。将选择阈值小于或等于属性值的最后一个条目。
+
+:::caution
+当使用 `minecraft:range_dispatch` 时，你需要指定**数值属性类型**。`scale` 表示**与获取的数值属性相乘获得最后的检查数值**，`entries` 表示**各个阈值和对应的物品模型映射**，而 `fallback` 表示**回落物品模型映射**。如果检查数值小于所有阈值则使用此映射。如果此项不存在，且检查数值小于所有阈值，则使用**无效模型**。
+:::
+
+```yaml
+items:
+  default:range_dispatch_item:
+    model:
+      type: "minecraft:range_dispatch"
+      property: "minecraft:crossbow/pull"
+      entries:
+        - model:
+            type: minecraft:model
+            path: "minecraft:item/custom/model_1"
+          threshold: 0.58
+        - model:
+            type: minecraft:model
+            path: "minecraft:item/custom/model_2"
+          threshold: 1.0
+      fallback:
+        type: minecraft:model
+        path: "minecraft:item/custom/model_3"
+```
+
+## 数值属性
+
+请查看 [https://zh.minecraft.wiki/w/物品模型映射#range_dispatch](https://zh.minecraft.wiki/w/物品模型映射#range_dispatch) 以获取每个参数的解释。
+
+### minecraft\:crossbow/pull
+
+> 弩被拉伸的程度；如果物品堆叠没有`charged_projectiles`组件，或物品堆叠不在任何生物身上，则返回0
+
+### minecraft\:bundle/fullness
+
+> 获取收纳袋的容量，此浮点数只会在0-1之间，如果物品堆叠没有`bundle_contents`组件则返回0
+
+### minecraft\:cooldown
+
+> 获取物品堆叠的冷却程度；如果物品不在玩家物品栏内，则返回0
+
+### minecraft\:compass
+
+> 读取指南针信息，计算指南针指针摆动进度作为返回值，返回值取值为0-1的闭区间。如果指向目标不存在，或指向目标和当前维度不一致，或当前位置与指向目标的距离小于1e-5时，指针摆动进度会使用随机浮点数。
+
+```yaml
+type: "minecraft:range_dispatch"
+property: "minecraft:compass"
+target: spawn
+wobble: true
+```
+
+### minecraft\:count
+
+> 读取物品堆叠的物品数量作为返回值。如果物品数量大于物品最大堆叠数量，则返回物品最大堆叠数量。
+
+```yaml
+type: "minecraft:range_dispatch"
+property: "minecraft:count"
+normalize: true
+```
+
+### minecraft\:damage
+
+> 读取物品堆叠的损坏值（`damage`组件）。如果物品没有损坏或无法损坏，则返回0。如果损坏值大于最大耐久度（`max_damage`组件），则返回最大耐久度。
+
+```yaml
+type: "minecraft:range_dispatch"
+property: "minecraft:damage"
+normalize: true
+```
+
+### minecraft\:time
+
+> 读取当前维度的时间，计算并平滑模拟时钟摆动进度，将时钟摆动进度作为返回值返回，返回值取值为0-1的闭区间。
+
+```yaml
+type: "minecraft:range_dispatch"
+property: "minecraft:time"
+source: daytime
+wobble: true
+```
+
+### minecraft\:use\_cycle
+
+> 读取当前物品堆叠的剩余使用时间，并对给定的周期取模作为返回值。如果物品堆叠不在任何生物身上，或生物没有使用这个物品堆叠，则返回0。
+
+```yaml
+type: "minecraft:range_dispatch"
+property: "minecraft:use_cycle"
+period: 1.0
+```
+
+### minecraft\:use\_duration
+
+> 读取物品堆叠的使用时间或剩余使用时间作为返回值。如果物品堆叠不在任何生物身上，或生物没有使用这个物品堆叠，则返回0。
+
+```yaml
+type: "minecraft:range_dispatch"
+property: "minecraft:use_duration"
+remaining: false
+```
+
+### minecraft\:custom\_model\_data
+
+> 读取物品堆叠的`custom_model_data`组件中的字符串数组，获取指定下标的字符串。如果下标超过字符串数组的长度范围，或物品堆叠不存在`custom_model_data`组件，则返回null，无法匹配。
+
+```yaml
+type: "minecraft:range_dispatch"
+property: "minecraft:custom_model_data"
+index: 0
+```

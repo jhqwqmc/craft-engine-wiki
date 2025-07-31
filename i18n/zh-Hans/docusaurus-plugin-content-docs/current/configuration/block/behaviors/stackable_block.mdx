@@ -1,0 +1,24 @@
+---
+title: 🥪 可堆叠方块
+id: stackable_block
+---
+
+| 属性名称 | 属性类型 | 是否必需 |
+|------|------|------|
+| 自定义  | int  | 是    |
+
+**可堆叠方块**允许使用指定物品堆叠该方块，将其转换为数量更多的形态。
+
+```yml
+blocks:
+  default:pebble:
+    behavior:
+      type: stackable_block
+      property: pebble  # 用于表示数量的属性名称
+      items:
+        - default:pebble
+      sounds:
+        stack: minecraft:block.stone.fall
+```
+
+![](/img/stackable_block.png)

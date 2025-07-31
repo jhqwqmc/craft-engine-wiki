@@ -71,7 +71,24 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
       additionalLanguages: ['java'],
     },
+    colorMode: {
+      disableSwitch: false,
+      respectPrefersColorScheme: true,
+    },
   } satisfies Preset.ThemeConfig,
+
+  plugins: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
+      ({
+        hashed: true,
+        language: ["en", "zh"],
+        searchBarShortcutKeymap: "ctrl+shift+f",
+        docsRouteBasePath: "/",
+      }),
+    ],
+  ],
 };
 
 export default config;

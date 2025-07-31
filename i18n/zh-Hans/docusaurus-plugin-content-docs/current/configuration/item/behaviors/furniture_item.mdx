@@ -1,0 +1,36 @@
+---
+title: 🪑 家具物品
+id: furniture_item
+---
+
+## 简介
+
+**家具物品**是一种绑定到家具的物品。你可以在这里配置其对应的家具命名空间ID，甚至完整的家具配置。当你将此行为绑定到物品上时，可以通过右键点击来放置它。
+
+```yaml
+items:
+  default:bench:
+    behavior:
+      type: furniture_item
+      furniture: default:bench
+furniture:
+  default:bench:
+    settings: ...
+    placement: ...
+    loot: ...
+```
+
+或
+
+```yaml
+items:
+  default:bench:
+    behavior:
+      type: block_item
+      block: 
+        settings: ...
+        placement: ...
+        loot: ...
+```
+
+![](/img/furniture_item_1.png)

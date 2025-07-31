@@ -1,0 +1,169 @@
+---
+title: 🐚 命令
+id: commands
+---
+
+## 基础命令
+
+### reload
+
+`/ce reload [all/recipe/config/pack]`
+
+此命令允许你重载插件资源。如果你不输入任何参数，它将默认为 `/ce reload config`。
+
+### upload
+
+`/ce upload`
+
+此命令强制手动启动资源包上传过程。
+
+### item
+
+`/ce item browser`
+
+此命令会打开插件的物品浏览器。你也可以直接输入 `/ce` 作为快捷方式。
+
+![](/img/commands_15.png)
+
+`/ce item get [物品标识符] (数量)`
+
+获取指定数量的物品
+
+`/ce item give [玩家] [物品标识符] (数量)`
+
+基于指定数量的物品
+
+`/ce item search-recipe/search-usage [玩家] [物品标识符]`
+
+查询物品的配方或用途
+
+![](/img/commands_16.png)
+
+## 功能命令
+
+### send-pack
+
+`/ce feature send-pack [玩家]`
+
+此命令将向指定玩家发送一个资源包。
+
+### totem-animation
+
+`/ce feature totem-animation [玩家] [物品标识符]`
+
+此命令为玩家播放不死图腾动画。
+
+![](/img/commands_14.png)
+
+
+## 调试命令
+
+### appearance-state-usage
+
+`/ce debug appearance-state-usage [方块类型]`
+
+该命令用于查询指定方块类型的外观方块状态使用情况。红色部分表示已被占用的方块状态，绿色部分则代表可用、未被占用的方块状态。当你将鼠标悬停在这些部分上时，可以查看具体方块状态，并识别哪些自定义方块状态正在使用它们。
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/commands_1.png').default} alt="" />
+</div>
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/commands_2.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被占用的外观方块状态</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/commands_3.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>未被占用的方块状态</p>
+</div>
+
+### real-state-usage
+
+`/ce debug real-state-usage [方块类型]`
+
+此命令与前面提到的命令相似，但主要区别在于它用于检查可用的真实方块状态。当你在 `additional-real-blocks.yml` 文件中注册额外的真实方块状态时，真实方块状态的数量可能会超过可用外观方块状态的数量。
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/commands_4.png').default} alt="" />
+</div>
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/commands_5.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被占用的真实方块状态</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/commands_6.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>未被占用的方块状态</p>
+</div>
+
+
+:::warning
+在下图中，上方区域显示了橡树树叶的可用外观方块状态，而下方区域则显示了橡树树叶的可用真实方块状态。\
+你可以使用这两个命令来体验它们之间的区别。
+
+```sh
+/ce debug appearance-state-usage minecraft:oak_leaves
+```
+
+```sh
+/ce debug real-state-usage minecraft:oak_leaves
+```
+
+![](/img/commands_7.png)
+
+:::
+
+
+### item-data
+
+`/ce debug item-data`
+
+此命令允许你检查当前手持物品的物品数据（例如 NBT 或组件）。
+
+![](/img/i18n/zh-Hans/commands_8.png)
+
+
+### get-block-internal-id
+
+`/ce debug get-block-internal-id [自定义方块状态]`
+
+此命令用于查找自定义方块对应的服务器端侧真实方块命名空间ID，常用于 WorldEdit 和数据包等工具中。
+
+![](/img/commands_9.png)
+![](/img/commands_10.png)
+
+
+:::tip
+
+**问：** 为什么数据包中必须使用真实方块命名空间ID，而不是像 default:palm_log 这样的名称？
+
+**答：** 因为配置文件在服务器启动后才加载，而数据包在服务器初始化阶段就已加载。此时服务器无法识别未注册的方块命名空间ID。为确保预注册的自定义方块能适配最新用户配置，CraftEngine采用了容器式动态绑定方案。
+
+:::
+
+
+### get-block-state-registry-id
+
+`/ce debug get-block-state-registry-id [真实方块状态]`
+
+此命令用于获取对应方块状态的注册标识符（不常用）。
+
+![](/img/commands_11.png)
+
+### target-block
+
+`/ce debug target-block [--this]`
+
+'target-block' 命令用于检查鼠标指向的方块数据（或使用 '--this' 标志获取当前位置）。它包括真实方块命名空间ID和 CraftEngine 方块状态。如果方块拥有自定义标签，那么也会显示这些标签。
+
+![](/img/commands_12.png)
+
+### is-section-injected
+
+`/ce debug is-section-injected`
+
+此命令用于检查当前区块是否已被注入。返回值为 false 表示存在异常情况，需要进行调查。
+
+![](/img/commands_13.png)

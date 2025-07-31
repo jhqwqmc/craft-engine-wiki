@@ -55,9 +55,66 @@ const sidebars: SidebarsConfig = {
           label: '💎 First Item',
         },
         {
-          type: 'doc',
-          id: "getting_start/set_up_host",
+          type: 'category',
           label: '🛜 Set Up Pack Host',
+          collapsed: true,
+          link: {
+            type: 'doc',
+            id: "getting_start/set_up_host",
+          },
+          items: [
+            {
+              type: 'doc',
+              id: "getting_start/set_up_host/self",
+              label: 'Self hosting',
+            },
+            {
+              type: 'doc',
+              id: "getting_start/set_up_host/lobfile",
+              label: 'Lobfile',
+            },
+            {
+              type: 'category',
+              label: 'S3',
+              collapsed: true,
+              link: {
+                type: 'doc',
+                id: "getting_start/set_up_host/s3",
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: "getting_start/set_up_host/s3/cloudflare_r2",
+                  label: 'Cloudflare R2',
+                },
+              ]
+            },
+            {
+              type: 'doc',
+              id: "getting_start/set_up_host/external",
+              label: 'External',
+            },
+            {
+              type: 'doc',
+              id: "getting_start/set_up_host/onedrive",
+              label: 'OneDrive',
+            },
+            {
+              type: 'doc',
+              id: "getting_start/set_up_host/dropbox",
+              label: 'Dropbox',
+            },
+            {
+              type: 'doc',
+              id: "getting_start/set_up_host/alist",
+              label: 'Alist',
+            },
+            {
+              type: 'doc',
+              id: "getting_start/set_up_host/gitlab",
+              label: 'Gitlab',
+            },
+          ]
         },
         {
           type: 'doc',

@@ -1,0 +1,187 @@
+---
+title: ⚔️ 装备
+id: equipment
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+## 简介
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/equipment_1.png').default} alt="" />
+</div>
+
+CraftEngine 提供两种创建自定义装备的方式：基于**盔甲纹饰**（适用于 1.20+ 版本）或使用**可装备组件**（1.21.2 新增）。
+
+:::info
+
+请注意以下均为装备配置，非物品具体设定。要将这些配置应用到护甲物品，请参阅[本文档]。
+
+:::
+
+## 基于组件
+<Highlight color="#0d9622ff">**1.21.2+**</Highlight><Highlight color="#0d9622ff">**推荐**</Highlight>
+
+```yaml
+equipments:
+  # 装备资源命名空间ID
+  default:topaz:
+    type: component
+    # '命名空间:路径' 解析为 assets/<命名空间>/textures/entity/equipment/<预设模型类型>/<路径>.png。
+    # 译者注：这里的命名空间和路径不允许使用中文
+    # 
+    # 示例: minecraft:topaz
+    #               ↓
+    # assets/minecraft/textures/entity/equipment/humanoid/topaz.png
+    humanoid: "minecraft:topaz"
+
+    # 其他预设模型类型
+    # assets/minecraft/textures/entity/equipment/humanoid_leggings/topaz.png
+    humanoid-leggings: "minecraft:topaz"
+
+    # 更多预设模型类型（根据需求添加）
+    # assets/minecraft/textures/entity/equipment/happy_ghast_body/topaz.png
+    happy-ghast-body: "minecraft:topaz"
+```
+
+下图展示了配置与实际纹理路径之间的映射。如果图层类型包含连字符（"-"），你必须在路径中将其替换为下划线（"_"）。例如：`humanoid-leggings` -> `humanoid_leggings`。
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/equipment_3.png').default} alt="" />
+</div>
+
+
+**支持的预设模型类型：**
+
+* humanoid
+* humanoid-leggings
+* wings
+* wolf-body
+* horse-body
+* llama-body
+* pig-saddle
+* strider-saddle
+* camel-saddle
+* horse-saddle
+* donkey-saddle
+* mule-saddle
+* skeleton-horse-saddle
+* zombie-horse-saddle
+* happy-ghast-body
+
+:::info
+
+❓️**问：** 为何 CraftEngine 不允许用户随意使用纹理路径并在生成资源包时重定位？
+
+✔️ **答：** 要求遵循 Minecraft 资源包规范——仅当 Mojang 自身违反规则时才会开放自定义路径功能，届时插件将自动处理版本适配路径。
+:::
+
+:::tip
+
+你也可通过配置块形式设置额外选项：
+
+```yaml
+
+equipments:
+  default:topaz:
+    type: component
+    humanoid:
+      texture: "minecraft:leather"
+      dyeable:
+        color-when-undyed: -6265536 # 皮革染色配置
+      # 鞘翅纹理配置
+      use-player-texture: false
+```
+:::
+
+:::tip
+
+也可通过列表组合多个纹理，以下是两个示例：
+
+```yaml
+equipments:
+  custom:partialy_dyeable_armor:
+    type: component
+    humanoid:
+      - texture: "minecraft:dyeable_part"
+        dyeable:
+          color-when-undyed: -6265536
+      - texture: "minecraft:undyeable_part"
+```
+
+```yaml
+equipments:
+  custom:red_flower_wreath:
+    type: component
+    humanoid:
+      - texture: "minecraft:wreath"
+      - texture: "minecraft:red_flower"
+  custom:yellow_flower_wreath:
+    type: component
+    humanoid:
+      - texture: "minecraft:wreath"
+      - texture: "minecraft:yellow_flower"
+  custom:white_flower_wreath:
+    type: component
+    humanoid:
+      - texture: "minecraft:wreath"
+      - texture: "minecraft:white_flower"
+```
+:::
+
+## 基于盔甲纹饰
+<Highlight color="#0d9622ff">**1.20+**</Highlight><Highlight color="#0d9622ff">**Iris/Optifine着色器兼容**</Highlight><Highlight color="#e03f26ff">**盔甲纹饰不可用**</Highlight>
+
+当 CraftEngine 移除原版盔甲基础纹理后，装备时将呈现完全透明状态。通过对其应用自定义纹饰即可实现自定义盔甲纹理。但此方法存在一个限制——该盔甲后续无法再接受额外纹饰。
+
+插件默认在 `config.yml` 中预置了原版盔甲牺牲选项，这些配置仅在您至少配置过一件基于纹饰的盔甲后才会生效。
+
+:::info
+
+问：被牺牲的盔甲还能正常显示吗？这是否意味着锁链甲完全不能使用了？
+
+答：CraftEngine 预见了这种情况。解决方案出乎意料地简单（至少对 CraftEngine 而言）——我们通过应用默认纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client-bound-data` 特性实现。
+
+```yaml
+# config.yml
+equipment:
+  sacrificed-vanilla-armor:
+    type: chainmail
+    asset-id: minecraft:chainmail
+    humanoid: minecraft:trims/entity/humanoid/chainmail
+    humanoid-leggings: minecraft:trims/entity/humanoid_leggings/chainmail
+
+# legacy_armor/configuration/chainmail.yml
+items:
+  minecraft:chainmail_helmet:
+    client-bound-data:
+      trim:
+        pattern: chainmail # 用于保持原始外观的纹饰图案
+        material: custom
+      hide-tooltip:
+        - trim
+  ...护腿、胸甲与靴子
+```
+
+:::
+
+此配置用于基于纹饰的盔甲套装。纹理路径无严格限制——CraftEngine将自动为您重定位纹理目录。
+
+```yaml
+equipments:
+  # 装备资源命名空间ID
+  default:topaz:
+    type: trim
+    humanoid: minecraft:entity/equipment/humanoid/topaz
+    humanoid-leggings: minecraft:entity/equipment/humanoid_leggings/topaz
+```
+
+:::caution
+
+基于纹饰的盔甲仅支持 **humanoid** 和 **humanoid-leggings** 模型类型。
+
+:::
+
+## 基于核心着色器
+
+CraftEngine 目前不打算实现基于核心着色器的自定义盔甲。这种方法本质上会依赖皮革盔甲作为基础，这在使用第三方着色器时会失效——尽管它确实提供了纹饰兼容性。然而，考虑到截至 2025 年，超过 90% 的服务器都已运行 1.21.2+ 版本，此功能可能永远不会实现。

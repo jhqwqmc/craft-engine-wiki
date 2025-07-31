@@ -1,0 +1,355 @@
+---
+title: 🪇 事件
+id: events
+---
+
+## 简介
+
+`events` 部分决定了哪些物品/家具/方块将在特定事件中执行预定义行为。在 `events` 部分下，您需要指定一个事件触发器，例如 `"right_click"` 表示右键点击动作。在事件触发器下方，您必须传递一个动作列表及其对应的类型。例如，`command` 用于执行特定命令。
+
+```yaml
+# 格式1
+events:
+  right_click:
+    - type: command
+      command: say 1
+      conditions:
+        - type: permission
+          permission: "craftengine.admin"
+    - type: command
+      command: say 2
+      conditions: []
+# 格式2
+events:
+  - on: right_click
+    functions:
+      - type: command
+        command: say 1
+        conditions:
+          - type: permission
+            permission: "craftengine.admin"
+      - type: command
+        command: say 2
+        conditions: []
+```
+
+## 🧨 事件触发器
+
+### 物品
+
+* break
+* right\_click
+* left\_click
+* consume
+
+### 方块
+
+* break
+* place
+* right\_click
+* left\_click
+* step
+
+### 家具
+
+* break
+* place
+* right\_click
+
+:::caution
+请注意：事件需配置在正确的区域。例如若需实现家具交互时执行指令，应将 `events` 置于 `furniture` 部分而非物品部分下。
+
+```yaml
+items:
+  default:bench:
+    events: # ❌️
+      right_click:
+       - type: command
+    behavior:
+      type: furniture_item
+      furniture:
+        events: # ✅️
+          right_click:
+           - type: command
+```
+:::
+
+## 🔧 函数
+
+### 取消事件
+
+取消原始事件。
+
+```yaml
+type: cancel_event
+```
+
+### 运行
+
+按顺序运行一系列函数。这对于共享相同条件的函数非常有用。
+
+```yaml
+type: run
+delay: 0 # 可选; 数字; [默认值: 0]
+functions: # 必填; 映射列表
+  - type: command
+  - type: message
+```
+
+### 命令
+
+以玩家或控制台身份运行命令。
+
+```yaml
+type: command
+command: "say 你好 <arg:player.name>" # 必填; 字符串列表/字符串
+target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
+as-player: false # 可选; [默认值: false]
+```
+
+### 消息
+
+发送消息或系统动作栏消息
+
+```yaml
+type: message
+message: "你好 <papi:player_name>" # 必填; 字符串列表/字符串
+target: "self" # 可选; 枚举[all,self]/玩家选择器
+overlay: false # 可选; [默认值: false]; false = 聊天框 / true = 动作栏
+```
+
+### 动作栏消息
+
+发送一条动作栏消息
+
+```yaml
+type: actionbar
+actionbar: "这是一个动作栏消息"  # 必填; 字符串
+target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
+```
+
+### 屏幕标题消息
+
+发送一条屏幕标题消息
+
+```yaml
+type: title
+title: "<red>标题</red>"  # 必填; 字符串
+subtitle: "<Yellow>副标题</yellow>" # 必填; 字符串
+fade-in: 20 # 可选; 数字; [默认值: 10]
+stay: 10 # 可选; 数字; [默认值: 20]
+fade-out: 10 # 可选; 数字; [默认值: 5]
+```
+
+### 打开窗口
+
+打开一个图形用户界面窗口
+
+```yaml
+type: open_window #
+gui-type: anvil # 必填; 枚举[anvil, enchantment, grindstone, loom, smithing, crafting, cartography];
+title: "Super Anvil"  # 可选; 字符串
+target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
+```
+
+### 放置方块
+
+放置一个方块
+
+```yaml
+type: place_block
+block-state: "default:chinese_lantern"
+x: <arg:block.block_x>
+y: <arg:block.block_y>
+z: <arg:block.block_z>
+```
+
+### 掉落战利品
+
+根据给定的战利品表掉落物品
+
+```yaml
+type: drop_loot
+x: <arg:block.block_x> + 0.5
+y: <arg:block.block_y> + 0.5
+z: <arg:block.block_z> + 0.5
+loot:
+  pools: ...
+```
+
+### 更新交互游戏刻
+
+更新最后一次交互结束时的游戏刻
+
+```yaml
+type: update_interaction_tick
+```
+
+### 设置物品数量
+
+设置此事件中当前物品的数量
+
+```yaml
+type: set_count
+add: true # 默认值: false
+count: -1
+target: "self" # 可选; 枚举[all,self]/玩家选择器
+```
+
+### 设置饥饿值
+
+设置玩家的饥饿值（0~20）
+
+```yaml
+type: set_food
+add: true
+food: 4
+target: "self" # 可选; 枚举[all,self]/玩家选择器
+```
+
+### 设置饱和度
+
+设置玩家的饱和度（0~10）
+
+```yaml
+type: set_saturation
+add: true
+saturation: 2.5
+target: "self" # 可选; 枚举[all,self]/玩家选择器
+```
+
+### 挥手
+
+挥动此事件中涉及的手，或配置中指定的手
+
+```yaml
+type: swing_hand
+hand: main_hand # 可选参数
+```
+
+### 粒子效果
+
+生成一个粒子效果
+
+```yaml
+type: particle
+particle: minecraft:end_rod
+x: "<arg:position.x>"
+y: "<arg:position.y>"
+z: "<arg:position.z>"
+count: 5
+offset-x: 0.3
+offset-y: 0.3
+offset-z: 0.3
+speed: 0
+
+# 以下参数仅在粒子为特定类型时才有效。
+
+# 带物品粒子选项的粒子类型：item
+item: default:chinese_lantern
+
+# 带方块粒子选项的粒子类型：block、block_marker、falling_dust、dust_pillar 和 block_crumble
+block-state: default:plam_log[axis=y]
+
+# 带幽匿块充能粒子选项的粒子类型：sculk_charge
+charge: 1.5
+
+# 带尖啸粒子选项的粒子类型：shriek
+shriek: 1
+
+# 带粉末粒子选项的粒子类型：dust
+color: 255,255,255
+scale: 1.0
+
+# 带粉末颜色过渡选项的粒子类型：dust_color_transition
+from: 255,255,255
+to: 0,0,0
+scale: 4.0
+
+# 带振动粒子选项的粒子类型：vibration
+target-x: 0
+target-y: 1
+target-z: 0
+arrival-time: 10
+
+# 带目标颜色粒子选项的粒子类型：trail
+target-x: 0
+target-y: 1
+target-z: 0
+duration: 10
+```
+
+### 状态效果
+
+添加一个状态效果
+
+```yaml
+type: potion_effect
+potion-effect: minecraft:blindness
+duration: 20  # 默认值: 20
+amplifier: 0   # 默认值: 0
+ambient: false # 是否来自信标
+particles: true
+```
+
+### 移除状态效果
+
+移除一个状态效果
+
+```yaml
+type: remove_potion_effect
+potion-effect: minecraft:blindness # 如果 'all' 为 true 则为可选
+all: false  # 默认值: false
+```
+
+### 等级经验
+
+添加技能/职业经验
+
+```yaml
+type: leveler_exp
+plugin: AuraSkills  # 经验值插件
+leveler: fishing  # 职业/技能 ID
+count: 10  # 给予的经验值数量
+```
+
+### 设置冷却时间
+
+为玩家设置冷却时间
+
+```yaml
+type: set_cooldown
+time: 1m30s
+id: my_cooldown_id
+add: false  # 默认值: false (是否累加冷却时间)
+```
+
+### 移除冷却时间
+
+为玩家移除冷却时间
+
+```yaml
+type: remove_cooldown
+id: my_cooldown_id  # 如果 'all' 为 true 则为可选
+all: false  # 默认值: false
+```
+
+### 播放声音
+
+播放一个声音
+
+```yaml
+type: play_sound
+sound: minecraft:xxxx.xxx
+x: <arg:position.x> # 如果使用了 'target' 参数则为可选
+y: <arg:position.y> # 如果使用了 'target' 参数则为可选
+z: <arg:position.z> # 如果使用了 'target' 参数则为可选
+target: "self" # 可选; 枚举[all,self]/玩家选择器
+pitch: 1
+volume: 1
+source: master
+```
+
+:::info
+更多函数即将到来...
+:::

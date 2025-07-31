@@ -1,0 +1,37 @@
+---
+title: 🛜 Lobfile
+id: lobfile
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#1877F2">**用户友好**</Highlight><Highlight color="#10ae28ff">**免费**</Highlight>
+
+对于初学者来说，Lobfile 实际上是一个非常不错的资源托管解决方案。它在大多数地区运行良好 —— 当然，像中国大陆这样的网络限制较重的地区除外。
+
+<details>
+  <summary>获取 API 密钥</summary>
+
+1️⃣ 访问 **https://lobfile.com/** 并注册一个账号  
+2️⃣ 点击 `Account` -> `Settings`  
+3️⃣ 点击 <Highlight color="#1877F2">**Copy API Key to Clipboard**</Highlight>
+
+</details>
+
+```yaml
+resource-pack:
+  delivery:
+    hosting:
+      - type: "lobfile"
+        api-key: "abcdefghijkl"
+        use-environment-variables: false
+        # 可选代理配置
+        proxy:
+          host: "127.0.0.1"
+          port: 7890
+```
+
+<details>
+  <summary>可用环境变量</summary>
+  - CE_LOBFILE_API_KEY
+</details>

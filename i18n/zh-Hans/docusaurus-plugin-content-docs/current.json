@@ -1,0 +1,386 @@
+{
+  "version.label": {
+    "message": "下一个版本",
+    "description": "当前版本的标签"
+  },
+  "sidebar.tutorialSidebar.category.📗 Introduction": {
+    "message": "📗 介绍",
+    "description": "教程侧边栏中'介绍'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.👋 Getting Started": {
+    "message": "👋 入门指南",
+    "description": "教程侧边栏中'入门指南'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.⚙️ Configuration": {
+    "message": "⚙️ 配置",
+    "description": "教程侧边栏中'配置'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.🗡️ Item": {
+    "message": "🗡️ 物品",
+    "description": "教程侧边栏中'物品'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.🟰 Item Models": {
+    "message": "🟰 物品模型",
+    "description": "教程侧边栏中'物品模型'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.🕹️ Item Behaviors": {
+    "message": "🕹️ 物品行为",
+    "description": "教程侧边栏中'物品行为'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.🧱 Block": {
+    "message": "🧱 方块",
+    "description": "教程侧边栏中'方块'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.🔣 Block States": {
+    "message": "🔣 方块状态",
+    "description": "教程侧边栏中'方块状态'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.🕹️ Block Behaviors": {
+    "message": "🕹️ 方块行为",
+    "description": "教程侧边栏中'方块行为'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.📒 Reference": {
+    "message": "📒 参考",
+    "description": "教程侧边栏中'参考'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.✏️ Text Format": {
+    "message": "✏️ 文本格式",
+    "description": "教程侧边栏中'文本格式'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.🤝 Compatibility": {
+    "message": "🤝 兼容性",
+    "description": "教程侧边栏中'兼容性'类别的标签"
+  },
+  "sidebar.tutorialSidebar.doc.☄️ Exclusive Features": {
+    "message": "☄️ 独家功能",
+    "description": "教程侧边栏中'独家功能'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🥕 Simply Better": {
+    "message": "🥕 简而不凡",
+    "description": "教程侧边栏中'简而不凡'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🚧 Under Development": {
+    "message": "🚧 开发中",
+    "description": "教程侧边栏中'开发中'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.💎 First Item": {
+    "message": "💎 首个物品",
+    "description": "教程侧边栏中'首个物品'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🌌 Add Custom Model": {
+    "message": "🌌 添加自定义模型",
+    "description": "教程侧边栏中'添加自定义模型'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🏹 Item Model Display": {
+    "message": "🏹 物品模型展示",
+    "description": "教程侧边栏中'物品模型展示'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🔢 Item Data": {
+    "message": "🔢 物品数据",
+    "description": "教程侧边栏中'物品数据'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🔧 Item Settings": {
+    "message": "🔧 物品设置",
+    "description": "教程侧边栏中'物品设置'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.📐 Model": {
+    "message": "📐 模型",
+    "description": "教程侧边栏中'模型'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🧩 Composite": {
+    "message": "🧩 组合",
+    "description": "按照数组次序依次渲染物品模型映射"
+  },
+  "sidebar.tutorialSidebar.doc.⚖️ Condition": {
+    "message": "⚖️ 布尔条件型",
+    "description": "根据指定的物品堆叠，计算给定的谓词，选择物品模型映射"
+  },
+  "sidebar.tutorialSidebar.doc.📡 Range Dispatch": {
+    "message": "📡 值调配型",
+    "description": "根据指定的物品堆叠，计算数值并查找数值区间，选择物品模型映射"
+  },
+  "sidebar.tutorialSidebar.doc.✅ Select": {
+    "message": "✅ 枚举条件型",
+    "description": "根据指定的物品堆叠，计算属性值并查找枚举，选择物品模型映射"
+  },
+  "sidebar.tutorialSidebar.doc.👻 Special": {
+    "message": "👻 特殊模型",
+    "description": "使用指定的硬编码渲染器渲染物品"
+  },
+  "sidebar.tutorialSidebar.doc.🧱 Block Item": {
+    "message": "🧱 方块物品",
+    "description": "教程侧边栏中'方块物品'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🌊 Liquid Collision Block Item": {
+    "message": "🌊 液体碰撞方块物品",
+    "description": "教程侧边栏中'液体碰撞方块物品'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.2️⃣ Double High Block Item": {
+    "message": "2️⃣ 双层方块物品",
+    "description": "教程侧边栏中'双层方块物品'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🪑 Furniture Item": {
+    "message": "🪑 家具物品",
+    "description": "教程侧边栏中'家具物品'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🪹 Compostable Item": {
+    "message": "🪹 可堆肥物品",
+    "description": "教程侧边栏中'可堆肥物品'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🔧 Block Settings": {
+    "message": "🔧 方块设置",
+    "description": "教程侧边栏中'方块设置'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.ℹ️ Properties": {
+    "message": "ℹ️ 属性",
+    "description": "教程侧边栏中'属性'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.💦 Concrete Powder Block": {
+    "message": "💦 混凝土粉末方块",
+    "description": "教程侧边栏中'混凝土粉末方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🟨 Falling Block": {
+    "message": "🟨 可下落方块",
+    "description": "教程侧边栏中'可下落方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🍁 Leaves Block": {
+    "message": "🍁 树叶方块",
+    "description": "教程侧边栏中'树叶方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🎍 Vertical Crop Block": {
+    "message": "🎍 垂直作物方块",
+    "description": "教程侧边栏中'垂直作物方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🌽 Crop Block": {
+    "message": "🌽 农作物方块",
+    "description": "教程侧边栏中'作物方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🌴 Sapling Block": {
+    "message": "🌴 树苗方块",
+    "description": "教程侧边栏中'树苗方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🪻 Bush Block": {
+    "message": "🪻 灌木方块",
+    "description": "教程侧边栏中'灌木方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🪓 Strippable Block": {
+    "message": "🪓 可剥离方块",
+    "description": "教程侧边栏中'可剥离方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🚟 Hanging Block": {
+    "message": "🚟 悬挂方块",
+    "description": "教程侧边栏中'悬挂方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🌿 Grass Block": {
+    "message": "🌿 草方块",
+    "description": "教程侧边栏中'草方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🌊 On Liquid Block": {
+    "message": "🌊 液面方块",
+    "description": "教程侧边栏中'液面方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🤽 Near Liquid Block": {
+    "message": "🤽 邻液方块",
+    "description": "教程侧边栏中'邻液方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.💡 Lamp Block": {
+    "message": "💡 灯方块",
+    "description": "教程侧边栏中'灯方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🥪 Stackable Block": {
+    "message": "🥪 可堆叠方块",
+    "description": "教程侧边栏中'可堆叠方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🏗️ Sturdy Base Block": {
+    "message": "🏗️ 稳固基底方块",
+    "description": "教程侧边栏中'稳固基底方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🪟 Trapdoor Block": {
+    "message": "🪟 活板门方块",
+    "description": "教程侧边栏中'活板门方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🚪 Door Block": {
+    "message": "🚪 门方块",
+    "description": "教程侧边栏中'门方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🪵 Fence Gate Block": {
+    "message": "🪵 栅栏门方块",
+    "description": "教程侧边栏中'栅栏门方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🎢 Stairs Block": {
+    "message": "🎢 楼梯方块",
+    "description": "教程侧边栏中'楼梯方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.➖️ Slab Block": {
+    "message": "➖️ 台阶方块",
+    "description": "教程侧边栏中'台阶方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.⬜️ Pressure Plate Block": {
+    "message": "⬜️ 压力板方块",
+    "description": "教程侧边栏中'压力板方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.2️⃣ Double High Block": {
+    "message": "2️⃣ 双层方块",
+    "description": "教程侧边栏中'双层方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
+    "message": "🫑 方块实体",
+    "description": "教程侧边栏中'方块实体'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.📂 Category": {
+    "message": "📂 分类",
+    "description": "教程侧边栏中'分类'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.😀 Emoji": {
+    "message": "😀 表情",
+    "description": "教程侧边栏中'表情'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.⚔️ Equipment": {
+    "message": "⚔️ 装备",
+    "description": "教程侧边栏中'装备'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.㊙️ Font": {
+    "message": "㊙️ 字体",
+    "description": "教程侧边栏中'字体'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🖼️ Image": {
+    "message": "🖼️ 图像",
+    "description": "教程侧边栏中'图像'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🌍 I18n": {
+    "message": "🌍 国际化",
+    "description": "教程侧边栏中'国际化'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🌍 Language": {
+    "message": "🌍 语言",
+    "description": "教程侧边栏中'语言'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🍳 Recipe": {
+    "message": "🍳 配方",
+    "description": "教程侧边栏中'配方'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🔊 Sound": {
+    "message": "🔊 音效",
+    "description": "教程侧边栏中'音效'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.💽 Jukebox Song": {
+    "message": "💽 唱片机曲目",
+    "description": "教程侧边栏中'唱片机曲目'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🗃️ Vanilla Loot": {
+    "message": "🗃️ 原版战利品",
+    "description": "教程侧边栏中'原版战利品'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🏷️ Block Tags": {
+    "message": "🏷️ 方块标签",
+    "description": "教程侧边栏中'方块标签'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🔗 Chain Arguments": {
+    "message": "🔗 链式参数",
+    "description": "教程侧边栏中'链式参数'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🔢 Number Format": {
+    "message": "🔢 数字格式",
+    "description": "教程侧边栏中'数字格式'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.📄 Template System": {
+    "message": "📄 模板系统",
+    "description": "教程侧边栏中'模板系统'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.⚔️ File Conflict": {
+    "message": "⚔️ 文件冲突",
+    "description": "教程侧边栏中'文件冲突'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🪇 Events": {
+    "message": "🪇 事件",
+    "description": "教程侧边栏中'事件'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.⚖️ Conditions": {
+    "message": "⚖️ 条件",
+    "description": "教程侧边栏中'条件'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🎲 Loot Table": {
+    "message": "🎲 战利品表",
+    "description": "教程侧边栏中'战利品表'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🐚 Commands": {
+    "message": "🐚 命令",
+    "description": "教程侧边栏中'命令'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.✈️ Paper Anti Xray": {
+    "message": "✈️ Paper反矿透",
+    "description": "教程侧边栏中'Paper反矿透'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🟢 Advanced Slime Paper": {
+    "message": "🟢 AdvancedSlimePaper",
+    "description": "教程侧边栏中'AdvancedSlimePaper'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🖌️ World Painter": {
+    "message": "🖌️ WorldPainter",
+    "description": "教程侧边栏中'WorldPainter'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.👔 Supported Levelers": {
+    "message": "👔 支持的等级系统",
+    "description": "教程侧边栏中'支持的等级系统'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.📦️ External Item Sources": {
+    "message": "📦️ 外部物品来源",
+    "description": "教程侧边栏中'外部物品来源'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🅿️ PlaceholderAPI": {
+    "message": "🅿️ 占位符",
+    "description": "教程侧边栏中'占位符'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.⚛️ Axiom": {
+    "message": "⚛️ Axiom",
+    "description": "教程侧边栏中'Axiom'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.category.🪑 Furniture": {
+    "message": "🪑 家具",
+    "description": "教程侧边栏中'家具'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.⌨️ API": {
+    "message": "⌨️ API",
+    "description": "教程侧边栏中'API'类别的标签"
+  },
+  "sidebar.tutorialSidebar.category.🛜 Set Up Pack Host": {
+    "message": "🛜 配置资源包托管",
+    "description": "教程侧边栏中'配置资源包托管'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Self hosting": {
+    "message": "自托管",
+    "description": "教程侧边栏中'自托管'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Lobfile": {
+    "message": "Lobfile",
+    "description": "教程侧边栏中'Lobfile'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.External": {
+    "message": "外部托管",
+    "description": "教程侧边栏中'外部托管'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.OneDrive": {
+    "message": "OneDrive",
+    "description": "教程侧边栏中'OneDrive'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Dropbox": {
+    "message": "Dropbox",
+    "description": "教程侧边栏中'Dropbox'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Alist": {
+    "message": "Alist",
+    "description": "教程侧边栏中'Alist'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Gitlab": {
+    "message": "Gitlab",
+    "description": "教程侧边栏中'Gitlab'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.category.S3": {
+    "message": "简单存储服务",
+    "description": "教程侧边栏中'简单存储服务'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Cloudflare R2": {
+    "message": "Cloudflare R2",
+    "description": "教程侧边栏中'Cloudflare R2'文档项的标签"
+  }
+}

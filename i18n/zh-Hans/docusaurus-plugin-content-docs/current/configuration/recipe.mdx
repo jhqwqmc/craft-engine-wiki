@@ -1,0 +1,378 @@
+---
+title: 🍳 配方
+id: recipe
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+## 准备工作
+
+在设置新配方之前，你需要了解以下内容。这些提示将使配置更轻松，并揭示额外有用的功能。
+
+### 标签
+
+CraftEngine 允许你使用标签，你也可以创建自定义标签。要使用标签，只需遵循以下格式：`#namespace:tag`。
+
+:::tip
+
+大多数合成插件都有一个共同的痛点——它们不支持为物品分配标签，也不允许在配方中使用标签。例如，如果你想让新创建的木板类型与原版木板在合成配方中混合使用，那根本无法实现。
+
+:::
+
+在下面的示例中，我为 `palm_planks` 添加了两个原版标签，允许它们参与数据包中包含这两个标签的所有配方。
+
+```yaml
+items:
+  default:palm_planks:
+    material: paper
+    custom-model-data: 1004
+    settings:
+      fuel-time: 300
+      tags:
+        - "minecraft:planks"
+        - "minecraft:wooden_tool_materials"
+    data:
+      item-name: "<!i>棕榈木板"
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_1.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>#minecraft:planks</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_2.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>#minecraft:wooden_tool_materials</p>
+</div>
+
+### 分组 / 标签栏
+
+```yaml
+recipes:
+  default:palm_planks:
+    type: shapeless
+    category: building
+    group: planks
+    ingredients:
+      A: "#default:palm_logs"
+    result:
+      id: default:palm_planks
+      count: 4
+```
+
+`group` 决定该配方在客户端解锁后所属的分组名称。分组名可自由定义，但请避免使用非法字符。译者注：例如中文
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_3.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>group</p>
+</div>
+
+`category` 决定该配方在配方书中所属的标签栏，可选类型有限。
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/recipe_4.png').default} alt="" />
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>category</p>
+</div>
+
+* 烧炼配方可选：`food`（食物）、`blocks`（方块）、`misc`（杂项）。
+* 合成配方可选：`building`（建筑）、`redstone`（红石）、`equipment`（装备）、`misc`（杂项）。
+
+### 与其他插件的兼容性
+
+首先，将支持的插件添加到 `config.yml` 中的此列表：
+
+```yaml
+recipe:
+  ingredient-sources:
+    - MythicMobs
+```
+
+:::info
+支持的物品来源请查阅[📦️ 外部物品来源](../compatibility/external_item_sources.mdx)，您也可以通过 API 注册自定义物品来源。
+:::
+
+接下来需要将每个外部物品源映射到对应的 CraftEngine 等效物，请参考以下配置示例：
+
+```yaml
+items: 
+  mythicmobs:kingscrown:
+    material: golden_helmet
+    data:
+      external:
+        plugin: MythicMobs
+        id: KingsCrown
+    settings:
+      tags:
+        - add_tag:if_you_want # 添加标签，如果你想的话
+```
+
+之后，只需像创建其他普通物品一样为该物品创建配方即可。
+
+```yaml
+recipes:
+  default:bench:
+    type: shaped
+    pattern:
+      - A A
+      - A A
+    ingredients:
+      A: mythicmobs:kingscrown
+    result:
+      id: default:bench
+      count: 1
+```
+
+:::caution
+
+对于用作原料的任何物品，你必须确保它们在 CraftEngine 中的命名空间是**小写**的插件名称，并且路径也应该是**小写**的。以下是一些示例，以便你了解其工作原理：
+
+* MythicMobs 中名为 'MySword' 的物品 -> `mythicmobs:mysword`
+* CustomFishing 中名为 'star_fish' 的物品 -> `customfishing:star_fish`
+* MMOItems 中名为 'MAGIC_GEM' 且类型为 'MATERIAL' 的物品 -> `mmoitems:material_magic_gem`
+* 某个**随机插件**中具有命名空间ID的物品 -> `random_plugin:namespace_id`
+
+:::
+
+### 结果后处理器
+
+<Highlight color="#da0d0dff">**实验性**</Highlight><Highlight color="#0d9622ff">**开发中**</Highlight>
+
+**结果后处理器**是为解决配方多样化需求引入的概念。例如，如果你想制作一把镐子，但希望输出的镐带有魔咒，那么为每个已附魔的物品都创建一个单独的配方是不切实际的。
+
+```yaml
+result:
+  id: default:topaz_pickaxe
+  count: 1
+  post-processors:
+    - type: apply_data
+      data:
+        enchantments:
+          minecraft:efficiency: 5
+```
+
+### 视觉结果
+
+<Highlight color="#da0d0dff">**概念阶段**</Highlight><Highlight color="#0d58daff">**未实装**</Highlight>
+
+插件保留了 **visual-result** 功能，可在合成过程中展示专门的物品，有效地防止玩家提前预知随机配方的结果。
+
+```yaml
+result:
+  id: default:topaz_pickaxe
+  count: 1
+  post-processors:
+    - type: apply_data
+      data:
+        enchantments:
+          minecraft:efficiency: 5
+visual-result:
+  id: default:random_icon
+```
+
+
+## 配方类型
+
+:::caution
+
+**重要提示：**
+
+要重新加载配方，你必须使用 `/ce reload recipe` 或 `/ce reload all`。如果你正在运行 Folia 服务器，则只能使用 `/ce reload recipe`。
+
+**Folia 服务器警告：**
+
+该操作极不安全！Folia 的配方管理器不是线程安全的，在运行时重新加载配方可能会导致服务器崩溃。
+
+:::
+
+### 有序合成配方
+
+```yaml
+recipes:
+  default:topaz_shovel:
+    type: shaped
+    pattern:
+      - "A"
+      - "B"
+      - "B"
+    ingredients:
+      A: "default:topaz"
+      B: "minecraft:stick"
+    result:
+      id: default:topaz_shovel
+      count: 1
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_5.png').default} alt="" />
+</div>
+
+```yaml
+recipes:
+  default:chinese_lantern:
+    type: shaped
+    pattern:
+      - "ABA"
+      - "BCB"
+      - "ABA"
+    ingredients:
+      A: "#minecraft:planks"
+      B: "minecraft:stick"
+      C: "minecraft:torch"
+    result:
+      id: default:chinese_lantern
+      count: 1
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_6.png').default} alt="" />
+</div>
+
+### 无序合成配方
+
+```yaml
+recipes:
+  default:palm_planks:
+    type: shapeless
+    category: building
+    group: planks
+    ingredients:
+      - "#default:palm_logs"
+      # 嵌套列表也受支持
+      - - test:ingredient1
+        - test:ingredient2
+    result:
+      id: default:palm_planks
+      count: 4
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_7.png').default} alt="" />
+</div>
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_8.png').default} alt="" />
+</div>
+
+
+### 烧炼配方
+
+烧炼配方包含`smelting`(熔炉)、`blasting`(高炉)、`smoking`(烟熏炉)和`campfire_cooking`(营火)四种类型，所有类型采用相同配置格式。
+
+```yaml
+recipes:
+  default:topaz_from_smelting_topaz_ore:
+    type: smelting
+    experience: 1.0
+    category: misc
+    group: topaz
+    time: 200
+    ingredient: "default:topaz_ore"
+    result:
+      id: default:topaz
+      count: 1
+  default:topaz_from_smelting_deepslate_topaz_ore:
+    type: smelting
+    experience: 1.0
+    category: misc
+    group: topaz
+    time: 200
+    ingredient: "default:deepslate_topaz_ore"
+    result:
+      id: default:topaz
+      count: 1
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_9.png').default} alt="" />
+</div>
+
+### 切石机配方
+
+```yaml
+recipes:
+  default:stonecutting_example:
+    type: stonecutting
+    group: topaz
+    ingredient: "minecraft:stone"
+    result:
+      id: default:topaz
+      count: 1
+```
+
+:::warning
+
+切石机配方是较为特殊的配方类型，不建议使用自定义物品作为原料，这极可能导致严重的客户端显示问题
+
+:::
+
+### 锻造升级配方
+
+```yaml
+default:topaz_bow:
+  type: smithing_transform
+  template-type: default:topaz # 槽位1（可选）
+  base: minecraft:bow # 槽位2（必填）
+  addition: default:topaz # 槽位3（可选）
+  # 是否像原版那样合并两个物品的组件
+  merge-components: true # 默认值：true
+  result:
+    id: default:topaz_bow
+    count: 1
+  # 参见下方指南
+  post-processors: []
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_10.png').default} alt="" />
+</div>
+
+
+:::tip
+如需更精确控制保留哪些组件，应按以下方式指定后处理器。
+
+**重要说明：** 不要与[结果后处理器](#结果后处理器)混淆——这是完全不同的系统。
+
+```yaml
+post-processors:
+  # 保留指定组件（1.20.5+）
+  - type: keep_components
+    components:
+      - minecraft:enchantments
+  # 保留指定NBT标签（1.20-1.20.4）
+  - type: keep_tags
+    tags:
+      - display.Name
+      - CustomModelData
+```
+:::
+
+### 盔甲纹饰配方
+
+```yaml
+default:bolt_tool_trims:
+  type: smithing_trim
+  template-type: "minecraft:bolt_armor_trim_smithing_template"
+  base: "#minecraft:trimmable_tool"
+  addition: "#minecraft:trim_materials"
+  pattern: minecraft:bolt # 需要在 1.21.5+
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/i18n/zh-Hans/recipe_11.png').default} alt="" />
+</div>
+
+### 酿造配方
+
+<Highlight color="#0dda4aff">**1.20.2+**</Highlight>
+
+```yaml
+tea_art:tea:
+  type: brewing
+  ingredient: tea_art:tea_leaf
+  container: tea_art:cup
+  result:
+    id: tea_art:cup_of_tea
+    count: 1
+```
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/recipe_12.png').default} alt="" />
+</div>

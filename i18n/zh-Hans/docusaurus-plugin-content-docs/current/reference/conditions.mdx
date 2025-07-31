@@ -1,0 +1,217 @@
+---
+title: ⚖️ 条件
+id: conditions
+---
+
+:::tip
+在条件类型前添加 `!` 可反转判断逻辑，例如：
+
+```yaml
+type: "!permission"
+permission: "craftengine.admin"
+```
+:::
+
+### any_of
+
+满足任意条件即可。
+
+```yaml
+type: any_of
+terms:
+  - type: xxx
+  - type: xxx
+```
+
+### all_of
+
+所有条件都必须满足。
+
+```yaml
+type: all_of
+terms:
+  - type: xxx
+  - type: xxx
+```
+
+### inverted
+
+对当前条件的结果值取反。
+
+```yaml
+type: inverted
+term:
+  type: xxx
+```
+
+### falling_block
+
+检测掉落物是否由下落的方块掉落
+
+```yaml
+type: falling_block
+```
+
+### survives_explosion
+
+以 `1/爆炸半径` 的概率返回成功。需要上下文提供参数进行检测，若未提供则总是通过。
+
+```yaml
+type: survives_explosion
+```
+
+### match_item
+
+检查手持物品。
+
+```yaml
+type: match_item
+id: "minecraft:iron_pickaxe"
+regex: false # 是否使用正则表达式匹配
+```
+
+```yaml
+type: match_item
+id: 
+  - "minecraft:iron_pickaxe"
+  - "minecraft:stone_pickaxe"
+regex: false # 是否使用正则表达式匹配
+```
+
+### match_block_property
+
+检查方块状态。
+
+```yaml
+type: match_block_property
+properties:
+  age: 3
+```
+
+### enchantment
+
+检测手中物品的魔咒。
+
+```yaml
+type: enchantment
+predicate: minecraft:silk_touch>=1 # > >= = < <=
+```
+
+### table_bonus
+
+以魔咒等级为索引，从列表中挑选概率通过。
+
+```yaml
+type: table_bonus
+enchantment: minecraft:fortune
+chances:
+  - 0.1
+  - 0.5
+  - 0.8
+  - 1
+```
+
+### random
+
+```yaml
+type: random
+value: 0.1 # 10%
+```
+
+### permission
+
+检查玩家是否拥有权限
+
+```yaml
+type: permission
+permission: "craftengine.admin"
+```
+
+### expression
+
+检查表达式是否返回 `true`
+
+```yaml
+type: expression
+# https://ezylang.github.io/EvalEx/references/references.html
+expression: "<papi:farming_level> >= 10"
+```
+
+### string_equals
+
+判断这两个值是否相等
+
+```yaml
+type: string_equals
+value1: "<arg:player.name>"
+value2: "玩家A" # 译者注：在正常 Minecraft 服务端是不允许使用中文作为玩家名称的这里仅作为演示
+```
+
+### string_contains
+
+判断 value1 是否包含 value2
+
+```yaml
+type: string_contains
+value1: "<arg:player.name>"
+value2: "A"
+```
+
+### string_regex
+
+判断 value 是否符合指定正则表达式
+
+```yaml
+type: string_regex
+value: "<arg:player.name>"
+regex: "[a-Z]"
+```
+
+### is_null
+
+检查参数是否为空
+
+```yaml
+type: is_null
+argument: "player.main_hand_item"
+```
+
+### hand
+
+检查交互手
+
+```yaml
+type: hand
+hand: main_hand # off_hand
+```
+
+### on_cooldown
+
+检查玩家是否处于冷却时间（使用 `set_cooldown` 函数为玩家设置冷却）
+
+```yaml
+type: on_cooldown
+id: my_cooldown_id
+```
+
+:::info
+示例用法
+
+```yaml
+events:
+  - on: right_click
+    functions:
+      - type: set_cooldown
+        id: test
+        time: 30s
+      - type: command
+        command: give <arg:player.name> minecraft:apple
+    conditions:
+      - type: "!on_cooldown"
+        id: test
+```
+:::
+
+:::info
+更多条件即将到来...
+:::
