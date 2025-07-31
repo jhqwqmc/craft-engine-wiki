@@ -1,15 +1,16 @@
 ---
-title: 🖼️ Image
+title: 🖼️ 图像
 id: image
 ---
 
 import PluginFileTree from '@site/src/components/PluginFileTree';
+import Comment from '@site/src/components/Comment';
 
-## Introduction
+## 简介
 
-At its core, the **image display** is a character substitution system. The game renders textures by mapping Unicode characters to image files via its font system. Minecraft itself uses multiple font sets, where the same character can have different visual styles across different fonts. This is the foundation for our custom image designs.
+**图像显示**的核心是字符替换系统。游戏通过字体系统将 Unicode 字符映射到图片文件来渲染纹理。Minecraft 本身使用了多种字体集，同一个字符在不同字体中可以有不同的视觉风格。这就是我们自定义图片设计的基础。
 
-The file tree structure below shows the location of custom font files. You don’t need to create these manually—this demonstration is solely to help you understand how vanilla fonts work.
+下面的文件树结构展示了自定义字体文件的位置。你不需要手动创建这些文件——此演示仅用于帮助你理解原版字体的工作原理。
 
 <PluginFileTree
   initialTreeData={[
@@ -39,25 +40,27 @@ The file tree structure below shows the location of custom font files. You don�
 />
 
 ```
-assets/[namespace]/font/[font_name].json
+assets/[命名空间]/font/[字体名称].json
 ```
+
+译者注：这里的命名空间和字体名称不允许使用中文
 
 :::tip
 
-Rich text component parsers like MiniMessage and Minedown all support the use of custom fonts.
+像 MiniMessage 和 Minedown 这样的富文本组件解析器都支持使用自定义字体。
 
-MiniMessage: `<font:namespace:font_name>Text</font>`\
-MineDown: `[Text](font=namespace:font_name)`
+MiniMessage: `<font:namespace:font_name>文本</font>`\
+MineDown: `[文本](font=namespace:font_name)`
 :::
 
 :::info
-**Q:** Will the characters in my country be affected? 
-Can my players illegally use these images through chat, anvils, or other means?
+**问：** 我所在国家的字符会受到影响吗？
+我的玩家可以通过聊天、铁砧或其他方式非法使用这些图片吗？
 
-**A:** Certainly not, unless you use Minecraft's default font(`minecraft:default`). Please avoid using that font unless you have to.
+**答：** 当然不会，除非你使用了 Minecraft 的**默认字体**（`minecraft:default`）。请尽量避免使用该字体，除非你必须这样做。
 :::
 
-## Single Character Bitmap
+## 单字符位图
 
 ```yaml
 images:
@@ -70,10 +73,10 @@ images:
 ```
 
 :::caution
-The `height` value must always be greater than or equal to the `ascent` value. This is a strict requirement enforced by Minecraft.
+`height` 值**必须始终大于或等于 `ascent` 值**。这是 Minecraft 强制执行的严格要求。
 :::
 
-## Multiple Characters Bitmap
+## 多字符位图
 
 ```yaml
 images:
@@ -87,35 +90,35 @@ images:
      - '\ub002\ub003'
 ```
 
-## Preview the Image In Game
+## 在游戏中预览图像
 
-You can use a very simple command to preview the effect of the image. All you need to do is replace `\ub000` with the character corresponding to your image.
+你可以使用一个非常简单的命令来预览图片效果。你只需将 `\ub000` 替换为你图片对应的字符即可。
 
 ```
 /tellraw @p {"text":"\ub000","font":"minecraft:icons"}
 ```
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/image_1.png" alt="" />
+  <img src={require('/img/image_1.png').default} alt="" />
 </div>
 
-## Compatibility with Other Plugins
+## 与其他插件的兼容性
 
-There are two ways to use images in other plugins:
+在其他插件中使用图片有两种方式：
 
-1. Use a plugin that supports both **MiniMessage/MineDown** and **PlaceholderAPI**. In this case, you just need to use the corresponding placeholder. Please refer to [**this page**](../compatibility/placeholderapi.mdx) to see how to use placeholders.
-2. Use a tag in the format of `<image:namespace:id>` `<image:namespace:id:row:column>` `<shift:-20>` just like what we do in [✏️ Text Format](../reference/text_format.mdx). CraftEngine will replace these tags with characters of the corresponding font at the **packet level**.
+1. 使用同时支持 **MiniMessage 或 MineDown** 和 **PlaceholderAPI** 的插件。此时只需使用对应占位符，具体用法请参阅[**此页面**](../compatibility/placeholderapi.mdx)。
+2. 使用 <Comment text="译者注：这里的命名空间和路径不建议使用中文">`<image:命名空间:路径>` `<image:命名空间:路径:行:列>`</Comment> `<shift:-20>` 格式标签，就像我们在 [✏️ 文本格式](../reference/text_format.mdx) 中所做的那样。CraftEngine 会在**数据包层面**将其替换为对应字体字符。
 
 :::info
-You can find the following configuration in config.yml, which controls the scope in which these tags are effective.
+你可以在 config.yml 中找到以下配置，它控制了这些标签的生效范围。
 
 ```yaml
 image:
-  # By intercepting packets, you are allowed to use <image:...> <shift:...> in other plugins
+  # 通过拦截数据包，你可以在其他插件中使用 <image:...> 和 <shift:...> 标签。
   intercept-packets:
     system-chat: true
     tab-list: true
     actionbar: true
-    ... more options
+    ...更多选项
 ```
 :::

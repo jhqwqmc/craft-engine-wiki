@@ -21,7 +21,7 @@ This process is extremely simple and requires no plugin-side configuration. Just
 For TTF fonts, you need to create a `default.json` file in the following path. If you already have a `default.json` file, simply append your font JSON to the bottom of the existing JSON file.
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/font_1.png" alt="" />
+  <img src={require('/img/font_1.png').default} alt="" />
 </div>
 
 ```json
@@ -38,7 +38,7 @@ For TTF fonts, you need to create a `default.json` file in the following path. I
 ```
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/font_2.png" alt="" />
+  <img src={require('/img/font_2.png').default} alt="" />
 </div>
 
 ## Bitmap
@@ -51,7 +51,7 @@ For TTF fonts, you need to create a `default.json` file in the following path. I
 If you wish to replace the vanilla character images, simply place the following PNG files in the specified path as outlined below.
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/font_3.png" alt="" />
+  <img src={require('/img/font_3.png').default} alt="" />
 </div>
 
 ## Unihex

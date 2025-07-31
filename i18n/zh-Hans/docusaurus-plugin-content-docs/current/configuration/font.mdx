@@ -1,5 +1,5 @@
 ---
-title: ㊙️ Font
+title: ㊙️ 字体
 id: font
 ---
 
@@ -7,21 +7,21 @@ import UrlCard from '@site/src/components/UrlCard';
 
 :::info
 
-This process is extremely simple and requires no plugin-side configuration. Just follow the tutorial below.
+这个过程极其简单，无需插件端配置。只需按照下面的教程操作即可。
 
 :::
 
 ## TTF
 
 <UrlCard
-  url="https://minecraft.wiki/w/Font#TTF_provider"
-  title="TTF Fonts"
+  url="https://zh.minecraft.wiki/w/自定义字体#ttf"
+  title="TrueType矢量字体"
 />
 
-For TTF fonts, you need to create a `default.json` file in the following path. If you already have a `default.json` file, simply append your font JSON to the bottom of the existing JSON file.
+对于 TTF 字体，你需要在以下路径中创建一个 `default.json` 文件。如果你已经有一个 `default.json` 文件，只需将你的字体 JSON 追加到现有 JSON 文件的末尾即可。
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/font_1.png" alt="" />
+  <img src={require('/img/font_1.png').default} alt="" />
 </div>
 
 ```json
@@ -38,27 +38,27 @@ For TTF fonts, you need to create a `default.json` file in the following path. I
 ```
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/font_2.png" alt="" />
+  <img src={require('/img/font_2.png').default} alt="" />
 </div>
 
-## Bitmap
+## 位图
 
 <UrlCard
-  url="https://minecraft.wiki/w/Font#Bitmap_provider"
-  title="Bitmap Fonts"
+  url="https://zh.minecraft.wiki/w/自定义字体#bitmap"
+  title="位图字体"
 />
 
-If you wish to replace the vanilla character images, simply place the following PNG files in the specified path as outlined below.
+如果你希望替换原版字符图片，只需将以下 PNG 文件放置在指定路径中，如下所示。
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/font_3.png" alt="" />
+  <img src={require('/img/font_3.png').default} alt="" />
 </div>
 
 ## Unihex
 
-To configure the unihex font in Minecraft, which is relatively less common and rarely used, you can refer to the Minecraft Wiki for detailed instructions.
+要配置 Minecraft 中的 unihex 字体（这种字体相对不常见且很少使用），你可以参考 Minecraft Wiki 获取详细说明。
 
 <UrlCard
-  url="https://minecraft.wiki/w/Font#Unihex_provider"
-  title="Unihex Fonts"
+  url="https://zh.minecraft.wiki/w/自定义字体#unihex"
+  title="Unihex 字体"
 />

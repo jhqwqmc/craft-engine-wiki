@@ -1,13 +1,13 @@
 ---
-title: 🌍 I18n
+title: 🌍 国际化
 id: i18n
 ---
 
-i18n is used mainly for **server-side** localization. If you are seeking **client-side** localization, please consult the [🌍 Language](lang.mdx). In general, typical users do not require the use of i18n, as it is primarily designed for providers of public model and asset packs who offer multilingual support.
+国际化主要用于**服务端**本地化。如需**客户端**本地化方案，请查阅[🌍 语言](lang.mdx)。通常普通用户无需使用国际化功能，该功能主要面向提供多语言支持的公共模型和资源包创作者设计。
 
 :::info
 
-The country or region specification for the language is optional (for example, "en\_us" can be simplified to "en"). The plugin will first attempt to find a language tailored to the specific country or region. If such a language is not available, it will then search for the general language. If the language is also not found, the plugin will default to using English (en) as the fallback language.
+语言的国家和地区标识为可选项（如 "en_us" 可简写为 "en"）。插件会优先查找针对特定国家和地区的语言版本，若不存在则查找通用语言版本，若仍未找到则默认使用英语 (en) 作为回退语言。
 
 :::
 
@@ -29,9 +29,9 @@ i18n:
 
 :::info
 
-To render server side translation, please insert [**i18n**](../reference/text_format.mdx#i18n_id_) tag
+如需渲染服务端翻译文本，请插入[**i18n**](../reference/text_format.mdx#i18n_标识符_)标签。
 
-Example:
+示例：
 ```yml
 items:
   custom:chinese_lantern:
@@ -43,7 +43,7 @@ items:
 
 :::tip
 
-You can nest other tags within i18n for use.
+你可在国际化配置区块内嵌套使用其他标签。
 
 ```yaml
 i18n:

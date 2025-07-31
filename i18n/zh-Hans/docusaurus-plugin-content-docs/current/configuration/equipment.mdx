@@ -1,56 +1,57 @@
 ---
-title: ⚔️ Equipment
+title: ⚔️ 装备
 id: equipment
 ---
 
 import Highlight from '@site/src/components/Highlight';
 
-## Introduction
+## 简介
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/equipment_1.png" alt="" />
+  <img src={require('/img/equipment_1.png').default} alt="" />
 </div>
 
-CraftEngine offers two ways to create custom equipment. One method is based on **Trim** (for Minecraft 1.20+), and the other uses the **Equippable component** (introduced in 1.21.2).
+CraftEngine 提供两种创建自定义装备的方式：基于**盔甲纹饰**（适用于 1.20+ 版本）或使用**可装备组件**（1.21.2 新增）。
 
 :::info
 
-Please note all configurations below pertain to equipment settings, not individual item specifications. To apply these equipment configurations to your armor items, please refer to [this documentation].
+请注意以下均为装备配置，非物品具体设定。要将这些配置应用到护甲物品，请参阅[本文档]。
 
 :::
 
-## Component Based
-<Highlight color="#0d9622ff">**1.21.2+**</Highlight><Highlight color="#0d9622ff">**Recommended**</Highlight>
+## 基于组件
+<Highlight color="#0d9622ff">**1.21.2+**</Highlight><Highlight color="#0d9622ff">**推荐**</Highlight>
 
 ```yaml
 equipments:
-  # the equipment asset id
+  # 装备资源命名空间ID
   default:topaz:
     type: component
-    # 'namespace:path' resolves to assets/<namespace>/textures/entity/equipment/<layer_type>/<path>.png.
+    # '命名空间:路径' 解析为 assets/<命名空间>/textures/entity/equipment/<预设模型类型>/<路径>.png。
+    # 译者注：这里的命名空间和路径不允许使用中文
     # 
-    # Example: minecraft:topaz
+    # 示例: minecraft:topaz
     #               ↓
     # assets/minecraft/textures/entity/equipment/humanoid/topaz.png
     humanoid: "minecraft:topaz"
 
-    # other layer types
+    # 其他预设模型类型
     # assets/minecraft/textures/entity/equipment/humanoid_leggings/topaz.png
     humanoid-leggings: "minecraft:topaz"
 
-    # more layer types, based on your needs
+    # 更多预设模型类型（根据需求添加）
     # assets/minecraft/textures/entity/equipment/happy_ghast_body/topaz.png
     happy-ghast-body: "minecraft:topaz"
 ```
 
-The image below demonstrates the mapping between configurations and actual texture paths. If a layer type contains hyphens ("-"), you must replace them with underscores ("_") in the path. Example `humanoid-leggings` -> `humanoid_leggings`
+下图展示了配置与实际纹理路径之间的映射。如果图层类型包含连字符（"-"），你必须在路径中将其替换为下划线（"_"）。例如：`humanoid-leggings` -> `humanoid_leggings`。
 
 <div style={{textAlign: 'center'}}>
-  <img src="/img/equipment_3.png" alt="" />
+  <img src={require('/img/i18n/zh-Hans/equipment_3.png').default} alt="" />
 </div>
 
 
-**Supported layer types:**
+**支持的预设模型类型：**
 
 * humanoid
 * humanoid-leggings
@@ -70,14 +71,14 @@ The image below demonstrates the mapping between configurations and actual textu
 
 :::info
 
-❓️**Q:** Why doesn't CraftEngine let users use random texture paths and relocate them when generating the resource pack?
+❓️**问：** 为何 CraftEngine 不允许用户随意使用纹理路径并在生成资源包时重定位？
 
-✔️ **A:** I want users to follow Minecraft's resource pack standards - I'll only allow custom paths if Mojang breaks their own rules. Then the plugin will handle version-specific paths for you.
+✔️ **答：** 要求遵循 Minecraft 资源包规范——仅当 Mojang 自身违反规则时才会开放自定义路径功能，届时插件将自动处理版本适配路径。
 :::
 
 :::tip
 
-You can also set it up as a configuration block like this for some extra options
+你也可通过配置块形式设置额外选项：
 
 ```yaml
 
@@ -87,15 +88,15 @@ equipments:
     humanoid:
       texture: "minecraft:leather"
       dyeable:
-        color-when-undyed: -6265536 # leather color
-      # for elytra texture
+        color-when-undyed: -6265536 # 皮革染色配置
+      # 鞘翅纹理配置
       use-player-texture: false
 ```
 :::
 
 :::tip
 
-You can also combine multiple textures using lists. Here are two examples:
+也可通过列表组合多个纹理，以下是两个示例：
 
 ```yaml
 equipments:
@@ -128,18 +129,18 @@ equipments:
 ```
 :::
 
-## Trim Based
-<Highlight color="#0d9622ff">**1.20+**</Highlight><Highlight color="#0d9622ff">**Iris/Optifine Shader Compatibility**</Highlight><Highlight color="#e03f26ff">**Trim Not Applicable**</Highlight>
+## 基于盔甲纹饰
+<Highlight color="#0d9622ff">**1.20+**</Highlight><Highlight color="#0d9622ff">**Iris/Optifine着色器兼容**</Highlight><Highlight color="#e03f26ff">**盔甲纹饰不可用**</Highlight>
 
-When CraftEngine removes a vanilla armor's base texture, the armor becomes completely transparent when worn. By applying custom trims to this invisible armor, we can achieve custom armor textures. However, this approach has one limitation - the armor can no longer receive additional trims afterward.
+当 CraftEngine 移除原版盔甲基础纹理后，装备时将呈现完全透明状态。通过对其应用自定义纹饰即可实现自定义盔甲纹理。但此方法存在一个限制——该盔甲后续无法再接受额外纹饰。
 
-By default, the plugin has preconfigured vanilla armor sacrificial options in `config.yml`. These settings will only take effect when you have configured at least one trim-based armor.
+插件默认在 `config.yml` 中预置了原版盔甲牺牲选项，这些配置仅在您至少配置过一件基于纹饰的盔甲后才会生效。
 
 :::info
 
-Q: Will sacrificed armor still display normally? Does this mean I can't use chainmail armor at all?
+问：被牺牲的盔甲还能正常显示吗？这是否意味着锁链甲完全不能使用了？
 
-A: CraftEngine anticipated this scenario. The solution is surprisingly simple, at least for CraftEngine - we apply a default trim pattern to vanilla chainmail armor to preserve its original appearance. This is achieved through CraftEngine's exclusive `client-bound-data` feature.
+答：CraftEngine 预见了这种情况。解决方案出乎意料地简单（至少对 CraftEngine 而言）——我们通过应用默认纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client-bound-data` 特性实现。
 
 ```yaml
 # config.yml
@@ -155,20 +156,20 @@ items:
   minecraft:chainmail_helmet:
     client-bound-data:
       trim:
-        pattern: chainmail # the pattern that preserves its original appearance
+        pattern: chainmail # 用于保持原始外观的纹饰图案
         material: custom
       hide-tooltip:
         - trim
-  ...leggings, chestplate and boots
+  ...护腿、胸甲与靴子
 ```
 
 :::
 
-This configures a trim-based armor set. The texture paths have no strict requirements - CraftEngine will automatically relocate texture directories for you.
+此配置用于基于纹饰的盔甲套装。纹理路径无严格限制——CraftEngine将自动为您重定位纹理目录。
 
 ```yaml
 equipments:
-  # the equipment asset id
+  # 装备资源命名空间ID
   default:topaz:
     type: trim
     humanoid: minecraft:entity/equipment/humanoid/topaz
@@ -177,10 +178,10 @@ equipments:
 
 :::caution
 
-Trim-based armor only supports the **humanoid** and **humanoid-leggings** model types.
+基于纹饰的盔甲仅支持 **humanoid** 和 **humanoid-leggings** 模型类型。
 
 :::
 
-## Core Shader Based
+## 基于核心着色器
 
-CraftEngine currently has no plans to implement custom armor based on core shaders. This approach would inherently rely on leather armor as a base, which would break when used with third-party shaders - though it does offer trim compatibility. However, given that as of 2025, over 90% of servers now run on version 1.21.2+, this feature will likely never be implemented.
+CraftEngine 目前不打算实现基于核心着色器的自定义盔甲。这种方法本质上会依赖皮革盔甲作为基础，这在使用第三方着色器时会失效——尽管它确实提供了纹饰兼容性。然而，考虑到截至 2025 年，超过 90% 的服务器都已运行 1.21.2+ 版本，此功能可能永远不会实现。

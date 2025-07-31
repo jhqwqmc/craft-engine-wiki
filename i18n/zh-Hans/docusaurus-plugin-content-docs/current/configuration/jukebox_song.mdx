@@ -1,11 +1,11 @@
 ---
-title: 💽 Jukebox Song
+title: 💽 唱片机曲目
 id: jukebox_song
 ---
 
 :::caution
 
-Due to the fact that Minecraft's registry becomes immutable once registered, you will need to restart the server in order to apply any new modifications. However, you can register a new song in real-time by modifying the configuration ID.
+由于 Minecraft 的注册表在注册后不可变，因此你需要重启服务器才能应用新的修改。不过，如果你在配置中修改了曲目的命名空间ID，则可以实时注册新的曲目，无需重启服务器。
 
 :::
 
@@ -13,13 +13,13 @@ Due to the fact that Minecraft's registry becomes immutable once registered, you
 jukebox-songs:
   default:credits_music:
     sound: minecraft:music.credits
-    length: 100.0  # music length in seconds
+    length: 100.0  # 音乐时长（秒）
     description: "Credits"  
     comparator-output: 15
     range: 32
 ```
 
-Just add the `minecraft:jukebox_playable` component, and your item becomes a playable music disc
+只需添加 `minecraft:jukebox_playable` 组件，即可使物品变为可播放的音乐唱片
 
 ```yaml
 items:
@@ -29,4 +29,4 @@ items:
       jukebox-playable: default:credits_music
 ```
 
-If you don't know how to customize a sound, please refer to [this page](sound.mdx).
+如需了解如何自定义音效，请参阅[此页面](sound.mdx)
