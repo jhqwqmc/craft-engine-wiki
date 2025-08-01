@@ -79,6 +79,9 @@ const config: Config = {
       disableSwitch: false,
       respectPrefersColorScheme: true,
     },
+    imageZoom: {
+      selector: '.markdown img',
+    },
   } satisfies Preset.ThemeConfig,
 
   plugins: [
@@ -92,6 +95,7 @@ const config: Config = {
         docsRouteBasePath: "/",
       }),
     ],
+    'plugin-image-zoom',
   ],
 };
 
