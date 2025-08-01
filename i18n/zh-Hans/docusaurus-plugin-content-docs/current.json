@@ -382,5 +382,9 @@
   "sidebar.tutorialSidebar.doc.Cloudflare R2": {
     "message": "Cloudflare R2",
     "description": "教程侧边栏中'Cloudflare R2'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.Tencent Cloud COS": {
+    "message": "腾讯云COS",
+    "description": "教程侧边栏中'腾讯云COS'文档项的标签"
   }
 }

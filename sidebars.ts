@@ -87,6 +87,11 @@ const sidebars: SidebarsConfig = {
                   id: "getting_start/set_up_host/s3/cloudflare_r2",
                   label: 'Cloudflare R2',
                 },
+                {
+                  type: 'doc',
+                  id: "getting_start/set_up_host/s3/tencentcloud_cos",
+                  label: 'Tencent Cloud COS',
+                },
               ]
             },
             {
