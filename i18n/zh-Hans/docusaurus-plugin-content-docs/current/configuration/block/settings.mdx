@@ -268,6 +268,8 @@ client-bound-tags:
   - minecraft:beacon_base_blocks
 ```
 
+![](/img/block_settings_4.png)
+
 ### 乐器
 
 决定了方块被放在音符盒下时，音符盒使用的乐器类型。（默认值：harp）
@@ -275,6 +277,8 @@ client-bound-tags:
 ```yaml
 instrument: BASEDRUM
 ```
+
+![](/img/block_settings_5.png)
 
 ### 流体状态
 
@@ -284,6 +288,8 @@ instrument: BASEDRUM
 fluid-state: water # empty/water
 ```
 
+![](/img/block_settings_6.png)
+
 ### 支撑形状
 
 决定了方块提供的**支撑形状**。默认情况下，自定义方块会使用其对应视觉状态的**支撑形状**。但是，你可以在这里手动指定一个原版方块的**支撑形状**来代替。
@@ -291,6 +297,8 @@ fluid-state: water # empty/water
 ```yaml
 support-shape: minecraft:stone
 ```
+
+![](/img/block_settings_7.png)
 
 ## 不稳定设置
 
@@ -308,6 +316,8 @@ support-shape: minecraft:stone
 luminance: 15
 ```
 
+![](/img/block_settings_8.png)
+
 ### 阻挡光线
 
 决定方块是否能阻挡光线。这也会决定该方块是否能将下方的方块转换为另一种类型（例如，草方块变为泥土）。（默认值：未定义）
@@ -316,6 +326,26 @@ luminance: 15
 can-occlude: false
 ```
 
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/block_settings_9.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: true</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/block_settings_10.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: false</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/block_settings_11.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: false</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/block_settings_12.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: true</p>
+</div>
+
 ### 散射光照
 
 决定光线穿过此方块后降低的光照等级。（默认值：未定义）
@@ -323,6 +353,21 @@ can-occlude: false
 ```yaml
 block-light: 0
 ```
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/block_settings_13.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block-light: 15</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/block_settings_14.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block-light: 7</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/block_settings_15.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block-light: 0</p>
+</div>
 
 ### 传播天空光照
 
