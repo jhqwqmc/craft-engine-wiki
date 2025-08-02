@@ -65,6 +65,8 @@ const config: Config = {
       title: 'XiaoMoMi Plugins',
       logo: {
         src: 'img/logo.svg',
+        width: 32,
+        height: 32,
       },
       items: [
         {
