@@ -79,8 +79,12 @@ const config: Config = {
       disableSwitch: false,
       respectPrefersColorScheme: true,
     },
-    imageZoom: {
+    zoom: {
       selector: '.markdown img',
+      background: {
+        light: 'rgba(255,255,255,0.8)',
+        dark: 'rgba(36,36,36,0.8)',
+      },
     },
   } satisfies Preset.ThemeConfig,
 
@@ -95,7 +99,7 @@ const config: Config = {
         docsRouteBasePath: "/",
       }),
     ],
-    'plugin-image-zoom',
+    'docusaurus-plugin-image-zoom',
   ],
 };
 
