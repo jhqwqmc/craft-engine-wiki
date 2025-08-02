@@ -248,7 +248,6 @@ Minecraft 将多个纹理合并成一张巨大的图像（称为纹理图集）�
 ❌ 7×7、13×13、19×19（非 2 的幂尺寸）\
 ❌ 17×32（混合有效/无效尺寸）
 
-**Never place font/GUI textures (e.g., rank.png, HUD elements) in the same directory as model textures (e.g., block/, item/).** Even if these textures are not directly used in models, Minecraft's texture atlas system will automatically include them when generating combined sprite sheets. This can lead to unintended visual degradation(mipmap-level):
 **切勿将字体/GUI 纹理（例如，rank.png、HUD 元素）放置在与模型纹理（例如，block/、item/）相同的目录中。** 即使这些纹理未直接用于模型，Minecraft 的纹理图集系统在生成组合精灵表时会自动包含它们。这可能导致意外的视觉降级（mipmap级别）：
 
 <details>

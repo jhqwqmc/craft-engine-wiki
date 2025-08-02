@@ -12,6 +12,10 @@ const config: Config = {
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    experimental_faster: { // 提升编译速度，如果编译失败可以关闭一些配置
+      rspackBundler: true,
+      rspackPersistentCache: true,
+    },
   },
 
   // Set the production url of your site here
@@ -61,6 +65,8 @@ const config: Config = {
       title: 'XiaoMoMi Plugins',
       logo: {
         src: 'img/logo.svg',
+        width: 32,
+        height: 32,
       },
       items: [
         {
@@ -79,8 +85,12 @@ const config: Config = {
       disableSwitch: false,
       respectPrefersColorScheme: true,
     },
-    imageZoom: {
+    zoom: {
       selector: '.markdown img',
+      background: {
+        light: 'rgba(255,255,255,0.8)',
+        dark: 'rgba(36,36,36,0.8)',
+      },
     },
   } satisfies Preset.ThemeConfig,
 
@@ -95,7 +105,7 @@ const config: Config = {
         docsRouteBasePath: "/",
       }),
     ],
-    'plugin-image-zoom',
+    'docusaurus-plugin-image-zoom',
   ],
 };
 
