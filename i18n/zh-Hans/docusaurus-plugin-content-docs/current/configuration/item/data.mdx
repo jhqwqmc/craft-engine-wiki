@@ -428,6 +428,10 @@ items:
 
 client-bound-data 仅存在于客户端侧，不涉及任何服务器端侧数据。通过使用客户端侧物品数据，您可以轻松实时更新物品提示框中的描述信息，包括 item_model 和 custom_model_data 等数据。此外，与其他插件不同，CraftEngine 的客户端侧物品数据在创造模式不会被<Comment text="也就是仅客户端侧的数据永久留存在了服务端侧">摸坏</Comment>。
 
+:::caution
+如果你启用了 `paper-global.yml` 的 [`enable-item-obfuscation`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_enable_item_obfuscation) 则需要将 `minecraft:custom_data` 添加到 [`dont-obfuscate`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_all_models_dont_obfuscate) 部分内，否则在查看其他实体时无法正确显示。
+:::
+
 :::info
 只需在您的配置区域添加一个 `client-bound-data` 部分，然后将所需数据从之前的 `data` 部分移动<Comment text="Ctrl+X Ctrl+V">（剪切+粘贴）</Comment>到里面。
 

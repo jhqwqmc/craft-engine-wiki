@@ -412,6 +412,10 @@ items:
 
 The client-bound-data exists exclusively on the client side, with no server-side components involved. Using the client-side item component, you can effortlessly update item descriptions in real time—including properties like item_model and custom_model_data. Additionally, unlike other plugins, CraftEngine items remain permanently unaltered in creative mode!
 
+:::caution
+If you have enabled [`enable-item-obfuscation`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_enable_item_obfuscation) in `paper-global.yml`, you need to add `minecraft:custom_data` to the [`dont-obfuscate`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_all_models_dont_obfuscate) section, otherwise items will not display correctly when viewing other entities.
+:::
+
 :::info
 Simply add a `client-bound-data` section in your configuration area, then move (cut/paste) the required data from the original `data` section into it
 
