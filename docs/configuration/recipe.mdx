@@ -135,8 +135,6 @@ For any items used as ingredients, you have to make sure their namespace in Craf
 
 ### Result Post Processor
 
-<Highlight color="#da0d0dff">**Experimental**</Highlight><Highlight color="#0d9622ff">**Under Implementation**</Highlight>
-
 The **Result Post Processor** is a concept introduced to address recipe diversification needs. For example, if you want to craft a pickaxe but wish the output to have enchantments, it would be impractical to create a separate recipe for the enchanted item.
 
 ```yaml
@@ -149,6 +147,10 @@ result:
         enchantments:
           minecraft:efficiency: 5
 ```
+
+:::info
+So far, there's only the apply_data type of post-processor. But you can register new ones using the API.
+:::
 
 ### Visual Result
 

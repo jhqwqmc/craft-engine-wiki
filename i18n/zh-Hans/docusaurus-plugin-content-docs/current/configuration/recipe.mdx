@@ -135,8 +135,6 @@ recipes:
 
 ### 结果后处理器
 
-<Highlight color="#da0d0dff">**实验性**</Highlight><Highlight color="#0d9622ff">**开发中**</Highlight>
-
 **结果后处理器**是为解决配方多样化需求引入的概念。例如，如果你想制作一把镐子，但希望输出的镐带有魔咒，那么为每个已附魔的物品都创建一个单独的配方是不切实际的。
 
 ```yaml
@@ -149,6 +147,10 @@ result:
         enchantments:
           minecraft:efficiency: 5
 ```
+
+:::info
+目前为止，只有apply_data类型的后处理器。你可以使用API注册新的后处理器。
+:::
 
 ### 视觉结果
 
