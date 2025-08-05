@@ -307,12 +307,16 @@
     "message": "🐚 命令",
     "description": "教程侧边栏中'命令'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.📦️ Datapack": {
+    "message": "📦️ 数据包",
+    "description": "教程侧边栏中'Datapack'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.✈️ Paper Anti Xray": {
     "message": "✈️ Paper反矿透",
     "description": "教程侧边栏中'Paper反矿透'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🟢 Advanced Slime Paper": {
-    "message": "🟢 AdvancedSlimePaper",
+    "message": "🟢 史莱姆世界",
     "description": "教程侧边栏中'AdvancedSlimePaper'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🖌️ World Painter": {
@@ -334,6 +338,10 @@
   "sidebar.tutorialSidebar.doc.⚛️ Axiom": {
     "message": "⚛️ Axiom",
     "description": "教程侧边栏中'Axiom'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🦕 MythicMobs": {
+    "message": "🦕 神话生物",
+    "description": "教程侧边栏中'MythicMobs'文档项的标签"
   },
   "sidebar.tutorialSidebar.category.🪑 Furniture": {
     "message": "🪑 家具",

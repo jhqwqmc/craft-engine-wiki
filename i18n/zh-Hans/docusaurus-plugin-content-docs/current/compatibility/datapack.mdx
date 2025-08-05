@@ -1,0 +1,108 @@
+---
+title: 📦️ 数据包
+id: datapack
+---
+:::info
+访问 https://misode.github.io/ 获取最佳数据包开发体验
+:::
+
+## 方块状态
+
+CraftEngine 允许你在数据包里使用自定义方块，这样就能使用数据包生成地形、树木，矿脉等。
+
+下面是一个基于1.21.4的TreeConfiguration示例:
+
+```json
+{
+  "type": "minecraft:tree",
+  "config": {
+    "ignore_vines": true,
+    "force_dirt": false,
+    "minimum_size": {
+      "type": "minecraft:two_layers_feature_size",
+      "min_clipped_height": 10,
+      "limit": 1,
+      "lower_size": 0,
+      "upper_size": 2
+    },
+    "dirt_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:sand"
+      }
+    },
+    "trunk_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "craftengine:note_block_1"
+      }
+    },
+    "foliage_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "craftengine:oak_leaves_6"
+      }
+    },
+    "trunk_placer": {
+      "type": "minecraft:straight_trunk_placer",
+      "base_height": 6,
+      "height_rand_a": 5,
+      "height_rand_b": 0
+    },
+    "foliage_placer": {
+      "type": "minecraft:cherry_foliage_placer",
+      "radius": 5,
+      "offset": 0,
+      "height": 4,
+      "wide_bottom_layer_hole_chance": 0.8,
+      "corner_hole_chance": 1,
+      "hanging_leaves_chance": 0.8,
+      "hanging_leaves_extension_chance": 0.4
+    },
+    "decorators": []
+  }
+}
+```
+
+:::tip
+点击[**这里**](../reference/commands.mdx#get-block-internal-id)了解如何获取自定义方块的真实方块命名空间ID。
+:::
+
+## 战利品
+
+当你想要使用craftengine的物品作为战利品时候，只需要按照如下方式配置。这个方法适用于宝箱，方块掉落物，钓鱼战利品等。
+
+```json
+{
+  "type": "minecraft:fishing",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "craftengine:item",
+          "name": "default:palm_log",
+          "weight": 60
+        },
+        {
+          "type": "craftengine:item",
+          "name": "default:chinese_lantern",
+          "weight": 25
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tropical_fish",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:pufferfish",
+          "weight": 13
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "minecraft:gameplay/fishing/fish"
+}
+```

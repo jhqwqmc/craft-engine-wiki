@@ -1,0 +1,108 @@
+---
+title: 📦️ Datapack
+id: datapack
+---
+:::info
+Visit https://misode.github.io/ for better datapack development environment.
+:::
+
+## Blocks
+
+CraftEngine allows you to use custom blocks in datapacks, enabling terrain generation, trees, ore veins, and more through datapack configuration.
+
+Here's a tree configuration example for Minecraft 1.21.4 using CraftEngine:
+
+```json
+{
+  "type": "minecraft:tree",
+  "config": {
+    "ignore_vines": true,
+    "force_dirt": false,
+    "minimum_size": {
+      "type": "minecraft:two_layers_feature_size",
+      "min_clipped_height": 10,
+      "limit": 1,
+      "lower_size": 0,
+      "upper_size": 2
+    },
+    "dirt_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:sand"
+      }
+    },
+    "trunk_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "craftengine:note_block_1"
+      }
+    },
+    "foliage_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "craftengine:oak_leaves_6"
+      }
+    },
+    "trunk_placer": {
+      "type": "minecraft:straight_trunk_placer",
+      "base_height": 6,
+      "height_rand_a": 5,
+      "height_rand_b": 0
+    },
+    "foliage_placer": {
+      "type": "minecraft:cherry_foliage_placer",
+      "radius": 5,
+      "offset": 0,
+      "height": 4,
+      "wide_bottom_layer_hole_chance": 0.8,
+      "corner_hole_chance": 1,
+      "hanging_leaves_chance": 0.8,
+      "hanging_leaves_extension_chance": 0.4
+    },
+    "decorators": []
+  }
+}
+```
+
+:::tip
+Click [**here**](../reference/commands.mdx#get-block-internal-id) to learn how to obtain the real block ID of a custom block.
+:::
+
+## Loots
+
+When you want to use items from CraftEngine as loot, simply configure them in the following way. This method applies to chests, block drops, fishing loot, and more.
+
+```json
+{
+  "type": "minecraft:fishing",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "craftengine:item",
+          "name": "default:palm_log",
+          "weight": 60
+        },
+        {
+          "type": "craftengine:item",
+          "name": "default:chinese_lantern",
+          "weight": 25
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:tropical_fish",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:pufferfish",
+          "weight": 13
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "minecraft:gameplay/fishing/fish"
+}
+```

@@ -542,6 +542,11 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'doc',
+          id: "compatibility/datapack",
+          label: '📦️ Datapack',
+        },
+        {
+          type: 'doc',
           id: "compatibility/anti_xray",
           label: '✈️ Paper Anti Xray',
         },
@@ -574,6 +579,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "compatibility/axiom",
           label: '⚛️ Axiom',
+        },
+        {
+          type: 'doc',
+          id: "compatibility/mythicmobs",
+          label: '🦕 MythicMobs',
         },
       ]
     },
