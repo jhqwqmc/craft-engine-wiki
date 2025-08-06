@@ -358,9 +358,51 @@ Cast a mythic mobs skill
 
 ```yaml
 type: mythic_mobs_skill
-sound: minecraft:xxxx.xxx
 skill: skill_id
 power: 1.0
+```
+
+### spawn\_furniture
+
+Spawns a furniture
+
+```yaml
+type: spawn_furniture
+furniture-id: "default:bench"
+x: <arg:position.x> # Default: <arg:position.x>
+y: <arg:position.y> # Default: <arg:position.y>
+z: <arg:position.z> # Default: <arg:position.z>
+pitch: <arg:pitch> # Default: <arg:pitch>
+yaw: <arg:yaw> # Default: <arg:yaw>
+anchor-type: ground # optional; enum[ground,ceiling,wall]
+play-sound: true # Default: true
+```
+
+### remove\_furniture
+
+Removes a furniture
+
+```yaml
+type: remove_furniture
+drop-loot: true # Default: true
+play-sound: true # Default: true
+```
+
+### replace\_furniture
+
+Replaces a furniture
+
+```yaml
+type: spawn_furniture
+furniture-id: "default:bench"
+x: <arg:position.x> # Default: <arg:position.x>
+y: <arg:position.y> # Default: <arg:position.y>
+z: <arg:position.z> # Default: <arg:position.z>
+pitch: <arg:pitch> # Default: <arg:pitch>
+yaw: <arg:yaw> # Default: <arg:yaw>
+anchor-type: ground # optional; enum[ground,ceiling,wall]
+drop-loot: true # Default: true
+play-sound: true # Default: true
 ```
 
 :::info
