@@ -350,15 +350,57 @@ volume: 1
 source: master
 ```
 
-### MythicMobs技能
+### 神话生物技能
 
-释放MythicMobs技能
+释放神话生物技能
 
 ```yaml
 type: mythic_mobs_skill
-sound: minecraft:xxxx.xxx
 skill: skill_id
 power: 1.0
+```
+
+### 生成家具
+
+生成一个家具
+
+```yaml
+type: spawn_furniture
+furniture-id: "default:bench"
+x: <arg:position.x> # 默认值: <arg:position.x>
+y: <arg:position.y> # 默认值: <arg:position.y>
+z: <arg:position.z> # 默认值: <arg:position.z>
+pitch: <arg:pitch> # 默认值: <arg:pitch>
+yaw: <arg:yaw> # 默认值: <arg:yaw>
+anchor-type: ground # 可选; 枚举[ground,ceiling,wall]
+play-sound: true # 默认值: true
+```
+
+### 移除家具
+
+移除一个家具
+
+```yaml
+type: remove_furniture
+drop-loot: true # 默认值: true
+play-sound: true # 默认值: true
+```
+
+### 替换家具
+
+替换一个家具
+
+```yaml
+type: spawn_furniture
+furniture-id: "default:bench"
+x: <arg:position.x> # 默认值: <arg:position.x>
+y: <arg:position.y> # 默认值: <arg:position.y>
+z: <arg:position.z> # 默认值: <arg:position.z>
+pitch: <arg:pitch> # 默认值: <arg:pitch>
+yaw: <arg:yaw> # 默认值: <arg:yaw>
+anchor-type: ground # 可选; 枚举[ground,ceiling,wall]
+drop-loot: true # 默认值: true
+play-sound: true # 默认值: true
 ```
 
 :::info
