@@ -3,23 +3,87 @@ title: ⌨️ API
 id: api
 ---
 
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
 ## 依赖库
 
 将 CraftEngine API 添加到你的项目：
 
-```kotlin
-repositories {
-    maven("https://repo.momirealms.net/releases/")
-    // maven("https://repo-momi.gtemc.cn/releases/") // 译者注：如果你的网络环境受限可以使用国内镜像依赖库
-    // maven("https://repo.gtemc.net/releases/") // 译者注：如果主依赖库爆炸了可以临时切换到镜像依赖库
-}
-```
-```kotlin
-dependencies {
-    compileOnly("net.momirealms:craft-engine-core:{version}") // 将 "{version}" 替换为插件版本
-    compileOnly("net.momirealms:craft-engine-bukkit:{version}") // 例如 0.0.60
-}
-```
+<Tabs groupId="code">
+    <TabItem value="kts" label="Gradle (Kotlin)">
+        ```kotlin
+        repositories {
+            maven("https://repo.momirealms.net/releases/")
+            // maven("https://repo-momi.gtemc.cn/releases/") // 译者注：如果你的网络环境受限可以使用国内镜像依赖库
+            // maven("https://repo.gtemc.net/releases/") // 译者注：如果主依赖库爆炸了可以临时切换到镜像依赖库
+        }
+        ```
+    </TabItem>
+    <TabItem value="gvy" label="Gradle (Groovy)">
+        ```groovy
+        repositories {
+            maven { url 'https://repo.momirealms.net/releases/' }
+            // maven { url 'https://repo-momi.gtemc.cn/releases/' } // 译者注：如果你的网络环境受限可以使用国内镜像依赖库
+            // maven { url 'https://repo.gtemc.net/releases/' } // 译者注：如果主依赖库爆炸了可以临时切换到镜像依赖库
+        }
+        ```
+    </TabItem>
+    <TabItem value="mvn" label="Maven">
+        ```xml
+        <repositories>
+            <repository>
+                <id>momirealms-repo</id>
+                <url>https://repo.momirealms.net/releases/</url>
+            </repository>
+            <repository>
+                <id>momirealms-repo-mirror1</id>
+                <url>https://repo-momi.gtemc.cn/releases/</url> <!-- 译者注：如果你的网络环境受限可以使用国内镜像依赖库 -->
+            </repository>
+            <repository>
+                <id>momirealms-repo-mirror2</id>
+                <url>https://repo.gtemc.net/releases/</url> <!-- 译者注：如果主依赖库爆炸了可以临时切换到镜像依赖库 -->
+            </repository>
+        </repositories>
+        ```
+    </TabItem>
+</Tabs>
+<Tabs groupId="code">
+    <TabItem value="kts" label="Gradle (Kotlin)">
+        ```kotlin
+        dependencies {
+            compileOnly("net.momirealms:craft-engine-core:{version}") // 将 "{version}" 替换为插件版本
+            compileOnly("net.momirealms:craft-engine-bukkit:{version}") // 例如 0.0.60
+        }
+        ```
+    </TabItem>
+    <TabItem value="gvy" label="Gradle (Groovy)">
+        ```groovy
+        dependencies {
+            compileOnly 'net.momirealms:craft-engine-core:{version}' // 将 "{version}" 替换为插件版本
+            compileOnly 'net.momirealms:craft-engine-bukkit:{version}' // 例如 0.0.60
+        }
+        ```
+    </TabItem>
+    <TabItem value="mvn" label="Maven">
+        ```xml
+        <dependencies>
+            <dependency>
+                <groupId>net.momirealms</groupId>
+                <artifactId>craft-engine-core</artifactId>
+                <version>{version}</version> <!-- 将 {version} 替换为插件版本 -->
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.momirealms</groupId>
+                <artifactId>craft-engine-bukkit</artifactId>
+                <version>{version}</version> <!-- 例如 0.0.60 -->
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+        ```
+    </TabItem>
+</Tabs>
 
 请确保将 CraftEngine 添加为你的插件的依赖项：
 

@@ -3,21 +3,75 @@ title: ⌨️ API
 id: api
 ---
 
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
 ## Repository
 
 Add CraftEngine API to your project:
 
-```kotlin
-repositories {
-    maven("https://repo.momirealms.net/releases/")
-}
-```
-```kotlin
-dependencies {
-    compileOnly("net.momirealms:craft-engine-core:{version}") // replace "{version}" with the plugin version
-    compileOnly("net.momirealms:craft-engine-bukkit:{version}") // for instance 0.0.60
-}
-```
+<Tabs groupId="code">
+    <TabItem value="kts" label="Gradle (Kotlin)">
+        ```kotlin
+        repositories {
+            maven("https://repo.momirealms.net/releases/")
+        }
+        ```
+    </TabItem>
+    <TabItem value="gvy" label="Gradle (Groovy)">
+        ```groovy
+        repositories {
+            maven { url 'https://repo.momirealms.net/releases/' }
+        }
+        ```
+    </TabItem>
+    <TabItem value="mvn" label="Maven">
+        ```xml
+        <repositories>
+            <repository>
+                <id>momirealms-repo</id>
+                <url>https://repo.momirealms.net/releases/</url>
+            </repository>
+        </repositories>
+        ```
+    </TabItem>
+</Tabs>
+<Tabs groupId="code">
+    <TabItem value="kts" label="Gradle (Kotlin)">
+        ```kotlin
+        dependencies {
+            compileOnly("net.momirealms:craft-engine-core:{version}") // replace "{version}" with the plugin version
+            compileOnly("net.momirealms:craft-engine-bukkit:{version}") // for instance 0.0.60
+        }
+        ```
+    </TabItem>
+    <TabItem value="gvy" label="Gradle (Groovy)">
+        ```groovy
+        dependencies {
+            compileOnly 'net.momirealms:craft-engine-core:{version}' // replace "{version}" with the plugin version
+            compileOnly 'net.momirealms:craft-engine-bukkit:{version}' // for instance 0.0.60
+        }
+        ```
+    </TabItem>
+    <TabItem value="mvn" label="Maven">
+        ```xml
+        <dependencies>
+            <dependency>
+                <groupId>net.momirealms</groupId>
+                <artifactId>craft-engine-core</artifactId>
+                <version>{version}</version> <!-- replace "{version}" with the plugin version -->
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.momirealms</groupId>
+                <artifactId>craft-engine-bukkit</artifactId>
+                <version>{version}</version> <!-- for instance 0.0.60 -->
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+        ```
+    </TabItem>
+</Tabs>
 
 Make sure to add CraftEngine as a dependency for your plugin:
 
