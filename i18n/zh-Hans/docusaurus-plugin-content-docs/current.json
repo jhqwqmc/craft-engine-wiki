@@ -343,6 +343,10 @@
     "message": "🦕 神话生物",
     "description": "教程侧边栏中'MythicMobs'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.⌨️ Skript": {
+    "message": "⌨️ Skript脚本",
+    "description": "教程侧边栏中'Skript'文档项的标签"
+  },
   "sidebar.tutorialSidebar.category.🪑 Furniture": {
     "message": "🪑 家具",
     "description": "教程侧边栏中'家具'类别的标签"
