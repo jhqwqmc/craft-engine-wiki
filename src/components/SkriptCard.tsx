@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import styles from './SkriptCard.module.css';
 
+interface I18NType {
+  type: 'Event' | 'Expression' | 'Effect' | 'Condition';
+  label: string;
+}
+
 interface SkriptCardProps {
   title: string;
-  type: 'Event' | 'Expression' | 'Effect' | 'Condition';
+  type: 'Event' | 'Expression' | 'Effect' | 'Condition' | I18NType;
   syntax?: string[];
   description?: string;
   examples?: string[];
@@ -24,8 +29,8 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
+  const getTypeIcon = (type: string | I18NType) => {
+    switch (typeof type === 'string' ? type : type.type) {
       case 'Event':
         return '📅';
       case 'Expression':
@@ -39,8 +44,8 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
     }
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
+  const getTypeColor = (type: string | I18NType) => {
+    switch (typeof type === 'string' ? type : type.type) {
       case 'Event':
         return '#8b5cf6'; // purple
       case 'Expression':
@@ -71,7 +76,7 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
               className={styles.type}
               style={{ backgroundColor: getTypeColor(type) }}
             >
-              {type}
+              {typeof type === 'string' ? type : type.label}
             </span>
           </div>
         </div>
@@ -88,57 +93,59 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
         </div>
       </div>
 
-      <div className={`${styles.content} ${isOpen ? styles.contentOpen : ''}`}>
-        {description && (
-          <div className={styles.section}>
-            <p className={styles.description}>{description}</p>
-          </div>
-        )}
-
-        {syntax.length > 0 && (
-          <div className={styles.section}>
-            <h4 className={styles.sectionTitle}>语法格式:</h4>
-            <div className={styles.syntaxContainer}>
-              {syntax.map((syn, index) => (
-                <code key={index} className={styles.syntax}>
-                  {syn}
-                </code>
-              ))}
+      <div className={`${styles.contentWrapper} ${isOpen ? styles.open : ''}`}>
+        <div className={styles.contentInner}>
+          {description && (
+            <div className={styles.section}>
+              <p className={styles.description}>{description}</p>
             </div>
-          </div>
-        )}
+          )}
 
-        {values.length > 0 && (
-          <div className={styles.section}>
-            <h4 className={styles.sectionTitle}>事件字段:</h4>
-            <div className={styles.valuesList}>
-              {values.map((value, index) => (
-                <code key={index} className={styles.value}>
-                  {value}
-                </code>
-              ))}
+          {syntax.length > 0 && (
+            <div className={styles.section}>
+              <h4 className={styles.sectionTitle}>语法格式:</h4>
+              <div className={styles.syntaxContainer}>
+                {syntax.map((syn, index) => (
+                  <code key={index} className={styles.syntax}>
+                    {syn}
+                  </code>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {examples.length > 0 && (
-          <div className={styles.section}>
-            <h4 className={styles.sectionTitle}>示例:</h4>
-            <div className={styles.examplesContainer}>
-              {examples.map((example, index) => (
-                <pre key={index} className={styles.example}>
-                  <code>{example}</code>
-                </pre>
-              ))}
+          {values.length > 0 && (
+            <div className={styles.section}>
+              <h4 className={styles.sectionTitle}>事件字段:</h4>
+              <div className={styles.valuesList}>
+                {values.map((value, index) => (
+                  <code key={index} className={styles.value}>
+                    {value}
+                  </code>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {children && (
-          <div className={styles.section}>
-            {children}
-          </div>
-        )}
+          {examples.length > 0 && (
+            <div className={styles.section}>
+              <h4 className={styles.sectionTitle}>示例:</h4>
+              <div className={styles.examplesContainer}>
+                {examples.map((example, index) => (
+                  <pre key={index} className={styles.example}>
+                    <code>{example}</code>
+                  </pre>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {children && (
+            <div className={styles.section}>
+              {children}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
