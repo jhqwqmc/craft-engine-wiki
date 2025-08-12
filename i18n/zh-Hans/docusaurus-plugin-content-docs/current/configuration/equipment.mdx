@@ -19,6 +19,49 @@ CraftEngine 提供两种创建自定义装备的方式：基于**盔甲纹饰**�
 
 :::
 
+:::tip
+**关于3D头盔的说明：**
+
+3D头盔的创建方法与**装备**完全无关。由于许多用户在创建3D头盔时遇到了困难，我将在此说明正确的创建方法，并澄清一些可能存在的误解。
+
+<details>
+  <summary>3D头盔原理</summary>
+
+  护甲类物品天生带有`equippable`组件，其中包含一个名为`asset_id`的选项。当指定该选项时，Minecraft会使用**硬编码渲染器**来显示指定的护甲纹理。这意味着即使你为基于钻石头盔的物品分配了自定义3D物品模型，玩家穿戴时仍会使用默认的**钻石头盔护甲渲染器**进行渲染。
+  ![](/img/3d_helmet_1.png)
+
+  要解决这个问题，你必须禁用硬编码渲染器，并让头盔改用默认的物品渲染器。
+
+  ### 解决方案1（适用于1.21.2+版本）：
+
+  重写equippable组件并移除asset_id选项。示例如下：
+
+  ```yaml
+  items:
+    default:my_3d_helemt:
+      material: diamond_helemt
+      data:
+        equippable:
+          slot: head
+  ```
+
+  ### 解决方案2（适用于1.20+版本）：
+
+  使用`client-bound-material`来修改头盔在客户端的渲染方式，而不影响其服务器端功能。示例如下：
+
+  ```yaml
+  items:
+    default:my_3d_helemt:
+      material: diamond_helemt
+      client-bound-material: paper
+  ```
+
+  ![](/img/3d_helmet_2.png)
+
+</details>
+
+:::
+
 ## 基于组件
 <Highlight color="#0d9622ff">**1.21.2+**</Highlight><Highlight color="#0d9622ff">**推荐**</Highlight>
 
