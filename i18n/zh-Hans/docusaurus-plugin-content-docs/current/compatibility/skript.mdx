@@ -8,17 +8,17 @@ import SkriptCard from '@site/src/components/SkriptCard';
 # ⌨️ Skript
 
 :::tip
-对于高级 Skript 用户，请使用反射来实现更高级的功能。如果您在使用 Skript 时遇到问题，请及时向我们反馈。如果您想要请求新的 Skript 功能并且您了解 Java，请考虑通过拉取请求贡献您的代码！
+对于高级 Skript 用户，请使用反射来实现更高级的功能。如果您在使用 CraftEngine 提供的 Skript 功能时遇到问题，请及时向我们[反馈](https://github.com/Xiao-MoMi/craft-engine/issues/new)。如果您想要请求新的 Skript 功能并且您了解 Java，请考虑通过拉取请求贡献您的代码！
 :::
 
 :::warning
-请注意，如果您在加载服务器时遇到错误，这可能是因为 Skript 脚本在 CraftEngine 之前加载。目前无法修复此问题，只能通过重新加载来解决。
+请注意，如果您在服务器加载插件时遇到错误，这可能是因为 Skript 脚本在 CraftEngine 之前加载。目前无法修复此问题，只能通过重新加载来解决。
 :::
 
 ## 事件
 
 <SkriptCard
-  title="放置/破坏 CraftEngine 方块事件"
+  title="放置或破坏 CraftEngine 方块事件"
   type="Event"
   description="当放置和破坏 CraftEngine 方块时触发"
   syntax={[
@@ -36,10 +36,16 @@ import SkriptCard from '@site/src/components/SkriptCard';
       send "你破坏了自定义方块！" to event-player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
-  title="放置/破坏 CraftEngine 家具事件"
+  title="放置或破坏 CraftEngine 家具事件"
   type="Event"
   description="当放置和破坏 CraftEngine 家具时触发"
   syntax={[
@@ -57,10 +63,16 @@ import SkriptCard from '@site/src/components/SkriptCard';
       send "你放置了自定义家具！" to event-player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
-  title="点击 CraftEngine 方块/家具事件"
+  title="点击 CraftEngine 方块或家具事件"
   type="Event"
   description="当点击 CraftEngine 方块和家具时触发"
   syntax={[
@@ -79,10 +91,16 @@ import SkriptCard from '@site/src/components/SkriptCard';
        send "你点击了自定义方块！" to event-player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
-  title="CraftEngine 重载事件"
+  title="CraftEngine 重新加载事件"
   type="Event"
   description="当 CraftEngine 加载时触发"
   syntax={[
@@ -95,12 +113,18 @@ import SkriptCard from '@site/src/components/SkriptCard';
       send "嘿，CraftEngine 已在服务器启用时加载，脚本现在将初始化一些内容！" to console`,
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 ## 条件
 
 <SkriptCard
-  title="CraftEngine 已加载"
+  title="CraftEngine 是否已加载"
   type="Condition"
   description="检查 CraftEngine 是否已加载"
   syntax={[
@@ -114,6 +138,12 @@ import SkriptCard from '@site/src/components/SkriptCard';
       send "脚本初始化一些内容！" to console`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "条件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
@@ -130,6 +160,12 @@ import SkriptCard from '@site/src/components/SkriptCard';
         send "你正在使用自定义物品挖掘" to event-player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "条件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
@@ -146,6 +182,12 @@ import SkriptCard from '@site/src/components/SkriptCard';
         send "你破坏了一个自定义方块" to event-player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "条件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
@@ -163,6 +205,12 @@ import SkriptCard from '@site/src/components/SkriptCard';
         send "我在做什么？" to event-player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "条件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 ## 表达式
@@ -170,7 +218,7 @@ import SkriptCard from '@site/src/components/SkriptCard';
 <SkriptCard
   title="自定义物品"
   type="Expression"
-  description="通过命名空间 ID 获取自定义物品"
+  description="通过命名空间ID获取自定义物品"
   syntax={[
     '[(the|a)] (custom|ce|craft-engine) item [with [namespace] id] %strings%',
   ]}
@@ -178,12 +226,18 @@ import SkriptCard from '@site/src/components/SkriptCard';
     `set {_item} to custom item with namespace id "default:topaz"`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "表达式",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
-  title="自定义物品 ID"
+  title="自定义物品命名空间ID"
   type="Expression"
-  description="获取自定义物品的命名空间 ID"
+  description="获取自定义物品的命名空间ID"
   syntax={[
     '(custom|ce|craft-engine) item [namespace] id of %itemstack/itemtype/slot%',
     '%itemstack/itemtype/slot%\'[s] (custom|ce|craft-engine) item [namespace] id'
@@ -192,12 +246,18 @@ import SkriptCard from '@site/src/components/SkriptCard';
     `set {_itemId} to craft-engine item id of player's tool`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "表达式",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
-  title="自定义方块 ID"
+  title="自定义方块命名空间ID"
   type="Expression"
-  description="获取自定义方块的命名空间 ID"
+  description="获取自定义方块的命名空间ID"
   syntax={[
     '%blocks/blockdata/customblockstates%\'s (custom|ce|craft-engine) block [namespace] id',
     '(custom|ce|craft-engine) block [namespace] id of %blocks/blockdata/customblockstates%'
@@ -208,6 +268,12 @@ import SkriptCard from '@site/src/components/SkriptCard';
         send "破坏了一个中式灯笼方块" to event-player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "表达式",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
@@ -223,12 +289,18 @@ import SkriptCard from '@site/src/components/SkriptCard';
       send event-block's block state to event-player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "表达式",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
-  title="家具 ID"
+  title="家具命名空间ID"
   type="Expression"
-  description="从实体获取家具 ID"
+  description="从实体获取家具的命名空间ID"
   syntax={[
     '%entities%\'s [(custom|ce|craft-engine)] furniture [namespace] id',
   ]}
@@ -236,6 +308,12 @@ import SkriptCard from '@site/src/components/SkriptCard';
     `set {_furnitureId} to {_entity}'s craft-engine furniture id`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "表达式",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 # 效果
@@ -251,6 +329,12 @@ import SkriptCard from '@site/src/components/SkriptCard';
     `place custom block default:palm_log[axis=x] at location of the player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "效果",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
@@ -264,6 +348,12 @@ import SkriptCard from '@site/src/components/SkriptCard';
     `place furniture "default:bench" at location of player`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "效果",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
 
 <SkriptCard
@@ -277,4 +367,10 @@ import SkriptCard from '@site/src/components/SkriptCard';
     `remove craft-engine furniture target entity`
   ]}
   defaultOpen={false}
+  i18n={{
+    label: "效果",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
 />
