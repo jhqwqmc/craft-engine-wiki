@@ -585,6 +585,11 @@ const sidebars: SidebarsConfig = {
           id: "compatibility/mythicmobs",
           label: '🦕 MythicMobs',
         },
+        {
+          type: 'doc',
+          id: "compatibility/skript",
+          label: '⌨️ Skript',
+        },
       ]
     },
     {
