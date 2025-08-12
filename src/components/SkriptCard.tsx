@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import styles from './SkriptCard.module.css';
 
-interface I18NType {
-  type: 'Event' | 'Expression' | 'Effect' | 'Condition';
+interface I18N {
   label: string;
+  syntax: string;
+  field: string;
+  example: string;
 }
 
 interface SkriptCardProps {
   title: string;
-  type: 'Event' | 'Expression' | 'Effect' | 'Condition' | I18NType;
+  type: 'Event' | 'Expression' | 'Effect' | 'Condition';
   syntax?: string[];
   description?: string;
   examples?: string[];
   values?: string[];
   children?: React.ReactNode;
   defaultOpen?: boolean;
+  i18n?: I18N;
 }
 
 const SkriptCard: React.FC<SkriptCardProps> = ({
@@ -26,11 +29,17 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
   values = [],
   children,
   defaultOpen = false,
+  i18n = {
+    label: type,
+    syntax: 'Syntax:',
+    field: 'Field:',
+    example: 'Example:',
+  }
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
-  const getTypeIcon = (type: string | I18NType) => {
-    switch (typeof type === 'string' ? type : type.type) {
+  const getTypeIcon = (type: string) => {
+    switch (type) {
       case 'Event':
         return '📅';
       case 'Expression':
@@ -44,8 +53,8 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
     }
   };
 
-  const getTypeColor = (type: string | I18NType) => {
-    switch (typeof type === 'string' ? type : type.type) {
+  const getTypeColor = (type: string) => {
+    switch (type) {
       case 'Event':
         return '#8b5cf6'; // purple
       case 'Expression':
@@ -76,7 +85,7 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
               className={styles.type}
               style={{ backgroundColor: getTypeColor(type) }}
             >
-              {typeof type === 'string' ? type : type.label}
+              {i18n.label}
             </span>
           </div>
         </div>
@@ -103,7 +112,7 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
 
           {syntax.length > 0 && (
             <div className={styles.section}>
-              <h4 className={styles.sectionTitle}>语法格式:</h4>
+              <h4 className={styles.sectionTitle}>{i18n.syntax}</h4>
               <div className={styles.syntaxContainer}>
                 {syntax.map((syn, index) => (
                   <code key={index} className={styles.syntax}>
@@ -116,7 +125,7 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
 
           {values.length > 0 && (
             <div className={styles.section}>
-              <h4 className={styles.sectionTitle}>事件字段:</h4>
+              <h4 className={styles.sectionTitle}>{i18n.field}</h4>
               <div className={styles.valuesList}>
                 {values.map((value, index) => (
                   <code key={index} className={styles.value}>
@@ -129,7 +138,7 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
 
           {examples.length > 0 && (
             <div className={styles.section}>
-              <h4 className={styles.sectionTitle}>示例:</h4>
+              <h4 className={styles.sectionTitle}>{i18n.example}</h4>
               <div className={styles.examplesContainer}>
                 {examples.map((example, index) => (
                   <pre key={index} className={styles.example}>
