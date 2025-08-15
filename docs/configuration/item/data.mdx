@@ -81,6 +81,18 @@ items:
         - "What a shiny rod!"
 ```
 
+### overwritable-lore
+
+This is a specialized data type designed for `client-bound-data`. The `overwritable-lore` will only be applied if the item has no existing lore. The name `overwritable-lore` reflects its behavior—it prioritizes and displays lore set by other plugins. For example, if a shop plugin is compatible with CraftEngine, you can purchase a CraftEngine item from the shop without the client-bound-data `lore` overriding the shop item's description.
+
+```yml
+items:
+  default:topaz_rod:
+    client-bound-data:
+      overwritable-lore: 
+        - "What a shiny rod!"
+```
+
 ### unbreakable
 
 Determines whether the item is unbreakable.

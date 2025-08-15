@@ -83,6 +83,18 @@ items:
         - "我去这鱼竿直接把我24K狗眼闪瞎了"
 ```
 
+### overwritable-lore (可覆盖描述)
+
+这是一种专为客户端绑定数据设计的特殊数据类型。可覆盖描述仅在物品没有现有描述时才会生效。其名称体现了它的行为特性——它会优先显示其他插件设置的描述内容。举例说明：若某个商店插件兼容CraftEngine，您从商店购买的CraftEngine物品将不会因客户端绑定数据的描述而覆盖商店原有的物品说明。
+
+```yml
+items:
+  default:topaz_rod:
+    client-bound-data:
+      overwritable-lore: 
+        - "我去这鱼竿直接把我24K狗眼闪瞎了"
+```
+
 ### unbreakable（无法破坏）
 
 控制物品是否无法被破坏。
