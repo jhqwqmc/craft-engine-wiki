@@ -15,49 +15,60 @@ CraftEngine 提供两种创建自定义装备的方式：基于**盔甲纹饰**�
 
 :::info
 
-请注意以下均为装备配置，非物品具体设定。要将这些配置应用到护甲物品，请参阅[此文档](item/settings.mdx#equipment装备)。
+请注意以下均为装备配置，非物品具体设定。要将这些配置应用到盔甲物品，请参阅[此文档](item/settings.mdx#equipment装备)。
 
 :::
 
 :::tip
-**关于3D头盔的说明：**
+**关于 3D 头盔的说明：**
 
-3D头盔的创建方法与**装备**完全无关。由于许多用户在创建3D头盔时遇到了困难，我将在此说明正确的创建方法，并澄清一些可能存在的误解。
+3D 头盔的创建方法与**装备**完全无关。由于许多用户在创建 3D 头盔时遇到了困难，我将在此说明正确的创建方法，并澄清一些可能存在的误解。
 
+---
+译者注：3D 头盔的渲染<Highlight color="#FF0000">**是**</Highlight>通过<Highlight color="#e03f26ff">**渲染物品模型**</Highlight>实现的，
+而<Highlight color="#FF0000">**不是**</Highlight>通过<Highlight color="#e03f26ff">**渲染盔甲模型**</Highlight>实现的。
+
+做个小实验尝试执行 `/item replace entity @p armor.head with minecraft:glass` 看看你的头上是不是渲染了一个完整的 3D 玻璃方块，尝试把 `minecraft:glass` 替换成 `minecraft:bow` 看看头上是不是渲染了一个弓物品。
+
+但是话说回来<Highlight color="#e03f26ff">**盔甲模型**</Highlight>的渲染优先级<Highlight color="#FF0000">**高于**</Highlight><Highlight color="#e03f26ff">**物品模型**</Highlight>，
+当使用<Highlight color="#FF0000">**原版头盔物品**</Highlight>作为 `material` 的时候默认就会<Highlight color="#FF0000">**自带**</Highlight>一个<Highlight color="#e03f26ff">**盔甲模型**</Highlight>，
+所以需要把这个<Highlight color="#e03f26ff">**盔甲模型**</Highlight>删掉就可以渲染<Highlight color="#e03f26ff">**物品模型**</Highlight>了，查看下面的**3D 头盔原理**获取解决方案。
+
+---
 <details>
-  <summary>3D头盔原理</summary>
+  <summary>3D 头盔原理</summary>
 
-  护甲类物品天生带有`equippable`组件，其中包含一个名为`asset_id`的选项。当指定该选项时，Minecraft会使用**硬编码渲染器**来显示指定的护甲纹理。这意味着即使你为基于钻石头盔的物品分配了自定义3D物品模型，玩家穿戴时仍会使用默认的**钻石头盔护甲渲染器**进行渲染。
-  
-  ![](/img/3d_helmet_1.png)
+    盔甲类物品天生带有 `equippable` 组件，其中包含一个名为 `asset_id` 的选项。当指定该选项时，Minecraft 会使用**硬编码渲染器**来渲染指定的盔甲纹理。这意味着即使你为基于钻石头盔的物品分配了自定义 3D 物品模型，玩家穿戴时仍会使用默认的**钻石头盔盔甲渲染器**进行渲染。
 
-  要解决这个问题，你必须禁用硬编码渲染器，并让头盔改用默认的物品渲染器。
+    ![](/img/3d_helmet_1.png)
 
-  ### 解决方案1（适用于1.21.2+版本）：
+    要解决这个问题，你必须禁用硬编码渲染器，并让头盔改用默认的物品渲染器。
 
-  重写equippable组件并移除asset_id选项。示例如下：
+    ### 解决方案1（适用于 1.21.2+ 版本）：
 
-  ```yaml
-  items:
-    default:my_3d_helemt:
-      material: diamond_helemt
-      data:
-        equippable:
-          slot: head
-  ```
+    重写 `equippable` 组件并移除 `asset_id` 选项。示例如下：
 
-  ### 解决方案2（适用于1.20+版本）：
+    ```yaml
+    items:
+      default:my_3d_helemt:
+        material: diamond_helemt
+        data:
+          equippable:
+            slot: head
+    ```
 
-  使用`client-bound-material`来修改头盔在客户端的渲染方式，而不影响其服务器端功能。示例如下：
+    ### 解决方案2（适用于1.20+版本）：
 
-  ```yaml
-  items:
-    default:my_3d_helemt:
-      material: diamond_helemt
-      client-bound-material: paper
-  ```
+    使用 `client-bound-material` 来修改头盔在客户端的渲染方式，而不影响其服务器端功能。示例如下：
 
-  ![](/img/3d_helmet_2.png)
+    ```yaml
+    items:
+      default:my_3d_helemt:
+        material: diamond_helemt
+        client-bound-material: paper
+    ```
+
+    ![](/img/3d_helmet_2.png)
 
 </details>
 
