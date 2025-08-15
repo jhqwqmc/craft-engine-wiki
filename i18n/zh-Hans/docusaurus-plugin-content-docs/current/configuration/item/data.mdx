@@ -83,6 +83,29 @@ items:
         - "我去这鱼竿直接把我24K狗眼闪瞎了"
 ```
 
+### overwritable-lore (可覆盖描述)
+
+这是一种专为客户端绑定数据设计的特殊数据类型。可覆盖描述仅在物品没有现有描述时才会生效。其名称体现了它的行为特性——它会优先显示其他插件设置的描述内容。举例说明：若某个商店插件兼容CraftEngine，您从商店购买的CraftEngine物品将不会因客户端绑定数据的描述而覆盖商店原有的物品说明。
+
+```yml
+items:
+  default:topaz_rod:
+    client-bound-data:
+      overwritable-lore: 
+        - "我去这鱼竿直接把我24K狗眼闪瞎了"
+```
+
+### overwritable-item-name (可覆盖描述物品名称)
+
+和 `overwritable-lore` 类似但是这个选项是为物品名称设计的
+
+```yml
+items:
+  default:topaz_rod:
+    client-bound-data:
+      overwritable-item-name: "<#FF8C00>黄玉钓竿"
+```
+
 ### unbreakable（无法破坏）
 
 控制物品是否无法被破坏。
@@ -411,6 +434,16 @@ items:
     ```
 </details>
 
+:::tip
+
+如果某个组件只需设置（无需指定具体值），可以直接使用以下配置方式：
+
+```yaml
+components:
+  minecraft:unbreakable: {}
+```
+
+:::
 
 ### 移除组件 (1.20.5+)
 
@@ -425,6 +458,8 @@ items:
 ```
 
 ## 客户端侧数据
+
+<Highlight color="#f2184eff">**付费版专属**</Highlight>
 
 client-bound-data 仅存在于客户端侧，不涉及任何服务器端侧数据。通过使用客户端侧物品数据，您可以轻松实时更新物品提示框中的描述信息，包括 item_model 和 custom_model_data 等数据。此外，与其他插件不同，CraftEngine 的客户端侧物品数据在创造模式不会被<Comment text="也就是仅客户端侧的数据永久留存在了服务端侧">摸坏</Comment>。
 

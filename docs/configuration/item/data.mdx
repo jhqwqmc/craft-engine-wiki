@@ -81,6 +81,29 @@ items:
         - "What a shiny rod!"
 ```
 
+### overwritable-lore
+
+This is a specialized data type designed for `client-bound-data`. The `overwritable-lore` will only be applied if the item has no existing lore. The name `overwritable-lore` reflects its behavior—it prioritizes and displays lore set by other plugins. For example, if a shop plugin is compatible with CraftEngine, you can purchase a CraftEngine item from the shop without the client-bound-data `lore` overriding the shop item's description.
+
+```yml
+items:
+  default:topaz_rod:
+    client-bound-data:
+      overwritable-lore: 
+        - "What a shiny rod!"
+```
+
+### overwritable-item-name
+
+Similar to `overwritable-lore` but designed for item-name
+
+```yml
+items:
+  default:topaz_rod:
+    client-bound-data:
+      overwritable-item-name: "<!i><#FF8C00>Topaz Rod"
+```
+
 ### unbreakable
 
 Determines whether the item is unbreakable.
@@ -395,6 +418,16 @@ The format for custom Components strictly adheres to the [Minecraft Wiki](https:
     ```
 </details>
 
+:::tip
+
+When a component only needs to be set (without requiring a value), you can simply use the following configuration:
+
+```yaml
+components:
+  minecraft:unbreakable: {}
+```
+
+:::
 
 ### Remove Components (1.20.5+)
 
@@ -409,6 +442,8 @@ items:
 ```
 
 ## Client Bound Data
+
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
 
 The client-bound-data exists exclusively on the client side, with no server-side components involved. Using the client-side item component, you can effortlessly update item descriptions in real time—including properties like item_model and custom_model_data. Additionally, unlike other plugins, CraftEngine items remain permanently unaltered in creative mode!
 
