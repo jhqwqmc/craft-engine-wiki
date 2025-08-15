@@ -93,6 +93,17 @@ items:
         - "What a shiny rod!"
 ```
 
+### overwritable-item-name
+
+Similar to `overwritable-lore` but designed for item-name
+
+```yml
+items:
+  default:topaz_rod:
+    client-bound-data:
+      overwritable-item-name: "<!i><#FF8C00>Topaz Rod"
+```
+
 ### unbreakable
 
 Determines whether the item is unbreakable.
@@ -431,6 +442,8 @@ items:
 ```
 
 ## Client Bound Data
+
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
 
 The client-bound-data exists exclusively on the client side, with no server-side components involved. Using the client-side item component, you can effortlessly update item descriptions in real time—including properties like item_model and custom_model_data. Additionally, unlike other plugins, CraftEngine items remain permanently unaltered in creative mode!
 
