@@ -83,9 +83,9 @@ items:
         - "我去这鱼竿直接把我24K狗眼闪瞎了"
 ```
 
-### overwritable-lore (可覆盖描述)
+### overwritable-lore（可覆写的物品提示框中的描述信息）
 
-这是一种专为客户端绑定数据设计的特殊数据类型。可覆盖描述仅在物品没有现有描述时才会生效。其名称体现了它的行为特性——它会优先显示其他插件设置的描述内容。举例说明：若某个商店插件兼容CraftEngine，您从商店购买的CraftEngine物品将不会因客户端绑定数据的描述而覆盖商店原有的物品说明。
+这是一种专为 `client-bound-data` 设计的特殊数据类型。`overwritable-lore` 仅在物品提示框中的描述信息为空时才会生效。该名称的可覆写体现了它的特性——它会优先显示其他插件设置的物品提示框中的描述信息。例如，当商店插件支持从 CraftEngine 获取物品时，在 `client-bound-data` 使用 `overwritable-lore` 不会像 `lore` 那样覆盖商店在展示售卖的物品时显示的描述信息。
 
 ```yml
 items:
@@ -95,9 +95,9 @@ items:
         - "我去这鱼竿直接把我24K狗眼闪瞎了"
 ```
 
-### overwritable-item-name (可覆盖描述物品名称)
+### overwritable-item-name（可覆写的物品名称）
 
-和 `overwritable-lore` 类似但是这个选项是为物品名称设计的
+类似于 `overwritable-lore`，但专为 `item-name` 设计
 
 ```yml
 items:
@@ -436,7 +436,7 @@ items:
 
 :::tip
 
-如果某个组件只需设置（无需指定具体值），可以直接使用以下配置方式：
+若某个组件只需存在而无需赋值，那么直接参考如下配置即可：
 
 ```yaml
 components:
