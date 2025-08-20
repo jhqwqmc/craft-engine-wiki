@@ -5,28 +5,28 @@ id: updater
 
 ## 简介
 
-在配置物品时，我们可能会忽略某些细节，需要调整玩家已有的物品数据。这时就需要物品更新器（Item Updater）——它能更新服务器上实际物品的数据。
+在配置物品时，我们可能会忽略某些细节，需要调整玩家现有的物品数据。这时物品更新器就派上了用场——它能更新服务器上存量物品的数据。
 
-由于更新器的工作机制（在特定事件时替换物品），它会带来一定的性能开销。您可以在 **config.yml** 中配置哪些事件会触发物品更新。默认情况下，所有触发条件都是关闭状态，您可以根据需要启用它们。
+由于更新器的工作方式（在触发特定事件时更新物品），会带来一些性能开销。你可以在 **config.yml** 中配置哪些事件应该触发物品更新器。默认情况下，所有触发器都是禁用的，你可以根据需要启用它们。
 
 ```yaml
 item:
   update-triggers:
-    click-in-inventory: false # 对创造模式玩家无效
+    click-in-inventory: false # 此选项对于创造模式物品栏无效
     drop: false
     pick-up: false
-    ...more
+    ...更多内容
 ```
 
 :::tip
-如果只需要更新物品的视觉元素（如custom-model-data、item-model、lore或name），推荐使用 `client-bound-data` 而非物品更新器。
+如果你只需要更新物品的视觉元素，例如自定义模型数据（custom-model-data）、物品模型（item-model）、物品提示框中的描述信息（lore）或物品名称（name），建议使用 `client-bound-data` 而不是物品更新器。
 :::
 
-配置更新器只需按照以下格式添加新的 updater 部分。物品默认版本号为0，插件会将其更新到最新版本。
+要配置物品更新器，只需按照以下格式添加一个新的 `updater` 部分。默认情况下，物品的版本号为 0，插件会尝试将它们更新到最新版本。
 
-以下示例中：
-- 版本为0的物品会同时执行更新逻辑1和2
-- 版本为1的物品只会应用逻辑2
+在以下示例中：
+- 若物品版本为 0，将同时执行更新逻辑 1 和 2
+- 若物品版本为 1，则仅应用逻辑 2
 
 ```yaml
 items:
@@ -37,41 +37,41 @@ items:
       1:
         type: apply_data
         data:
-          item-name: First Update
-      # 可以用列表形式同时应用多个更新器
+          item-name: 首次更新
+      # 你可以通过列表格式同时应用多个更新器。
       2:
         - type: apply_data
           data:
             lore: 
-              - "Second Update"
+              - "再次更新"
         - type: transmute
           material: wooden_sword
 ```
 
 ## 更新器类型
 
-### apply_data
+### apply_data（应用数据）
 
-应用任何CraftEngine支持的 [物品数据](./data.mdx)
+应用任何 CraftEngine 支持的[物品数据](./data.mdx)
 
 ```yaml
 type: apply_data
 data:
-  item-name: 第一次更新
+  item-name: 首次更新
 ```
 
-### transmute
+### transmute（材质置换）
 
-转换物品的基础材质（保留所有组件/NBT数据）
+将物品的基础材质替换为另一种物品的材质，同时保留其所有组件或NBT数据。
 
 ```yaml
 type: transmute
 material: wooden_sword
 ```
 
-### reset
+### reset（重置）
 
-立即将物品更新到最新状态（保留指定组件/NBT标签）
+立即将物品更新至最新状态，同时保留指定的组件或NBT标签
 
 ```yaml
 type: reset
