@@ -49,6 +49,9 @@ blocks:
       can-occlude: false
       block-light: 0
       propagate-skylight: false
+      jump-factor: 1.0
+      speed-factor: 1.0
+      friction: 0.7
 ```
 </details>
 
@@ -301,6 +304,30 @@ support-shape: minecraft:stone
 ![](/img/block_settings_7.png)
 
 ## 不稳定设置
+
+:::caution
+接下来的方块设置只对非玩家实体生效
+:::
+
+### 摩擦力
+
+决定了物品在方块表面速度减慢的系数 (默认: 0.7, 冰: 0.98, 蓝冰: 0.989)
+
+```yaml
+friction: 0.7
+```
+
+### 跳跃乘数
+
+```yaml
+jump-factor: 1.0
+```
+
+### 速度乘数
+
+```yaml
+speed-factor: 1.0
+```
 
 :::caution
 剩余的方块设置都与**光照系统**有关。CraftEngine 已尽可能在不影响服务器性能的情况下实现了部分光照效果。客户端光照系统的视觉问题属于正常现象，在大多数情况下我也无法修复。
