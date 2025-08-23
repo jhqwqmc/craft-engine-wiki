@@ -135,21 +135,18 @@ type: "minecraft:team"
 default: -12012264
 ```
 
-:::::tip
+:::tip
 
-:::warning
-Before starting this tutorial, please read [Create Model with BlockBench](../../../getting_start/add_custom_model.mdx#create-model-with-blockbench)
-:::
+## How to Create a Tintable Model
 
-## How to Create a Dyeable Model
-
-First, create a model with a grayscale texture.
-Then, in the preview window, click on the face of the model you want to dye. After that, go to the top toolbar, select the `UV` tab, and check the `Tint` option.
-⚠️ Note: You must click the face in the **preview window** first, otherwise the option won’t be available.
+Step 1: Create a grayscale texture. \
+Step 2: In the preview window, select the target model's surface texture. \
+Step 3: Open the "UV" tab from the top toolbar. \
+Step 4: Check the "Tint" option.
 
 ![](/img/item_model_display_1.png)
 
-Repeat this for every face you want tinted. After exporting the model, you’ll notice that the selected faces now include a `tintindex` property.
+Step 5: Repeat this for every face you want tinted. After exporting the model, you’ll notice that the selected faces now include a `tintindex` property.
 
 ```json
 {
@@ -166,7 +163,7 @@ Repeat this for every face you want tinted. After exporting the model, you’ll 
       "to": [2, 8, 15],
       "rotation": {"angle": 0, "axis": "y", "origin": [-6, 7, 10]},
       "faces": {
-        "north": {"uv": [0.25, 0.25, 0.75, 0.75], "texture": "#0", "tintindex": 0},
+        "north": {"uv": [0.25, 0.25, 0.75, 0.75], "texture": "#0", "tintindex": 0}, // tintindex has been added here
         "east": {"uv": [1.25, 0.25, 1.75, 0.75], "texture": "#0", "tintindex": 0},
         "south": {"uv": [2.25, 0.25, 2.75, 0.75], "texture": "#0", "tintindex": 0},
         "west": {"uv": [3.25, 0.25, 3.75, 0.75], "texture": "#0", "tintindex": 0},
@@ -184,7 +181,7 @@ Repeat this for every face you want tinted. After exporting the model, you’ll 
         "east": {"uv": [2, 2, 14, 2], "texture": "#1"},
         "south": {"uv": [2, 2, 14, 2], "texture": "#1"},
         "west": {"uv": [2, 2, 14, 2], "texture": "#1"},
-        "up": {"uv": [2, 2, 14, 14], "texture": "#1", "tintindex": 1}, // You can see that a tintindex property has been added here
+        "up": {"uv": [2, 2, 14, 14], "texture": "#1", "tintindex": 1}, // tintindex has been added here
         "down": {"uv": [2, 2, 14, 14], "texture": "#1"}
       }
     }
@@ -192,26 +189,30 @@ Repeat this for every face you want tinted. After exporting the model, you’ll 
 }
 ```
 
-Next, configure the item model:
+Step 6: Open your item configuration and then edit your model section:
 
 ```yaml
 items:
-  tints:example:
+  example:tinted_item:
     model:
       type: minecraft:model
       path: tints:item/example
       generation:
         parent: "tints:block/example"
-      tints: # Define the tinted faces you selected in BlockBench
-        - type: "minecraft:dye" # First tint, corresponds to faces with tintindex=0 (counting starts at 0)
-          value: 144,80,62
-        - type: "minecraft:grass" # Second tint, corresponds to faces with tintindex=1
+      tints:
+        # tintindex 0
+        - type: "minecraft:dye"
+          default: 144,80,62
+        # tintindex 1
+        - type: "minecraft:grass"
           temperature: 0.5
           downfall: 0.5
+        # tintindex 2 if you have more tint sources
+        ...
 ```
-
-Finally, you can download the complete example pack here: [Download Example](/file/tints.zip)
 
 ![](/img/item_model_display_2.png)
 
-:::::
+**If you have questions about certain details, you can download the example here: [Download](/file/tints.zip)**
+
+:::
