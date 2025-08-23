@@ -153,8 +153,7 @@ items:
 ```
 
 :::tip
-Unlike defining `custom-model-data` directly inside an item, setting `custom-model-data` under `data` only indicates the usage of this component.
-If you want to generate the corresponding resource pack file, you should write it as follows:
+The custom-model-data defined within the `data` does not bind a model to the specified material's custom_model_data mapping. In most cases, you should configure it under the root node of the item, unless you know exactly what you are doing.
 
 ```yaml
 items:
@@ -250,8 +249,7 @@ items:
 ```
 
 :::tip
-Unlike defining `item-model` directly inside an item, setting `item-model` under `data` only indicates the usage of this component.
-If you want to generate the corresponding resource pack file, you should write it as follows:
+The item-model defined within `data` does not generate a model for the corresponding path. In most cases, you should configure it under the root node of the item, unless you know exactly what you are doing.
 
 ```yaml
 items:
