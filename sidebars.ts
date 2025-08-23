@@ -409,7 +409,21 @@ const sidebars: SidebarsConfig = {
             id: "configuration/furniture",
           },
           items: [
-
+            {
+              type: 'doc',
+              id: "configuration/furniture/settings",
+              label: '⚙️ Furniture Settings',
+            },
+            {
+              type: 'doc',
+              id: "configuration/furniture/behaviors",
+              label: '🕹️ Furniture Behaviors',
+            },
+            {
+              type: 'doc',
+              id: "configuration/furniture/placement",
+              label: '📍 Furniture Placement',
+            },
           ]
         },
         {
