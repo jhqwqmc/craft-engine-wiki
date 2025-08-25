@@ -104,7 +104,13 @@ functions: # 必填; 映射列表
 type: command
 command: "say 你好 <arg:player.name>" # 必填; 字符串列表/字符串
 target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
+
+# 以玩家身份执行这个指令
 as-player: false # 可选; [默认值: false]
+# 以op身份执行这个指令，风险自担
+as-op: false # 可选; [默认值: false]
+# 有些自定义指令插件基于事件驱动，使用此选项可能可以兼容
+as-event: false # 可选; [默认值: false]
 ```
 
 ### 消息
