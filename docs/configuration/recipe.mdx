@@ -157,20 +157,20 @@ So far, there's only the apply_data type of post-processor. But you can register
 The visual-result feature prevents players from directly anticipating the outcome of crafting recipes. This is particularly useful for recipes involving randomized items.
 
 ```yaml
-    result:
-      id: default:topaz_sword
-      count: 1
-    visual-result:
-      id: default:topaz_sword
-      count: 1
-      post-processors:
-        - type: apply_data
-          data:
-            remove-components: 
-              - attribute_modifiers
-            lore:
-              - "<gray>Attack Damage 1~3"
-              - "<gray>Attack Speed 1~2"
+result:
+  id: default:topaz_sword
+  count: 1
+visual-result:
+  id: default:topaz_sword
+  count: 1
+  post-processors:
+    - type: apply_data
+      data:
+        remove-components: 
+          - attribute_modifiers
+        lore:
+          - "<gray>Attack Damage 1~3"
+          - "<gray>Attack Speed 1~2"
 ```
 
 ## Recipe Types

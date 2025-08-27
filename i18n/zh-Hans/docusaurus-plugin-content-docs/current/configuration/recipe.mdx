@@ -157,20 +157,20 @@ result:
 视觉结果功能阻止玩家直接预知合成配方的结果。这对于包含随机化物品的配方特别有用。
 
 ```yaml
-    result:
-      id: default:topaz_sword
-      count: 1
-    visual-result:
-      id: default:topaz_sword
-      count: 1
-      post-processors:
-        - type: apply_data
-          data:
-            remove-components: 
-              - attribute_modifiers
-            lore:
-              - "<gray>攻击伤害 1~3"
-              - "<gray>攻击速度 1~2"
+result:
+  id: default:topaz_sword
+  count: 1
+visual-result:
+  id: default:topaz_sword
+  count: 1
+  post-processors:
+    - type: apply_data
+      data:
+        remove-components: 
+          - attribute_modifiers
+        lore:
+          - "<gray>攻击伤害 1~3"
+          - "<gray>攻击速度 1~2"
 ```
 
 ## 配方类型
