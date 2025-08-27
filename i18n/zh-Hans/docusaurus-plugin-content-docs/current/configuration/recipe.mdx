@@ -154,7 +154,7 @@ result:
 
 ### 视觉结果
 
-视觉结果功能阻止玩家直接预知合成配方的结果。这对于包含随机化物品的配方特别有用。
+视觉结果功能能够防止玩家提前预知合成配方的结果。这对于包含随机化物品的配方特别有用。
 
 ```yaml
 result:
@@ -166,7 +166,7 @@ visual-result:
   post-processors:
     - type: apply_data
       data:
-        remove-components: 
+        remove-components:
           - attribute_modifiers
         lore:
           - "<gray>攻击伤害 1~3"
