@@ -98,3 +98,40 @@ count: "<papi:skilllevel_farming> / 20 + 5"
 ```
 
 :::
+
+### gaussian
+
+Using Gaussian/Normal Distribution as a random number generator
+
+```yaml
+type: gaussian
+
+# Required parameter: Lower bound for random number generation
+# Generated random values will not be less than this value
+# Purpose: Ensures random numbers stay within a reasonable range for the application, avoiding abnormally small values
+min: 10
+
+# Required parameter: Upper bound for random number generation
+# Generated random values will not be greater than this value
+# Purpose: Ensures random numbers stay within a reasonable range for the application, avoiding abnormally large values
+max: 20
+
+# Optional parameter: Mean (expected value) of the Gaussian distribution
+# Defines the center of the distribution, i.e., the value most likely to occur
+# Default: (min + max) / 2.0 (the midpoint of the range)
+# In this example: If not specified, the default value would be 15
+mean: 15
+
+# Optional parameter: Standard deviation of the Gaussian distribution
+# Measures the dispersion of data. A smaller value means data is more concentrated, a larger value means data is more spread out.
+# Default: (max - min) / 6.0, based on the "6σ principle" (99.7% of values fall within μ±3σ)
+# In this example: If not specified, the default value would be (20-10)/6≈1.67
+std-dev: 1
+
+# Optional parameter: Maximum number of attempts to generate a valid random number, defaults to 128
+# Since the theoretical range of the Gaussian distribution is (-∞, +∞), but is truncated by min/max,
+# values generated outside the [min, max] range will be regenerated.
+# This parameter prevents infinite loops in extreme cases.
+# If no valid value is generated after the maximum attempts, the closest boundary value (min or max) is typically returned.
+max-attempts: 128
+```
