@@ -154,21 +154,23 @@ result:
 
 ### 视觉结果
 
-<Highlight color="#da0d0dff">**概念阶段**</Highlight><Highlight color="#0d58daff">**未实装**</Highlight>
-
-插件保留了 **visual-result** 功能，可在合成过程中展示专门的物品，有效地防止玩家提前预知随机配方的结果。
+视觉结果功能阻止玩家直接预知合成配方的结果。这对于包含随机化物品的配方特别有用。
 
 ```yaml
-result:
-  id: default:topaz_pickaxe
-  count: 1
-  post-processors:
-    - type: apply_data
-      data:
-        enchantments:
-          minecraft:efficiency: 5
-visual-result:
-  id: default:random_icon
+    result:
+      id: default:topaz_sword
+      count: 1
+    visual-result:
+      id: default:topaz_sword
+      count: 1
+      post-processors:
+        - type: apply_data
+          data:
+            remove-components: 
+              - attribute_modifiers
+            lore:
+              - "<gray>攻击伤害 1~3"
+              - "<gray>攻击速度 1~2"
 ```
 
 ## 配方类型
