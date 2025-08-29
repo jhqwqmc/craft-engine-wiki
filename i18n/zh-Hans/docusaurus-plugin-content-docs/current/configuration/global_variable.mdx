@@ -1,0 +1,49 @@
+---
+title: 🔢 全局变量
+id: global_variable
+---
+
+全局变量是一种可在任意上下文中访问的变量类型，广泛应用于表达式、物品数据等多种场景。
+
+以下是一个基础示例，其中`<arg:0>`格式的标签是可选参数，可由调用方动态提供：
+
+```yaml
+global-variables:
+  test: "<!i><#FF8C00><arg:0>'s <arg:1>"
+```
+
+```yaml
+items#topaz_gears:
+  default:topaz_rod:
+    client-bound-data:
+      item-name: "<global:test:'<arg:player.name>':'<i18n:item.topaz_rod>'>"
+```
+
+:::tip
+CraftEngine 的全局变量支持在其他插件中调用，但在设计上**不支持传入额外参数**，该限制出于性能优化的考虑。 
+
+以下为几种常见应用场景及示例：
+
+1. 为不支持 PlaceholderAPI 的插件解析变量
+```yaml
+global-variables:
+  money: "<papi:vault_eco_balance>"
+```
+
+```yaml
+# 其他插件的Bossbar文件
+bossbar: "当前金币: <global:money>"
+```
+
+2. 在不支持 MiniMessage 的插件中使用富文本格式
+```yaml
+global-variables:
+  coin_without_shadow: "<!shadow><image:default:icons>"
+```
+
+```yaml
+# 其他插件的hologram配置
+line: "<global:coin_without_shadow> 我的金币: %vault_eco_balance%"
+```
+
+:::

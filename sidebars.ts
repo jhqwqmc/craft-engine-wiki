@@ -467,6 +467,11 @@ const sidebars: SidebarsConfig = {
           id: "configuration/vanilla_loot",
           label: '🗃️ Vanilla Loot',
         },
+        {
+          type: 'doc',
+          id: "configuration/global_variable",
+          label: '🔢 Global Variables',
+        },
       ]
     },
     {

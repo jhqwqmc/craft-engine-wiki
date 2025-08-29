@@ -275,6 +275,10 @@
     "message": "🗃️ 原版战利品",
     "description": "教程侧边栏中'原版战利品'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.🔢 Global Variables": {
+    "message": "🔢 全局变量",
+    "description": "教程侧边栏中'全局变量'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🏷️ Block Tags": {
     "message": "🏷️ 方块标签",
     "description": "教程侧边栏中'方块标签'文档项的标签"
