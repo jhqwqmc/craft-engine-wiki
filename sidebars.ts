@@ -391,6 +391,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/double_high_block",
                   label: '2️⃣ Double High Block',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/change_over_time_block",
+                  label: '🔄 Change Over Time Block',
+                },
               ]
             },
             {

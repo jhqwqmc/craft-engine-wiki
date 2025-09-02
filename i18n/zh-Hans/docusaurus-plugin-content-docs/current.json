@@ -227,6 +227,10 @@
     "message": "2️⃣ 双层方块",
     "description": "教程侧边栏中'双层方块'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.🔄 Change Over Time Block": {
+    "message": "🔄 随时间更改方块",
+    "description": "教程侧边栏中'随时间更改方块'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",
     "description": "教程侧边栏中'方块实体'文档项的标签"
