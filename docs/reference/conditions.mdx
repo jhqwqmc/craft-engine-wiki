@@ -230,6 +230,20 @@ events:
       - type: "!on_cooldown"
         id: test
 ```
+
+### worldguard:region
+
+Check whether the location in the current context is within a WorldGuard region.
+
+```yaml
+type: worldguard:region
+# Mode 1 represents union of regions
+# Mode 2 represents intersection of regions
+mode: 1
+regions:
+  - A
+  - B
+```
 :::
 
 :::info
