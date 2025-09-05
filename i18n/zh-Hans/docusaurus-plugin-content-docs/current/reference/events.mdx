@@ -373,11 +373,11 @@ power: 1.0
 ```yaml
 type: spawn_furniture
 furniture-id: "default:bench"
-x: <arg:position.x> # 默认值: <arg:position.x>
-y: <arg:position.y> # 默认值: <arg:position.y>
-z: <arg:position.z> # 默认值: <arg:position.z>
-pitch: <arg:pitch> # 默认值: <arg:pitch>
-yaw: <arg:yaw> # 默认值: <arg:yaw>
+x: <arg:furniture.x> # 默认值: <arg:furniture.x>
+y: <arg:furniture.y> # 默认值: <arg:furniture.y>
+z: <arg:furniture.z> # 默认值: <arg:furniture.z>
+pitch: <arg:furniture.pitch> # 默认值: <arg:furniture.pitch>
+yaw: <arg:furniture.yaw> # 默认值: <arg:furniture.yaw>
 anchor-type: ground # 可选; 枚举[ground,ceiling,wall]
 play-sound: true # 默认值: true
 ```
@@ -397,13 +397,13 @@ play-sound: true # 默认值: true
 替换一个家具
 
 ```yaml
-type: spawn_furniture
+type: replace_furniture
 furniture-id: "default:bench"
-x: <arg:position.x> # 默认值: <arg:position.x>
-y: <arg:position.y> # 默认值: <arg:position.y>
-z: <arg:position.z> # 默认值: <arg:position.z>
-pitch: <arg:pitch> # 默认值: <arg:pitch>
-yaw: <arg:yaw> # 默认值: <arg:yaw>
+x: <arg:furniture.x> # 默认值: <arg:furniture.x>
+y: <arg:furniture.y> # 默认值: <arg:furniture.y>
+z: <arg:furniture.z> # 默认值: <arg:furniture.z>
+pitch: <arg:furniture.pitch> # 默认值: <arg:furniture.pitch>
+yaw: <arg:furniture.yaw> # 默认值: <arg:furniture.yaw>
 anchor-type: ground # 可选; 枚举[ground,ceiling,wall]
 drop-loot: true # 默认值: true
 play-sound: true # 默认值: true
