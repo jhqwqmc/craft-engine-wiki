@@ -77,7 +77,14 @@ equipment:
 控制物品是否可以通过工作台或铁砧修复。（默认值：true）
 
 ```yaml
+# 简单的总开关
 repairable: true
+
+# 或者设定具体修复场景
+repairable:
+  crafting-table: true
+  anvil-repair: false
+  anvil-combine: true
 ```
 
 ![](/img/i18n/zh-Hans/item_settings_3.png)
