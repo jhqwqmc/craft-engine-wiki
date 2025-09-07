@@ -396,6 +396,16 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/change_over_time_block",
                   label: '🔄 Change Over Time Block',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/toggleable_lamp_block",
+                  label: '💡 Toggleable Lamp Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/bottom_half_stairs_block",
+                  label: '🎢 Bottom Half Stairs Block',
+                },
               ]
             },
             {
