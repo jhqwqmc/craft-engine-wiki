@@ -1,0 +1,18 @@
+---
+title: 💡 可切换灯方块
+id: toggleable_lamp_block
+---
+
+| 属性名称    | 属性类型    | 是否必需 |
+|---------|---------|------|
+| lit     | boolean | 是    |
+| powered | boolean | 是    |
+
+**可切换灯方块**允许方块在红石信号激活时轮换 `lit` 状态。
+
+```yaml
+blocks:
+  default:copper_coil:
+    behavior:
+      type: toggleable_lamp_block
+```

@@ -6,7 +6,6 @@ id: lamp_block
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | lit           | boolean       | yes      |
-| powered       | boolean       | yes      |
 
 **Lamp Block** allows the block to turn into `lit` state on redstone powered. 
 
@@ -16,7 +15,6 @@ blocks:
     behavior:
       type: lamp_block
       can-open-with-hand: false # When set to true, all redstone features will be disabled
-      redstone-toggle-mode: false
 ```
 
 ![](/img/lamp_block.png)

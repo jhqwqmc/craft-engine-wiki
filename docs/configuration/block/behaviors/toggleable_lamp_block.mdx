@@ -1,0 +1,18 @@
+---
+title: 💡 Toggleable Lamp Block
+id: toggleable_lamp_block
+---
+
+| Property Name | Property Type | Required |
+|---------------|---------------|----------|
+| lit           | boolean       | yes      |
+| powered       | boolean       | yes      |
+
+**Toggleable Lamp Block** allow blocks to cycle between `lit` states when activated by redstone signals.
+
+```yaml
+blocks:
+  default:copper_coil:
+    behavior:
+      type: toggleable_lamp_block
+```
