@@ -403,8 +403,13 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
-                  id: "configuration/block/behaviors/bottom_half_stairs_block",
-                  label: '🎢 Bottom Half Stairs Block',
+                  id: "configuration/block/behaviors/sofa_block",
+                  label: '🛋️ Sofa Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/bouncing_block",
+                  label: '⏏️ Bouncing Block',
                 },
               ]
             },
