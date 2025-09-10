@@ -3,10 +3,13 @@ title: ⏏️ 弹跳方块
 id: bouncing_block
 ---
 
+**弹跳方块**可以让你在方块上弹起来。
+
 ```yml
 blocks:
   default:sofa:
     behavior:
       type: bouncing_block
-      bounce-height: 0.66
+      bounce-height: 0.66 # 弹跳高度
+      sync-player-self: true # 同步玩家自身位置，如果你使用的方块已经有弹跳的功能了就改为 false
 ```

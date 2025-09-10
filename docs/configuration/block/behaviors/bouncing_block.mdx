@@ -3,10 +3,13 @@ title: ⏏️ Bouncing Block
 id: bouncing_block
 ---
 
+**Bouncing Block** let you bounce off the block.
+
 ```yml
 blocks:
   default:sofa:
     behavior:
       type: bouncing_block
-      bounce-height: 0.66
+      bounce-height: 0.66 # Bounce Height
+      sync-player-self: true # Synchronize with player's own position. If the block you're using already has bounce functionality, set this to false
 ```
