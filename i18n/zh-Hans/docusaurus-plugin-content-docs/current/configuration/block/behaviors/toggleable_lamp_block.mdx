@@ -1,0 +1,19 @@
+---
+title: 💡 可切换灯方块
+id: toggleable_lamp_block
+---
+
+| 属性名称    | 属性类型    | 是否必需 |
+|---------|---------|------|
+| lit     | boolean | 是    |
+| powered | boolean | 否    |
+
+**可切换灯方块**允许方块在有 `powered` 属性时通过红石信号激活时轮换 `lit` 状态，或当启用 `can-open-with-hand` 时，可通过右键轮换 `lit` 状态。
+
+```yaml
+blocks:
+  default:copper_coil:
+    behavior:
+      type: toggleable_lamp_block
+      can-open-with-hand: false # 当设置成 true 时，powered 属性为可选
+```
