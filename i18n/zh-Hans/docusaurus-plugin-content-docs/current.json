@@ -231,6 +231,18 @@
     "message": "🔄 随时间更改方块",
     "description": "教程侧边栏中'随时间更改方块'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.💡 Toggleable Lamp Block": {
+    "message": "💡 可切换灯方块",
+    "description": "教程侧边栏中'可切换灯方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🛋️ Sofa Block": {
+    "message": "🛋️ 沙发方块",
+    "description": "教程侧边栏中'沙发方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.⏏️ Bouncing Block": {
+    "message": "⏏️ 弹跳方块",
+    "description": "教程侧边栏中'弹跳方块'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",
     "description": "教程侧边栏中'方块实体'文档项的标签"
