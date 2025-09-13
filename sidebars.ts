@@ -416,11 +416,6 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/bouncing_block",
                   label: '⏏️ Bouncing Block',
                 },
-                {
-                  type: 'doc',
-                  id: "configuration/block/behaviors/seat_block",
-                  label: '🪑 Seat Block',
-                },
               ]
             },
             {
