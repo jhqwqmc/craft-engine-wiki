@@ -247,6 +247,14 @@
     "message": "⏏️ 弹跳方块",
     "description": "教程侧边栏中'弹跳方块'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.✨ Simple Particle Block": {
+    "message": "✨ 简单粒子方块",
+    "description": "教程侧边栏中'简单粒子方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.✨ Wall Torch Particle Block": {
+    "message": "✨ 墙上火把粒子方块",
+    "description": "教程侧边栏中'墙上火把粒子方块'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",
     "description": "教程侧边栏中'方块实体'文档项的标签"

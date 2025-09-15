@@ -416,6 +416,16 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/bouncing_block",
                   label: '⏏️ Bouncing Block',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/simple_particle_block",
+                  label: '✨ Simple Particle Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/wall_torch_particle_block",
+                  label: '✨ Wall Torch Particle Block',
+                },
               ]
             },
             {
