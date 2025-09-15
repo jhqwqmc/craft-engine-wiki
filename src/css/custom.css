@@ -41,3 +41,7 @@
 .file-tree [aria-expanded="false"] + .tree-node-children-wrapper {
   display: none;
 }
+
+.theme-doc-markdown > header > h1::first-letter {
+  font-family: 'Segoe UI Emoji', sans-serif;
+}
