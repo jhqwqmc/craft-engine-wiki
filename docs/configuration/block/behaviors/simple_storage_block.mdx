@@ -3,6 +3,10 @@ title: 📦 Simple Storage Block
 id: simple_storage_block
 ---
 
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | open          | boolean       | no       |
@@ -17,7 +21,9 @@ blocks:
       sounds:
         open: minecraft:block.iron_trapdoor.open
         close: minecraft:block.iron_trapdoor.close
-      has-signal: true # Can it detect redstone signals?
-      allow-input: true # Whether items can be inputted
-      allow-output: true # Whether items can be outputted
+      has-signal: true # Detects redstone signals
+      allow-input: true # Permits item input
+      allow-output: true # Permits item output
 ```
+
+![](/img/simple_storage_block.png)

@@ -3,13 +3,17 @@ title: ✨ Simple Particle Block
 id: simple_particle_block
 ---
 
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+
 ```yml
 blocks:
   default:amethyst_torch:
     behavior:
       type: simple_particle_block
       tick-interval: 10
-      particles: # See Particle argument below
+      particles: # Defines particle effects, see Particle argument below
         - particle: smoke
           x: 0.5
           y: 0.7
@@ -20,6 +24,10 @@ blocks:
           offset-z: 0
           speed: 0
 ```
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/simple_particle_block.png').default} alt="" />
+</div>
 
 ## Particle argument
 
