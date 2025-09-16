@@ -231,6 +231,10 @@
     "message": "🔄 随时间更改方块",
     "description": "教程侧边栏中'随时间更改方块'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.📦 Simple Storage Block": {
+    "message": "📦 简单存储方块",
+    "description": "教程侧边栏中'简单存储方块'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.💡 Toggleable Lamp Block": {
     "message": "💡 可切换灯方块",
     "description": "教程侧边栏中'可切换灯方块'文档项的标签"
@@ -242,6 +246,14 @@
   "sidebar.tutorialSidebar.doc.⏏️ Bouncing Block": {
     "message": "⏏️ 弹跳方块",
     "description": "教程侧边栏中'弹跳方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.✨ Simple Particle Block": {
+    "message": "✨ 简单粒子方块",
+    "description": "教程侧边栏中'简单粒子方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.✨ Wall Torch Particle Block": {
+    "message": "✨ 墙上火把粒子方块",
+    "description": "教程侧边栏中'墙上火把粒子方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",

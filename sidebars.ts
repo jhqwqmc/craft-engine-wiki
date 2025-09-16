@@ -398,6 +398,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/block/behaviors/simple_storage_block",
+                  label: '📦 Simple Storage Block',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/block/behaviors/toggleable_lamp_block",
                   label: '💡 Toggleable Lamp Block',
                 },
@@ -410,6 +415,16 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/block/behaviors/bouncing_block",
                   label: '⏏️ Bouncing Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/simple_particle_block",
+                  label: '✨ Simple Particle Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/wall_torch_particle_block",
+                  label: '✨ Wall Torch Particle Block',
                 },
               ]
             },

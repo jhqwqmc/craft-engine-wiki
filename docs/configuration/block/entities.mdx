@@ -3,10 +3,68 @@ title: 🫑 Block Entities
 id: entities
 ---
 
+## Introduction
+
 A block entity is something between a block and an entity. It behaves like a block in terms of rendering and placement, but stores data like an entity. Block entities allow you to attach more complex data to blocks, making them ideal for industrial machines or other blocks that require advanced data storage.
 
+## Entity-Based Block Rendering
+
+By configuring `entity-renderer` in the block state, you can define the entity content to be rendered, and combine it with a `model` to achieve hybrid rendering of blocks and entities.
+For pure entity rendering, you can use a visual block state without a model or configure an empty material model in `model` to remove the model entirely.
+
 :::warning
+If the visual block state uses solid block rendering, simply removing the model may cause issues with transparent blocks.
+<img src={require('/img/block_entities_1.png').default} alt="" style={{ width: '100%', height: 'auto', maxWidth: '128px', maxHeight: '128px', objectFit: 'contain' }} />
 
-Experimental feature, NO PUBLIC API available for the moment.
-
+For blocks that rely solely on entity rendering, you can specify any visual block state as the client-side displayed block.
+However, note that if the corresponding block state mapping is not configured in `mappings.yml`, and a specific state (e.g., barrier) is required,
+you can register additional real block states in `additional-real-blocks.yml` with a configuration like `minecraft:barrier: 128`.
+For more details, see [Not Enough Real Block States](states.mdx#not-enough-real-block-states).
 :::
+
+### Item Display Entity
+
+Full Configuration Example
+
+```yml
+blocks:
+  default:sleeper_sofa:
+    state:
+      id: 0
+      state: white_bed[facing=west,occupied=false,part=foot]
+      entity-renderer:
+        - type: craftengine:item_display # Optional; enum[item_display, text_display]; default: item_display
+          item: default:sleeper_sofa # Required; string; specifies the item to render
+          scale: 1.0 # Optional; number; default: 1
+          position: 0.5 # Optional; number; default: 0.5
+          translation: 0,0,0 # Optional; vector; default: 0,0,0
+          pitch: 0.0 # Optional; number; default: 0
+          yaw: 0.0 # Optional; number; default: 0
+          rotation: 0.0 # Optional; number; default: 0
+          display-context: NONE # Optional; enum[NONE, THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND, FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND, HEAD, GUI, GROUND, FIXED, ON_SHELF]; default: NONE
+          billboard: FIXED # Optional; enum[FIXED, VERTICAL, HORIZONTAL, CENTER]; default: FIXED
+```
+
+### Text Display Entity
+
+Full Configuration Example
+
+```yml
+blocks:
+  default:sofa:
+    states:
+      appearances:
+        facing=east,shape=straight:
+          state: barrier
+          entity-renderer:
+            - type: craftengine:text_display # Optional; enum[item_display, text_display]; default: item_display
+              text: "Hello" # Required; string; specifies the text to render
+              scale: 1.0 # Optional; number; default: 1
+              position: 0.5 # Optional; number; default: 0.5
+              translation: 0,0,0 # Optional; vector; default: 0,0,0
+              pitch: 0.0 # Optional; number; default: 0
+              yaw: 0.0 # Optional; number; default: 0
+              rotation: 0.0 # Optional; number; default: 0
+              billboard: FIXED # Optional; enum[FIXED, VERTICAL, HORIZONTAL, CENTER]; default: FIXED
+        # ...other configurations
+```

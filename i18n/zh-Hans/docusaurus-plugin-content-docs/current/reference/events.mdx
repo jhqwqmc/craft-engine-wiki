@@ -64,13 +64,13 @@ items:
   default:bench:
     events: # ❌️
       right_click:
-       - type: command
+        - type: command
     behavior:
       type: furniture_item
       furniture:
         events: # ✅️
           right_click:
-           - type: command
+            - type: command
 ```
 :::
 
@@ -90,7 +90,7 @@ type: cancel_event
 
 ```yaml
 type: run
-delay: 0 # 可选; 数字; [默认值: 0]
+delay: 0 # 可选; 数字; 默认值: 0
 functions: # 必填; 映射列表
   - type: command
   - type: message
@@ -103,14 +103,14 @@ functions: # 必填; 映射列表
 ```yaml
 type: command
 command: "say 你好 <arg:player.name>" # 必填; 字符串列表/字符串
-target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
 
 # 以玩家身份执行这个指令
-as-player: false # 可选; [默认值: false]
+as-player: false # 可选; 布尔; 默认值: false
 # 以op身份执行这个指令，风险自担
-as-op: false # 可选; [默认值: false]
+as-op: false # 可选; 布尔; 默认值: false
 # 有些自定义指令插件基于事件驱动，使用此选项可能可以兼容
-as-event: false # 可选; [默认值: false]
+as-event: false # 可选; 布尔; 默认值: false
 ```
 
 ### 消息
@@ -120,8 +120,8 @@ as-event: false # 可选; [默认值: false]
 ```yaml
 type: message
 message: "你好 <papi:player_name>" # 必填; 字符串列表/字符串
-target: "self" # 可选; 枚举[all,self]/玩家选择器
-overlay: false # 可选; [默认值: false]; false = 聊天框 / true = 动作栏
+target: "self" # 可选; 枚举[all, self]/玩家选择器
+overlay: false # 可选; 默认值: false; false = 聊天框 / true = 动作栏
 ```
 
 ### 动作栏消息
@@ -131,7 +131,7 @@ overlay: false # 可选; [默认值: false]; false = 聊天框 / true = 动作�
 ```yaml
 type: actionbar
 actionbar: "这是一个动作栏消息"  # 必填; 字符串
-target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
 ```
 
 ### 屏幕标题消息
@@ -142,9 +142,9 @@ target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
 type: title
 title: "<red>标题</red>"  # 必填; 字符串
 subtitle: "<Yellow>副标题</yellow>" # 必填; 字符串
-fade-in: 20 # 可选; 数字; [默认值: 10]
-stay: 10 # 可选; 数字; [默认值: 20]
-fade-out: 10 # 可选; 数字; [默认值: 5]
+fade-in: 20 # 可选; 数字; 默认值: 10
+stay: 10 # 可选; 数字; 默认值: 20
+fade-out: 10 # 可选; 数字; 默认值: 5
 ```
 
 ### 打开窗口
@@ -154,8 +154,8 @@ fade-out: 10 # 可选; 数字; [默认值: 5]
 ```yaml
 type: open_window #
 gui-type: anvil # 必填; 枚举[anvil, enchantment, grindstone, loom, smithing, crafting, cartography];
-title: "Super Anvil"  # 可选; 字符串
-target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
+title: "超级铁砧"  # 可选; 字符串
+target: "self" # 可选; 枚举[all, self]/玩家选择器; [默认值: self]
 ```
 
 ### 放置方块
@@ -164,10 +164,10 @@ target: "self" # 可选; 枚举[all,self]/玩家选择器; [默认值: self]
 
 ```yaml
 type: place_block
-block-state: "default:chinese_lantern"
-x: <arg:block.block_x>
-y: <arg:block.block_y>
-z: <arg:block.block_z>
+block-state: "default:chinese_lantern" # 必填; 字符串
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
 ```
 
 ### 掉落战利品
@@ -176,9 +176,9 @@ z: <arg:block.block_z>
 
 ```yaml
 type: drop_loot
-x: <arg:block.block_x> + 0.5
-y: <arg:block.block_y> + 0.5
-z: <arg:block.block_z> + 0.5
+x: <arg:block.block_x> + 0.5 # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> + 0.5 # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> + 0.5 # 可选; 数字; 默认值: <arg:position.z>
 loot:
   pools: ...
 ```
@@ -198,8 +198,8 @@ type: update_interaction_tick
 ```yaml
 type: set_count
 add: true # 默认值: false
-count: -1
-target: "self" # 可选; 枚举[all,self]/玩家选择器
+count: -1 # 必填; 数字
+target: "self" # 可选; 枚举[all, self]/玩家选择器
 ```
 
 ### 设置饥饿值
@@ -208,9 +208,9 @@ target: "self" # 可选; 枚举[all,self]/玩家选择器
 
 ```yaml
 type: set_food
-add: true
-food: 4
-target: "self" # 可选; 枚举[all,self]/玩家选择器
+add: true # 可选; 枚举; 默认值: false
+food: 4 # 必填; 数字
+target: "self" # 可选; 枚举[all, self]/玩家选择器
 ```
 
 ### 设置饱和度
@@ -230,7 +230,7 @@ target: "self" # 可选; 枚举[all,self]/玩家选择器
 
 ```yaml
 type: swing_hand
-hand: main_hand # 可选参数
+hand: main_hand # 可选; 枚举[main_hand, off_hand]; 不填会从上下文获取需要挥动的手
 ```
 
 ### 粒子效果
@@ -239,15 +239,15 @@ hand: main_hand # 可选参数
 
 ```yaml
 type: particle
-particle: minecraft:end_rod
-x: "<arg:position.x>"
-y: "<arg:position.y>"
-z: "<arg:position.z>"
-count: 5
-offset-x: 0.3
-offset-y: 0.3
-offset-z: 0.3
-speed: 0
+particle: minecraft:end_rod # 必填; 字符串
+x: "<arg:position.x>" # 可选; 数字; 默认值: <arg:position.x>
+y: "<arg:position.y>" # 可选; 数字; 默认值: <arg:position.y>
+z: "<arg:position.z>" # 可选; 数字; 默认值: <arg:position.z>
+count: 5 # 可选; 数字; 默认值: 1
+offset-x: 0.3 # 可选; 数字; 默认值: 0
+offset-y: 0.3 # 可选; 数字; 默认值: 0
+offset-z: 0.3 # 可选; 数字; 默认值: 0
+speed: 0 # 可选; 数字; 默认值: 0
 
 # 以下参数仅在粒子为特定类型时才有效。
 
@@ -291,11 +291,11 @@ duration: 10
 
 ```yaml
 type: potion_effect
-potion-effect: minecraft:blindness
-duration: 20  # 默认值: 20
-amplifier: 0   # 默认值: 0
-ambient: false # 是否来自信标
-particles: true
+potion-effect: minecraft:blindness # 必填; 字符串
+duration: 20  # 可选; 数字; 默认值: 20
+amplifier: 0   # 可选; 数字; 默认值: 0
+ambient: false # 可选; 布尔; 是否来自信标
+particles: true  # 可选; 布尔
 ```
 
 ### 移除状态效果
@@ -304,8 +304,8 @@ particles: true
 
 ```yaml
 type: remove_potion_effect
-potion-effect: minecraft:blindness # 如果 'all' 为 true 则为可选
-all: false  # 默认值: false
+potion-effect: minecraft:blindness # 如果 'all' 为 true 则为可选; 布尔
+all: false  # 可选; 布尔; 默认值: false
 ```
 
 ### 等级经验
@@ -314,9 +314,9 @@ all: false  # 默认值: false
 
 ```yaml
 type: leveler_exp
-plugin: AuraSkills  # 经验值插件
-leveler: fishing  # 职业/技能 ID
-count: 10  # 给予的经验值数量
+plugin: AuraSkills  # 可选; 字符串
+leveler: fishing  # 可选; 字符串; 职业/技能 ID
+count: 10  # 可选; 数字
 ```
 
 ### 设置冷却时间
@@ -326,8 +326,8 @@ count: 10  # 给予的经验值数量
 ```yaml
 type: set_cooldown
 time: 1m30s
-id: my_cooldown_id
-add: false  # 默认值: false (是否累加冷却时间)
+id: my_cooldown_id # 可选; 字符串
+add: false  # 可选; 布尔; 默认值: false (是否累加冷却时间)
 ```
 
 ### 移除冷却时间
@@ -336,8 +336,8 @@ add: false  # 默认值: false (是否累加冷却时间)
 
 ```yaml
 type: remove_cooldown
-id: my_cooldown_id  # 如果 'all' 为 true 则为可选
-all: false  # 默认值: false
+id: my_cooldown_id  # 如果 'all' 为 true 则为可选; 字符串
+all: false  # 可选; 布尔; 默认值: false
 ```
 
 ### 播放声音
@@ -347,13 +347,13 @@ all: false  # 默认值: false
 ```yaml
 type: play_sound
 sound: minecraft:xxxx.xxx
-x: <arg:position.x> # 如果使用了 'target' 参数则为可选
-y: <arg:position.y> # 如果使用了 'target' 参数则为可选
-z: <arg:position.z> # 如果使用了 'target' 参数则为可选
-target: "self" # 可选; 枚举[all,self]/玩家选择器
-pitch: 1
-volume: 1
-source: master
+x: <arg:position.x> # 如果使用了 'target' 参数则为可选; 数字
+y: <arg:position.y> # 如果使用了 'target' 参数则为可选; 数字
+z: <arg:position.z> # 如果使用了 'target' 参数则为可选; 数字
+target: "self" # 可选; 枚举[all, self]/玩家选择器
+pitch: 1 # 可选; 数字; 默认值: 1
+volume: 1 # 可选; 数字; 默认值: 1
+source: master # 可选; 枚举[music, master, record, weather, block, hostile, neutral, player, ambient, voice, ui]; 默认值: master
 ```
 
 ### MythicMobs 技能
@@ -362,8 +362,8 @@ source: master
 
 ```yaml
 type: mythic_mobs_skill
-skill: skill_id
-power: 1.0
+skill: skill_id # 必填; 字符串
+power: 1.0 # 可选; 数字; 默认值: 1.0
 ```
 
 ### 生成家具
@@ -372,14 +372,14 @@ power: 1.0
 
 ```yaml
 type: spawn_furniture
-furniture-id: "default:bench"
-x: <arg:position.x> # 默认值: <arg:position.x>
-y: <arg:position.y> # 默认值: <arg:position.y>
-z: <arg:position.z> # 默认值: <arg:position.z>
-pitch: <arg:position.pitch> # 默认值: <arg:position.pitch>
-yaw: <arg:position.yaw> # 默认值: <arg:position.yaw>
+furniture-id: "default:bench" # 可选; 字符串
+x: <arg:position.x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:position.y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:position.z> # 可选; 数字; 默认值: <arg:position.z>
+pitch: <arg:position.pitch> # 可选; 数字; 默认值: <arg:position.pitch>
+yaw: <arg:position.yaw> # 可选; 数字; 默认值: <arg:position.yaw>
 anchor-type: ground # 可选; 枚举[ground,ceiling,wall]
-play-sound: true # 默认值: true
+play-sound: true # 可选; 布尔; 默认值: true
 ```
 
 ### 移除家具
@@ -388,8 +388,8 @@ play-sound: true # 默认值: true
 
 ```yaml
 type: remove_furniture
-drop-loot: true # 默认值: true
-play-sound: true # 默认值: true
+drop-loot: true # 可选; 布尔; 默认值: true
+play-sound: true # 可选; 布尔; 默认值: true
 ```
 
 ### 替换家具
@@ -399,14 +399,39 @@ play-sound: true # 默认值: true
 ```yaml
 type: replace_furniture
 furniture-id: "default:bench"
-x: <arg:furniture.x> # 默认值: <arg:furniture.x>
-y: <arg:furniture.y> # 默认值: <arg:furniture.y>
-z: <arg:furniture.z> # 默认值: <arg:furniture.z>
-pitch: <arg:furniture.pitch> # 默认值: <arg:furniture.pitch>
-yaw: <arg:furniture.yaw> # 默认值: <arg:furniture.yaw>
+x: <arg:furniture.x> # 可选; 数字; 默认值: <arg:furniture.x>
+y: <arg:furniture.y> # 可选; 数字; 默认值: <arg:furniture.y>
+z: <arg:furniture.z> # 可选; 数字; 默认值: <arg:furniture.z>
+pitch: <arg:furniture.pitch> # 可选; 数字; 默认值: <arg:furniture.pitch>
+yaw: <arg:furniture.yaw> # 可选; 数字; 默认值: <arg:furniture.yaw>
 anchor-type: ground # 可选; 枚举[ground,ceiling,wall]
 drop-loot: true # 默认值: true
 play-sound: true # 默认值: true
+```
+
+### 传送
+
+传送至指定地点
+
+```yaml
+type: teleport
+x: <arg:position.x> # 必填; 数字
+y: 100 # 必填; 数字
+z: <arg:position.z> + 5 # 必填; 数字
+pitch: <arg:player.pitch> # 可选; 默认值: 0
+yaw: <arg:player.yaw> # 可选; 默认值: 0
+world: world # 可选; 字符串;
+```
+
+### 弹窗
+
+发送一个弹窗
+
+```yaml
+type: toast
+toast: 这是一个弹窗 # 必填; 字符串
+advancement-type: goal # 可选; 枚举[goal,task,challenge]; 默认值: goal
+icon: minecraft:stone # 必填; 字符串
 ```
 
 :::info
