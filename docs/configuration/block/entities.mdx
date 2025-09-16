@@ -3,28 +3,68 @@ title: 🫑 Block Entities
 id: entities
 ---
 
+import Highlight from '@site/src/components/Highlight';
+
 ## Introduction
 
-A block entity is something between a block and an entity. It behaves like a block in terms of rendering and placement, but stores data like an entity. Block entities allow you to attach more complex data to blocks, making them ideal for industrial machines or other blocks that require advanced data storage.
+A block entity combines the properties of a block and an entity. It occupies a block position in the world but can **store data, perform updates, and support custom rendering** like an entity. With the Block Entity API, you can bring advanced functionality to your blocks, such as:
 
-## Entity-Based Block Rendering
+- A battery block that visually changes its model based on its current energy level.
+- A generator that runs on a tick-based logic, consuming fuel periodically to produce power.
 
-By configuring `entity-renderer` in the block state, you can define the entity content to be rendered, and combine it with a `model` to achieve hybrid rendering of blocks and entities.
-For pure entity rendering, you can use a visual block state without a model or configure an empty material model in `model` to remove the model entirely.
+All block behaviors that rely on a block entity are labeled with <Highlight color="#3B6B60">Block Entity</Highlight> at the top of their documentation page.
+
+While the current library of built-in block entity types is still growing, future versions of CraftEngine will significantly expand these offerings with more versatile and ready-to-use components.
+
+Note: In the current version, each block can only be assigned one type of block entity. For instance, you cannot combine simple_storage_block and simple_particle_block on the same block. Support for composite block entities is planned for a future update.
+
+## Entity-Based Rendering
+
+### How it works?
+
+As we all know, the number of variants for a single block is limited. For example, a tripwire only has 128 variants, meaning that without sacrificing the original tripwire, we can create at most 127 custom block states. However, if we remove the texture of one of these states, make it appear completely transparent, and place a display entity at the center of the block, we can achieve virtually unlimited custom blocks.
 
 :::warning
-If the visual block state uses solid block rendering, simply removing the model may cause issues with transparent blocks.
+
+Please note that some vanilla blocks use hardcoded renderers. If a block uses a model with non-full-block dimensions, it may cause X-ray effects as shown in the image below.
+
 <img src={require('/img/block_entities_1.png').default} alt="" style={{ width: '100%', height: 'auto', maxWidth: '128px', maxHeight: '128px', objectFit: 'contain' }} />
 
-For blocks that rely solely on entity rendering, you can specify any visual block state as the client-side displayed block.
-However, note that if the corresponding block state mapping is not configured in `mappings.yml`, and a specific state (e.g., barrier) is required,
-you can register additional real block states in `additional-real-blocks.yml` with a configuration like `minecraft:barrier: 128`.
+:::
+
+To configure a display entity, simply add an `entity-renderer` option. This option accepts a configuration section or list as its parameter.
+
+```yaml
+blocks:
+  default:sleeper_sofa:
+    state:
+      id: 0
+      state: white_bed[facing=west,occupied=false,part=foot]
+      entity-renderer:
+        - type: item_display
+          ...
+        - type: item_display
+          ...
+  default:table_lamp:
+    states:
+      appearances:
+        east_off:
+          state: barrier
+          entity-renderer:
+            type: item_display
+            ...
+```
+
+:::caution
+Do not forget to add an additional real server-side block for the corresponding visual block.
 For more details, see [Not Enough Real Block States](states.mdx#not-enough-real-block-states).
 :::
 
-### Item Display Entity
+:::info
+When no type is specified, it defaults to using `item_display`.
+:::
 
-Full Configuration Example
+### Item Display
 
 ```yml
 blocks:
@@ -33,7 +73,7 @@ blocks:
       id: 0
       state: white_bed[facing=west,occupied=false,part=foot]
       entity-renderer:
-        - type: craftengine:item_display # Optional; enum[item_display, text_display]; default: item_display
+        - type: item_display
           item: default:sleeper_sofa # Required; string; specifies the item to render
           scale: 1.0 # Optional; number; default: 1
           position: 0.5 # Optional; number; default: 0.5
@@ -45,9 +85,7 @@ blocks:
           billboard: FIXED # Optional; enum[FIXED, VERTICAL, HORIZONTAL, CENTER]; default: FIXED
 ```
 
-### Text Display Entity
-
-Full Configuration Example
+### Text Display
 
 ```yml
 blocks:
@@ -57,7 +95,7 @@ blocks:
         facing=east,shape=straight:
           state: barrier
           entity-renderer:
-            - type: craftengine:text_display # Optional; enum[item_display, text_display]; default: item_display
+            - type: text_display
               text: "Hello" # Required; string; specifies the text to render
               scale: 1.0 # Optional; number; default: 1
               position: 0.5 # Optional; number; default: 0.5
@@ -66,5 +104,4 @@ blocks:
               yaw: 0.0 # Optional; number; default: 0
               rotation: 0.0 # Optional; number; default: 0
               billboard: FIXED # Optional; enum[FIXED, VERTICAL, HORIZONTAL, CENTER]; default: FIXED
-        # ...other configurations
 ```
