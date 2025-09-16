@@ -3,6 +3,10 @@ title: ✨ Wall Torch Particle Block
 id: wall_torch_particle_block
 ---
 
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | facing        | horizontal_direction | yes      |
@@ -13,7 +17,7 @@ blocks:
     behavior:
       type: wall_torch_particle_block
       tick-interval: 10
-      particles: # See Particle argument below
+      particles: # Defines particle effects, see Particle argument below
         - particle: smoke
           x: 0.5
           y: 0.7
@@ -24,6 +28,8 @@ blocks:
           offset-z: 0
           speed: 0
 ```
+
+![](/img/wall_torch_particle_block.png)
 
 ## Particle argument
 

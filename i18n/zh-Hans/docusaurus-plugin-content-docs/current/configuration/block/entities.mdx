@@ -3,10 +3,66 @@ title: 🫑 方块实体
 id: entities
 ---
 
+## 简介
+
 方块实体是介于方块和实体之间的存在。它在渲染和放置方面表现像方块，但能像实体一样存储数据。方块实体允许你为方块附加更复杂的数据，非常适合工业机器或其他需要高级数据存储的方块。
 
+## 基于实体的方块渲染
+
+通过在方块状态中配置 `entity-renderer`，可以定义需要渲染的实体内容，并可结合 `model` 实现方块与实体的混合渲染。
+若仅需实体渲染，可使用无模型的视觉方块状态，或通过在 `model` 中配置空材质模型来移除模型。
+
 :::warning
+如果你使用的视觉方块状态使用的是固体方块渲染，直接去除模型可能会导致透视方块的问题。
+<img src={require('/img/block_entities_1.png').default} alt="" style={{ width: '100%', height: 'auto', maxWidth: '128px', maxHeight: '128px', objectFit: 'contain' }} />
 
-实验性功能，目前暂不提供公开API
-
+对于纯实体渲染的方块，可指定任意视觉方块状态作为客户端显示的方块。但需注意，若未在 `mappings.yml` 中配置对应方块状态的映射，且需要特定状态（如屏障），
+可在 `additional-real-blocks.yml` 中添加类似 `minecraft:barrier: 128` 的配置来注册额外真实方块状态。详情参见[真实方块状态不足](states.mdx#真实方块状态不足)。
 :::
+
+### 物品展示实体
+
+完整配置预览
+
+```yml
+blocks:
+  default:sleeper_sofa:
+    state:
+      id: 0
+      state: white_bed[facing=west,occupied=false,part=foot]
+      entity-renderer:
+        - type: craftengine:item_display # 可选; 枚举[item_display, text_display]; 默认值: item_display
+          item: default:sleeper_sofa # 必填; 字符串; 指定了需要渲染的物品
+          scale: 1.0 # 可选; 数字; 默认值: 1
+          position: 0.5 # 可选; 数字; 默认值: 0.5
+          translation: 0,0,0 # 可选; 向量; 默认值: 0,0,0
+          pitch: 0.0 # 可选; 数字; 默认值: 0
+          yaw: 0.0 # 可选; 数字; 默认值: 0
+          rotation: 0.0 # 可选; 数字; 默认值: 0
+          display-context: NONE # 可选; 枚举[NONE, THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND, FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND, HEAD, GUI, GROUND, FIXED, ON_SHELF]; 默认值: NONE
+          billboard: FIXED # 可选; 枚举[FIXED, VERTICAL, HORIZONTAL, CENTER]; 默认值: FIXED
+```
+
+### 文本展示实体
+
+完整配置预览
+
+```yml
+blocks:
+  default:sofa:
+    states:
+      appearances:
+        facing=east,shape=straight:
+          state: barrier
+          entity-renderer:
+            - type: craftengine:text_display # 可选; 枚举[item_display, text_display]; 默认值: item_display
+              text: "你好" # 必填; 字符串; 指定了需要渲染的文本
+              scale: 1.0 # 可选; 数字; 默认值: 1
+              position: 0.5 # 可选; 数字; 默认值: 0.5
+              translation: 0,0,0 # 可选; 向量; 默认值: 0,0,0
+              pitch: 0.0 # 可选; 数字; 默认值: 0
+              yaw: 0.0 # 可选; 数字; 默认值: 0
+              rotation: 0.0 # 可选; 数字; 默认值: 0
+              billboard: FIXED # 可选; 枚举[FIXED, VERTICAL, HORIZONTAL, CENTER]; 默认值: FIXED
+        #...其他配置
+```
