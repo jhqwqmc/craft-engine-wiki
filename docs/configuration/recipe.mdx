@@ -154,7 +154,9 @@ So far, there's only the apply_data type of post-processor. But you can register
 
 ### Visual Result
 
-The visual-result feature prevents players from directly anticipating the outcome of crafting recipes. This is particularly useful for recipes involving randomized items.
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+
+The visual-result feature prevents players from directly anticipating the outcome of **crafting** recipes. This is particularly useful for recipes involving randomized items.
 
 ```yaml
 result:
@@ -171,6 +173,34 @@ visual-result:
         lore:
           - "<gray>Attack Damage 1~3"
           - "<gray>Attack Speed 1~2"
+```
+
+### Functions
+
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+
+Functions can be used to run specific functions when an item is successfully crafted.
+
+```yaml
+recipes:
+  default:bench:
+    functions:
+      - type: command
+        command: say 1
+```
+
+### Conditions
+
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+
+Conditions allow you to set requirements for this recipe, preventing players who do not meet them from crafting it.
+
+```yaml
+recipes:
+  default:bench:
+    conditions:
+      - type: permission
+        permission: recipe.unlock.bench
 ```
 
 ## Recipe Types
