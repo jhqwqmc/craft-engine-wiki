@@ -235,6 +235,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/item/behaviors/compostable_item",
                   label: '🪹 Compostable Item',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/item/behaviors/wall_block_item",
+                  label: '🧱 Wall Block Item',
+                },
               ]
             },
             {
@@ -425,6 +430,51 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/block/behaviors/wall_torch_particle_block",
                   label: '✨ Wall Torch Particle Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/directional_attached_block",
+                  label: '➡️ Directional Attached Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/face_attached_horizontal_directional_block",
+                  label: '➡️ Face Attached Horizontal Directional Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/liquid_flowable_block",
+                  label: '🪣 Liquid Flowable Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/fence_block",
+                  label: '🚧 Fence Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/button_block",
+                  label: '🔘 Button Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/stem_block",
+                  label: '🍄 Stem Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/attached_stem_block",
+                  label: '🍄 Attached Stem Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/chime_block",
+                  label: '🔔 Chime Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/budding_block",
+                  label: '🌱 Budding Block',
                 },
               ]
             },
@@ -648,6 +698,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "compatibility/skript",
           label: '⌨️ Skript',
+        },
+        {
+          type: 'doc',
+          id: "compatibility/quickshop_hikari",
+          label: '📦 QuickShop-Hikari',
         },
       ]
     },

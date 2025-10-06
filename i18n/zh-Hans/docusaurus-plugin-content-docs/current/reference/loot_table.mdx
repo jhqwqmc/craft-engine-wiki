@@ -53,7 +53,7 @@ type: item
 item: "minecraft:apple"
 ```
 
-### furniture_item
+### furniture\_item
 
 将物品设置为放置时的原始家具物品，否则使用备用物品。
 
@@ -112,7 +112,7 @@ conditions: []
 ```
 :::
 
-### apply_bonus
+### apply\_bonus
 
 根据给定的魔咒和公式增加掉落物品的数量。更多信息请参考[公式](#️-公式)。
 
@@ -123,7 +123,7 @@ formula:
   type: ore_drops
 ```
 
-### set_count
+### set\_count
 
 设置该物品的数量。
 
@@ -133,7 +133,7 @@ count: 10
 add: true  # 添加或设置
 ```
 
-### explosion_decay
+### explosion\_decay
 
 如果物品是因为方块被爆炸破坏而产生，执行该函数的每个物品有1/爆炸半径的概率消失，堆叠的物品会被分为多个单独的物品计算；否则此物品修饰器不做任何处理。
 
@@ -141,7 +141,7 @@ add: true  # 添加或设置
 type: explosion_decay
 ```
 
-### drop_exp
+### drop\_exp
 
 掉落一定数量的经验值。
 
@@ -150,9 +150,19 @@ type: drop_exp
 count: 1
 ```
 
+### limit\_count
+
+限制物品数量。
+
+```yaml
+type: limit_count
+min: 1
+max: 5
+```
+
 ## ➕️ 公式
 
-### ore_drops
+### ore\_drops
 
 和原版 Minecraft 一样的矿物掉落随机算法
 
@@ -160,7 +170,7 @@ count: 1
 type: ore_drops
 ```
 
-### binomial_with_bonus_count
+### binomial\_with\_bonus\_count
 
 和原版 Minecraft 相同的二项分布随机数算法。`extra` 表示额外计算的次数。二项分布计算的n为魔咒等级与额外计算次数之和。`probability` 代表二项分布中的概率p。
 

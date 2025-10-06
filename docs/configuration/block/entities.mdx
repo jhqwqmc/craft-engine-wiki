@@ -38,7 +38,6 @@ To configure a display entity, simply add an `entity-renderer` option. This opti
 blocks:
   default:sleeper_sofa:
     state:
-      id: 0
       state: white_bed[facing=west,occupied=false,part=foot]
       entity-renderer:
         - type: item_display
@@ -55,11 +54,6 @@ blocks:
             ...
 ```
 
-:::caution
-Do not forget to add an additional real server-side block for the corresponding visual block.
-For more details, see [Not Enough Real Block States](states.mdx#not-enough-real-block-states).
-:::
-
 :::info
 When no type is specified, it defaults to using `item_display`.
 :::
@@ -70,7 +64,6 @@ When no type is specified, it defaults to using `item_display`.
 blocks:
   default:sleeper_sofa:
     state:
-      id: 0
       state: white_bed[facing=west,occupied=false,part=foot]
       entity-renderer:
         - type: item_display

@@ -158,6 +158,17 @@ title: "超级铁砧"  # 可选; 字符串
 target: "self" # 可选; 枚举[all, self]/玩家选择器; [默认值: self]
 ```
 
+### 破坏方块
+
+破坏一个方块
+
+```yaml
+type: break_block
+x: <arg:position.x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:position.y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:position.z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
 ### 放置方块
 
 放置一个方块
@@ -432,6 +443,29 @@ type: toast
 toast: 这是一个弹窗 # 必填; 字符串
 advancement-type: goal # 可选; 枚举[goal,task,challenge]; 默认值: goal
 icon: minecraft:stone # 必填; 字符串
+```
+
+### 伤害
+
+伤害一个玩家
+
+```yaml
+type: damage
+target: self # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+amount: 1.0 # 可选; 数字; 默认值: 1.0
+damage-type: generic # 可选; 字符串; 默认值: generic
+```
+
+### 设置变量
+
+设置一个变量
+
+```yaml
+type: set_variable
+name: my_variable # 必填; 字符串
+number: 1.0 # 可选; 数字
+as-int: false # 可选; 布尔; 默认值: false
+text: "你好" # 可选; 字符串
 ```
 
 :::info

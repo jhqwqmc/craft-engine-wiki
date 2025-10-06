@@ -388,8 +388,6 @@ items:
     model:
       type: minecraft:model # Don't focus too much on the type here as we'll explain it in detail later.
       path: tutorial:item/toxic_sword
-    # If you are running on a server below 1.21.2, add custom-model-data here for backwards compatibility
-    custom-model-data: 1000
 ```
 
 ![](/img/toxic_sword_looks.png)
@@ -433,16 +431,6 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
   <summary>What is ItemModel?</summary>
 
   ItemModel, introduced in 1.21.2, is a data component with better rendering efficiency than CustomModelData, reducing client-side performance overhead. Normally, you don’t need to manually specify the model path (item-model), as the plugin auto-generates it.
-
-  However, if your server requires broad version compatibility (e.g., 1.20–1.21.8) and optimal rendering for newer clients, configure both:
-
-  ```yaml
-  items:
-    tutorial:toxic_sword:
-      material: diamond_sword
-      item-model: tutorial:toxic_sword
-      custom-model-data: 1000
-  ```
 
 </details>
 
@@ -569,7 +557,6 @@ Let me explain the purpose of each parameter and where to obtain them:
     items:
       default:big_apple:
         material: apple
-        custom-model-data: 1000
         model:
           type: minecraft:model
           path: "minecraft:item/custom/big_apple"
@@ -592,7 +579,6 @@ Let me explain the purpose of each parameter and where to obtain them:
     items:
       default:gui_head_size_1:
         material: player_head
-        custom-model-data: 1000
         model:
           type: minecraft:special
           # The model here is a parameter required for minecraft:special models

@@ -131,6 +131,10 @@
     "message": "🪹 可堆肥物品",
     "description": "教程侧边栏中'可堆肥物品'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.🧱 Wall Block Item": {
+    "message": "🧱 墙面方块物品",
+    "description": "教程侧边栏中'墙面方块物品'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🔧 Block Settings": {
     "message": "🔧 方块设置",
     "description": "教程侧边栏中'方块设置'文档项的标签"
@@ -254,6 +258,42 @@
   "sidebar.tutorialSidebar.doc.✨ Wall Torch Particle Block": {
     "message": "✨ 墙上火把粒子方块",
     "description": "教程侧边栏中'墙上火把粒子方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.➡️ Directional Attached Block": {
+    "message": "➡️ 定向附着方块",
+    "description": "教程侧边栏中'定向附着方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.➡️ Face Attached Horizontal Directional Block": {
+    "message": "➡️ 水平面定向附着方块",
+    "description": "教程侧边栏中'水平面定向附着方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🪣 Liquid Flowable Block": {
+    "message": "🪣 流体推动方块",
+    "description": "教程侧边栏中'流体推动方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🚧 Fence Block": {
+    "message": "🚧 栅栏方块",
+    "description": "教程侧边栏中'栅栏方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🔘 Button Block": {
+    "message": "🔘 按钮方块",
+    "description": "教程侧边栏中'按钮方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🍄 Stem Block": {
+    "message": "🍄 茎方块",
+    "description": "教程侧边栏中'茎方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🍄 Attached Stem Block": {
+    "message": "🍄 附着茎方块",
+    "description": "教程侧边栏中'附着茎方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🔔 Chime Block": {
+    "message": "🔔 震响方块",
+    "description": "教程侧边栏中'震响方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🌱 Budding Block": {
+    "message": "🌱 母岩方块",
+    "description": "教程侧边栏中'母岩方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",
@@ -382,6 +422,10 @@
   "sidebar.tutorialSidebar.doc.⌨️ Skript": {
     "message": "⌨️ Skript",
     "description": "教程侧边栏中'Skript'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.📦 QuickShop-Hikari": {
+    "message": "📦 QuickShop-Hikari",
+    "description": "教程侧边栏中'QuickShop-Hikari'文档项的标签"
   },
   "sidebar.tutorialSidebar.category.🪑 Furniture": {
     "message": "🪑 家具",

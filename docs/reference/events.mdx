@@ -157,6 +157,17 @@ title: "Super Anvil"  # optional; string
 target: "self" # optional; enum[all, self]/player selector; default: self
 ```
 
+### break\_block
+
+Break a block
+
+```yaml
+type: break_block
+x: <arg:position.x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:position.y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:position.z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
 ### place\_block
 
 Places a block
@@ -432,6 +443,29 @@ type: toast
 toast: This is a toast # required; string
 advancement-type: goal # optional; enum[goal,task,challenge]; default: goal
 icon: minecraft:stone # required; string
+```
+
+### damage
+
+Damages the target
+
+```yaml
+type: damage
+target: self # optional; enum[all, self]/player selector; default: self
+amount: 1.0 # optional; number; default: 1.0
+damage-type: generic # optional; string; default: generic
+```
+
+### set\_variable
+
+Sets a variable
+
+```yaml
+type: set_variable
+name: my_variable # required; string
+number: 1.0 # optional; number
+as-int: false # optional; boolean; default: false
+text: "hello" # optional; string
 ```
 
 :::info
