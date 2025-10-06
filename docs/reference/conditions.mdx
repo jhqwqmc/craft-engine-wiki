@@ -177,12 +177,12 @@ value1: "<arg:player.name>"
 value2: "A"
 ```
 
-### string\_regex
+### regex
 
 Determines if value matches the pattern
 
 ```yaml
-type: string_regex
+type: regex
 value: "<arg:player.name>"
 regex: "[a-Z]"
 ```
@@ -245,6 +245,16 @@ mode: 1
 regions:
   - A
   - B
+```
+
+### distance
+
+Check whether the distance between the player and the context's position within the current context falls within the specified range.
+
+```yaml
+type: distance
+min: 0
+max: 32
 ```
 
 :::info

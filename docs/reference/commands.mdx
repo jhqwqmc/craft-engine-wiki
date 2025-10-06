@@ -37,6 +37,14 @@ Give specific quantity of an item
 
 Query the recipe or use of an item
 
+`/search-recipe [item-id]`
+
+Query the item recipe
+
+`/search-usage [item-id]`
+
+Query the item usage
+
 ![](/img/commands_16.png)
 
 ## Feature Commands
@@ -49,12 +57,33 @@ This command will send a resource pack to the specified player(s).
 
 ### totem-animation
 
-`/ce feature totem-animation [player] [item-id]`
+`/ce feature totem-animation [player] [item-id] (sound) (volume) (pitch) (min-volume) (min-pitch) [--no-sound]`
 
 This command plays the Totem of Undying animation for the player.
 
 ![](/img/commands_14.png)
 
+## Resource Commands
+
+### list
+
+`/ce resource list`
+
+This command is used to list all packages within the resources folder.
+
+![](/img/commands_17.png)
+
+### enable
+
+`/ce resource enable [pack]`
+
+This command enable a specified package.
+
+### disable
+
+`/ce resource disable [pack]`
+
+This command disable a specified package.
 
 ## Debug Commands
 
@@ -70,7 +99,12 @@ The command is used to retrieve the usage status of excess appearances for a spe
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_2.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>appearance state in use</p>
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>appearance state in use by manual allocation</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/commands_7.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>appearance state in use by automatic allocation</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
@@ -80,41 +114,24 @@ The command is used to retrieve the usage status of excess appearances for a spe
 
 ### real-state-usage
 
-`/ce debug real-state-usage [block_type]`
+`/ce debug real-state-usage`
 
 This command is similar to the one mentioned above, but the key difference lies in its function to inspect the available real states. When you register additional real states in the `additional-real-blocks.yml` file, the number of real states may exceed the number of available appearances.
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_4.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>real state in use by manual allocation</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_5.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>real state in use</p>
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>real state in use by automatic allocation</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_6.png').default} alt="" />
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>free state</p>
 </div>
-
-
-:::warning
-In the image below, the upper section displays the available appearance states for oak leaves, while the lower section shows the available real states for oak leaves. \
-You can use the command to experience the difference between them.
-
-```sh
-/ce debug appearance-state-usage minecraft:oak_leaves
-```
-
-```sh
-/ce debug real-state-usage minecraft:oak_leaves
-```
-
-![](/img/commands_7.png)
-
-:::
-
 
 ### item-data
 
@@ -167,3 +184,45 @@ The 'target-block' is used to inspect the data of the block that the mouse is po
 This method checks whether the current chunk has been injected. A return value of false indicates an abnormal condition that requires investigation.
 
 ![](/img/commands_13.png)
+
+### setblock
+
+`/ce debug setblock [location] [id]`
+
+This command is used to place CraftEngine blocks at a specified location.
+
+### spawn-furniture
+
+`/ce debug spawn-furniture [location] [id] [anchor-type]`
+
+This command is used to place furniture in a specified location.
+
+### clear-cooldown
+
+`/ce debug clear-cooldown [player]`
+
+This command is used to clear the player's cooldown.
+
+### is-chunk-persistent-loaded
+
+`/ce debug is-chunk-persistent-loaded`
+
+This command is used to check whether a chunk has been persistent-loaded.
+
+### entity-id
+
+`/ce debug entity-id [world] [entityId]`
+
+This command is used to retrieve entity data by entity ID.
+
+### save-default-resources
+
+`/ce debug save-default-resources`
+
+This command is used to restore the default configuration.
+
+### clean-cache
+
+`/ce debug clean-cache [type]`
+
+This command is used to clear automatically allocated cache data.

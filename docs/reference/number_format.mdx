@@ -135,3 +135,17 @@ std-dev: 1
 # If no valid value is generated after the maximum attempts, the closest boundary value (min or max) is typically returned.
 max-attempts: 128
 ```
+
+### binomial
+
+Using Binomial Distribution as a random number generator
+
+```yaml
+type: binomial
+
+# Required parameter: The amount of trials
+extra: 10
+
+# Required parameter: The probability of success on an individual trial
+probability: 0.2
+```

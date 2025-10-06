@@ -389,8 +389,6 @@ items:
     model:
       type: minecraft:model # 不要过于关注这里的类型，我们稍后会详细解释。
       path: tutorial:item/toxic_sword
-    # 如果您需要兼容的客户端版本低于 1.21.2，请在此添加 custom-model-data 以确保向后兼容
-    custom-model-data: 1000
 ```
 
 ![](/img/toxic_sword_looks.png)
@@ -434,16 +432,6 @@ items:
   <summary>什么是物品模型?</summary>
 
   物品模型是 1.21.2 中引入的数据组件，相较于自定义模型数据具有更高的渲染效率，可减少客户端性能开销。通常，您无需手动指定模型路径（item-model），因为插件会自动生成。
-
-  然而，如果您的服务器需要广泛的版本兼容性（例如 1.20–1.21.8）并为较新客户端提供最佳渲染效果，请同时配置两者：
-
-  ```yaml
-  items:
-    tutorial:toxic_sword:
-      material: diamond_sword
-      item-model: tutorial:toxic_sword
-      custom-model-data: 1000
-  ```
 
 </details>
 
@@ -569,7 +557,6 @@ items:
     items:
       default:big_apple:
         material: apple
-        custom-model-data: 1000
         model:
           type: minecraft:model
           path: "minecraft:item/custom/big_apple"
@@ -592,7 +579,6 @@ items:
     items:
       default:gui_head_size_1:
         material: player_head
-        custom-model-data: 1000
         model:
           type: minecraft:special
           # 这里的 model 是 minecraft:special 模型所需的参数
