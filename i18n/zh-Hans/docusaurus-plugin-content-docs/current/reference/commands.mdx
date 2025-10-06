@@ -31,11 +31,19 @@ id: commands
 
 `/ce item give [玩家] [物品标识符] (数量)`
 
-基于指定数量的物品
+给予玩家指定数量的物品
 
 `/ce item search-recipe/search-usage [玩家] [物品标识符]`
 
-查询物品的配方或用途
+指定玩家查询物品的配方或用途
+
+`/search-recipe [物品标识符]`
+
+查询物品的配方
+
+`/search-usage [物品标识符]`
+
+查询物品的用途
 
 ![](/img/commands_16.png)
 
@@ -49,12 +57,33 @@ id: commands
 
 ### totem-animation
 
-`/ce feature totem-animation [玩家] [物品标识符]`
+`/ce feature totem-animation [玩家] [物品标识符] (声音) (音量) (音高) (最小音量) (最小音高) [--no-sound]`
 
 此命令为玩家播放不死图腾动画。
 
 ![](/img/commands_14.png)
 
+## 资源命令
+
+### list
+
+`/ce resource list`
+
+此命令用于列出所有 resources 文件夹下的包。
+
+![](/img/i18n/zh-Hans/commands_17.png)
+
+### enable
+
+`/ce resource enable [包名]`
+
+此命令用于启用指定包。
+
+### disable
+
+`/ce resource disable [包名]`
+
+此命令用于禁用指定包。
 
 ## 调试命令
 
@@ -70,7 +99,12 @@ id: commands
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_2.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被占用的外观方块状态</p>
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被手动分配占用的外观方块状态</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/commands_7.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被自动分配占用的外观方块状态</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
@@ -80,41 +114,24 @@ id: commands
 
 ### real-state-usage
 
-`/ce debug real-state-usage [方块类型]`
+`/ce debug real-state-usage`
 
 此命令与前面提到的命令相似，但主要区别在于它用于检查可用的真实方块状态。
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_4.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被手动分配占用的真实方块状态</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_5.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被占用的真实方块状态</p>
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>被自动分配占用的真实方块状态</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_6.png').default} alt="" />
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>未被占用的方块状态</p>
 </div>
-
-
-:::warning
-在下图中，上方区域显示了橡树树叶的可用外观方块状态，而下方区域则显示了橡树树叶的可用真实方块状态。\
-你可以使用这两个命令来体验它们之间的区别。
-
-```sh
-/ce debug appearance-state-usage minecraft:oak_leaves
-```
-
-```sh
-/ce debug real-state-usage minecraft:oak_leaves
-```
-
-![](/img/commands_7.png)
-
-:::
-
 
 ### item-data
 
@@ -167,3 +184,45 @@ id: commands
 此命令用于检查当前区块是否已被注入。返回值为 false 表示存在异常情况，需要进行调查。
 
 ![](/img/commands_13.png)
+
+### setblock
+
+`/ce debug setblock [位置] [方块标识符]`
+
+此命令用于放置 CraftEngine 方块到指定位置。
+
+### spawn-furniture
+
+`/ce debug spawn-furniture [位置] [家具标识符] [锚点类型]`
+
+此命令用于放置家具到指定位置。
+
+### clear-cooldown
+
+`/ce debug clear-cooldown [玩家]`
+
+此命令用于清除玩家冷却。
+
+### is-chunk-persistent-loaded
+
+`/ce debug is-chunk-persistent-loaded`
+
+此命令用于检查区块是否被强加载。
+
+### entity-id
+
+`/ce debug entity-id [世界] [实体ID]`
+
+此命令用于获取通过实体id获取的实体数据。
+
+### save-default-resources
+
+`/ce debug save-default-resources`
+
+此命令用于重新保存默认配置。
+
+### clean-cache
+
+`/ce debug clean-cache [缓存类型]`
+
+此命令用于清理自动分配的缓存数据。
