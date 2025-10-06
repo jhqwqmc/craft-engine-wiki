@@ -7,6 +7,11 @@ id: states
 
 In Minecraft's block system, each block has one or more block states. For example, wood has a facing direction, and leaves have different distances. These states determine how the block behaves and appears in the game.
 
+在开始介绍配置文件之前，我需要向你介绍两个概念：**视觉方块状态** 和 **内部方块状态**
+
+**视觉方块状态**，又称为原版方块状态、外观方块状态，是指玩家客户端收到的方块状态。比如具有特定音调和音色的音符盒，插件通过为这些状态添加模型以实现自定义方块渲染。这个状态需要在配置文件中使用 `auto-state` 或 `state` 指定。
+
+**内部方块状态**，又称为服务端侧方块状态、真实方块状态，是服务端上真正被存储，执行具体机制行为的方块状态，**通过网络协议转换为视觉方块状态**发送给客户端渲染。这个状态可以通过 `id` 指定，但是通常情况下你无需设置这个选项，插件会为你自动安排。
 
 ![](/img/block_states_1.png)
 
@@ -15,11 +20,24 @@ In Minecraft's block system, each block has one or more block states. For exampl
 Most blocks only require a single state to function properly. The example below shows how to configure a single-state block.
 
 ```yaml
+# 范例1：使用auto-state自动分配一个可用的note_block的外观
 blocks:
   default:chinese_lantern:
     state:
-      id: 15
-      state: note_block:15
+      auto-state: note_block
+      model:
+        path: "minecraft:block/custom/chinese_lantern"
+        generation:
+          parent: "minecraft:block/cube_column"
+          textures:
+            "end": "minecraft:block/custom/chinese_lantern_top"
+            "side": "minecraft:block/custom/chinese_lantern"
+
+# 范例2：使用state指定一个方块状态
+blocks:
+  default:chinese_lantern:
+    state:
+      state: note_block
       model:
         path: "minecraft:block/custom/chinese_lantern"
         generation:
@@ -29,48 +47,10 @@ blocks:
             "side": "minecraft:block/custom/chinese_lantern"
 ```
 
-### Internal Id
-
-```yaml
-blocks:
-  default:chinese_lantern:
-    state:
-      id: 15
-```
-
-The **id** represents a unique identifier for blocks. For example, `15` in this case would correspond to `craftengine:note_block_15`. 
-
-:::caution
-The **15** in `id: 15` is completely unrelated to the **15** in `state: note_block:15`. I will explain it later.
-:::
-
-:::info
-
-The maximum number of **id** is determined by the sum of two factors:
-
-1. **Available Block Appearance States**: These are defined in the `mappings.yml` file. For a single block type, the more free block states you "release," the higher the number of available appearance states.
-2. **Additionally Registered Real States**: These are added via the `additional-real-blocks.yml` file. This configuration allows you to manually register extra real serverside states for specific blocks, further increasing the total pool of internal IDs.
-
-:::
 
 ### Visual State
 
-```yaml
-blocks:
-  default:chinese_lantern:
-    state: note_block:15
-```
-The `state` refers to the visual appearance seen by clients. These states are the vanilla block states we freed in the **mappings.yml** file. The maximum number of available states is determined by the Minecraft version and is strictly limited. `note_block:15` refers to the **16th** released note_block block state (zero-indexed).
 
-![](/img/block_states_2.png)![](/img/block_states_3.png)
-
-:::tip
-
-You can configure state like this if you want to precisely control the appearance state in use.
-```yaml
-state: minecraft:note_block[instrument=hat,note=0,powered=false]
-```
-:::
 
 ### Model
 
@@ -178,7 +158,7 @@ blocks:
     states:
       appearances:
         axisY:
-          state: "note_block:0"
+          auto-state: "note_block"
           model:
             path: "minecraft:block/custom/stripped_palm_log"
             generation:
@@ -187,7 +167,7 @@ blocks:
                 "end": "minecraft:block/custom/palm_log_top"
                 "side": "minecraft:block/custom/palm_log"
         axisX:
-          state: "note_block:1"
+          auto-state: "note_block"
           model:
             x: 90
             y: 90
@@ -198,7 +178,7 @@ blocks:
                 "end": "minecraft:block/custom/palm_log_top"
                 "side": "minecraft:block/custom/palm_log"
         axisZ:
-          state: "note_block:2"
+          auto-state: "note_block"
           model:
             x: 90
             path: "minecraft:block/custom/stripped_palm_log_horizontal"
@@ -230,70 +210,11 @@ blocks:
       variants:
         axis=x:
           appearance: axisX # refers to the appearance name we just defined in the "appearances"
-          id: 0
         axis=y:
           appearance: axisY
-          id: 1
         axis=z:
           appearance: axisZ
-          id: 2
 ```
-
-<details>
-  <summary>Full Config</summary>
-
-```yml
-blocks:
-  default:palm_log:
-    states:
-      properties:
-        axis:
-          type: axis
-          default: y
-      appearances:
-        axisY:
-          state: "note_block:0"
-          model:
-            path: "minecraft:block/custom/stripped_palm_log"
-            generation:
-              parent: "minecraft:block/cube_column"
-              textures:
-                "end": "minecraft:block/custom/palm_log_top"
-                "side": "minecraft:block/custom/palm_log"
-        axisX:
-          state: "note_block:1"
-          model:
-            x: 90
-            y: 90
-            path: "minecraft:block/custom/stripped_palm_log_horizontal"
-            generation:
-              parent: "minecraft:block/cube_column_horizontal"
-              textures:
-                "end": "minecraft:block/custom/palm_log_top"
-                "side": "minecraft:block/custom/palm_log"
-        axisZ:
-          state: "note_block:2"
-          model:
-            x: 90
-            path: "minecraft:block/custom/stripped_palm_log_horizontal"
-            generation:
-              parent: "minecraft:block/cube_column_horizontal"
-              textures:
-                "end": "minecraft:block/custom/palm_log_top"
-                "side": "minecraft:block/custom/palm_log"
-      variants:
-        axis=x:
-          appearance: axisX
-          id: 0
-        axis=y:
-          appearance: axisY
-          id: 1
-        axis=z:
-          appearance: axisZ
-          id: 2
-```
-
-</details>
 
 :::tip
 
@@ -303,72 +224,8 @@ To customize block settings for specific states, add configuration like this:
 variants:
   "distance=7,persistent=false,waterlogged=false":
     appearance: "default"
-    id: 6
     settings:
       is-randomly-ticking: true
 ```
 
 :::
-
-## Feeling confused?
-
-However, you might also be confused about the relationship between `id` and `state` — why do I need to configure two parameters? Aside from making the configuration more complicated, what’s the actual purpose of this? 
-
-To understand why, you need to look at how CraftEngine implements custom blocks at a fundamental level. Let’s start by discussing the principles behind the plugin.
-
-### Unused States
-
-First, let me ask you a simple question: How many different appearances does a vanilla leaves block have? I believe you’ll quickly figure out the answer: two states — waterlogged and non-waterlogged.
-
-But do you know how many block states a single type of leaves block needs to maintain on the server side?
-
-<details>
-  <summary>Answer</summary>
-
-  The correct number is **28**. Did you get it right?
-
-  But how is this number calculated? Let's enable debug mode (F3) and hover the cursor over a leaves block. You'll notice several key-value pairs listed under the block ID - these represent the block's properties. Alternatively, you could use a debug stick to examine these.
-
-  ![](/img/block_states_6.png)
-  
-  - waterlogged: 2 states (true/false).
-  - persistent: 2 states (true/false).
-  - distance: 7 states (values 1 to 7).
-
-  Therefore, the total number of possible leaves block states is `2 × 2 × 7 = 28`.
-
-  ![](/img/block_states_5.png)
-
-</details>
-
-Then you'll realize - wow! With so many leaves block states but only two visual variants, couldn't we repurpose those extra states for custom block appearances? Exactly! This is where the `mappings.yml` file comes into play. Through `mappings.yml`, we can **map seemingly identical block states to share the same visual representation**. This clever approach frees up those redundant states for our custom block implementations.
-
-### mappings.yml
-
-Below is an excerpt from the default mappings.yml configuration. It maps all oak leaves with distance=1-7 to distance=7 and persistent=true. This means every vanilla leaves block in the world is technically converted to distance=7, persistent=true leaves by the plugin - yet you can't visually tell the difference because they appear identical.
-
-```yml
-"minecraft:oak_leaves[distance=1,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=2,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=3,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=4,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=5,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=6,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=7,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=2,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=3,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=4,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=5,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=6,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-```
-
-### Id & State
-
-Now, let's return to the **id** and **state** we just discussed. The state refers to the "unused" block states we released in mappings.yml, while the **id** represents the actual block states existing on the server side. We need to establish a bridge between these two parameters with **packet magics**, so that the new blocks actually existing on the server will be mapped to those freed vanilla states, thereby appearing as custom blocks.
-
-### Not Enough Real Block States
-
-By default, the plugin generates and releases a number of real block states equal to the available freed visual states. However, in some cases, we may need special mechanics that require more real block states but fewer visual states. In such scenarios, multiple real states will be mapped to the same visual state, resulting in the issue mentioned in the title: "Not Enough Real Blocks".
-
-To resolve this, you will need to use the `additional-real-blocks.yml` file to register additional real blocks.

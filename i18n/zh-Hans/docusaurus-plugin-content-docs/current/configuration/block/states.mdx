@@ -7,6 +7,12 @@ id: states
 
 在 Minecraft 的方块系统中，每个方块都带有一个或多个方块状态。例如，木头有朝向，树叶有不同的距离。这些方块状态决定了方块在游戏中的行为和外观。
 
+首先我需要向你介绍两个概念：**视觉方块状态** 和 **内部方块状态**
+
+**视觉方块状态**，又称为原版方块状态，是指玩家客户端收到的方块状态。比如具有特定音调和音色的音符盒，插件通过为这些状态添加模型以实现自定义方块渲染。
+
+**内部方块状态**，又称为服务端侧方块状态、真实方块状态，是服务端上真正被存储，执行物理行为的方块状态，通过网络协议转换为视觉方块状态发送给客户端渲染。
+
 
 ![](/img/block_states_1.png)
 
@@ -18,8 +24,7 @@ id: states
 blocks:
   default:chinese_lantern:
     state:
-      id: 15
-      state: note_block:15
+      auto-state: note_block
       model:
         path: "minecraft:block/custom/chinese_lantern"
         generation:
@@ -28,49 +33,6 @@ blocks:
             "end": "minecraft:block/custom/chinese_lantern_top"
             "side": "minecraft:block/custom/chinese_lantern"
 ```
-
-### 内部标识符
-
-```yaml
-blocks:
-  default:chinese_lantern:
-    state:
-      id: 15
-```
-
-`id` 代表方块的**唯一标识符**。例如，本例中的 `15` 将对应于 `craftengine:note_block_15`。
-
-:::caution
-`id: 15` 中的 **15** 与 `state: note_block:15` 中的 **15** 完全不相关。我稍后会解释。
-:::
-
-:::info
-
-方块**标识符**的最大数量取决于两个因素的总和：
-
-1. **可用的外观方块状态**：这些在 `mappings.yml` 文件中定义。对于单一的方块类型，你“释放”的**空闲方块状态越多，可用的外观方块状态数量就越多**。
-2. **额外注册的真实方块状态**：这些通过 `additional-real-blocks.yml` 文件添加。此配置允许你为特定方块**手动注册额外的服务器端侧真实方块状态**，进一步增加内部标识符的总量。
-
-:::
-
-### 视觉方块状态
-
-```yaml
-blocks:
-  default:chinese_lantern:
-    state: note_block:15
-```
-`state` 指的是**客户端看到的视觉外观**。这些方块状态是我们通过 **mappings.yml** 文件释放的**原版方块状态**。可用方块状态的最大数量由 Minecraft 版本决定，并且受到严格限制。`note_block:15` 指的是**第 16 个**（从零开始计数）被释放的音符盒方块状态。
-
-![](/img/block_states_2.png)![](/img/block_states_3.png)
-
-:::tip
-
-如果您想精确控制使用中的外观方块状态，可以像这样配置方块状态。
-```yaml
-state: minecraft:note_block[instrument=hat,note=0,powered=false]
-```
-:::
 
 ### 模型
 
@@ -230,13 +192,10 @@ blocks:
       variants:
         axis=x:
           appearance: axisX # 指的是我们在“appearances”中刚刚定义的外观名称。
-          id: 0
         axis=y:
           appearance: axisY
-          id: 1
         axis=z:
           appearance: axisZ
-          id: 2
 ```
 
 <details>
@@ -284,13 +243,10 @@ blocks:
       variants:
         axis=x:
           appearance: axisX
-          id: 0
         axis=y:
           appearance: axisY
-          id: 1
         axis=z:
           appearance: axisZ
-          id: 2
 ```
 
 </details>
@@ -303,72 +259,8 @@ blocks:
 variants:
   "distance=7,persistent=false,waterlogged=false":
     appearance: "default"
-    id: 6
     settings:
       is-randomly-ticking: true
 ```
 
 :::
-
-## 懵逼了？
-
-您可能会对 `id` 和 `state` 之间的关系感到困惑——为什么需要配置这两个参数？除了使配置更复杂之外，这么做的实际目的是什么？
-
-要理解原因，您需要了解 CraftEngine 在底层是如何实现自定义方块的。让我们从讨论插件背后的原理开始。
-
-### 未使用的方块状态
-
-首先，让我问你一个简单的问题：原版树叶有多少种不同的外观？我相信你会很快得出答案：两种方块状态——含水和不含水。
-
-但你知道服务器端需要为单一类型的树叶维护多少种方块状态吗？
-
-<details>
-  <summary>答案</summary>
-
-  正确答案是 **28**。你答对了吗？
-
-  但这个数字是怎么计算出来的呢？让我们按下F3打开调试屏幕，然后将视角对准树叶并且确保处在你的方块交互距离内。你会注意到在方块命名空间ID下列出了几个键值对——这些代表了方块的属性。或者，你可以使用调试棒来检查这些属性。
-
-  ![](/img/block_states_6.png)
-
-  - waterlogged：2 种状态（true/false）。
-  - persistent：2 种状态（true/false）。
-  - distance：7 种状态（值从 1 到 7）。
-
-  因此，树叶可能的状态总数是 `2 × 2 × 7 = 28`。
-
-  ![](/img/block_states_5.png)
-
-</details>
-
-然后你会意识到——哇！树叶方块有这么多状态，但只有两种视觉变体，我们能否将那些多余的状态重新用于自定义方块外观？正是如此！这就是 `mappings.yml` 文件发挥作用的地方。通过 `mappings.yml`，我们可以**将看似相同的方块状态映射为共享相同的视觉表现的方块状态**。这种巧妙的方法释放了那些冗余状态，供我们的自定义方块实现使用。
-
-### mappings.yml
-
-以下是默认 mappings.yml 配置的摘录。它将所有 distance=1-7 的橡树树叶映射到 distance=7 且 persistent=true。这意味着世界中的每个原版橡树树叶在技术上都被插件转换为 distance=7、persistent=true 的橡树树叶——但你无法从视觉上分辨差异，因为它们看起来完全相同。
-
-```yml
-"minecraft:oak_leaves[distance=1,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=2,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=3,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=4,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=5,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=6,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=7,persistent=false,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=2,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=3,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=4,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=5,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-"minecraft:oak_leaves[distance=6,persistent=true,waterlogged=false]": minecraft:oak_leaves[distance=7,persistent=true,waterlogged=false]
-```
-
-### 标识符与方块状态
-
-现在，让我们回到刚刚讨论的 **id** 和 **state**。方块状态指的是我们在 mappings.yml 中释放的“未使用”方块状态，而 **id** 代表服务器端实际存在的方块状态。我们需要通过 **数据包魔法** 在这两个参数之间建立一座桥梁，以便服务器上实际存在的新方块能够映射到那些释放的原版方块状态，从而表现为自定义方块。
-
-### 真实方块状态不足
-
-默认情况下，插件会生成并释放与可用视觉方块状态数量相等的真实方块状态。然而，在某些情况下，我们可能需要特殊机制，这些机制需要更多的真实方块状态但只需要较少的视觉方块状态。在这种场景下，多个真实方块状态将被映射到相同的视觉方块状态，从而导致标题中提到的“真实方块不足”问题。
-
-为了解决这个问题，您需要使用 `additional-real-blocks.yml` 文件来注册额外的真实方块。

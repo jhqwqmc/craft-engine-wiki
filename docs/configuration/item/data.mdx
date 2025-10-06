@@ -514,7 +514,7 @@ items:
 :::
 
 :::tip
-client-bound-data is quite useful for players in adventure mode, allowing them to break certain real custom blocks on serverside.
+client-bound-data is quite useful for players in adventure mode, allowing them to break certain real custom blocks on serverside. I recommend using block tags here whenever possible, rather than specific block IDs. This helps resolve some client-side protocol issues.
 
 ```yaml
 items:
@@ -524,23 +524,16 @@ items:
     settings:
       tags:
         - "default:topaz_tools"
+    data:
+      components:
+        # server side block state
+        can_break:
+          blocks: "#mineable/pickaxe"
     client-bound-data:
       components:
         # client side block state
         can_break:
-          blocks: minecraft:note_block
-          state:
-            "instrument": "hat"
-            "note": "0"
-            "powered": "false"
-    data:
-      item-name: "<!i><#FF8C00><i18n:item.topaz_pickaxe>"
-      tooltip-style: minecraft:topaz
-      components:
-        minecraft:max_damage: 64
-        # server side block state
-        can_break:
-          blocks: "craftengine:note_block_1"
+          blocks: minecraft:mushroom_stem
     model:
       template: default:model/simplified_handheld
       arguments:

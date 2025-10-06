@@ -532,7 +532,7 @@ items:
 :::
 
 :::tip
-client-bound-data 对冒险模式中的玩家非常有用，它允许玩家在服务器端破坏某些真自定义方块。
+client-bound-data 对冒险模式中的玩家非常有用，它允许玩家在服务器端破坏某些真自定义方块。我建议在这里尽可能使用方块标签，而不是具体的方块id。这有助于解决一些客户端网络协议问题。
 
 ```yaml
 items:
@@ -542,23 +542,17 @@ items:
     settings:
       tags:
         - "default:topaz_tools"
-    client-bound-data:
-      components:
-        # 客户端侧方块状态
-        can_break:
-          blocks: minecraft:note_block
-          state:
-            "instrument": "hat"
-            "note": "0"
-            "powered": "false"
     data:
-      item-name: "<!i><#FF8C00><i18n:item.topaz_pickaxe>"
-      tooltip-style: minecraft:topaz
       components:
         minecraft:max_damage: 64
         # 服务端侧方块状态
         can_break:
-          blocks: "craftengine:note_block_1"
+          blocks: "#mineable/pickaxe"
+    client-bound-data:
+      components:
+        # 客户端侧方块状态
+        can_break:
+          blocks: minecraft:mushroom_stem
     model:
       template: default:model/simplified_handheld
       arguments:
