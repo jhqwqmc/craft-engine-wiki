@@ -98,9 +98,25 @@ images:
     font: minecraft:icons
     file: minecraft:font/image/icons.png
     chars:
-     - '\ub000\ub001'
-     - '\ub002\ub003'
+     - '\ub000\ub001\ub002'
+     - '\ub003\ub004\ub005'
 ```
+
+:::tip
+
+You can also use the `grid-size` option to let the plugin automatically arrange the corresponding number of characters for you, without needing to manually specify `chars`.
+
+```yaml
+images:
+  default:icons:
+    height: 10
+    ascent: 9
+    font: minecraft:icons
+    file: minecraft:font/image/icons.png
+    grid-size: 2,3 # row,column
+```
+
+:::
 
 ## Preview the Image In Game
 

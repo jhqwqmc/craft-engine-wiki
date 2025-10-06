@@ -91,7 +91,7 @@ This command disable a specified package.
 
 `/ce debug appearance-state-usage [block_type]`
 
-The command is used to retrieve the usage status of excess appearances for a specified block type. The red sections indicate states that are already in use, while the green sections represent available, unused states. When you hover your mouse over these sections, you can view the specific states and identify which custom states are using them.
+The command retrieves the usage status of appearances for a specified block type. The red sections indicate manually assigned states, the yellow sections represent automatically assigned states, and the green sections denote available or unused states. Hovering your mouse over these sections allows you to view the specific states and identify which custom states are utilizing them.
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_1.png').default} alt="" />
@@ -99,12 +99,12 @@ The command is used to retrieve the usage status of excess appearances for a spe
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_2.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>appearance state in use by manual allocation</p>
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>manual assigned states</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/commands_7.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>appearance state in use by automatic allocation</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>automatically assigned states</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
@@ -120,12 +120,12 @@ This command is similar to the one mentioned above, but the key difference lies 
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_4.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>real state in use by manual allocation</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>manual assigned states</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_5.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>real state in use by automatic allocation</p>
+  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>automatically assigned states</p>
 </div>
 
 <div style={{textAlign: 'center'}}>

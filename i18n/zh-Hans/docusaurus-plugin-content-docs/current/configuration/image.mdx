@@ -101,9 +101,25 @@ images:
     font: minecraft:icons
     file: minecraft:font/image/icons.png
     chars:
-     - '\ub000\ub001'
-     - '\ub002\ub003'
+     - '\ub000\ub001\ub002'
+     - '\ub003\ub004\ub005'
 ```
+
+:::tip
+
+你也可以通过添加 `grid-size` 选项，来让插件为你自动安排相应数量的字符，而无需手动指定`chars`
+
+```yaml
+images:
+  default:icons:
+    height: 10
+    ascent: 9
+    font: minecraft:icons
+    file: minecraft:font/image/icons.png
+    grid-size: 2,3 # row,column
+```
+
+:::
 
 ## 在游戏中预览图像
 
