@@ -33,8 +33,6 @@ blocks:
         place: minecraft:block.deepslate.place
         hit: minecraft:block.deepslate.hit
         fall: minecraft:block.deepslate.fall
-        land: minecraft:block.anvil.land
-        destroy: minecraft:block.anvil.destroy
       require-correct-tools: true
       respect-tool-component: false
       correct-tools:
@@ -181,8 +179,6 @@ Determines the sound of the block in various situations (Default: null)
 * break    When the player breaks this block
 * step    When the player walks on this block
 * place    When the player places this block
-* land   When the block falls on ground (For falling blocks)
-* destroy   When the block falls on ground and break (For falling blocks)
 
 ```yaml
 sounds:
@@ -191,8 +187,6 @@ sounds:
   place: minecraft:block.deepslate.place
   hit: minecraft:block.deepslate.hit
   fall: minecraft:block.deepslate.fall
-  land: minecraft:block.anvil.land
-  destroy: minecraft:block.anvil.destroy
 ```
 
 :::info
