@@ -4,6 +4,7 @@ id: data
 ---
 
 import Highlight from '@site/src/components/Highlight';
+import DiffViewer from '@site/src/components/DiffViewer';
 
 ## Introduction
 
@@ -179,6 +180,81 @@ items:
         - enchantments
         - attribute_modifiers
 ```
+
+### block-state
+
+The block state properties to apply when placing this block.
+
+```yaml
+items:
+  default:sofa:
+    material: note_block
+    data:
+      # use detailed vanilla block properties
+      block-state:
+        note: "1"
+        powered: "false"
+        instrument: "harp"
+```
+
+```yaml
+items:
+  default:palm_sapling:
+    material: oak_sapling
+    data:
+      # Automatically use the visual properties of any custom block state you define.
+      block-state: default:palm_sapling[stage=0]
+```
+
+:::tip
+This is particularly beneficial for players with high latency, as it significantly improves the block placement experience, **espcially for PVP servers**.
+
+Please note: the material must correspond to the visual block state. 
+This means you can no longer use items like `paper` or `nether_brick`, but must instead use ones like `note_block`, `string`, or `oak_leaves` that match the intended block's appearance.
+
+⚠️ **Of course, this approach has a limitation: it's not compatible with custom blocks that possess multiple visual states. For instance, if you forcibly apply the block_state component to a directional block, you will observe a brief visual flicker.**
+
+If you have the **premium** version, you can consider using a configuration format like the following. 
+This improves the client-side experience while maintaining the original server-side item mechanics.
+
+<DiffViewer>
+{`
+items:
+    default:palm_planks:
+      material: nether_brick
+      data:
+        item-name: <!i><i18n:item.palm_planks>
++   client-bound-material: mushroom_stem
++   client-bound-data:
++     block-state: default:palm_planks
+      settings:
+        fuel-time: 300
+        tags:
+          - minecraft:planks
+          - minecraft:wooden_tool_materials
+      model:
+        type: minecraft:model
+        path: minecraft:item/custom/palm_planks
+        generation:
+          parent: minecraft:block/custom/palm_planks
+      behavior:
+        type: block_item
+        block:
+          settings:
+            template: default:settings/planks
+          loot:
+            template: default:loot_table/self
+          state:
+-         auto-state: solid
++         auto-state: mushroom_stem
+            model:
+              template: default:model/simplified_cube_all
+              arguments:
+                path: minecraft:block/custom/palm_planks
+`}
+</DiffViewer>
+
+:::
 
 ### attribute-modifiers
 
