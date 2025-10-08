@@ -33,8 +33,6 @@ blocks:
         place: minecraft:block.deepslate.place
         hit: minecraft:block.deepslate.hit
         fall: minecraft:block.deepslate.fall
-        land: minecraft:block.anvil.land
-        destroy: minecraft:block.anvil.destroy
       require-correct-tools: true
       respect-tool-component: false
       correct-tools:
@@ -181,8 +179,6 @@ is-view-blocking: true
 * break 当玩家破坏方块时
 * step 当玩家在方块上行走时
 * place 当玩家放置方块时
-* land 当下落的方块落地且变为方块
-* destroy 当下落的方块落地且未能变为方块
 
 ```yaml
 sounds:
@@ -191,8 +187,6 @@ sounds:
   place: minecraft:block.deepslate.place
   hit: minecraft:block.deepslate.hit
   fall: minecraft:block.deepslate.fall
-  land: minecraft:block.anvil.land
-  destroy: minecraft:block.anvil.destroy
 ```
 
 :::info
