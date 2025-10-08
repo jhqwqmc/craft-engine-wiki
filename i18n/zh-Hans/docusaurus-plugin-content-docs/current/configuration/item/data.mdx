@@ -5,6 +5,7 @@ id: data
 
 import Highlight from '@site/src/components/Highlight';
 import Comment from '@site/src/components/Comment';
+import DiffViewer from '@site/src/components/DiffViewer';
 
 ## 简介
 
@@ -217,14 +218,42 @@ items:
 
 若您持有付费版本，可考虑使用如下配置格式，在保持原服务端物品机制的同时，优化客户端体验。
 
-```yaml
+<DiffViewer>
+{`
 items:
-  default:palm_sapling:
-    material: nether_brick
-    client-bound-material: oak_sapling
-    client-bound-data:
-      block-state: default:palm_sapling[stage=0]
-```
+    default:palm_planks:
+      material: nether_brick
+      data:
+        item-name: <!i><i18n:item.palm_planks>
++   client-bound-material: mushroom_stem
++   client-bound-data:
++     block-state: default:palm_planks
+      settings:
+        fuel-time: 300
+        tags:
+          - minecraft:planks
+          - minecraft:wooden_tool_materials
+      model:
+        type: minecraft:model
+        path: minecraft:item/custom/palm_planks
+        generation:
+          parent: minecraft:block/custom/palm_planks
+      behavior:
+        type: block_item
+        block:
+          settings:
+            template: default:settings/planks
+          loot:
+            template: default:loot_table/self
+          state:
+-         auto-state: solid
++         auto-state: mushroom_stem
+            model:
+              template: default:model/simplified_cube_all
+              arguments:
+                path: minecraft:block/custom/palm_planks
+`}
+</DiffViewer>
 :::
 
 ### attribute-modifiers（属性修饰符）
