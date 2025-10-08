@@ -183,6 +183,50 @@ items:
         - attribute_modifiers
 ```
 
+### block-state （方块状态属性）
+
+放置此方块时需应用的方块状态属性。
+
+```yaml
+items:
+  default:sofa:
+    material: note_block
+    data:
+      # 使用精细的原版方块属性
+      block-state:
+        note: "1"
+        powered: "false"
+        instrument: "harp"
+```
+
+```yaml
+items:
+  default:palm_sapling:
+    material: oak_sapling
+    data:
+      # 自动应用自定义方块状态定义的视觉属性
+      block-state: default:palm_sapling[stage=0]
+```
+
+:::tip
+这对高延迟玩家尤其有益，能显著提升方块放置体验。
+
+请注意：材质必须与视觉方块状态相匹配。 这意味着不能再使用`paper`或`nether_brick`等物品，而需使用`note_block`、`string`或`oak_leaves`等符合目标方块外观的材质。 
+
+⚠️ **当然，这种方式存在局限：不适用于拥有多重视觉状态的自定义方块。例如，若对方向性方块强制应用方块状态组件，会出现短暂的视觉闪烁。** 
+
+若您持有付费版本，可考虑使用如下配置格式，在保持原服务端物品机制的同时，优化客户端体验。
+
+```yaml
+items:
+  default:palm_sapling:
+    material: nether_brick
+    client-bound-material: oak_sapling
+    client-bound-data:
+      block-state: default:palm_sapling[stage=0]
+```
+:::
+
 ### attribute-modifiers（属性修饰符）
 
 将[属性修饰符](https://zh.minecraft.wiki/w/%E6%95%B0%E6%8D%AE%E7%BB%84%E4%BB%B6#attribute_modifiers)应用于物品。
