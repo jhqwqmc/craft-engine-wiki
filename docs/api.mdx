@@ -80,6 +80,15 @@ softdepend:
   - CraftEngine
 ```
 
+For papermc plugins use this instead
+```yaml
+dependencies:
+    CraftEngine:
+      load: BEFORE
+      required: true
+      join-classpath: true
+```
+
 :::caution
 
 **Be Aware with Changes**
