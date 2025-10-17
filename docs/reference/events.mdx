@@ -468,6 +468,37 @@ as-int: false # optional; boolean; default: false
 text: "hello" # optional; string
 ```
 
+### merchant\_trade
+
+Create a custom villager trading shop
+
+```yaml
+type: merchant_trade
+title: "Custom Merchant"
+offers:
+  - cost-1: 
+      item: iron_pickaxe
+      # optional custom component predicates
+      components:  
+        minecraft:enchantments:
+          minecraft:unbreaking: 1
+    # cost-2 is optional
+    cost-2:
+      item: cobblestone
+      # optional count
+      count: 8
+    result: 
+      item: default:topaz
+      count: 4
+  # add more trade offers
+  - cost-1: stone
+    result: default:topaz
+    # optional
+    experience: 3
+```
+
+![](/img/merchant_trade.png)
+
 :::info
 More functions are coming...
 :::

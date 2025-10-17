@@ -319,8 +319,8 @@
     "message": "🖼️ 图像",
     "description": "教程侧边栏中'图像'文档项的标签"
   },
-  "sidebar.tutorialSidebar.doc.🌍 I18n": {
-    "message": "🌍 国际化",
+  "sidebar.tutorialSidebar.doc.🌍 I18n/L10n": {
+    "message": "🌍 国际化/本地化",
     "description": "教程侧边栏中'国际化'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🌍 Language": {

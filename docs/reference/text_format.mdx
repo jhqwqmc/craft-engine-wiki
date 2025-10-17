@@ -95,18 +95,26 @@ item-name: "<!i><white><image:default:icons:0:1><#FF8C00> Topaz Rod"
 
 ### \<i18n:\_id\_>
 
-Searching for translations applicable to the current language.
+Searching for translations applicable to the serverside language.
 
 ```yaml
-internal:cooking_info:
-  template: "internal:icon/2d"
-  arguments:
-    model_data: 1006
-    texture: cooking_info
-    name: "<!i><#FF8C00><i18n:internal.cooking_info>"
-    lore:
-      - "<!i><gray><i18n:internal.cooking_info.0>"
-      - "<!i><gray><i18n:internal.cooking_info.1>"
+items:
+  custom:chinese_lantern:
+    material: paper
+    data:
+      item-name: "<i18n:item.chinese_lantern>"
+```
+
+### \<l10n:\_id\_>
+
+Searching for translations applicable to the client language settings.
+
+```yaml
+items:
+  custom:chinese_lantern:
+    material: paper
+    data:
+      item-name: "<l10n:item.chinese_lantern>"
 ```
 
 ### \<expr:\_format\_:\_expression\_>

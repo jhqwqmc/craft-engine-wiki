@@ -1,9 +1,11 @@
 ---
-title: 🌍 I18n
+title: 🌍 I18n/L10n
 id: i18n
 ---
 
-i18n is used mainly for **server-side** localization. If you are seeking **client-side** localization, please consult the [🌍 Language](./lang.mdx). In general, typical users do not require the use of i18n, as it is primarily designed for providers of public model and asset packs who offer multilingual support.
+**i18n** is a fully server-side localization system, which means that the `<i18n>` tags you use are actually applied on the server. The language used is determined by the server's language settings and is independent of the player's client language.
+
+**l10n** provides a customized localization experience for the client. The `<l10n>` tag selects the appropriate translation text based on the language chosen in the player's client, regardless of the server's language settings.
 
 :::info
 
@@ -11,8 +13,10 @@ The country or region specification for the language is optional (for example, "
 
 :::
 
+Example configuration:
+
 ```yaml
-i18n:
+translations:
   en:
     item.chinese_lantern: "Chinese Lantern"
     item.fairy_flower: "Fairy Flower"
@@ -29,27 +33,27 @@ i18n:
 
 :::info
 
-To render server side translation, please insert [**i18n**](../reference/text_format.mdx#i18n_id_) tag
-
-Example:
+Example usage of `<i18n>` and `<l10n>`:
 ```yml
 items:
   custom:chinese_lantern:
     material: paper
     data:
+      # The item's name will be directly replaced with "Chinese lantern" and stored within the item's component.
       item-name: "<i18n:item.chinese_lantern>"
+```
+
+```yml
+items:
+  custom:chinese_lantern:
+    material: paper
+    data:
+      # The item's name will be stored as the raw text <l10n:item.chinese_lantern>. 
+      # When the client receives the packet for this item, it will automatically select the appropriate language to replace it.
+      item-name: "<l10n:item.chinese_lantern>"
 ```
 :::
 
 :::tip
-
-You can nest other tags within i18n for use.
-
-```yaml
-i18n:
-  en:
-    internal.cooking_info.0: "Time: <arg:cooking_time>ticks"
-    internal.cooking_info.1: "Experience: <arg:cooking_experience>"
-```
-
+You can use the `<l10n>` tag in messages and items from other plugins to apply localization on the fly!
 :::
