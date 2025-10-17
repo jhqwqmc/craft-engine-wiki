@@ -73,16 +73,17 @@ Add CraftEngine API to your project:
     </TabItem>
 </Tabs>
 
-Make sure to add CraftEngine as a dependency for your plugin:
+Make sure to declare CraftEngine as a dependency in your plugin.yml:
 
 ```yaml
 softdepend:
   - CraftEngine
 ```
 
-For papermc plugins use this instead
+For paper-plugin.yml, you must include the `join-classpath: true` option to access the API classes:
 ```yaml
 dependencies:
+  server:
     CraftEngine:
       load: BEFORE
       required: true
