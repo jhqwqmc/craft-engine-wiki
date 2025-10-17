@@ -7,14 +7,9 @@ import UrlCard from '@site/src/components/UrlCard';
 
 ## Overview
 
-Here, "language" specifically refers to the client-side language setting. This means any text content dynamically adapts to the player's current client language in real time.
+The "language" system is fully dependent on client-side resource packs. It dynamically adapts text to the player's client language, but any content change requires a mandatory resource pack reload. For a solution independent of resource packs, use `l10n` instead.
 
-<UrlCard
-  url="https://minecraft.wiki/w/Resource_pack#Language"
-  title="Language"
-/>
-
-In CraftEngine, you only need to configure your language-dependent content in the following format:
+Example configuration:
 
 ```yaml
 lang:
@@ -39,7 +34,7 @@ lang:
 
 :::info
 
-To render client side translation, please insert [https://docs.papermc.io/adventure/minimessage/format/#translatable](https://docs.papermc.io/adventure/minimessage/format/#translatable)
+To render client side translation, please insert [https://docs.papermc.io/adventure/minimessage/format/#translatable](https://docs.papermc.io/adventure/minimessage/format/#translatable) tag
 
 Example:
 ```yml
@@ -60,7 +55,7 @@ In addition to custom translation keys, CraftEngine provides built-in shortcut t
 
 The configuration method is very simple. Just add the `block_name:` prefix before the regular block ID, and the plugin will automatically convert it to the corresponding real block ID.
 
-Example: `block_name:default:chinese_lantern` -> `block.craftengine.note_block_13`
+Example: `block_name:default:chinese_lantern` -> `block.craftengine.custom_13`
 
 ```yaml
 lang:

@@ -468,6 +468,35 @@ as-int: false # 可选; 布尔; 默认值: false
 text: "你好" # 可选; 字符串
 ```
 
+### 村民交易
+
+打开一个自定义村民交易界面
+
+```yaml
+type: merchant_trade
+title: "自定义商人"
+offers:
+  - cost-1: 
+      item: iron_pickaxe
+      # 可选的组件条件
+      components:  
+        minecraft:enchantments:
+          minecraft:unbreaking: 1
+    # cost-2 is optional
+    cost-2:
+      item: cobblestone
+      # 可选的原料数量
+      count: 8
+    result: 
+      item: default:topaz
+      count: 4
+  # 添加更多的交易选项
+  - cost-1: stone
+    result: default:topaz
+    # 可选的经验
+    experience: 3
+```
+
 :::info
 更多函数即将到来...
 :::

@@ -7,14 +7,9 @@ import UrlCard from '@site/src/components/UrlCard';
 
 ## 概览
 
-此处 "language" 特指客户端语言设置，意味着文本内容会实时适配玩家当前客户端语言。
+“语言”系统完全依赖于客户端的资源包。它能根据玩家客户端的语言动态调整文本，但任何内容更改都必须强制重新加载资源包。如需实现不依赖资源包的解决方案，请改用 `l10n` 系统。
 
-<UrlCard
-  url="https://zh.minecraft.wiki/w/资源包#语言"
-  title="语言"
-/>
-
-在 CraftEngine 中，你只需按照以下格式配置你的语言相关内容：
+范例配置：
 
 ```yaml
 lang:
@@ -60,7 +55,7 @@ items:
 
 配置方法非常简单。只需在常规方块命名空间ID前添加 `block_name:` 前缀，插件就会自动将其转换为对应的**真实方块命名空间ID**。
 
-示例：`block_name:default:chinese_lantern` -> `block.craftengine.note_block_13`
+示例：`block_name:default:chinese_lantern` -> `block.craftengine.custom_13`
 
 ```yaml
 lang:

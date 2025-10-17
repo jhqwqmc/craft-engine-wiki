@@ -120,15 +120,23 @@ item-name: "<!i><white><image:default:icons:0:1><#FF8C00>黄玉钓竿"
 查找适用于当前服务端语言的翻译。
 
 ```yaml
-internal:cooking_info:
-  template: "internal:icon/2d"
-  arguments:
-    model_data: 1006
-    texture: cooking_info
-    name: "<!i><#FF8C00><i18n:internal.cooking_info>"
-    lore:
-      - "<!i><gray><i18n:internal.cooking_info.0>"
-      - "<!i><gray><i18n:internal.cooking_info.1>"
+items:
+  custom:chinese_lantern:
+    material: paper
+    data:
+      item-name: "<i18n:item.chinese_lantern>"
+```
+
+### \<l10n:\_标识符\_>
+
+查找适用于当前客户端语言的翻译。
+
+```yaml
+items:
+  custom:chinese_lantern:
+    material: paper
+    data:
+      item-name: "<l10n:item.chinese_lantern>"
 ```
 
 ### \<expr:\_格式\_:\_表达式\_>

@@ -525,7 +525,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'doc',
           id: "configuration/i18n",
-          label: '🌍 I18n',
+          label: '🌍 I18n/L10n',
         },
         {
           type: 'doc',
