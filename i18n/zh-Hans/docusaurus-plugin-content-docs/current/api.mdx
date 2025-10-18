@@ -85,11 +85,21 @@ import Tabs from "@theme/Tabs";
     </TabItem>
 </Tabs>
 
-请确保将 CraftEngine 添加为你的插件的依赖项：
+请确保在您的 plugin.yml 中声明 CraftEngine 为依赖项：
 
 ```yaml
 softdepend:
   - CraftEngine
+```
+
+对于 paper-plugin.yml，您必须包含 `join-classpath: true` 选项才能访问 API 类：
+```yaml
+dependencies:
+  server:
+    CraftEngine:
+      load: BEFORE
+      required: false
+      join-classpath: true
 ```
 
 :::caution

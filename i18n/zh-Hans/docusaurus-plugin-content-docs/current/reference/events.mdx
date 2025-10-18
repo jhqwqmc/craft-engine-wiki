@@ -474,18 +474,18 @@ text: "你好" # 可选; 字符串
 
 ```yaml
 type: merchant_trade
-title: "自定义商人"
+title: "自定义奸商"
 offers:
-  - cost-1: 
+  - cost-1:
       item: iron_pickaxe
-      # 可选的组件条件
-      components:  
-        minecraft:enchantments:
+      # 可选的检查收购物品的额外信息，默认为空
+      components: # 当物品与指定的物品堆叠组件限制相同时检查才能成功
+        minecraft:enchantments: # 检查指定的物品堆叠组件
           minecraft:unbreaking: 1
-    # cost-2 is optional
+    # 可选的第二个收购物品，默认为空
     cost-2:
       item: cobblestone
-      # 可选的原料数量
+      # 收购物品的基础数量，默认为 1
       count: 8
     result: 
       item: default:topaz
@@ -493,9 +493,11 @@ offers:
   # 添加更多的交易选项
   - cost-1: stone
     result: default:topaz
-    # 可选的经验
+    # 生物从此交易选项中能获得的经验值，默认为 1
     experience: 3
 ```
+
+![](/img/i18n/zh-Hans/merchant_trade.png)
 
 :::info
 更多函数即将到来...
