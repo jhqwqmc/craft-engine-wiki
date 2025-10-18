@@ -8,11 +8,12 @@ resource-pack:
   delivery:
     hosting:
       - type: gitlab
-        use-environment-variables: false
         gitlab-url: ""
         access-token: ""
         project-id: ""
-        # 可选代理配置
+        # 可选选项
+        use-environment-variables: false # 是否使用环境变量提供机密信息，默认为 false
+        ## 可选代理配置
         # proxy:
         #   host: "127.0.0.1"
         #   port: 7890
