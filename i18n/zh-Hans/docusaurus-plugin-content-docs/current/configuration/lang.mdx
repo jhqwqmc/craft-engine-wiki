@@ -3,19 +3,20 @@ title: 🌍 语言
 id: lang
 ---
 
-import UrlCard from '@site/src/components/UrlCard';
-
 ## 概览
 
 “语言”系统完全依赖于客户端的资源包。它能根据玩家客户端的语言动态调整文本，但任何内容更改都必须强制重新加载资源包。如需实现不依赖资源包的解决方案，请改用 `l10n` 系统。
 
-范例配置：
+示例配置：
 
 ```yaml
 lang:
   en_us:
     item.custom.palm_leaves: Palm Leaves
     item.custom.palm_log: Palm Log
+  zh_cn:
+    item.custom.palm_leaves: 棕榈树叶
+    item.custom.palm_log: 棕榈原木
 ```
 
 :::tip
@@ -34,7 +35,7 @@ lang:
 
 :::info
 
-如需渲染客户端翻译文本，请插入 [https://docs.papermc.io/adventure/minimessage/format/#translatable](https://docs.papermc.io/adventure/minimessage/format/#translatable)
+如需渲染客户端翻译文本，请插入 [lang](https://docs.papermc.io/adventure/minimessage/format/#translatable) 标签
 
 示例：
 ```yml
