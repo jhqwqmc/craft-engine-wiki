@@ -163,12 +163,38 @@ Set the return item after consuming the item. For example, after the player drin
 consume-replacement: minecraft:apple
 ```
 
-### craft-remaining-item
+### craft-remainder / craft-remaining-item
 
 Choose whether items should return other items when the crafting recipe is finished.
 
+Returns a fixed item
+
 ```yaml
-craft-remaining-item: bucket
+craft-remainder: bucket
+```
+
+Consumes a certain amount of durability
+
+```yaml
+craft-remainder: 
+  type: hurt_and_break
+  damage: 1
+```
+
+Select the remaining items according to the recipe
+
+```yaml
+craft-remainder:
+  type: recipe_based
+  terms:
+    - recipes: 
+        - test:test1
+        - test:test3
+      craft-remainder:
+        type: hurt_and_break
+    - recipes: 
+        - test:test2
+      craft-remainder: minecraft:stone
 ```
 
 ![](/img/item_settings_8.png)

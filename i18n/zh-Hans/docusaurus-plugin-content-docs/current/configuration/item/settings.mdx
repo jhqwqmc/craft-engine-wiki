@@ -170,12 +170,38 @@ food:
 consume-replacement: minecraft:apple
 ```
 
-### craft-remaining-item（合成剩余物品）
+### craft-remainder / craft-remaining-item（合成剩余物品）
 
-控制在合成配方完成后，物品是否应返还其他物品。
+控制在合成配方完成后，物品是否应返还其他物品，或是对参与合成的物品进行一些特殊操作。
+
+返回一个固定物品
 
 ```yaml
-craft-remaining-item: bucket
+craft-remainder: bucket
+```
+
+消耗一定耐久度
+
+```yaml
+craft-remainder: 
+  type: hurt_and_break
+  damage: 1 # 默认1
+```
+
+根据配方选择合成剩余物品
+
+```yaml
+craft-remainder:
+  type: recipe_based
+  terms:
+    - recipes: 
+        - test:test1
+        - test:test3
+      craft-remainder:
+        type: hurt_and_break
+    - recipes: 
+        - test:test2
+      craft-remainder: minecraft:stone
 ```
 
 ![](/img/i18n/zh-Hans/item_settings_8.png)
