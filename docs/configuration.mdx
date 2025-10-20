@@ -122,3 +122,14 @@ items:
             consume_seconds: 128000
             animation: spear
 ```
+
+### Expanded Value Structure 
+
+To specify a data type, such as `float`, `long`, or `short`, you can prefix the value with `!!<type>`.
+
+```yaml
+long-value: !!long 1234
+float-value: !!float 12.34
+byte-value: !!byte 1
+short-value: !!short 123
+```

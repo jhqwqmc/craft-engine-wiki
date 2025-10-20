@@ -60,6 +60,22 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 | uuid      | uuid   | the uuid of the world |
 | time      | long   | the time of the world |
 
+### entity
+
+| parameter        | type                   | description                      |
+|------------------|------------------------|----------------------------------|
+| x                | double                 | the x coordinate of the entity   |
+| y                | double                 | the y coordinate of the entity   |
+| z                | double                 | the z coordinate of the entity   |
+| block\_x         | int                    | the x coordinate of the entity   |
+| block\_y         | int                    | the y coordinate of the entity   |
+| block\_z         | int                    | the z coordinate of the entity   |
+| name             | string                 | the name of the entity           |
+| uuid             | uuid                   | the uuid of the entity           |
+| world            | [#world](#world)       | the world where the entity is in |
+| position         | [#position](#position) | the position of the entity       |
+| item             | [#item](#item)         | the item of dropped item entity  |
+
 ### position
 
 | parameter | type             | description      |

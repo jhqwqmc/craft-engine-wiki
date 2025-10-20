@@ -122,3 +122,14 @@ items:
             consume_seconds: 128000
             animation: spear
 ```
+
+### 拓展值结构
+
+当你需要使用特定的数据类型，比如`float`，`long`，`short`的时候，可以在值前面加上`!!<type>`
+
+```yaml
+long-value: !!long 1234
+float-value: !!float 12.34
+byte-value: !!byte 1
+short-value: !!short 123
+```
