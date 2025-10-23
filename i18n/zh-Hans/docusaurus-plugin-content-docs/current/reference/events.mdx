@@ -99,7 +99,7 @@ functions: # 必填; 映射列表
 
 ### 命令
 
-以玩家或控制台身份运行命令。
+以玩家、控制台或事件的形式运行命令。
 
 ```yaml
 type: command
@@ -177,6 +177,34 @@ z: <arg:position.z> # 可选; 数字; 默认值: <arg:position.z>
 ```yaml
 type: place_block
 block-state: "default:chinese_lantern" # 必填; 字符串
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
+### 更新方块属性
+
+更新某个方块的方块属性
+
+```yaml
+type: update_block_property
+properties:  # 必填; 键值对
+  axis: x
+  age: 7
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
+### 转换方块
+
+将当前方块转换为另一个方块并保留全部的属性
+
+```yaml
+type: transform_block
+block: default:palm_log # 必填；新方块
+properties:             # 可选; 键值对
+  property_a: b
 x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
 y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
 z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
@@ -506,6 +534,55 @@ offers:
 
 ```yaml
 type: remove_entity
+```
+
+### 条件判断
+
+运行首个满足指定条件的函数。
+译者注：只要满足了某个条件，执行完该条件内的函数，就会结束条件判断函数的运行，即使后面有可以满足的条件，也不会执行该条件内的函数。
+
+```yaml
+type: if_else
+rules:
+  - conditions:
+      - type: permission
+        permission: group.admin
+    functions:
+      - type: command
+        command: say 管理员你好
+  - conditions:
+      - type: permission
+        permission: group.vip
+    functions:
+      - type: command
+        command: say VIP你好
+  - functions:
+      - type: command
+        command: say 玩家你好
+```
+
+### 条件匹配
+
+根据源数值进行匹配，并执行首个匹配案例对应的函数。其功能类似于编程语言中的 switch-case 语句
+
+```yaml
+type: when
+source: <papi:player_world>
+cases:
+  - when: "world"
+    functions: 
+      - type: message
+        message: "您位于主世界。"
+  - when: 
+      - "world_nether"
+      - "world_the_end"
+    functions: 
+      - type: message
+        message: "您正处于危险维度！"
+# 可选配置
+fallback:
+  - type: message
+    message: "您处于未知世界中。"
 ```
 
 :::info
