@@ -79,7 +79,7 @@ items:
 
 ### cancel\_event
 
-Cancels the original event.
+Cancel the original event.
 
 ```yaml
 type: cancel_event
@@ -87,7 +87,7 @@ type: cancel_event
 
 ### run
 
-Runs a list of functions in order. It's useful for functions that share the same conditions.
+Run a list of functions in order. It's useful for functions that share the same conditions.
 
 ```yaml
 type: run
@@ -99,7 +99,7 @@ functions: # required; maplist
 
 ### command
 
-Runs a command as a player or console.
+Run a command as a player, console or event.
 
 ```yaml
 type: command
@@ -115,7 +115,7 @@ as-event: false # optional; boolean; default: false
 
 ### message
 
-Sends a message/system actionbar message
+Send a message/system actionbar message
 
 ```yaml
 type: message
@@ -126,7 +126,7 @@ overlay: false # optional; default: false; false = chat box / true = actionbar
 
 ### actionBar
 
-Sends an actionbar
+Send an actionbar
 
 ```yaml
 type: actionbar
@@ -136,7 +136,7 @@ target: "self" # optional; enum[all, self]/player selector; default: self
 
 ### Title
 
-Sends a title
+Send a title
 
 ```yaml
 type: title
@@ -149,7 +149,7 @@ fade-out: 10 # optional; number; default: 5
 
 ### open\_window
 
-Opens a gui window
+Open a gui window
 
 ```yaml
 type: open_window #
@@ -171,7 +171,7 @@ z: <arg:position.z> # 可选; 数字; 默认值: <arg:position.z>
 
 ### place\_block
 
-Places a block
+Place a block
 
 ```yaml
 type: place_block
@@ -181,9 +181,37 @@ y: <arg:block.block_y> # optional; number; default: <arg:position.y>
 z: <arg:block.block_z> # optional; number; default: <arg:position.z>
 ```
 
+### update\_block\_property
+
+Update the properties of an existing block
+
+```yaml
+type: update_block_property
+properties: # required; key-value pair
+  axis: x
+  age: 7
+x: <arg:block.block_x> # optional; number; default: <arg:position.x>
+y: <arg:block.block_y> # optional; number; default: <arg:position.y>
+z: <arg:block.block_z> # optional; number; default: <arg:position.z>
+```
+
+### transform_block
+
+Transform the current block into another one, with properties preserved
+
+```yaml
+type: transform_block 
+block: default:palm_log # required
+properties:             # optional; key-value pair
+  property_a: b
+x: <arg:block.block_x> # optional; number; default: <arg:position.x>
+y: <arg:block.block_y> # optional; number; default: <arg:position.y>
+z: <arg:block.block_z> # optional; number; default: <arg:position.z>
+```
+
 ### drop\_loot
 
-Drops loots based on the give loot table
+Drop loots based on the give loot table
 
 ```yaml
 type: drop_loot
@@ -196,7 +224,7 @@ loot:
 
 ### update\_interaction\_tick
 
-Updates the tick when the last interaction ends
+Update the tick when the last interaction ends
 
 ```yaml
 type: update_interaction_tick
@@ -204,7 +232,7 @@ type: update_interaction_tick
 
 ### set\_count
 
-Sets the count of the current item in this event
+Set the count of the current item in this event
 
 ```yaml
 type: set_count
@@ -215,7 +243,7 @@ target: "self" # optional; enum[all, self]/player selector
 
 ### set\_food
 
-Sets the food level (0\~20) of the player
+Set the food level (0\~20) of the player
 
 ```yaml
 type: set_food
@@ -226,7 +254,7 @@ target: "self" # optional; enum[all, self]/player selector
 
 ### set\_saturation
 
-Sets the saturation(0\~10) of the player
+Set the saturation(0\~10) of the player
 
 ```yaml
 type: set_saturation
@@ -237,7 +265,7 @@ target: "self" # optional; enum[all, self]/player selector
 
 ### swing\_hand
 
-Swings the hand involved in this event or the hand specified in config
+Swing the hand involved in this event or the hand specified in config
 
 ```yaml
 type: swing_hand
@@ -246,7 +274,7 @@ hand: main_hand # optional; enum[main_hand, off_hand]; leave it empty to swing t
 
 ### particle
 
-Spawns a particle
+Spawn a particle
 
 ```yaml
 type: particle
@@ -299,7 +327,7 @@ duration: 10
 
 ### potion\_effect
 
-Adds a potion effect
+Add a potion effect
 
 ```yaml
 type: potion_effect
@@ -312,7 +340,7 @@ particles: true  # optional; boolean
 
 ### remove\_potion\_effect
 
-Removes a potion effect
+Remove a potion effect
 
 ```yaml
 type: remove_potion_effect
@@ -322,7 +350,7 @@ all: false  # optional; boolean; default: false
 
 ### leveler\_exp
 
-Adds skill/job experience
+Add skill/job experience
 
 ```yaml
 type: leveler_exp
@@ -333,7 +361,7 @@ count: 10  # required; number
 
 ### set\_cooldown
 
-Sets cooldown for player
+Set cooldown for player
 
 ```yaml
 type: set_cooldown
@@ -344,7 +372,7 @@ add: false # optional; boolean; default: false (Whether to accumulate cooldown t
 
 ### remove\_cooldown
 
-Removes cooldown for player
+Remove cooldown for player
 
 ```yaml
 type: remove_cooldown
@@ -354,7 +382,7 @@ all: false  # optional; boolean; default: false
 
 ### play\_sound
 
-Plays a sound
+Play a sound
 
 ```yaml
 type: play_sound
@@ -380,7 +408,7 @@ power: 1.0 # optional; number; default: 1.0
 
 ### spawn\_furniture
 
-Spawns a furniture
+Spawn a furniture
 
 ```yaml
 type: spawn_furniture
@@ -396,7 +424,7 @@ play-sound: true # optional; boolean; default: true
 
 ### remove\_furniture
 
-Removes a furniture
+Remove a furniture
 
 ```yaml
 type: remove_furniture
@@ -406,7 +434,7 @@ play-sound: true # optional; boolean; default: true
 
 ### replace\_furniture
 
-Replaces a furniture
+Replace a furniture
 
 ```yaml
 type: replace_furniture
@@ -423,7 +451,7 @@ play-sound: true # default: true
 
 ### teleport
 
-Teleports to a certain location
+Teleport to a certain location
 
 ```yaml
 type: teleport
@@ -437,7 +465,7 @@ world: world # optional; string;
 
 ### toast
 
-Sends a toast
+Send a toast
 
 ```yaml
 type: toast
@@ -448,7 +476,7 @@ icon: minecraft:stone # required; string
 
 ### damage
 
-Damages the target
+Damage the target
 
 ```yaml
 type: damage
@@ -459,7 +487,7 @@ damage-type: generic # optional; string; default: generic
 
 ### set\_variable
 
-Sets a variable
+Set a variable
 
 ```yaml
 type: set_variable
@@ -502,7 +530,7 @@ offers:
 
 ### remove\_entity
 
-Removes the entity in this context
+Remove the entity in this context
 
 ```yaml
 type: remove_entity
@@ -510,7 +538,7 @@ type: remove_entity
 
 ### if\_else
 
-Runs the first function that meets the specified conditions.
+Run the first function that meets the specified conditions.
 
 ```yaml
 type: if_else
@@ -534,7 +562,7 @@ rules:
 
 ### when
 
-Evaluates a source value and executes the functions of the first matching case. It's similar to a switch-case statement in programming languages.
+Evaluate a source value and executes the functions of the first matching case. It's similar to a switch-case statement in programming languages.
 
 ```yaml
 type: when

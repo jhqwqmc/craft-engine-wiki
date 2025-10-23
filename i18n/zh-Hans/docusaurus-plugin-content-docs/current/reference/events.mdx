@@ -182,6 +182,34 @@ y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
 z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
 ```
 
+### 更新方块属性
+
+更新某个方块的方块属性
+
+```yaml
+type: update_block_property
+properties:  # 必填; 键值对
+  axis: x
+  age: 7
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
+### 转换方块
+
+将当前方块转换为另一个方块并保留全部的属性
+
+```yaml
+type: transform_block
+block: default:palm_log # 必填；新方块
+properties:             # 可选; 键值对
+  property_a: b
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
 ### 掉落战利品
 
 根据给定的战利品表掉落物品
