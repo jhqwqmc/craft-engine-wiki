@@ -508,6 +508,54 @@ offers:
 type: remove_entity
 ```
 
+### 条件判断
+
+执行第一条所有条件均为真的规则所对应的函数
+
+```yaml
+type: if_else
+rules:
+  - conditions:
+      - type: permission
+        permission: group.admin
+    functions:
+      - type: command
+        command: say 管理员你好
+  - conditions:
+      - type: permission
+        permission: group.vip
+    functions:
+      - type: command
+        command: say VIP你好
+  - functions:
+      - type: command
+        command: say 玩家你好
+```
+
+### 条件匹配
+
+根据源数值进行匹配，并执行首个匹配案例对应的函数。其功能类似于编程语言中的 switch-case 语句
+
+```yaml
+type: when
+source: <papi:player_world>
+cases:
+  - when: "world"
+    functions: 
+      - type: message
+        message: "您位于主世界。"
+  - when: 
+      - "nether"
+      - "the_end"
+    functions: 
+      - type: message
+        message: "您正处于危险维度！"
+# 可选配置
+fallback:
+  - type: message
+    message: "您处于未知世界中。"
+```
+
 :::info
 更多函数即将到来...
 :::

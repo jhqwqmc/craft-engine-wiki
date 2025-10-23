@@ -508,6 +508,54 @@ Removes the entity in this context
 type: remove_entity
 ```
 
+### if\_else
+
+Runs the first function that meets the specified conditions.
+
+```yaml
+type: if_else
+rules:
+  - conditions:
+      - type: permission
+        permission: group.admin
+    functions:
+      - type: command
+        command: say hello admin
+  - conditions:
+      - type: permission
+        permission: group.vip
+    functions:
+      - type: command
+        command: say hello vip
+  - functions:
+      - type: command
+        command: say hello player
+```
+
+### when
+
+Evaluates a source value and executes the functions of the first matching case. It's similar to a switch-case statement in programming languages.
+
+```yaml
+type: when
+source: <papi:player_world>
+cases:
+  - when: "world"
+    functions: 
+      - type: message
+        message: "You are in the overworld."
+  - when: 
+      - "nether"
+      - "the_end"
+    functions: 
+      - type: message
+        message: "You are in a dangerous dimension!"
+# optional
+fallback:
+  - type: message
+    message: "You are in an unknown world."
+```
+
 :::info
 More functions are coming...
 :::
