@@ -25,7 +25,7 @@ Please note all configurations below pertain to equipment settings, not individu
 The creation method for 3D helmets is completely unrelated to **equipment.** Since many users have encountered difficulties when creating 3D helmets, I'm here to explain the correct way to create them and clarify some potential misconceptions you may have.
 
 <details>
-  <summary>3D Helemt</summary>
+  <summary>3D Helmet</summary>
 
   Armor items inherently come with an `equippable` component, which includes an option called `asset_id`. When this option is specified, Minecraft uses a **hardcoded renderer** to display the designated armor texture. This means that even if you assign a custom 3D item model to a diamond helmet-based item, it will still be rendered using the default **diamond helmet armor renderer** when worn by a player.
 
@@ -39,8 +39,8 @@ The creation method for 3D helmets is completely unrelated to **equipment.** Sin
 
   ```yaml
   items:
-    default:my_3d_helemt:
-      material: diamond_helemt
+    default:my_3d_helmet:
+      material: diamond_helmet
       data:
         equippable:
           slot: head
@@ -52,8 +52,8 @@ The creation method for 3D helmets is completely unrelated to **equipment.** Sin
 
   ```yaml
   items:
-    default:my_3d_helemt:
-      material: diamond_helemt
+    default:my_3d_helmet:
+      material: diamond_helmet
       client-bound-material: paper
   ```
 
