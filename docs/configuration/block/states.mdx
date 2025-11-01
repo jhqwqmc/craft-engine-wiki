@@ -81,6 +81,17 @@ Currently available `auto-state` options:
 - sugar_cane - Any sugar cane
 :::
 
+:::tip
+If multiple block appearances reference the same id, they will ultimately be assigned the same visual block state. This is helpful if you need multiple block states to share the same visual state.
+
+```yaml
+auto-state:
+  type: solid
+  id: namespace:id
+```
+
+:::
+
 #### 🎯 Using `state`: Precise Control Over Every Detail
 
 When you need to **precisely specify a particular state**, you should use the `state` parameter. This is crucial for blocks with multiple variants such as doors, fences, and trapdoors, as only precise control can achieve the expected collision box and appearance.

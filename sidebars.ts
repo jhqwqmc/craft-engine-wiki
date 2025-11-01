@@ -476,6 +476,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/budding_block",
                   label: '🌱 Budding Block',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/seat_block",
+                  label: '💺 Seat Block',
+                },
               ]
             },
             {
