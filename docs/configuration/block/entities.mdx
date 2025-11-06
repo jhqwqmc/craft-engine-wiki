@@ -69,7 +69,7 @@ blocks:
         - type: item_display
           item: default:sleeper_sofa # Required; string; specifies the item to render
           scale: 1.0 # Optional; number; default: 1
-          position: 0.5 # Optional; number; default: 0.5
+          position: 0.5,0.5,0.5 # Optional; number; default: 0.5
           translation: 0,0,0 # Optional; vector; default: 0,0,0
           pitch: 0.0 # Optional; number; default: 0
           yaw: 0.0 # Optional; number; default: 0
@@ -91,10 +91,33 @@ blocks:
             - type: text_display
               text: "Hello" # Required; string; specifies the text to render
               scale: 1.0 # Optional; number; default: 1
-              position: 0.5 # Optional; number; default: 0.5
+              position: 0.5,0.5,0.5 # Optional; number; default: 0.5
               translation: 0,0,0 # Optional; vector; default: 0,0,0
               pitch: 0.0 # Optional; number; default: 0
               yaw: 0.0 # Optional; number; default: 0
               rotation: 0.0 # Optional; number; default: 0
               billboard: FIXED # Optional; enum[FIXED, VERTICAL, HORIZONTAL, CENTER]; default: FIXED
+```
+
+### BetterModel
+
+```yaml
+entity-renderer:
+  - type: better_model
+    model: custom_model # Required; string; specifies the model to render
+    position: 0.5,0.5,0.5 # Optional; default: 0.5
+    yaw: 0 # Optional
+    pitch: 0 # Optional
+    sight-trace: true # Optional
+```
+
+### ModelEngine
+
+```yaml
+entity-renderer:
+  - type: model_engine
+    model: custom_model # Required; string; specifies the model to render
+    position: 0.5,0.5,0.5 # Optional; default: 0.5
+    yaw: 0 # Optional
+    pitch: 0 # Optional
 ```
