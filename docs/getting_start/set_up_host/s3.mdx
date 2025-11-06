@@ -18,21 +18,23 @@ resource-pack:
         bucket: ""
         access-key-id: ""
         access-key-secret: ""
+        # Optional options
+        use-environment-variables: false
         protocol: "https"
         path-style: false
         region: "auto"
         upload-path: "server_resource_pack.zip"
         disable-calculate-sha256: false
         validity: 10
-        # Optional CDN
-        # cdn:
-        #   domain: ""
-        #   protocol: "https"
         # Optional rate limiter
         rate-map:
           max-requests: 5
           reset-interval: 20 # seconds
-        # Optional proxy
+        ## Optional CDN
+        # cdn:
+        #   domain: ""
+        #   protocol: "https"
+        ## Optional proxy
         # proxy:
         #   host: "127.0.0.1"
         #   port: 7890

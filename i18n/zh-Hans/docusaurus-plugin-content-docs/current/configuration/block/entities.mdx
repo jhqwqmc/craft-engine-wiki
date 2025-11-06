@@ -100,3 +100,26 @@ blocks:
               rotation: 0.0 # 可选; 数字; 默认值: 0
               billboard: FIXED # 可选; 枚举[FIXED, VERTICAL, HORIZONTAL, CENTER]; 默认值: FIXED
 ```
+
+### BetterModel
+
+```yaml
+entity-renderer:
+  - type: better_model
+    model: custom_model # 必填; 字符串; 指定需要渲染的模型
+    position: 0.5,0.5,0.5 # 可选; 默认值: 0.5
+    yaw: 0 # 可选; 数字; 默认值: 0
+    pitch: 0 # 可选; 数字; 默认值: 0
+    sight-trace: true # 可选
+```
+
+### ModelEngine
+
+```yaml
+entity-renderer:
+  - type: model_engine
+    model: custom_model # 必填; 字符串; 指定需要渲染的模型
+    position: 0.5,0.5,0.5 # 可选; 默认值: 0.5
+    yaw: 0 # 可选; 数字; 默认值: 0
+    pitch: 0 # 可选; 数字; 默认值: 0
+```
