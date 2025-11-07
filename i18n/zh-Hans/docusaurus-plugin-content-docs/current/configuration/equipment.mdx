@@ -13,9 +13,20 @@ import Highlight from '@site/src/components/Highlight';
 
 CraftEngine 提供两种创建自定义装备的方式：基于**盔甲纹饰**（适用于 1.20+ 版本）或使用**可装备组件**（1.21.2 新增）。
 
-:::info
+:::warning
 
 请注意以下均为装备配置，非物品具体设定。要将这些配置应用到盔甲物品，请参阅[此文档](item/settings.mdx#equipment装备)。
+
+```yaml
+items:
+  my:custom_helmet:
+    settings:
+      equipment:
+        asset-id: my:custom_armor
+equipments:
+  my:custom_armor:
+    ...
+```
 
 :::
 
@@ -187,15 +198,16 @@ equipments:
 ## 基于盔甲纹饰
 <Highlight color="#0d9622ff">**1.20+**</Highlight><Highlight color="#0d9622ff">**Iris/Optifine着色器兼容**</Highlight><Highlight color="#e03f26ff">**盔甲纹饰不可用**</Highlight>
 
-当 CraftEngine 移除原版盔甲基础纹理后，装备时将呈现完全透明状态。通过对其应用自定义纹饰即可实现自定义盔甲纹理。但此方法存在一个限制——该盔甲后续无法再接受额外纹饰。
+当 CraftEngine 移除原版盔甲基础纹理后，装备时将呈现完全透明状态。通过对其应用自定义纹饰即可实现自定义盔甲纹理。此方法仅存在一个限制——该盔甲后续无法再接受额外纹饰。
 
-插件默认在 `config.yml` 中预置了原版盔甲牺牲选项，这些配置仅在您至少配置过一件基于纹饰的盔甲后才会生效。
+<details>
+  <summary>修复被“破坏”的原版盔甲</summary>
 
-:::info
+  问：被牺牲的盔甲还能正常显示吗？这是否意味着锁链甲或是我选定的那个盔甲完全不能使用了？
 
-问：被牺牲的盔甲还能正常显示吗？这是否意味着锁链甲完全不能使用了？
+  答：CraftEngine 预见了这种情况。解决方案出乎意料地简单（至少对 CraftEngine 而言）——我们通过应用特殊纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client-bound-data` 特性实现。
 
-答：CraftEngine 预见了这种情况。解决方案出乎意料地简单（至少对 CraftEngine 而言）——我们通过应用默认纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client-bound-data` 特性实现。
+  插件默认在 `config.yml` 中预置了原版盔甲牺牲选项，这些配置仅在您至少配置过一件基于纹饰的盔甲后才会生效。
 
 ```yaml
 # config.yml
@@ -212,13 +224,12 @@ items:
     client-bound-data:
       trim:
         pattern: chainmail # 用于保持原始外观的纹饰图案
-        material: custom
+        material: custom # it's a hardcoded material type
       hide-tooltip:
         - trim
   ...护腿、胸甲与靴子
 ```
-
-:::
+</details>
 
 此配置用于基于纹饰的盔甲套装。纹理路径无严格限制——CraftEngine将自动为您重定位纹理目录。
 
@@ -233,7 +244,7 @@ equipments:
 
 :::caution
 
-基于纹饰的盔甲仅支持 **humanoid** 和 **humanoid-leggings** 模型类型。
+基于纹饰的盔甲仅支持 **humanoid** 和 **humanoid-leggings** 模型类型。如果你遇到**盔甲无法正确应用纹理**或是**被踢出服务器**的问题，请尝试重新进入服务器，如果无法解决则是配置存在问题。
 
 :::
 
