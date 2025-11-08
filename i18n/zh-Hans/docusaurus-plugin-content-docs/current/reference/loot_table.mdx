@@ -62,6 +62,24 @@ type: furniture_item
 item: "default:fallback_item"
 ```
 
+:::tip
+
+你可以通过配置`weight`选项来决定选中此物品的相对概率
+
+```yaml
+loot:
+  pools:
+    - rolls: 1
+      entries:
+        - type: item
+          item: apple
+          weight: 1
+        - type: item
+          item: stone
+          weight: 1
+```
+:::
+
 ### exp
 
 掉落给定数量的经验值。
