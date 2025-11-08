@@ -62,6 +62,24 @@ type: furniture_item
 item: "default:fallback_item"
 ```
 
+:::tip
+
+You can configure the `weight` parameter for loot entries to determine their relative probability of being acquired.
+
+```yaml
+loot:
+  pools:
+    - rolls: 1
+      entries:
+        - type: item
+          item: apple
+          weight: 1
+        - type: item
+          item: stone
+          weight: 1
+```
+:::
+
 ### exp
 
 Drop a certain amount of experience.
@@ -121,6 +139,16 @@ type: apply_bonus
 enchantment: minecraft:fortune
 formula:
   type: ore_drops
+```
+
+### apply\_data
+
+Apply [item data](configuration/item/data.mdx) on the item
+
+```yaml
+type: apply_data
+data:
+  item-name: "Custom Item"
 ```
 
 ### set\_count

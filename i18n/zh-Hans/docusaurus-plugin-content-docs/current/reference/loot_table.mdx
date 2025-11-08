@@ -62,6 +62,24 @@ type: furniture_item
 item: "default:fallback_item"
 ```
 
+:::tip
+
+你可以通过配置`weight`选项来决定选中此物品的相对概率
+
+```yaml
+loot:
+  pools:
+    - rolls: 1
+      entries:
+        - type: item
+          item: apple
+          weight: 1
+        - type: item
+          item: stone
+          weight: 1
+```
+:::
+
 ### exp
 
 掉落给定数量的经验值。
@@ -121,6 +139,16 @@ type: apply_bonus
 enchantment: minecraft:fortune
 formula:
   type: ore_drops
+```
+
+### apply\_data
+
+对物品应用 [item data](configuration/item/data.mdx)
+
+```yaml
+type: apply_data
+data:
+  item-name: "自定义物品"
 ```
 
 ### set\_count
