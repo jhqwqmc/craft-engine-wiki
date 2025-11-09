@@ -481,6 +481,16 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/seat_block",
                   label: '💺 Seat Block',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/surface_spreading_block",
+                  label: '🌿 Surface Spreading Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/snowy_block",
+                  label: '❄️ Snowy Block',
+                },
               ]
             },
             {
