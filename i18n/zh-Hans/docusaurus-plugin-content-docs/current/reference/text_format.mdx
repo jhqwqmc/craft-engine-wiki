@@ -17,15 +17,15 @@ id: text_format
 例如： `%image_mm_<命名空间>:<路径>%` 如果你的图片在配置文件中定义的是 `default:icons` 那么只需要写 `%image_mm_default:icons%` 即可
 
 以下是几个例子：
-- `%image_mm_<default>:<icons>%` ❌️（应该去掉`<` 和 `>`）
+- `%image_mm_<default>:<icons>%` ❌️（应该去掉 `<` 和 `>`）
 - `%image_mm_default:icons%` ✔️
 - `%image_mm_default:icons:[行]:[列]%` ❌️（如果你不需要行和列，请删除这两个参数）
-- `%image_mm_default:icons:[0]:[1]%` ❌️（应该去掉`[` 和 `]`）
+- `%image_mm_default:icons:[0]:[1]%` ❌️（应该去掉 `[` 和 `]`）
 - `%imagemmdefault:icons:1:0%` ❌️ （不能去掉必要的 `_`）
 - `%image_mm_default:icons:1:0%` ✔️
-- `id: <test_namespace>:<test/my_path>` ❌️（应该去掉`<` 和 `>`）
+- `id: <test_namespace>:<test/my_path>` ❌️（应该去掉 `<` 和 `>`）
 - `id: test_namespace:test/my_path` ✔️
-- `<shift:_666_>` ❌️（应该去掉`_`）
+- `<shift:_666_>` ❌️（应该去掉 `_`）
 - `shift:666` ❌️（不是哥们你怎么连最外面的也去掉了）
 - `<viewerarg:player.name>` ❌️（不能去掉必要的 `_`）
 - `<shift:666>` ✔️
