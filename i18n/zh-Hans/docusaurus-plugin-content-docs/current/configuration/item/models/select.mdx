@@ -44,8 +44,8 @@ items:
 
 ### minecraft\:charge\_type
 
-> 弩内部包含的物品类型，检查物品堆叠的`charged_projectiles`组件
-> 如果此组件为空或不存在，则为`none`；如果组件内存在烟花火箭，则为`rocket`；其他情况下为`arrow`
+> 弩内部包含的物品类型，检查物品堆叠的 `charged_projectiles` 组件
+> 如果此组件为空或不存在，则为 `none`；如果组件内存在烟花火箭，则为 `rocket`；其他情况下为 `arrow`
 
 ### minecraft\:context\_dimension
 
@@ -61,15 +61,15 @@ items:
 
 ### minecraft\:main\_hand
 
-> 获取玩家的主手是左手（`left`）还是右手（`right`）；如果物品堆叠不在玩家身上，则为null，无法匹配
+> 获取玩家的主手是左手（`left`）还是右手（`right`）；如果物品堆叠不在玩家身上，则为 null，无法匹配
 
 ### minecraft\:trim\_material
 
-> 读取物品堆叠的`trim`组件并获取盔甲纹饰材料；如果物品堆叠无此组件则为null，无法匹配
+> 读取物品堆叠的 `trim` 组件并获取盔甲纹饰材料；如果物品堆叠无此组件则为null，无法匹配
 
 ### minecraft\:block\_state
 
-> 读取物品堆叠的`block_state`组件，并获取指定方块属性的值作为返回值。如果物品堆叠不存在此组件，或方块不具有对应方块属性，则返回null，无法匹配。
+> 读取物品堆叠的 `block_state` 组件，并获取指定方块属性的值作为返回值。如果物品堆叠不存在此组件，或方块不具有对应方块属性，则返回 null，无法匹配。
 
 ```yaml
 type: "minecraft:select"
@@ -80,7 +80,7 @@ block-state-property: "facing"
 ### minecraft\:component (1.21.5+)
 
 > 读取物品堆叠的[可持久化组件](https://zh.minecraft.wiki/w/%E6%95%B0%E6%8D%AE%E7%BB%84%E4%BB%B6)数据，获取此组件的数据作为返回值。指定不可持久化的组件或枚举值不符合对应组件的数据要求时此模型映射会直接加载失败。
-> 游戏会完全匹配物品模型映射指定的组件值和物品的组件值。例如，对于`custom_data`组件而言，`{a:data,b:true}`和`"{\"a\":\"data\",\"b\":true}"`最终都会被序列化为`{"a":"data","b":true}`，因此这两种写法尽管形式不同，但会被视为相同的组件值：枚举值同时指定会被游戏警告重复的枚举值，物品数据定义和枚举值定义使用任何一种形式都被视为匹配成功。由于游戏会完全匹配，因此不能单独筛选组件中某个键值对的精确值，例如枚举值`{"a":"data"}`不会匹配上述示例。
+> 游戏会完全匹配物品模型映射指定的组件值和物品的组件值。例如，对于 `custom_data` 组件而言，`{a:data,b:true}` 和 `"{\"a\":\"data\",\"b\":true}"` 最终都会被序列化为 `{"a":"data","b":true}`，因此这两种写法尽管形式不同，但会被视为相同的组件值：枚举值同时指定会被游戏警告重复的枚举值，物品数据定义和枚举值定义使用任何一种形式都被视为匹配成功。由于游戏会完全匹配，因此不能单独筛选组件中某个键值对的精确值，例如枚举值 `{"a":"data"}` 不会匹配上述示例。
 
 ```yaml
 type: "minecraft:select"
@@ -90,7 +90,7 @@ component: "minecraft:unbreakable"
 
 ### minecraft\:custom\_model\_data
 
-> 读取物品堆叠的`custom_model_data`组件中的strings，获取指定下标的字符串。如果下标超过strings的长度范围，或物品堆叠不存在`custom_model_data`组件，则返回null，无法匹配。
+> 读取物品堆叠的 `custom_model_data` 组件中的 strings，获取指定下标的字符串。如果下标超过 strings 的长度范围，或物品堆叠不存在 `custom_model_data` 组件，则返回 null，无法匹配。
 
 ```yaml
 type: "minecraft:select"

@@ -210,9 +210,9 @@ items:
 ```
 
 :::tip
-这对高延迟玩家尤其有益，能显著提升方块放置体验。**尤其是对于PVP来说**。
+这对高延迟玩家尤其有益，能显著提升方块放置体验。**尤其是对于 PVP 来说**。
 
-请注意：材质必须与视觉方块状态相匹配。 这意味着不能再使用`paper`或`nether_brick`等物品，而需使用`note_block`、`string`或`oak_leaves`等符合目标方块外观的材质。 
+请注意：材质必须与视觉方块状态相匹配。 这意味着不能再使用 `paper` 或 `nether_brick` 等物品，而需使用 `note_block`、`string` 或 `oak_leaves` 等符合目标方块外观的材质。
 
 ⚠️ **当然，这种方式存在局限：不适用于拥有多重视觉状态的自定义方块。例如，若对方向性方块强制应用方块状态组件，会出现短暂的视觉闪烁。** 
 
@@ -303,7 +303,7 @@ items:
 
 ### max-damage（最大耐久度）(1.20.5+)
 
-存储物品的最大耐久度，和`damage`组件一起控制物品能否被损坏。此组件不存在时若物品被损坏则游戏将最大耐久度视为0。
+存储物品的最大耐久度，和 `damage` 组件一起控制物品能否被损坏。此组件不存在时若物品被损坏则游戏将最大耐久度视为 0。
 
 ```yaml
 items:
@@ -372,9 +372,9 @@ trim:
   material: iron # 参阅下方的盔甲纹饰材料
 ```
 :::tip
-你可以从 [<Comment text="你将访问GitHub请准备合适的网络环境">**盔甲纹饰图案**</Comment>](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/data/minecraft/trim_pattern)
+你可以从 [<Comment text="你将访问 GitHub 请准备合适的网络环境">**盔甲纹饰图案**</Comment>](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/data/minecraft/trim_pattern)
 和
-[<Comment text="你将访问GitHub请准备合适的网络环境">**盔甲纹饰材料**</Comment>](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/data/minecraft/trim_material)
+[<Comment text="你将访问 GitHub 请准备合适的网络环境">**盔甲纹饰材料**</Comment>](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/data/minecraft/trim_material)
 获取到的文件名作为参数，不要带上 `.json` 后缀，并且请忽略以 `_` 开头的文件。
 :::
 
@@ -605,7 +605,7 @@ items:
 :::
 
 :::tip
-client-bound-data 对冒险模式中的玩家非常有用，它允许玩家在服务器端破坏某些真自定义方块。我建议在这里尽可能使用方块标签，而不是具体的方块id。这有助于解决一些客户端网络协议问题。
+client-bound-data 对冒险模式中的玩家非常有用，它允许玩家在服务器端破坏某些真自定义方块。我建议在这里尽可能使用方块标签，而不是具体的方块 id。这有助于解决一些客户端网络协议问题。
 
 ```yaml
 items:

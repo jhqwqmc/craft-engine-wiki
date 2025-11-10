@@ -248,7 +248,7 @@ Minecraft 将多个纹理合并成一张巨大的图像（称为纹理图集）�
 ❌ 7×7、13×13、19×19（非 2 的幂尺寸）\
 ❌ 17×32（混合有效/无效尺寸）
 
-**切勿将字体/GUI 纹理（例如，rank.png、HUD 元素）放置在与模型纹理（例如，block/、item/）相同的目录中。** 即使这些纹理未直接用于模型，Minecraft 的纹理图集系统在生成组合精灵表时会自动包含它们。这可能导致意外的视觉降级（mipmap级别）：
+**切勿将字体/GUI 纹理（例如，rank.png、HUD 元素）放置在与模型纹理（例如，block/、item/）相同的目录中。** 即使这些纹理未直接用于模型，Minecraft 的纹理图集系统在生成组合精灵表时会自动包含它们。这可能导致意外的视觉降级（mipmap 级别）：
 
 <details>
   <summary>Mipmap级别4和级别0的差异对比</summary>
@@ -351,7 +351,7 @@ Minecraft 将多个纹理合并成一张巨大的图像（称为纹理图集）�
   "credit": "Made with Blockbench",
   "textures": {
     "0": "tutorial:item/toxic_sword",
-    "particle": "tutorial:item/toxic_sword" // 指的是方块破坏、进食等的粒子效果。译者注：json不支持注释记得删掉这个注释
+    "particle": "tutorial:item/toxic_sword" // 指的是方块破坏、进食等的粒子效果。译者注：json 不支持注释记得删掉这个注释
   },
   "elements": [
     {
@@ -601,4 +601,4 @@ items:
 
 ## 调试
 
-如果你的模型显示为紫黑色方块或无法正确渲染，首先请检查你的服务器控制台——CraftEngine 会在那里记录大多数潜在错误。另外，也可以检查客户端日志来诊断资源包加载问题。
+如果你的模型显示为紫黑色方块或无法正确渲染，首先请检查你的服务器控制台 —— CraftEngine 会在那里记录大多数潜在错误。另外，也可以检查客户端日志来诊断资源包加载问题。

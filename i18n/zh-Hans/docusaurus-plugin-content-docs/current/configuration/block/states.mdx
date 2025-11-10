@@ -5,7 +5,7 @@ id: states
 
 ## 简介
 
-在 Minecraft 的方块系统中，每个方块都可以拥有一个或多个方块状态。例如，木头有不同朝向，树叶可以检测与树木的“距离”。这些状态共同决定了方块在游戏中的外观和物理行为。
+在 Minecraft 的方块系统中，每个方块都可以拥有一个或多个方块状态。例如，原木有不同朝向，树叶可以检测与树木的“距离”。这些状态共同决定了方块在游戏中的外观和物理行为。
 
 为了更好地理解插件如何运作，我们首先需要区分两个核心概念：
 
@@ -47,7 +47,7 @@ blocks:
 ### 视觉状态
 方块的视觉表现由 `auto-state` 或 `state` 这两个选项来控制。你可以根据自己对精度的需求，二选一。
 
-#### 🛠️ 使用 `auto-state`(自动状态)：让插件帮你选
+#### 🛠️ 使用 `auto-state`：让插件帮你选
 `auto-state` 的参数指向插件预设好的一组外观状态。这些状态都共享一些关键特性，比如拥有**相同的碰撞箱和一致的渲染属性**（例如是否支持透明）。
 
 - 它有什么用？
@@ -70,9 +70,9 @@ blocks:
 - higher_tripwire - 碰撞箱较大的绊线
 - tripwire - 任意绊线
 - note_block - 音符盒
-- mushroom_stem - 蘑菇茎
-- red_mushroom_block - 红蘑菇块
-- brown_mushroom_block - 棕蘑菇块
+- mushroom_stem - 蘑菇柄
+- red_mushroom_block - 红色蘑菇方块
+- brown_mushroom_block - 棕色蘑菇方块
 - mushroom - 蘑菇方块
 - solid - 任意实心方块（包括音符盒和蘑菇方块）
 - sapling - 任意树苗
@@ -91,7 +91,7 @@ auto-state:
 
 :::
 
-#### 🎯 使用 `state`(手动状态)：精准控制每个细节
+#### 🎯 使用 `state`：精准控制每个细节
 
 当你需要**精确指定某个特定状态**时，就应该使用 `state` 参数。这对于门、栅栏、活板门等多变体方块至关重要，只有精确控制，才能获得预期的碰撞箱和外观。
 
@@ -166,7 +166,7 @@ blocks:
 
 :::info
 
-如果你对如何配置 `path（模型路径）` 和 `generation（模型生成）` 等属性感到困惑，我们强烈建议你首先完成 **[入门教程](../../getting_start.mdx)**，它将帮助你系统地理解基本流程。
+如果你对如何配置 `path`（模型路径）和 `generation`（模型生成）等属性感到困惑，我们强烈建议你首先完成 **[入门教程](../../getting_start.mdx)**，它将帮助你系统地理解基本流程。
 
 当然，这里有一个简单的判断方法，可以帮助你快速上手：
 
@@ -282,7 +282,7 @@ custom_axis:
 
 ### 第二步：定义外观
 
-在第二步中，我们需要配置自定义方块的可能视觉外观。例如，一个木头方块需要三种方向，因此我们需要指定三种原版方块状态作为其视觉表现。
+在第二步中，我们需要配置自定义方块的可能视觉外观。例如，一个原木方块需要三种方向，因此我们需要指定三种原版方块状态作为其视觉表现。
 
 在下面配置中，`axisX`、`axisZ` 和 `axisY` 这些状态名称可以自由定义：
 
@@ -348,7 +348,7 @@ blocks:
 每个变体键下都有两个可选的配置选项 `appearance`（用于分配外观），`settings`（用于覆写设置）。下面我们通过一个树叶的配置示例，来帮助您理解变体是如何工作的：
 
 <details>
-  <summary>完整的states区域配置</summary>
+  <summary>完整的 states 区域配置</summary>
 
 ```yaml
 blocks:
@@ -433,7 +433,7 @@ blocks:
 blocks:
   default:chinese_lantern:
     state:
-      id: 0 # 指定该方块的内部ID为0
+      id: 0 # 指定该方块的内部 ID 为 0
       auto-state: note_block
       model:
         path: "minecraft:block/custom/chinese_lantern"
