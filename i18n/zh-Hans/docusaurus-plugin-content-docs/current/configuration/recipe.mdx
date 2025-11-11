@@ -368,10 +368,14 @@ default:topaz_bow:
 
 ```yaml
 post-processors:
+  # 合并结果和原料的附魔，而不是保留其中之一
+  - type: merge_enchantments
+
   # 保留指定组件（1.20.5+）
   - type: keep_components
     components:
       - minecraft:enchantments
+
   # 保留指定NBT标签（1.20-1.20.4）
   - type: keep_tags
     tags:
