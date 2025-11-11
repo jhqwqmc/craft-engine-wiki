@@ -370,10 +370,12 @@ If you need more precise control over which components are preserved, you should
 post-processors:
   # Merge the enchantments of the final product and the original item, rather than choosing one of them.
   - type: merge_enchantments
+
   # Keep the specified components (1.20.5+)
   - type: keep_components
     components:
       - minecraft:enchantments
+
   # Keep the specified nbt tags (1.20-1.20.4)
   - type: keep_tags
     tags:
