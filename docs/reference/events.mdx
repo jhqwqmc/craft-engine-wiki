@@ -601,6 +601,7 @@ Cycle the value of a block property
 ```yaml
 type: cycle_block_property
 property: axis # required; string
+inverse: <arg:player.is_sneaking> # optional; number; default: <arg:player.is_sneaking>
 x: <arg:block.block_x> # optional; number; default: <arg:position.x>
 y: <arg:block.block_y> # optional; number; default: <arg:position.y>
 z: <arg:block.block_z> # optional; number; default: <arg:position.z>
