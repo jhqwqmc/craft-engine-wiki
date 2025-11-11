@@ -76,13 +76,33 @@ items:
 
 控制物品提示框中所显示的描述信息。
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     data:
       lore: 
         - "我去这鱼竿直接把我24K狗眼闪瞎了"
 ```
+
+:::info
+
+出于性能考虑，当我们需要动态将一行描述文本分割为多行时，需要更复杂的配置。以下是高级描述文本配置格式，该格式更为精细，同时提供了更强的灵活性。"priority"（优先级）决定了文本段的最终显示位置——优先级数值越低，文本段将越靠近顶部。
+
+```yaml
+lore:
+  - content: 
+      - "hello"
+      - 123456
+  - content: "优先级 2"
+    priority: 2
+  - content: "优先级 1"
+    priority: 1
+  - content: "此行继承上一行的优先级"
+  - content: "分割\n此行文本"
+    split-lines: true
+```
+
+:::
 
 ### overwritable-lore（可覆写的物品提示框中的描述信息）
 
@@ -133,6 +153,18 @@ items:
 
 :::tip
 当物品类型为附魔书时，任何魔咒都将自动转换为“无活性”的魔咒。
+
+你可以添加merge选项来决定是否和物品已有的附魔合并，这对配方的结果后处理器很有用。
+```yaml
+items:
+  default:topaz_rod:
+    data:
+      enchantment:
+        merge: true
+        enchantments:
+          minecraft:sharpness: 1
+          custom:enchant: 3
+```
 :::
 
 ### dyed-color（所染颜色）
