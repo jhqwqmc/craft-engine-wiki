@@ -176,6 +176,17 @@ items:
       - minecraft:item/custom/topaz_crossbow_firework
 ```
 
+### Shield
+
+```yaml
+items:
+  default:shield_3d:
+    material: shield
+    models:
+      - minecraft:item/custom/shield_3d
+      - minecraft:item/custom/shield_3d_blocking
+```
+
 :::tip
 If you already have model json files, you can directly specify the model path to apply the simplified model.
 
@@ -196,16 +207,30 @@ items:
 ```
 :::
 
-### Shield
+:::tip
+Normally, when you have only specified the textures, the item's model JSON path is automatically assigned. You can manually specify the path using the 'model' option, as shown in the example below.
 
 ```yaml
 items:
-  default:shield_3d:
-    material: shield
-    models:
-      - minecraft:item/custom/shield_3d
-      - minecraft:item/custom/shield_3d_blocking
+  default:ender_pearl_flower_seeds:
+    material: paper
+    model: minecraft:item/custom/ender_pearl_flower_seeds
+    texture: minecraft:item/custom/ender_pearl_flower_seeds
 ```
+
+```yaml
+items:
+  default:topaz_rod:
+    material: fishing_rod
+    models:
+      - minecraft:item/custom/topaz_rod
+      - minecraft:item/custom/topaz_rod_cast
+    textures:
+      - minecraft:item/custom/topaz_rod
+      - minecraft:item/custom/topaz_rod_cast
+```
+
+:::
 
 ## Legacy Model
 
