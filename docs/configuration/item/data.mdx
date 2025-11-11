@@ -82,6 +82,26 @@ items:
         - "What a shiny rod!"
 ```
 
+:::info
+
+For performance considerations, more complex configuration is required when we need to dynamically split a line of lore into multiple lines. Below is the advanced lore configuration format, which is more intricate but offers greater flexibility. The "priority" determines the final position of the text segment—the lower the priority, the closer it will be to the top.
+
+```yml
+lore:
+  - content: 
+      - "hello"
+      - 123456
+  - content: "Priority 2"
+    priority: 2
+  - content: "Priority 1"
+    priority: 1
+  - content: "This line inherits the the priority of the above one"
+  - content: "Split\nThis Line"
+    split-lines: true
+```
+
+:::
+
 ### overwritable-lore
 
 This is a specialized data type designed for `client-bound-data`. The `overwritable-lore` will only be applied if the item has no existing lore. The name `overwritable-lore` reflects its behavior—it prioritizes and displays lore set by other plugins. For example, if a shop plugin is compatible with CraftEngine, you can purchase a CraftEngine item from the shop without the client-bound-data `lore` overriding the shop item's description.
@@ -131,6 +151,18 @@ items:
 
 :::tip
 When the item type is an enchanted book, any enchantments will automatically be converted to stored enchantments.
+
+You can add the `merge` option to decide whether to merge with the existing enchantments on the item. This is useful for the result post-processor of recipes.
+```yaml
+items:
+  default:topaz_rod:
+    data:
+      enchantment:
+        merge: true
+        enchantments:
+          minecraft:sharpness: 1
+          custom:enchant: 3
+```
 :::
 
 ### dyed-color
