@@ -6,7 +6,7 @@ id: datapack
 Visit https://misode.github.io/ for better datapack development environment.
 :::
 
-## Blocks
+## Block State Provider
 
 CraftEngine allows you to use custom blocks in datapacks, enabling terrain generation, trees, ore veins, and more through datapack configuration.
 
@@ -32,15 +32,23 @@ Here's a tree configuration example for Minecraft 1.21.4 using CraftEngine:
       }
     },
     "trunk_provider": {
-      "type": "minecraft:simple_state_provider",
+      "type": "craftengine:simple_state_provider",
       "state": {
-        "Name": "craftengine:custom_0"
+        "Name": "default:palm_log"
+        "Properties": {
+          "axis": "y"
+        }
       }
     },
     "foliage_provider": {
-      "type": "minecraft:simple_state_provider",
+      "type": "craftengine:simple_state_provider",
       "state": {
-        "Name": "craftengine:custom_57"
+        "Name": "default:palm_leaves",
+        "Properties": {
+          "distance": "7",
+          "persistent": "false",
+          "waterlogged": "false"
+        }
       }
     },
     "trunk_placer": {
@@ -64,8 +72,64 @@ Here's a tree configuration example for Minecraft 1.21.4 using CraftEngine:
 }
 ```
 
+![](/img/palm_tree.png)
+
 :::tip
+Compared to the native Minecraft datapack, the main difference is that the namespace has been changed from `minecraft` to `craftengine`, while all other configuration formats remain the same. Currently, CraftEngine supports the following block state types:
+
+- `craftengine:simple_state_provider`
+- `craftengine:weighted_state_provider`
+- `craftengine:rotated_block_provider`
+- `craftengine:randomized_int_state_provider`
+
+The usage and effects of these types are consistent with their counterparts in the native Minecraft datapack.
+:::
+
+## Configured feature
+
+When placing double-height plants or other multi-state blocks, Minecraft's native placement logic suffers from hardcoded limitations that often lead to errors such as only generating the bottom half. To address this, CraftEngine introduces a new configured feature type called `craftengine:simple_block`. While its usage is similar to `minecraft:simple_block`, it provides enhanced compatibility and better handling for multi-state blocks within CraftEngine.
+
+```json
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "feature": {
+      "feature": {
+        "type": "craftengine:simple_block",
+        "config": {
+          "to_place": {
+            "type": "craftengine:simple_state_provider",
+            "state": {
+              "Name": "default:palm_door"
+            }
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "blocks": "minecraft:air"
+          }
+        }
+      ]
+    },
+    "tries": 96,
+    "xz_spread": 7,
+    "y_spread": 3
+  }
+}
+```
+
+![](/img/double_block_generation.png)
+
+:::caution
+
+Please note: custom IDs are currently only resolved for feature types registered directly through CraftEngine. Due to some hardcoded vanilla limitations, you may need to use the internal block ID (e.g., `craftengine:custom_0`) in certain contexts where the CraftEngine ID is not recognized.
+
 Click [**here**](../reference/commands.mdx#get-block-internal-id) to learn how to obtain the real block ID of a custom block.
+
 :::
 
 ## Loots
