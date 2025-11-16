@@ -8,7 +8,7 @@ id: datapack
 译者注：网站的右上角的地球图案点击拉到最下面可以切换为简体中文。
 :::
 
-## 方块状态
+## 方块状态提供器
 
 CraftEngine 允许你在数据包里使用自定义方块，这样就能使用数据包生成地形、树木，矿脉等。
 
@@ -34,15 +34,23 @@ CraftEngine 允许你在数据包里使用自定义方块，这样就能使用�
       }
     },
     "trunk_provider": {
-      "type": "minecraft:simple_state_provider",
+      "type": "craftengine:simple_state_provider",
       "state": {
-        "Name": "craftengine:custom_0"
+        "Name": "default:palm_log"
+        "Properties": {
+          "axis": "y"
+        }
       }
     },
     "foliage_provider": {
-      "type": "minecraft:simple_state_provider",
+      "type": "craftengine:simple_state_provider",
       "state": {
-        "Name": "craftengine:custom_57"
+        "Name": "default:palm_leaves",
+        "Properties": {
+          "distance": "7",
+          "persistent": "false",
+          "waterlogged": "false"
+        }
       }
     },
     "trunk_placer": {
@@ -66,8 +74,64 @@ CraftEngine 允许你在数据包里使用自定义方块，这样就能使用�
 }
 ```
 
+![](/img/palm_tree.png)
+
 :::tip
+与Minecraft原版数据包相比，主要区别在于命名空间由 `minecraft` 变更为 `craftengine`，其余配置格式保持一致。目前，CraftEngine 支持以下方块状态类型：
+
+- `craftengine:simple_state_provider`
+- `craftengine:weighted_state_provider`
+- `craftengine:rotated_block_provider`
+- `craftengine:randomized_int_state_provider`
+
+上述类型的用法及效果均与Minecraft原版数据包中同名类型相同。
+:::
+
+## 已配置的地物
+
+在放置双层植物或其他由多个状态组成的方块时，Minecraft 原生的放置逻辑存在硬编码问题，常导致仅生成下半部分等错误。为此，CraftEngine 引入了一种新的已配置地物类型 `craftengine:simple_block`，其用法与 minecraft:simple_block 类似，但针对 CraftEngine 中的多状态方块提供了更完善的兼容性处理。
+
+```json
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "feature": {
+      "feature": {
+        "type": "craftengine:simple_block",
+        "config": {
+          "to_place": {
+            "type": "craftengine:simple_state_provider",
+            "state": {
+              "Name": "default:palm_door"
+            }
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "blocks": "minecraft:air"
+          }
+        }
+      ]
+    },
+    "tries": 96,
+    "xz_spread": 7,
+    "y_spread": 3
+  }
+}
+```
+
+![](/img/double_block_generation.png)
+
+:::caution
+
+尽管 CraftEngine 功能强大，但其原生机制并未在所有场景下都适配自定义标识符。目前，仅有通过 CraftEngine 直接注册的特性类型能自动解析自定义ID。若您遇到因硬编码限制而不支持直接使用 CraftEngine ID 的情况，请改用其内部对应的真实方块ID，例如 `craftengine:custom_0`。
+
 点击[**这里**](../reference/commands.mdx#get-block-internal-id)了解如何获取自定义方块的真实方块命名空间ID。
+
 :::
 
 ## 战利品
