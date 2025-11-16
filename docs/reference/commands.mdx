@@ -153,7 +153,7 @@ This command is used to retrieve the server-side real block name corresponding t
 
 :::tip
 
-**Q**: Why must we use the real block namespace ID (e.g., `craftengine:custom_666`) in native Minecraft data packs, instead of a name like `default:palm_log`?
+**Q:** Why must we use the real block namespace ID (e.g., `craftengine:custom_666`) in native Minecraft data packs, instead of a name like `default:palm_log`?
 
 **A:** Because the configuration file is only loaded after the server starts, while datapacks are loaded much earlier during server initialization. The server cannot recognize a non-existent block ID at this stage. To ensure that pre-registered custom blocks can adapt to the latest user configurations, CraftEngine employs a container-style dynamic binding solution.
 
