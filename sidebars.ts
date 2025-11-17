@@ -240,6 +240,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/item/behaviors/wall_block_item",
                   label: '🧱 Wall Block Item',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/item/behaviors/ceiling_block_item",
+                  label: '⬇️ Ceiling Block Item',
+                },
               ]
             },
             {
