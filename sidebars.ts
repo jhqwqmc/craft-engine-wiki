@@ -245,6 +245,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/item/behaviors/ceiling_block_item",
                   label: '⬇️ Ceiling Block Item',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/item/behaviors/ground_block_item",
+                  label: '⬆️ Ground Block Item',
+                },
               ]
             },
             {
