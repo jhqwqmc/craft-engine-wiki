@@ -62,33 +62,33 @@ import Highlight from '@site/src/components/Highlight';
 
 ## %checkceitem\_%
 
-`checkceitem` 占位符用于检查玩家物品栏中的物品，可用于菜单插件检查是否满足有可售卖物品的情况等。
+`checkceitem` 占位符用于在其他菜单插件中检查玩家物品栏的 CraftEngine 物品。
 
 ### %checkceitem_count_\<命名空间\>:\<路径\>%
 
-返回玩家物品栏中指定物品的数量
+返回玩家物品栏中指定物品的数量。
 
 ### %checkceitem_has_\<命名空间\>:\<路径\>:\[数量\]%
 
-返回玩家物品栏中是否有指定数量的物品
+返回玩家物品栏中是否有指定数量的物品。
 
 ### %checkceitem_id_\[槽位\]%
 
-槽位可写不小于 0 的数字，或者 `main_hand` 和 `off_hand` 用于分别指定主手和副手槽位 \
-返回玩家物品栏中指定槽位物品的命名空间ID
+槽位可写不小于 0 的数字，或者 `main_hand` 和 `off_hand` 用于分别指定主手和副手槽位。 \
+返回玩家物品栏中指定槽位物品的命名空间ID。
 
-![](/img/placeholderapi_5.png)
+![](/img/placeholderapi_4.png)
 
 ### %checkceitem_iscustom_\[槽位\]%
 
-槽位可写不小于 0 的数字，或者 `main_hand` 和 `off_hand` 用于分别指定主手和副手槽位 \
-返回玩家物品栏中指定槽位物品是否为自定义物品
+槽位可写不小于 0 的数字，或者 `main_hand` 和 `off_hand` 用于分别指定主手和副手槽位。 \
+返回玩家物品栏中指定槽位物品是否为自定义物品。
 
-![](/img/placeholderapi_6.png)
+![](/img/placeholderapi_5.png)
 
 :::tip
 
-你可以查阅下图来确定槽位的索引 \
-![](/img/placeholderapi_4.png)
+物品槽位数字 \
+![](/img/items_slot_number.png)
 
 :::
