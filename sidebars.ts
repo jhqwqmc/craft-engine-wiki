@@ -501,6 +501,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/snowy_block",
                   label: '❄️ Snowy Block',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/hangable_block",
+                  label: '🚟 Hangable Block',
+                },
               ]
             },
             {

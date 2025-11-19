@@ -315,6 +315,10 @@
     "message": "❄️ 覆雪方块",
     "description": "教程侧边栏中'覆雪方块'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.🚟 Hangable Block": {
+    "message": "🚟 可悬挂方块",
+    "description": "教程侧边栏中'可悬挂方块'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",
     "description": "教程侧边栏中'方块实体'文档项的标签"
