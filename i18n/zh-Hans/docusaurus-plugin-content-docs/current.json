@@ -135,6 +135,14 @@
     "message": "🧱 墙面方块物品",
     "description": "教程侧边栏中'墙面方块物品'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.⬇️ Ceiling Block Item": {
+    "message": "⬇️ 天花板方块物品",
+    "description": "教程侧边栏中'天花板方块物品'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.⬆️ Ground Block Item": {
+    "message": "⬇️ 地面方块物品",
+    "description": "教程侧边栏中'地面方块物品'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🔧 Block Settings": {
     "message": "🔧 方块设置",
     "description": "教程侧边栏中'方块设置'文档项的标签"
@@ -306,6 +314,10 @@
   "sidebar.tutorialSidebar.doc.❄️ Snowy Block": {
     "message": "❄️ 覆雪方块",
     "description": "教程侧边栏中'覆雪方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🚟 Hangable Block": {
+    "message": "🚟 可悬挂方块",
+    "description": "教程侧边栏中'可悬挂方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",
