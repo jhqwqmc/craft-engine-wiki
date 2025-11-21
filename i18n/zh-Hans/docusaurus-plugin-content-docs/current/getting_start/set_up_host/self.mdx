@@ -20,7 +20,7 @@ resource-pack:
 +       ip: "你服务器的IP" # 例如 111.222.333.444
           port: 8163
           protocol: "http"
-          # 拒绝非Minecraft客户端请求
+          # 拒绝非 Minecraft 客户端请求
           deny-non-minecraft-request: true
           # 生成一次性限时的下载链接
           one-time-token: true
@@ -29,8 +29,8 @@ resource-pack:
             max-bandwidth-per-second: 5_000_000 # 5MB/s
             # 每个玩家保障的最低下载速度，确保并发下载时仍能保持可接受的下载性能
             min-download-speed-per-player: 50_000 # 50KB/s
-            # 防止单个IP在短时间内发送过多资源包下载请求
-            qps-per-ip: 5/60 #  5 requests per 60 seconds
+            # 防止单个 IP 在短时间内发送过多资源包下载请求
+            qps-per-ip: 5/60 # 每 60 秒 5 次请求
 `}
 </DiffViewer>
 
