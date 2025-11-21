@@ -53,3 +53,36 @@ Return raw shift characters
 Alternatively, you can display custom images through CraftEngine's packet interception. Please refer to [**this page**](../configuration/image.mdx#compatibility-with-other-plugins) for details.
 
 :::
+
+## %checkceitem\_%
+
+The `checkceitem` palceholder helps you detect CraftEngine items in certain menu plugins.
+
+### %checkceitem\_count\_namespace:id%
+
+Returns the quantity of the specified item in the player's inventory.
+
+### %checkceitem\_has\_namespace:id\:\[amount\]%
+
+Returns whether the player's inventory contains the specified quantity of the item.
+
+### %checkceitem\_id\_\[slot\]%
+
+The slot can be a non-negative number (>= 0), or `main_hand` and `off_hand` to specify the main hand and off-hand slots, respectively. \
+Returns the resource location of the item in the specified slot.
+
+![](/img/placeholderapi_4.png)
+
+### %checkceitem\_iscustom\_\[slot\]%
+
+The slot can be a non-negative number (>= 0), or `main_hand` and `off_hand` to specify the main hand and off-hand slots, respectively. \
+Returns whether the item in the specified slot is a custom item.
+
+![](/img/placeholderapi_5.png)
+
+:::tip
+
+Items slot number \
+![](/img/items_slot_number.png)
+
+:::

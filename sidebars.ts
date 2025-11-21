@@ -240,6 +240,16 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/item/behaviors/wall_block_item",
                   label: '🧱 Wall Block Item',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/item/behaviors/ceiling_block_item",
+                  label: '⬇️ Ceiling Block Item',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/item/behaviors/ground_block_item",
+                  label: '⬆️ Ground Block Item',
+                },
               ]
             },
             {
@@ -490,6 +500,11 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/block/behaviors/snowy_block",
                   label: '❄️ Snowy Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/hangable_block",
+                  label: '🚟 Hangable Block',
                 },
               ]
             },
