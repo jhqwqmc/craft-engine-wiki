@@ -60,6 +60,40 @@ Heads up: If two templates have the same setting, the one below will overwrite t
 
 ![](/img/template_2.avif)
 
+## Merges
+
+Merges deeply combines two config sections, including all lists - nothing gets left behind. Basically, merges function almost exactly like multiple templates.
+
+```yaml
+items:
+  craftengine:custom_bread:
+    template: craftengine:apple_template
+    arguments:
+      nutrition: 1
+      saturation: 2.5
+    merges:
+      data:
+        food:
+          can-always-eat: true
+```
+
+## Overrides
+
+Overrides completely replace whatever's in the specified config path—including lists and maps. No merging, just a full swap.
+
+```yaml
+items:
+  craftengine:custom_bread:
+    template: craftengine:apple_template
+    arguments:
+      nutrition: 1
+      saturation: 2.5
+    overrides:
+      material: bread
+```
+
+![](/img/template_4.avif)
+
 ## Arguments
 
 You can define parameters in template using `${xxx}`, like `${nutrition}` or `${saturation}`.  Then, when calling the template, use the `arguments` section to set the parameter values. Here's a quick example:
@@ -82,6 +116,15 @@ items:
 
 ![](/img/template_3.avif)
 
+Template parameters are applied sequentially. This means that a parameter you have just defined is immediately available for use in any subsequent parameter.
+
+```yaml
+arguments:
+  arg1: topaz
+  arg2: helmet
+  arg3: ${arg1}_${arg2}
+```
+
 :::info
 
 If you need to use curly braces `{}` as normal text (not as parameters), just escape them with a backslash like `\{` or `\}`. 
@@ -92,107 +135,123 @@ If you need to use curly braces `{}` as normal text (not as parameters), just es
 
 :::tip
 
+In addition, there are two special parameters, `${__NAMESPACE__}` and `${__ID__}`, which are automatically derived from the resource location of the current non-template entry and passed into any referenced template. For example:
+
+```yml
+items:
+  default:palm_log:
+    template: default:my_template
+templates:
+  default:my_template:
+    data: 
+      item-name: "<lang:item.${__NAMESPACE__}.${__ID__}>"
+```
+
+```yml
+items:
+  default:palm_log:
+    data:
+      item-name: "<lang:item.default.palm_log>"
+```
+
+:::
+
+### Default Values
+
 To set default values for parameters, add `:-` after the parameter name - for example:
 
 - `${nutrition:-1}`
 - `${saturation:-2.5d}`
 - `${map:-{aa:bb,cc:ddd}}`
 - `${string:-"1234"}`
+- `${nullable:-null}`
 
 The default values follow Minecraft's SNBT format (the same format used when specifying NBT data in commands).
 
-In addition, there are two special parameters, `${__NAMESPACE__}` and `${__ID__}`. These are automatically taken from the **resource location** of the current non-template entry and passed into any referenced template. For example:
+### Additional Argument Types
+
+While most parameters are simple strings or numbers, some scenarios benefit from more user-friendly options. The extended parameter types were created for these cases.
+
+- **list**
 
 ```yml
-items:
-  default:palm_log:
-    # Within this block, ${__NAMESPACE__} and ${__ID__} will be "default" and "palm_log"
-    ...
-blocks:
-  default:palm_log:
-    # Same here: "default" and "palm_log"
-    ...
-furniture:
-  default:bench:
-    # Here they will be "default" and "bench"
-    ...
-categories:
-  default:palm_tree:
-    # Here they will be "default" and "palm_tree"
-    ...
-templates:
-  default:my_template:
-    # Note: inside a template block, ${__NAMESPACE__} and ${__ID__} come from the entry that references the template, not from the template’s own resource location
-    item: ${__NAMESPACE__}:${__ID__}
-    item-name: "<lang:item.${__NAMESPACE__}.${__ID__}>"
+arguments:
+  arg1:
+    - value1
+    - value2
+```
+
+- **map**
+
+```yml
+arguments:
+  arg_1:
+    option1: value1
+    option2: value2
+```
+
+:::caution
+
+If a map used as a parameter contains the `type` key and should not be interpreted as a parameter type, you must add the `__skip_template_argument__` marker.
+
+```yaml
+arguments:
+  hitbox:
+    __skip_template_argument__: {}
+    type: shulker
+    scale: 2
+    peek: 100
 ```
 
 :::
 
-## Overrides
+- **condition**
 
-Overrides completely replace whatever's in the specified config path—including lists and maps. No merging, just a full swap.
+It selects a parameter value based on a condition. This allows the conversion of some string-required parameters into a boolean value.
 
-```yaml
+```yml
+arguments:
+  leaves_base_model:
+    type: condition
+    condition: ${tintable:-false}
+    on-true: leaves
+    on-false: cube_all
+```
+
+- **to_upper_case** / **to_lower_case**
+
+```yml
 items:
-  craftengine:custom_bread:
-    template: craftengine:apple_template
+  default:test:
+    template: mmoitems:rarity_item
     arguments:
-      nutrition: 1
-      saturation: 2.5
-    overrides:
-      material: bread
-```
-
-![](/img/template_4.avif)
-
-## Merges
-
-Merges deeply combines two config sections, including all lists - nothing gets left behind. Basically, merges function almost exactly like multiple templates.
-
-```yaml
-items:
-  craftengine:custom_bread:
-    template: craftengine:apple_template
+      rarity: common
+      name: "Test Item"
+templates:
+  mmoitems:rarity_item:
+    template: mmoitems:rarity_item/internal
     arguments:
-      nutrition: 1
-      saturation: 2.5
-    merges:
-      data:
-        food:
-          can-always-eat: true
+      rarity.uppercase:
+        type: to_upper_case
+        value: "${rarity}"
+        locale: en
+  mmoitems:rarity_item/internal:
+    data:
+      item-name: "<!i><white><image:${rarity}> ${name}"
+      nbt:
+        MMOITEMS_ITEM_RARITY: ${rarity.uppercase} # I don't use MMOItems so I'm not sure if 
 ```
 
-## Tips
+- **self_increase_int**
 
-:::tip
+Whenever `${id}` is replaced, an increment or decrement operation is performed.
 
-You can use parameters within configuration keys despite the feature being rarely needed.
-
-```yaml
-templates:
-  craftengine:example:
-    "${argument}": value
-```
-
-You can also use parameters within template lists, overrides, and merges.
-
-```yaml
-templates:
-  default:settings/ore:
-    template:
-      - default:sound/stone
-      - default:pickaxe_power/level_${break_power}
-    overrides:
-      push-reaction: NORMAL
-      is-redstone-conductor: true
-      is-suffocating: true
-      instrument: BASEDRUM
-      can-occlude: true
-      map-color: ${map_color}
-      tags:
-        - minecraft:mineable/pickaxe
-    merges:
-      hardness: ${hardness}
-      resistance: 3.0
+```yml
+arguments:
+  id:
+    type: self_increase_int
+    from: 0
+    to: 20
+    step: 1
+    step-interval: 1
 ```
