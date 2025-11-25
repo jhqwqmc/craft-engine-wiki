@@ -168,6 +168,16 @@ To set default values for parameters, add `:-` after the parameter name - for ex
 
 The default values follow Minecraft's SNBT format (the same format used when specifying NBT data in commands).
 
+:::tip
+
+Default values also support recursively nested parameters, such as:
+
+```yaml
+item-name: "<!i><white>${arg1:-'${arg2:-\'${arg3:-abc}\'}'}"
+```
+
+:::
+
 ### Additional Argument Types
 
 While most parameters are simple strings or numbers, some scenarios benefit from more user-friendly options. The extended parameter types were created for these cases.
