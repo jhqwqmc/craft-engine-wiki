@@ -218,6 +218,23 @@ arguments:
     on-false: cube_all
 ```
 
+- **when**
+
+It selects a value by matching the source value against a set of predefined cases. This allows mapping different input values to specific outputs, with an optional fallback value for unmatched cases.
+
+```yml
+arguments:
+  slot: 
+    type: when
+    source: ${part}
+    when:
+      helmet: head
+      chestplate: chest
+      leggings: legs
+      boots: feet
+    fallback: any
+```
+
 - **to_upper_case** / **to_lower_case**
 
 ```yml
