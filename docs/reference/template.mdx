@@ -240,23 +240,23 @@ arguments:
 ```yml
 items:
   default:test:
-    template: mmoitems:rarity_item
+    template: mmoitems:tier_item
     arguments:
-      rarity: common
+      tier: common
       name: "Test Item"
 templates:
-  mmoitems:rarity_item:
-    template: mmoitems:rarity_item/internal
+  mmoitems:tier_item:
+    template: mmoitems:tier_item/internal
     arguments:
-      rarity.uppercase:
+      tier.uppercase:
         type: to_upper_case
-        value: "${rarity}"
+        value: "${tier}"
         locale: en
-  mmoitems:rarity_item/internal:
+  mmoitems:tier_item/internal:
     data:
-      item-name: "<!i><white><image:${rarity}> ${name}"
+      item-name: "<!i><white><image:${tier}> ${name}"
       nbt:
-        MMOITEMS_ITEM_RARITY: ${rarity.uppercase} # I don't use MMOItems so I'm not sure if 
+        MMOITEMS_TIER: ${tier.uppercase}
 ```
 
 - **self_increase_int**
