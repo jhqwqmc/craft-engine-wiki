@@ -282,3 +282,15 @@ arguments:
     step: 1
     step-interval: 1
 ```
+
+- **expression**
+
+Execute an expression and convert it to the desired numeric type.
+
+```yml
+arguments:
+  damage:
+    type: expression
+    expression: "${base_damage:-10d} * ${damage_multiplier:-1d}"
+    value-type: double # int/double/short/long/float/boolean/byte
+```
