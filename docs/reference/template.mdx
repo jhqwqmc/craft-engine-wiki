@@ -213,7 +213,7 @@ It selects a parameter value based on a condition. This allows the conversion of
 arguments:
   leaves_base_model:
     type: condition
-    condition: ${tintable:-false}
+    condition: "${tintable:-false}"
     on-true: leaves
     on-false: cube_all
 ```
@@ -226,7 +226,7 @@ It selects a value by matching the source value against a set of predefined case
 arguments:
   slot: 
     type: when
-    source: ${part}
+    source: "${part}"
     when:
       helmet: head
       chestplate: chest
