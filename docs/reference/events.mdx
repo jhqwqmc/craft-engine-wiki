@@ -607,6 +607,42 @@ y: <arg:block.block_y> # optional; number; default: <arg:position.y>
 z: <arg:block.block_z> # optional; number; default: <arg:position.z>
 ```
 
+### set\_exp
+
+Set the experience point of the player
+
+```yaml
+type: set_exp
+count: 1 # required; number
+add: true # optional; boolean; default: false
+target: "self" # optional; enum[all, self]/player selector; default: self
+```
+
+### set\_level
+
+Set the experience level of the player
+
+```yaml
+type: set_level
+count: 1 # required; number
+add: true # optional; boolean; default: false
+target: "self" # optional; enum[all, self]/player selector; default: self
+```
+
+### play\_totem\_animation
+
+Play the totem animation
+
+```yaml
+type: play_totem_animation
+item: "default:topaz" # required; string
+sound: minecraft:entity.player.levelup # optional; string
+pitch: 1 # optional; number; default: 1
+volume: 1 # optional; number; default: 1
+silent: false # optional; boolean; default: false
+target: "self" # optional; enum[all, self]/player selector; default: self
+```
+
 :::info
 More functions are coming...
 :::
