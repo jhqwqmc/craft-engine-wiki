@@ -99,6 +99,12 @@ blocks:
               billboard: FIXED # Optional; enum[FIXED, VERTICAL, HORIZONTAL, CENTER]; default: FIXED
 ```
 
+:::tip
+
+When using display entities as block entity renderers, it is recommended to use `translation` instead of `position`, and `rotation` instead of `yaw` and `pitch`. This avoids sending position synchronization packets and ensures the best visual performance.
+
+:::
+
 ### Item
 
 ```yaml

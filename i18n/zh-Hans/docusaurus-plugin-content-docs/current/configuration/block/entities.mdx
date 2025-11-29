@@ -71,10 +71,10 @@ blocks:
         - type: item_display
           item: default:sleeper_sofa # 必填; 字符串; 指定需要渲染的物品
           scale: 1.0 # 可选; 数字; 默认值: 1
-          position: 0.5 # 可选; 数字; 默认值: 0.5
+          position: 0.5 # 可选; 数字; 默认值: 0.5; 建议用translation
           translation: 0,0,0 # 可选; 向量; 默认值: 0,0,0
-          pitch: 0.0 # 可选; 数字; 默认值: 0
-          yaw: 0.0 # 可选; 数字; 默认值: 0
+          pitch: 0.0 # 可选; 数字; 默认值: 0; 建议用rotation
+          yaw: 0.0 # 可选; 数字; 默认值: 0; 建议用rotation
           rotation: 0.0 # 可选; 数字; 默认值: 0
           display-context: NONE # 可选; 枚举[NONE, THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND, FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND, HEAD, GUI, GROUND, FIXED, ON_SHELF]; 默认值: NONE
           billboard: FIXED # 可选; 枚举[FIXED, VERTICAL, HORIZONTAL, CENTER]; 默认值: FIXED
@@ -93,13 +93,19 @@ blocks:
             - type: text_display
               text: "你好" # 必填; 字符串; 指定需要渲染的文本
               scale: 1.0 # 可选; 数字; 默认值: 1
-              position: 0.5 # 可选; 数字; 默认值: 0.5
+              position: 0.5 # 可选; 数字; 默认值: 0.5; 建议用translation
               translation: 0,0,0 # 可选; 向量; 默认值: 0,0,0
-              pitch: 0.0 # 可选; 数字; 默认值: 0
-              yaw: 0.0 # 可选; 数字; 默认值: 0
+              pitch: 0.0 # 可选; 数字; 默认值: 0; 建议用rotation
+              yaw: 0.0 # 可选; 数字; 默认值: 0; 建议用rotation
               rotation: 0.0 # 可选; 数字; 默认值: 0
               billboard: FIXED # 可选; 枚举[FIXED, VERTICAL, HORIZONTAL, CENTER]; 默认值: FIXED
 ```
+
+:::tip
+
+在使用展示实体作为方块实体渲染器的时候，建议使用 `translation` 代替 `position`，用 `rotation` 代替 `yaw` 和 `pitch`。这样可以避免发送位置同步包，保证最佳视觉效果。
+
+:::
 
 ### 掉落物
 
