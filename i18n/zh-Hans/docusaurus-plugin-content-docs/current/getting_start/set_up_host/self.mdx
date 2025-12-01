@@ -24,6 +24,8 @@ resource-pack:
           deny-non-minecraft-request: true
           # 生成一次性限时的下载链接
           one-time-token: true
+          # 改进 deny-non-minecraft-request 和 one-time-token 的验证，如果你的服务器未完全启用正版验证请勿启用
+          strict-validation: false
           rate-limiting:
             # 每秒最大带宽限制，防止资源包下载时影响服务器其他玩家的稳定性
             max-bandwidth-per-second: 5_000_000 # 5MB/s
