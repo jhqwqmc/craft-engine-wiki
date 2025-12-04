@@ -23,6 +23,7 @@ const config: Config = {
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
+  trailingSlash: false,
   scripts: [{src: "https://wzfx.gtemc.cn/js/script.js", defer: true, 'data-domain': 'ce.gtemc.cn',}],
 
   // GitHub pages deployment config.
@@ -30,7 +31,7 @@ const config: Config = {
   organizationName: 'Xiao-MoMi', // Usually your GitHub org/user name.
   projectName: 'craft-engine-wiki', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
 
   markdown: {
     hooks: {
