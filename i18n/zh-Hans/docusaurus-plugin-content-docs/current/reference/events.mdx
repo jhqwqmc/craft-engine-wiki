@@ -596,6 +596,21 @@ y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
 z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
 ```
 
+你也可以使用基于自定义规则的循环
+
+```yaml
+type: cycle_block_property
+property: facing # required; string
+x: <arg:block.block_x> # optional; number; default: <arg:position.x>
+y: <arg:block.block_y> # optional; number; default: <arg:position.y>
+z: <arg:block.block_z> # optional; number; default: <arg:position.z>
+rules:
+  north: east
+  east: south
+  south: west
+  west: north
+```
+
 ### 设置经验值
 
 设置玩家的经验值
@@ -629,6 +644,15 @@ sound: minecraft:entity.player.levelup # 可选; 字符串
 pitch: 1 # 可选; 数字; 默认值: 1
 volume: 1 # 可选; 数字; 默认值: 1
 silent: false # 可选; 布尔; 默认值: false
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### 关闭容器
+
+关闭当前打开的容器
+
+```yaml
+type: close_inventory
 target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
 ```
 

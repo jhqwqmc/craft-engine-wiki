@@ -595,6 +595,21 @@ y: <arg:block.block_y> # optional; number; default: <arg:position.y>
 z: <arg:block.block_z> # optional; number; default: <arg:position.z>
 ```
 
+You can also define a custom cycle sequence with specific rules.
+
+```yaml
+type: cycle_block_property
+property: facing # required; string
+x: <arg:block.block_x> # optional; number; default: <arg:position.x>
+y: <arg:block.block_y> # optional; number; default: <arg:position.y>
+z: <arg:block.block_z> # optional; number; default: <arg:position.z>
+rules:
+  north: east
+  east: south
+  south: west
+  west: north
+```
+
 ### set\_exp
 
 Set the experience point of the player
@@ -631,7 +646,16 @@ silent: false # optional; boolean; default: false
 target: "self" # optional; enum[all, self]/player selector; default: self
 ```
 
-### clear_item
+### close\_inventory
+
+Close the current inventory
+
+```yaml
+type: close_inventory
+target: "self" # optional; enum[all, self]/player selector; default: self
+```
+
+### clear\_item
 
 Clear items from the player's inventory
 
