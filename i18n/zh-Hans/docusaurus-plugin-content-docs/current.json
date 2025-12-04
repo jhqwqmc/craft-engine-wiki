@@ -119,6 +119,10 @@
     "message": "🌊 液体碰撞方块物品",
     "description": "教程侧边栏中'液体碰撞方块物品'文档项的标签"
   },
+    "sidebar.tutorialSidebar.doc.🌊 Liquid Collision Furniture Item": {
+    "message": "🌊 液体碰撞家具物品",
+    "description": "教程侧边栏中'液体碰撞家具物品'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.2️⃣ Double High Block Item": {
     "message": "2️⃣ 双层方块物品",
     "description": "教程侧边栏中'双层方块物品'文档项的标签"
