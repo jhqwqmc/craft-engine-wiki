@@ -438,6 +438,17 @@ drop-loot: true # default: true
 play-sound: true # default: true
 ```
 
+### rotate\_furniture
+
+Rotate a furniture. Sometimes furniture cannot be rotated due to collision shape, at which point the on-failure event will be triggered.
+
+```yaml
+type: rotate_furniture
+degree: 90
+on-success: [] # functions
+on-failure: [] # functions
+```
+
 ### teleport
 
 Teleport to a certain location

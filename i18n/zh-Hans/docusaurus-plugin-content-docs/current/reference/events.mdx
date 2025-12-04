@@ -438,6 +438,17 @@ drop-loot: true # 默认值: true
 play-sound: true # 默认值: true
 ```
 
+### 旋转家具
+
+旋转一个家具，家具有时候会因为碰撞体积无法旋转，这时候就会触发 on-failure
+
+```yaml
+type: rotate_furniture
+degree: 90
+on-success: [] # 函数
+on-failure: [] # 函数
+```
+
 ### 传送
 
 传送至指定地点
