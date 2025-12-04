@@ -8,18 +8,6 @@ id: events
 The `events` section determines which item/furniture/block will execute predefined behaviors during specific events. Under the `events` section, you need to specify an event trigger, such as `"right_click"` for a right-click action. Below the event trigger, you must pass a list of actions with their corresponding types. For example, `command` executes a specific command.
 
 ```yaml
-# format 1
-events:
-  right_click:
-    - type: command
-      command: say 1
-      conditions:
-        - type: permission
-          permission: "craftengine.admin"
-    - type: command
-      command: say 2
-      conditions: []
-# format 2
 events:
   - on: right_click
     functions:
@@ -419,7 +407,7 @@ y: <arg:position.y> # optional; number; default: <arg:position.y>
 z: <arg:position.z> # optional; number; default: <arg:position.z>
 pitch: <arg:position.pitch> # optional; number; default: <arg:position.pitch>
 yaw: <arg:position.yaw> # optional; number; default: <arg:position.yaw>
-anchor-type: ground # optional; enum[ground,ceiling,wall]
+variant: ground # optional;
 play-sound: true # optional; boolean; default: true
 ```
 
@@ -445,7 +433,7 @@ y: <arg:furniture.y> # required; number; default: <arg:furniture.y>
 z: <arg:furniture.z> # required; number; default: <arg:furniture.z>
 pitch: <arg:furniture.pitch> # required; number; default: <arg:furniture.pitch>
 yaw: <arg:furniture.yaw> # required; number; default: <arg:furniture.yaw>
-anchor-type: ground # optional; enum[ground,ceiling,wall]
+variant: ground # optional;
 drop-loot: true # default: true
 play-sound: true # default: true
 ```

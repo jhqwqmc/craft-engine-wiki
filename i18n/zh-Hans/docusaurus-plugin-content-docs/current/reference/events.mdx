@@ -8,18 +8,6 @@ id: events
 `events` 部分决定了哪些物品/家具/方块将在特定事件中执行预定义行为。在 `events` 部分下，您需要指定一个事件触发器，例如 `"right_click"` 表示右键点击动作。在事件触发器下方，您必须传递一个动作列表及其对应的类型。例如，`command` 用于执行特定命令。
 
 ```yaml
-# 格式1
-events:
-  right_click:
-    - type: command
-      command: say 1
-      conditions:
-        - type: permission
-          permission: "craftengine.admin"
-    - type: command
-      command: say 2
-      conditions: []
-# 格式2
 events:
   - on: right_click
     functions:
@@ -419,7 +407,7 @@ y: <arg:position.y> # 可选; 数字; 默认值: <arg:position.y>
 z: <arg:position.z> # 可选; 数字; 默认值: <arg:position.z>
 pitch: <arg:position.pitch> # 可选; 数字; 默认值: <arg:position.pitch>
 yaw: <arg:position.yaw> # 可选; 数字; 默认值: <arg:position.yaw>
-anchor-type: ground # 可选; 枚举[ground,ceiling,wall]
+variant: ground # 可选;
 play-sound: true # 可选; 布尔; 默认值: true
 ```
 
@@ -445,7 +433,7 @@ y: <arg:furniture.y> # 可选; 数字; 默认值: <arg:furniture.y>
 z: <arg:furniture.z> # 可选; 数字; 默认值: <arg:furniture.z>
 pitch: <arg:furniture.pitch> # 可选; 数字; 默认值: <arg:furniture.pitch>
 yaw: <arg:furniture.yaw> # 可选; 数字; 默认值: <arg:furniture.yaw>
-anchor-type: ground # 可选; 枚举[ground,ceiling,wall]
+variant: ground # 可选;
 drop-loot: true # 默认值: true
 play-sound: true # 默认值: true
 ```
