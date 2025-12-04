@@ -371,6 +371,12 @@ post-processors:
   # 合并结果和原料的魔咒信息，而不是保留其中之一
   - type: merge_enchantments
 
+  # 保留 custom_data 组件的特定数据（1.20.5+）
+  - type: keep_custom_data
+    paths:
+      - weapon
+      - energy.fly
+
   # 保留指定组件（1.20.5+）
   - type: keep_components
     components:

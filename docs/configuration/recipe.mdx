@@ -371,6 +371,12 @@ post-processors:
   # Merge the enchantments of the final product and the original item, rather than choosing one of them.
   - type: merge_enchantments
 
+  # Keep the specific data of the custom_data component (1.20.5+)
+  - type: keep_custom_data
+    paths:
+      - weapon
+      - energy.fly
+
   # Keep the specified components (1.20.5+)
   - type: keep_components
     components:

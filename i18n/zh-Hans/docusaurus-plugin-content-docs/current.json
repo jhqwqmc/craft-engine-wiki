@@ -319,6 +319,10 @@
     "message": "🚟 可悬挂方块",
     "description": "教程侧边栏中'可悬挂方块'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.💎 Drop Experience Block": {
+    "message": "💎 掉落经验方块",
+    "description": "教程侧边栏中'掉落经验方块'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",
     "description": "教程侧边栏中'方块实体'文档项的标签"
