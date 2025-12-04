@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/zh-Hans",
+      "destination": "/zh-Hans/",
+      "statusCode": 301
+    }
+  ]
+}
