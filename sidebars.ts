@@ -506,6 +506,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/hangable_block",
                   label: '🚟 Hangable Block',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/drop_experience_block",
+                  label: '💎 Drop Experience Block',
+                },
               ]
             },
             {

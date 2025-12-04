@@ -254,7 +254,7 @@ events:
 
 :::
 
-### worldguard:region
+### worldguard\:region
 
 Check whether the location in the current context is within a WorldGuard region.
 
@@ -278,12 +278,22 @@ min: 0
 max: 32
 ```
 
-### has_player
+### has\_player
 
 Check if player exists in this context
 
 ```yaml
 type: has_player
+```
+
+### inventory\_has\_item
+
+Detect whether the specified item or quantity is present in the current context player's inventory.
+
+```yaml
+type: inventory_has_item
+id: "minecraft:iron_pickaxe"
+count: 1
 ```
 
 :::info
