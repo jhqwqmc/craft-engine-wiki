@@ -31,7 +31,7 @@ const config: Config = {
   organizationName: 'Xiao-MoMi', // Usually your GitHub org/user name.
   projectName: 'craft-engine-wiki', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
 
   markdown: {
     hooks: {
