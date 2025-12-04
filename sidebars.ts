@@ -232,6 +232,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/item/behaviors/liquid_collision_furniture_item",
+                  label: '🌊 Liquid Collision Furniture Item',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/item/behaviors/compostable_item",
                   label: '🪹 Compostable Item',
                 },
