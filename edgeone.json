@@ -6,8 +6,13 @@
       "statusCode": 301
     },
     {
-      "source": ":path/",
-      "destination": ":path",
+      "source": "/zh-Hans/:path/",
+      "destination": "/zh-Hans/:path",
+      "statusCode": 302
+    },
+    {
+      "source": "/:path/",
+      "destination": "/:path",
       "statusCode": 302
     }
   ]
