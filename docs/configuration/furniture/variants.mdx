@@ -74,8 +74,9 @@ elements:
     scale: 1 # scale: 1,2,1
     apply-dyed-color: true
     glow-color: 255,255,255
-    block-light: 15
-    sky-light: 15
+    brightness: # optional; If there are options where the two values below must not be -1
+      block-light: 15 # required; default: -1
+      sky-light: 15 # required; default: -1
     view-range: 1.0 # When the distance is more than (view-range * Entity Distance * 64) the entity is not rendered
     # rotation support 3 formats
     rotation: 45  # Y axis
