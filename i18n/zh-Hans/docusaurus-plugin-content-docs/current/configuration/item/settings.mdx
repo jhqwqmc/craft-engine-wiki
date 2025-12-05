@@ -300,3 +300,20 @@ keep-on-death-chance: 0.2 # 0~1
 ```yaml
 destroy-on-death-chance: 0.5 # 0~1
 ```
+
+### 掉落物显示名称
+
+用于控制掉落物是否显示名称，以及显示的内容
+
+```yaml
+drop-display: false  # 如果全局开启，可以单独关闭
+```
+
+```yaml
+drop-display: true  # 根据物品名显示实体名
+```
+
+```yaml
+# 自定义显示名称 <arg:count> 为数量，<name>为物品名
+drop-display: "<arg:count>x <name>"  
+```

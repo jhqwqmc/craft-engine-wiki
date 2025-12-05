@@ -290,3 +290,20 @@ Determines the probability of this item being destroyed upon death.
 ```yaml
 destroy-on-death-chance: 0.5 # 0~1
 ```
+
+### drop-display
+
+Used to control whether the names of dropped items are displayed, as well as what content is shown.
+
+```yaml
+drop-display: false  # If globally enabled, can be individually disabled for specific items.
+```
+
+```yaml
+drop-display: true  # Displays the entity name based on the item name.
+```
+
+```yaml
+# Custom display name. <arg:count> represents the quantity, <name> represents the item name.
+drop-display: "<arg:count>x <name>"
+```
