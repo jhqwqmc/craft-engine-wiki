@@ -1,0 +1,84 @@
+{
+  "redirects": [
+    {
+      "source": "/zh-Hans",
+      "destination": "/zh-Hans/",
+      "statusCode": 301
+    },
+    {
+      "source": "/zh-Hans/:id1/",
+      "destination": "/zh-Hans/:id1",
+      "statusCode": 301
+    },
+    {
+      "source": "/zh-Hans/:id1/:id2/",
+      "destination": "/zh-Hans/:id1/:id2",
+      "statusCode": 301
+    },
+    {
+      "source": "/:id1/:id2/",
+      "destination": "/:id1/:id2",
+      "statusCode": 301
+    },
+    {
+      "source": "/zh-Hans/:id1/:id2/:id3/",
+      "destination": "/zh-Hans/:id1/:id2/:id3",
+      "statusCode": 301
+    },
+    {
+      "source": "/:id1/:id2/:id3/",
+      "destination": "/:id1/:id2/:id3",
+      "statusCode": 301
+    },
+    {
+      "source": "/zh-Hans/:id1/:id2/:id3/:id4/",
+      "destination": "/zh-Hans/:id1/:id2/:id3/:id4",
+      "statusCode": 301
+    },
+    {
+      "source": "/:id1/:id2/:id3/:id4/",
+      "destination": "/:id1/:id2/:id3/:id4",
+      "statusCode": 301
+    },
+    {
+      "source": "/zh-Hans/:id1/:id2/:id3/:id4/:id5/",
+      "destination": "/zh-Hans/:id1/:id2/:id3/:id4/:id5",
+      "statusCode": 301
+    },
+    {
+      "source": "/:id1/:id2/:id3/:id4/:id5/",
+      "destination": "/:id1/:id2/:id3/:id4/:id5",
+      "statusCode": 301
+    },
+    {
+      "source": "/zh-Hans/:id1/:id2/:id3/:id4/:id5/:id6/",
+      "destination": "/zh-Hans/:id1/:id2/:id3/:id4/:id5/:id6",
+      "statusCode": 301
+    },
+    {
+      "source": "/:id1/:id2/:id3/:id4/:id5/:id6/",
+      "destination": "/:id1/:id2/:id3/:id4/:id5/:id6",
+      "statusCode": 301
+    },
+    {
+      "source": "/zh-Hans/:id1/:id2/:id3/:id4/:id5/:id6/:id7/",
+      "destination": "/zh-Hans/:id1/:id2/:id3/:id4/:id5/:id6/:id7",
+      "statusCode": 301
+    },
+    {
+      "source": "/:id1/:id2/:id3/:id4/:id5/:id6/:id7/",
+      "destination": "/:id1/:id2/:id3/:id4/:id5/:id6/:id7",
+      "statusCode": 301
+    },
+    {
+      "source": "/zh-Hans/:id1/:id2/:id3/:id4/:id5/:id6/:id7/:id8/",
+      "destination": "/zh-Hans/:id1/:id2/:id3/:id4/:id5/:id6/:id7/:id8",
+      "statusCode": 301
+    },
+    {
+      "source": "/:id1/:id2/:id3/:id4/:id5/:id6/:id7/:id8/",
+      "destination": "/:id1/:id2/:id3/:id4/:id5/:id6/:id7/:id8",
+      "statusCode": 301
+    }
+  ]
+}
