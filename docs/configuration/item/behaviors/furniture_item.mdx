@@ -12,6 +12,12 @@ items:
   default:bench:
     behavior:
       type: furniture_item
+      rules: # Please refer to the rules below for details.
+        ground: # variant
+          # any / four / eight / sixteen / north / east / west / south
+          rotation: four
+          # any / center / half /  quarter  / corner
+          alignment: center
       furniture: default:bench
       ignore-placer: false      # Whether to ignore the placer's collision box during placement
       ignore-entities: false     # Whether to ignore entity collision boxes during placement
@@ -30,6 +36,12 @@ items:
   default:bench:
     behavior:
       type: furniture_item
+      rules: # Please refer to the rules below for details.
+        ground: # variant
+          # any / four / eight / sixteen / north / east / west / south
+          rotation: four
+          # any / center / half /  quarter  / corner
+          alignment: center
       ignore-placer: false      # Whether to ignore the placer's collision box during placement
       ignore-entities: false     # Whether to ignore entity collision boxes during placement
       furniture:
@@ -40,3 +52,39 @@ items:
 ```
 
 ![](/img/furniture_item_1.png)
+
+## Rules
+
+### rotation
+
+The plugin's furniture supports a variety of rotation schemes, with the differences between them lying in the limitations on the number of rotation angles or the direct specification of rotation directions.
+
+:::danger
+Rotation has no effect on wall variant.
+:::
+
+### alignment
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_item_2.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>center</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_item_3.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>half</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_item_4.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>quarter</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_item_5.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>corner</p>
+</div>
+
+:::tip
+Alignment is also applicable to wall variant.
+:::

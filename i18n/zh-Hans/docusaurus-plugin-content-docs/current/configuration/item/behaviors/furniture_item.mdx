@@ -12,6 +12,14 @@ items:
   default:bench:
     behavior:
       type: furniture_item
+      rules: # 具体见下方规则
+        ground: # 变体
+          # any / four / eight / sixteen / north / east / west / south
+          # 任意 / 四向 / 八向  / 十六向  /  北   /  东   /  西  /   南
+          rotation: four
+          # any / center / half /  quarter  / corner
+          # 任意 /  居中  / 半格 / 四分之一格 / 角落
+          alignment: center
       furniture: default:bench
       ignore-placer: false      # 放置时候是否忽略放置者的碰撞箱
       ignore-entities: false     # 放置时候是否忽略所有实体的碰撞箱
@@ -30,6 +38,14 @@ items:
   default:bench:
     behavior:
       type: furniture_item
+      rules: # 具体见下方规则
+        ground: # 变体
+          # any / four / eight / sixteen / north / east / west / south
+          # 任意 / 四向 / 八向  / 十六向  /  北   /  东   /  西  /   南
+          rotation: four
+          # any / center / half /  quarter  / corner
+          # 任意 /  居中  / 半格 / 四分之一格 / 角落
+          alignment: center
       ignore-placer: false      # 放置时候是否忽略放置者的碰撞箱
       ignore-entities: false     # 放置时候是否忽略所有实体的碰撞箱
       furniture:
@@ -40,3 +56,39 @@ items:
 ```
 
 ![](/img/furniture_item_1.png)
+
+## 规则
+
+### 旋转
+
+该插件的家具支持多种旋转方案，其差异主要体现在旋转角度的数量限制或是否直接指定旋转方向。
+
+:::danger
+旋转配置对 wall 变体无效。
+:::
+
+### 对齐
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_item_2.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>center</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_item_3.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>half</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_item_4.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>quarter</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_item_5.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>corner</p>
+</div>
+
+:::tip
+对齐配置同样适用于 wall 变体。
+:::

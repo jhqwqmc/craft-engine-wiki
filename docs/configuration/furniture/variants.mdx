@@ -1,0 +1,228 @@
+---
+title: 📍 Furniture Variants
+id: variants
+---
+
+## Introduction
+
+Furniture supports three variants: ground, ceiling, and wall.
+You can employ distinct appearances and collision box schemes for different variants.
+For instance, a potted plant furniture item may stand upright when placed on the ground,
+dangle with a rope when hung from the ceiling,
+and be supported by a wooden plank when mounted on the wall—much like vanilla bell block.
+
+:::tip
+You can configure multiple variants simultaneously for a single piece of furniture.
+:::
+
+Below, I will use the ground mode as an example to explain how to configure a basic variant.
+
+```yaml
+furniture:
+  default:bench:
+    variants:
+      ground:
+        # create offsets for the drops so they won't spawn in blocks
+        loot-spawn-offset: 0,0,0
+        # Supports External Models Here
+        # model-engine: blueprint_id
+        # better-model: blueprint_id
+        elements:
+          - item: default:bench
+            display-transform: NONE
+            billboard: FIXED
+            position: 0.5,0,0
+            translation: 0,0.5,0
+            apply-dyed-color: true # default: true
+            # glow-color: 255,255,255 # glow color: r,g,b
+        hitboxes:
+          - type: interaction # non-collision hitbox
+            can-use-item-on: false # default: false
+            can-be-hit-by-projectile: false # default: false
+            blocks-building: false # default: true
+            position: 0,0,0
+            width: 1
+            height: 2
+            # 'width'/'height' can be simplified to 'scale'
+            # scale: 1,2
+            interactive: true # whether the interaction entity is interactive
+            seats:
+              - 0,0,-0.1 0
+```
+
+There are two sections: `elements`, and `hitboxes`
+
+The `elements` section defines which items compose the furniture (you can configure multiple items for a single piece of furniture, each with different display modes).  \
+The `hitboxes` section specifies the collision volume of the furniture.
+
+## Elements
+
+An `element` is each item that constitutes the appearance of the furniture. For most furniture, a single item suffices.
+However, if you wish to create a more intricate piece of furniture, you can assemble it from multiple items.
+For example, a holographic projection could be divided into two items: a base and the projection itself.
+The base could have a fixed orientation, while the projection could be set to always face the player.
+
+```yaml
+elements:
+  - item: default:bench
+    display-transform: none # none / third_person_left_hand / third_person_right_hand
+                            # first_person_left_hand / first_person_right_hand
+                            # head / gui / ground / fixed
+    billboard: fixed  # fixed / vertical / horizontal / center
+    position: 0.5,0,0
+    translation: 0,0.5,0
+    scale: 1 # scale: 1,2,1
+    apply-dyed-color: true
+    glow-color: 255,255,255
+    brightness: # optional; If there are options where the two values below must not be -1
+      block-light: 15 # required; default: -1
+      sky-light: 15 # required; default: -1
+    view-range: 1.0 # When the distance is more than (view-range * Entity Distance * 64) the entity is not rendered
+    # rotation support 3 formats
+    rotation: 45  # Y axis
+    rotation: 45,45,0  # Euler angle
+    rotation: 0,0,0.7071,0.7071  # Quaternions  https://quaternions.online/
+```
+
+:::warning
+Please note the distinction between `position` and `translation`. `position` alters the coordinate location of the corresponding display entity, whereas `translation` is a displacement attribute of the display entity itself.
+:::
+
+:::danger
+For wall variants of furniture, you need to use `position` for slight offsets; otherwise, the furniture may turn black in certain directions. This is related to how Minecraft renders entities.
+:::
+
+## Hitboxes
+
+The `hitbox` is the interaction entity sent to the player, and you can visualize its effect by using the F3+B debug screen.
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_variants_1.png').default} alt="" />
+</div>
+
+### Interaction
+
+```yaml
+hitboxes:
+  - type: interaction # non-collision hitbox
+    can-use-item-on: false # default: false
+    can-be-hit-by-projectile: false # default: false
+    blocks-building: false # default: true
+    position: 0,0,0
+    width: 1
+    height: 2
+    # 'width'/'height' can be simplified to 'scale'
+    # scale: 1,2
+    interactive: true # whether the interaction entity is interactive
+    seats:
+      - 0,0,-0.1 0
+```
+
+### Shulker
+
+```yaml
+hitboxes:
+  - type: shulker # hard-collision hitbox
+    can-use-item-on: true # default: true
+    can-be-hit-by-projectile: true # default: true
+    blocks-building: true # default: true
+    position: 1,0,0
+    scale: 1 # 1.20.5+
+    peek: 0 # 0~100
+    # Relative direction. north = facing the player
+    direction: UP # up/down/north/west/east/south
+    interaction-entity: true # whether to summon another interaction entity
+    interactive: true # whether the interaction entity is interactive
+    seats:
+      - 1,0,-0.1 0
+```
+
+### Happy Ghast
+
+```yaml
+hitboxes:
+  - type: happy_ghast # hard/soft-collision hitbox
+    can-use-item-on: true # default: true
+    can-be-hit-by-projectile: true # default: true
+    blocks-building: true # default: true
+    hard-collision: true # default: true
+    position: 1,0,0
+    scale: 0.25 # default: 1
+    seats:
+      - 1,0,-0.1 0
+```
+
+### Custom
+
+```yaml
+hitboxes:
+  - type: custom # mainly used for soft-collision hitbox
+    position: 1,0,0
+    scale: 5 # 1.20.5+
+    # You can use any entity here
+    entity-type: slime # default: slime
+    seats:
+      - 1,0,-0.1 0
+```
+
+:::tip
+A single `hitbox` can be configured with multiple seats. If the seats of multiple `hitboxes` are positioned at the same location, it is equivalent to having only one seat.
+:::
+
+:::info
+The position of a `seat` is determined by a location and a rotation, separated by a space in the configuration.
+
+```
+0,0,0 0
+```
+
+You may also choose not to configure a rotation angle, allowing players to rotate freely to any angle while seated.
+
+```
+0,0,0
+```
+:::
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_variants_2.gif').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>0,0,0 0</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_variants_3.gif').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>0,0,0</p>
+</div>
+
+## Entity Culling
+
+You can individually control whether entity culling is enabled for each furniture item
+
+```yaml
+ground:
+  entity-culling: false # Disabled
+```
+
+Once entity culling is enabled, you can configure the culling parameters
+
+```yaml
+ground:
+  entity-culling:
+    aabb: -0.5,0,-0.5,0.5,2,0.5 # x1,y1,z1,x2,y2,z2. Manual configuration of AABB is not recommended; the plugin will calculate it automatically.
+    view-distance: 64 # View distance culling. -1 means unlimited distance.
+                      # However, setting this to -1 is not recommended when ray tracing is enabled,
+                      # as it results in excessive algorithm path length and performance impact.
+    ray-tracing: false # Whether to enable ray tracing culling.
+```
+
+## External Models
+
+You can also use external models from ModelEngine/BetterModel
+
+```yaml
+furniture:
+  default:bench:
+    variants:
+      ground:
+        model-engine: blueprint_id
+        better-model: blueprint_id
+```

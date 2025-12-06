@@ -331,6 +331,18 @@
     "message": "🫑 方块实体",
     "description": "教程侧边栏中'方块实体'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.⚙️ Furniture Settings": {
+    "message": "⚙️ 家具设置",
+    "description": "教程侧边栏中'家具设置'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🕹️ Furniture Behaviors": {
+    "message": "🕹️ 家具行为",
+    "description": "教程侧边栏中'家具行为'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.📍 Furniture Variants": {
+    "message": "📍 家具变体",
+    "description": "教程侧边栏中'家具变体'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.📂 Category": {
     "message": "📂 分类",
     "description": "教程侧边栏中'分类'文档项的标签"

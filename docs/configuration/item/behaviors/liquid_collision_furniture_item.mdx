@@ -12,6 +12,12 @@ items:
   default:bench:
     behavior:
       type: liquid_collision_furniture_item
+      rules: # For details, see the rules for [🪑 Furniture Item].
+        ground: # variant
+          # any / four / eight / sixteen / north / east / west / south
+          rotation: four
+          # any / center / half /  quarter  / corner
+          alignment: center
       furniture: default:bench
       ignore-placer: false      # Whether to ignore the placer's collision box during placement
       ignore-entities: false     # Whether to ignore entity collision boxes during placement

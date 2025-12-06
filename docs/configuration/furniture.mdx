@@ -3,12 +3,109 @@ title: 🪑 Furniture
 id: furniture
 ---
 
-:::caution
+import UrlCard from '@site/src/components/UrlCard';
 
-The furniture system will undergo a major refactor in version 0.0.66, introducing more advanced furniture features.
+:::danger
+Please note that reloading the plugin will not affect furniture that already placed! You will need to restart the server or reload the chunks to apply new configurations to existing furniture. The plugin utilizes caching to enhance the performance of the furniture. Forcibly reloading furniture that is already loaded on the server without caution could have a significant impact on the server's stability.
 
-The new wiki will be updated after the 0.0.66 release. For now, please refer to the old wiki for documentation.
-
-https://mo-mi.gitbook.io/xiaomomi-plugins/craftengine/plugin-wiki/craftengine/add-new-contents/entities/furniture
-
+In the future, the plugin may consider introducing related unsafe flags for forced reloading, but certainly not at this moment.
 :::
+
+## Sections to Configure
+
+A complete furniture configuration contains the following sections:
+
+* behavior
+
+<UrlCard
+    url="furniture/behaviors"
+    title="🕹️ Furniture Behaviors"
+    subtitle=" "
+/>
+
+* settings
+
+<UrlCard
+    url="furniture/settings"
+    title="⚙️ Furniture Settings"
+    subtitle=" "
+/>
+
+* variants
+
+<UrlCard
+    url="furniture/variants"
+    title="📍 Furniture Variants"
+    subtitle=" "
+/>
+
+* loot
+
+<UrlCard
+    url="../reference/loot_table"
+    title="🎲 Loot Table"
+    subtitle=" "
+/>
+
+* events
+
+<UrlCard
+    url="../reference/events"
+    title="🪇 Events"
+    subtitle=" "
+/>
+
+## How to Bind Items
+
+<UrlCard
+    url="item/behaviors/furniture_item"
+    title="🪑 Furniture Item"
+    subtitle=" "
+/>
+
+<UrlCard
+    url="item/behaviors/liquid_collision_furniture_item"
+    title="🌊 Liquid Collision Furniture Item"
+    subtitle=" "
+/>
+
+## Full Config Overview
+
+```yaml
+furniture:
+  default:bench:
+    settings:
+      item: default:bench
+      sounds:
+        break: minecraft:block.bamboo_wood.break
+        place: minecraft:block.bamboo_wood.place
+    variants:
+      ground:
+        loot-spawn-offset: 0.5,0.5,0
+        entity-culling: true
+        elements:
+          - item: default:bench
+            display-transform: none
+            billboard: fixed
+            position: 0.5,0,0
+            translation: 0,0.5,0
+            shadow-radius: 1
+            shadow-strength: 0.2
+            apply-dyed-color: true
+            glow-color: 255,255,255
+        hitboxes:
+          - position: 0,0,0
+            type: shulker
+            direction: east
+            peek: 100
+            blocks-building: true
+            interactive: true
+            interaction-entity: true
+            seats:
+              - 0,0,-0.1 0
+              - 1,0,-0.1 0
+    loot:
+      template: default:loot_table/furniture
+      arguments:
+        item: default:bench
+```
