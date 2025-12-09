@@ -67,6 +67,34 @@ This command plays the Totem of Undying animation for the player.
 
 ![](/img/commands_14.png)
 
+### locale
+
+`/ce feature locale set [player] [locale]`
+
+This command is used to set the player's locale.
+
+`/ce feature locale unset [player]`
+
+This command is used to unset the player's locale.
+
+### toggle-entity-culling
+
+`/ce feature toggle-entity-culling [player] (state)`
+
+This command is used to toggle whether entity culling is enabled for a player.
+
+### entity-culling-distance-scale
+
+`/ce feature entity-culling-distance-scale set [player] [scale]`
+
+This command is used to set the entity culling distance scale for a player.
+
+### display-entity-view-distance-scale
+
+`/ce feature entity-culling-distance-scale set [player] [scale]`
+
+This command is used to set the maximum view distance scale for the player's display entities.
+
 ## Resource Commands
 
 ### list
@@ -258,3 +286,9 @@ This command is used to enter furniture debug mode.
     <img src={require('/img/commands_20.png').default} alt="" />
     <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>show incorrect placement</p>
 </div>
+
+### optimize-furniture-structure
+
+`/ce debug optimize-furniture-structure [world] [file] (y-offset)`
+
+This command is used to optimize furniture within the structure file.
