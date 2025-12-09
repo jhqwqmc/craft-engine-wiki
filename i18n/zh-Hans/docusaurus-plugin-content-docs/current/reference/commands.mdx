@@ -67,6 +67,34 @@ id: commands
 
 ![](/img/commands_14.png)
 
+### locale
+
+`/ce feature locale set [玩家] [区域设置]`
+
+此命令用于设置当前区域设置。
+
+`/ce feature locale unset [玩家]`
+
+此命令用于取消设置当前区域设置。
+
+### toggle-entity-culling
+
+`/ce feature toggle-entity-culling [玩家] (状态)`
+
+此命令用于切换玩家是否启用实体剔除。
+
+### entity-culling-distance-scale
+
+`/ce feature entity-culling-distance-scale set [玩家] [缩放比率]`
+
+此命令用于设置玩家的实体剔除距离缩放比率。
+
+### display-entity-view-distance-scale
+
+`/ce feature entity-culling-distance-scale set [玩家] [缩放比率]`
+
+此命令用于设置玩家的展示实体最大可视范围缩放比率。
+
 ## 资源命令
 
 ### list
@@ -260,3 +288,8 @@ id: commands
     <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>展示错误放置</p>
 </div>
 
+### optimize-furniture-structure
+
+`/ce debug optimize-furniture-structure [世界] [文件] (y轴偏移量)`
+
+此命令用于优化结构存储文件中的家具。
