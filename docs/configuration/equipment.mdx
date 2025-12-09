@@ -195,7 +195,7 @@ When CraftEngine removes a vanilla armor's base texture, the armor becomes compl
 
   Q: Will sacrificed armor still display normally? Does this mean I can't use chainmail armor at all?
 
-  A: CraftEngine anticipated this scenario. The solution is surprisingly simple, at least for CraftEngine - we apply a special trim pattern to vanilla chainmail armor to preserve its original appearance. This is achieved through CraftEngine's exclusive `client-bound-data` feature.
+  A: CraftEngine anticipated this scenario. The solution is surprisingly simple, at least for CraftEngine - we apply a special trim pattern to vanilla chainmail armor to preserve its original appearance. This is achieved through CraftEngine's exclusive `client-bound-data` feature. You can fix vanilla chainmail armor by running `/ce resource enable legacy_armor`
 
   By default, the plugin has preconfigured vanilla armor sacrificial options in `config.yml`. These settings will only take effect when you have configured at least one trim-based armor.
 
