@@ -444,6 +444,31 @@ pdc:
     key: "value"
 ```
 
+### conditional
+
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+
+Conditional data allows you to assign different item data based on conditions
+
+```yaml
+conditional#1:
+  conditions:
+    - type: permission
+      permission: item.unlock
+  data:
+    item-name: "A Mythic Sword"
+    lore:
+      - "A blade forged in the crucible of fallen stars"
+conditional#2:
+  conditions:
+    - type: "!permission"
+      permission: item.unlock
+  data:
+    item-name: "???? Sword"
+    lore:
+      - "????????"
+```
+
 ## Customizable Data
 
 :::caution

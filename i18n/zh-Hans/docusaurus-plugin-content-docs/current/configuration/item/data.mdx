@@ -459,6 +459,31 @@ pdc:
     key: "value"
 ```
 
+### conditional (条件数据)
+
+<Highlight color="#f2184eff">**付费版专属**</Highlight>
+
+条件数据允许你定义应用此数据修饰的条件
+
+```yaml
+conditional#1:
+  conditions:
+    - type: permission
+      permission: item.unlock
+  data:
+    item-name: "神话剑"
+    lore:
+      - "由星辰打造而来"
+conditional#2:
+  conditions:
+    - type: "!permission"
+      permission: item.unlock
+  data:
+    item-name: "???? 剑"
+    lore:
+      - "????????"
+```
+
 ## 自定义数据
 
 :::caution
