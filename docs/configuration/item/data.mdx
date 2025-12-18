@@ -398,9 +398,12 @@ To create a tooltip style, you must place the texture in the directory as follow
 Apply a decorative alteration to a tool or armor
 
 ```yaml
-trim:
-  pattern: eye # https://minecraft.wiki/w/Smithing#Trimming
-  material: iron # https://minecraft.wiki/w/Smithing#Material
+items:
+  default:my_chestplate:
+    data:
+      trim:
+        pattern: eye # https://minecraft.wiki/w/Smithing#Trimming
+        material: iron # https://minecraft.wiki/w/Smithing#Material
 ```
 
 ### equippable (1.21.2+)
@@ -408,24 +411,27 @@ trim:
 If present, this item can be equipped in the specified slot.
 
 ```yml
-equippable:
-  # The slot to put the item on
-  slot: head # HEAD / CHEST / LEGS / FEET / BODY / MAIN_HAND / OFF_HAND / SADDLE
+items:
+  default:my_helmet:
+    data:
+      equippable:
+        # The slot to put the item on
+        slot: head # head / chest / legs / feet / body / mainhand / offhand / saddle
 
-  # Optional Arguments
-  # The directory this refers to is assets/<namespace>/equipment/<id>.json
-  asset-id: minecraft:topaz
-  # The resource location of the overlay texture to use when equipped. The directory this refers to is assets/<namespace>/textures/<id>.
-  camera-overlay: namespace:id
-  # Whether the item can be dispensed by using a dispenser.
-  dispensable: true
-  # Whether this item is damaged when the wearing entity is damaged.
-  damage-on-hurt: true
-  # Whether the item can be equipped into the relevant slot by right-clicking.
-  swappable: true
-  # >= 1.21.5
-  # Whether this item can be equipped onto a target mob by pressing use on it (as long as this item can be equipped on the target at all)
-  equip-on-interact: true
+        # Optional Arguments
+        # The directory this refers to is assets/<namespace>/equipment/<id>.json
+        asset-id: minecraft:topaz
+        # The resource location of the overlay texture to use when equipped. The directory this refers to is assets/<namespace>/textures/<id>.
+        camera-overlay: namespace:id
+        # Whether the item can be dispensed by using a dispenser.
+        dispensable: true
+        # Whether this item is damaged when the wearing entity is damaged.
+        damage-on-hurt: true
+        # Whether the item can be equipped into the relevant slot by right-clicking.
+        swappable: true
+        # >= 1.21.5
+        # Whether this item can be equipped onto a target mob by pressing use on it (as long as this item can be equipped on the target at all)
+        equip-on-interact: true
 ```
 
 ### pdc (Persistent Data Container)
@@ -442,6 +448,34 @@ pdc:
     - 3
   map_example: # Map
     key: "value"
+```
+
+### conditional
+
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+
+Conditional data allows you to assign different item data based on conditions
+
+```yaml
+items:
+  default:mythic_sword:
+    client-bound-data:
+      conditional#1:
+        conditions:
+          - type: permission
+            permission: item.unlock
+        data:
+          item-name: "A Mythic Sword"
+          lore:
+            - "A blade forged in the crucible of fallen stars"
+      conditional#2:
+        conditions:
+          - type: "!permission"
+            permission: item.unlock
+        data:
+          item-name: "???? Sword"
+          lore:
+            - "????????"
 ```
 
 ## Customizable Data
