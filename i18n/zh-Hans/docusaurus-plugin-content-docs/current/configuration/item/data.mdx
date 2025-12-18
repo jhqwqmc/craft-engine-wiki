@@ -399,9 +399,12 @@ items:
 控制物品存储的盔甲纹饰数据。提示框中会显示盔甲纹饰的名称。
 
 ```yaml
-trim:
-  pattern: eye # 参阅下方的盔甲纹饰图案
-  material: iron # 参阅下方的盔甲纹饰材料
+items:
+  default:my_chestplate:
+    data:
+      trim:
+        pattern: eye # 参阅下方的盔甲纹饰图案
+        material: iron # 参阅下方的盔甲纹饰材料
 ```
 :::tip
 你可以从 [<Comment text="你将访问 GitHub 请准备合适的网络环境">**盔甲纹饰图案**</Comment>](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/data/minecraft/trim_pattern)
@@ -415,32 +418,35 @@ trim:
 控制物品是否可被生物装备穿戴。
 
 ```yml
-equippable:
-  # 物品可被穿戴的装备槽位
-  slot: head # HEAD / CHEST / LEGS / FEET / BODY / MAIN_HAND / OFF_HAND / SADDLE
-             # 头盔 / 胸甲  / 护腿  / 靴子 / 身体  / 主手      / 副手     / 鞍
+items:
+  default:my_helmet:
+    data:
+      equippable:
+        # 物品可被穿戴的装备槽位
+        slot: head # head / chest / legs / feet / body / mainhand / offhand / saddle
+                  # 头盔 / 胸甲  / 护腿  / 靴子 / 身体  / 主手      / 副手     / 鞍
 
-  # 可选参数
-  # 物品被穿戴时的装备模型的命名空间ID。
-  # 此值不存在时，若装备在头部则根据物品模型渲染物品，否则什么也不会渲染。
-  # 此处的目录指的是 assets/<命名空间>/equipment/<路径>.json
-  asset-id: minecraft:topaz
-  # 当此项存在且物品被玩家穿戴时，玩家第一人称视角将渲染指定的纹理遮罩。
-  # 此遮罩可以使用多个设置此标签的物品互相叠加，每个物品指定的遮罩都会被渲染，
-  # 且渲染顺序按照主手、副手、头盔、胸甲、护腿、靴子、身体、鞍的顺序依次叠加渲染。
-  # 当遮罩纹理渲染时，遮罩纹理被视为独立纹理，即无法作为动态纹理或GUI纹理渲染，但可以指定纹理过滤方式。
-  # 此处的目录指的是 assets/<命名空间>/textures/<路径>
-  # 译者注：这里不允许使用中文作为命名空间ID
-  camera-overlay: 命名空间:路径
-  # 是否可以使用发射器使生物穿戴此物品。如果物品本身有特殊的发射器行为则此项无效。
-  dispensable: true
-  # 生物在受到会影响损害盔甲的伤害时此物品是否会受损而减少耐久。
-  damage-on-hurt: true
-  # 物品是否可以直接使用穿戴。
-  swappable: true
-  # >= 1.21.5
-  # 对生物使用此物品时，是否可以让被交互的生物在允许的空槽位上穿戴此物品。
-  equip-on-interact: true
+        # 可选参数
+        # 物品被穿戴时的装备模型的命名空间ID。
+        # 此值不存在时，若装备在头部则根据物品模型渲染物品，否则什么也不会渲染。
+        # 此处的目录指的是 assets/<命名空间>/equipment/<路径>.json
+        asset-id: minecraft:topaz
+        # 当此项存在且物品被玩家穿戴时，玩家第一人称视角将渲染指定的纹理遮罩。
+        # 此遮罩可以使用多个设置此标签的物品互相叠加，每个物品指定的遮罩都会被渲染，
+        # 且渲染顺序按照主手、副手、头盔、胸甲、护腿、靴子、身体、鞍的顺序依次叠加渲染。
+        # 当遮罩纹理渲染时，遮罩纹理被视为独立纹理，即无法作为动态纹理或GUI纹理渲染，但可以指定纹理过滤方式。
+        # 此处的目录指的是 assets/<命名空间>/textures/<路径>
+        # 译者注：这里不允许使用中文作为命名空间ID
+        camera-overlay: 命名空间:路径
+        # 是否可以使用发射器使生物穿戴此物品。如果物品本身有特殊的发射器行为则此项无效。
+        dispensable: true
+        # 生物在受到会影响损害盔甲的伤害时此物品是否会受损而减少耐久。
+        damage-on-hurt: true
+        # 物品是否可以直接使用穿戴。
+        swappable: true
+        # >= 1.21.5
+        # 对生物使用此物品时，是否可以让被交互的生物在允许的空槽位上穿戴此物品。
+        equip-on-interact: true
 ```
 
 ### pdc（持久化数据容器）
@@ -463,25 +469,28 @@ pdc:
 
 <Highlight color="#f2184eff">**付费版专属**</Highlight>
 
-条件数据允许你定义应用此数据修饰的条件
+条件数据允许你定义应用此物品数据的条件
 
 ```yaml
-conditional#1:
-  conditions:
-    - type: permission
-      permission: item.unlock
-  data:
-    item-name: "神话剑"
-    lore:
-      - "由星辰打造而来"
-conditional#2:
-  conditions:
-    - type: "!permission"
-      permission: item.unlock
-  data:
-    item-name: "???? 剑"
-    lore:
-      - "????????"
+items:
+  default:mythic_sword:
+    client-bound-data:
+      conditional#1:
+        conditions:
+          - type: permission
+            permission: item.unlock
+        data:
+          item-name: "神话剑"
+          lore:
+            - "由星辰打造而来"
+      conditional#2:
+        conditions:
+          - type: "!permission"
+            permission: item.unlock
+        data:
+          item-name: "???? 剑"
+          lore:
+            - "????????"
 ```
 
 ## 自定义数据
