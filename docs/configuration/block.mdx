@@ -102,28 +102,28 @@ import ClickableYamlFragment from '@site/src/components/ClickableYamlFragment';
   <ClickableYamlFragment
     to="../reference/loot_table"
     highlightColor="#1fc9e0ff"
-    yamlContent={`      loot:
-          pools:
-            - rolls: 1
-              conditions:
-                - type: "survives_explosion"
-              entries:
-                - type: "item"
-                  item: "default:palm_log"`}
+    yamlContent={`    loot:
+        pools:
+          - rolls: 1
+            conditions:
+              - type: "survives_explosion"
+            entries:
+              - type: "item"
+                item: "default:palm_log"`}
   />
 
   <ClickableYamlFragment
     to="../reference/events"
     highlightColor="#c91fe0ff"
-    yamlContent={`      events:
-          - on: "right_click"
-            functions:
-              - type: "open_window"
-                gui-type: "anvil"
-              - type: "cancel_event"
-            conditions:
-              - type: "expression"
-                expression: '!<arg:player.is_sneaking>'`}
+    yamlContent={`    events:
+        - on: "right_click"
+          functions:
+            - type: "open_window"
+              gui-type: "anvil"
+            - type: "cancel_event"
+          conditions:
+            - type: "expression"
+              expression: '!<arg:player.is_sneaking>'`}
   />
 
 </OverallYamlConfig>
