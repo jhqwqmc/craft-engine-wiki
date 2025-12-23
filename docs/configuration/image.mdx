@@ -150,3 +150,16 @@ image:
     ... more options
 ```
 :::
+
+## Using in Language Files
+
+Sometimes we create images to replace parts of the titles of vanilla containers, but the vanilla language file does not support custom fonts. In such cases, you need to set the font of the image to `minecraft:default`, otherwise it will not work.
+
+```yaml
+images:
+  test:custom_ui:
+    height: 140
+    ascent: 18
+    font: minecraft:default
+    file: minecraft:font/gui/custom/gui.png
+```

@@ -153,3 +153,16 @@ image:
     ...更多选项
 ```
 :::
+
+## 在语言文件中使用
+
+有时，我们会创建图片用于替换原版容器的部分标题，但原版语言文件并不支持自定义字体。在这种情况下，你需要将图片的字体设置为 `minecraft:default`，否则它将无法生效。
+
+```yaml
+images:
+  test:custom_ui:
+    height: 140
+    ascent: 18
+    font: minecraft:default
+    file: minecraft:font/gui/custom/gui.png
+```
