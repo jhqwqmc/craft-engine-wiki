@@ -84,7 +84,7 @@ items:
 
 :::info
 
-For performance considerations, more complex configuration is required when we need to dynamically split a line of lore into multiple lines. Below is the advanced lore configuration format, which is more intricate but offers greater flexibility. The "priority" determines the final position of the text segment—the lower the priority, the closer it will be to the top.
+For performance considerations, more complex configuration is required when we need to dynamically split a line of lore into multiple lines or add custom conditions. Below is the advanced lore configuration format, which is more intricate but offers greater flexibility. The "priority" determines the final position of the text segment—the lower the priority, the closer it will be to the top.
 
 ```yml
 lore:
@@ -98,6 +98,9 @@ lore:
   - content: "This line inherits the the priority of the above one"
   - content: "Split\nThis Line"
     split-lines: true
+    conditions:
+      - type: permission
+        permission: craftengine.admin
 ```
 
 :::
