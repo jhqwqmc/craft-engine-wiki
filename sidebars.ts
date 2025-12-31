@@ -516,6 +516,16 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/drop_experience_block",
                   label: '💎 Drop Experience Block',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/multi_high_block",
+                  label: '🏢 Multi High Block',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/spreading_block",
+                  label: '👾 Spreading Block',
+                },
               ]
             },
             {
