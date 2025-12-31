@@ -327,6 +327,14 @@
     "message": "💎 掉落经验方块",
     "description": "教程侧边栏中'掉落经验方块'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.🏢 Multi High Block": {
+    "message": "🏢 多层方块",
+    "description": "教程侧边栏中'多层方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.👾 Spreading Block": {
+    "message": "👾 扩散方块",
+    "description": "教程侧边栏中'扩散方块'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",
     "description": "教程侧边栏中'方块实体'文档项的标签"
