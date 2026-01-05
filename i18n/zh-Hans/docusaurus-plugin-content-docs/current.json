@@ -147,6 +147,10 @@
     "message": "⬆️ 地面方块物品",
     "description": "教程侧边栏中'地面方块物品'文档项的标签"
   },
+  "sidebar.tutorialSidebar.doc.⛏️ Range Mining Item": {
+    "message": "⛏️ 范围挖掘工具",
+    "description": "教程侧边栏中'范围挖掘工具'文档项的标签"
+  },
   "sidebar.tutorialSidebar.doc.🔧 Block Settings": {
     "message": "🔧 方块设置",
     "description": "教程侧边栏中'方块设置'文档项的标签"
