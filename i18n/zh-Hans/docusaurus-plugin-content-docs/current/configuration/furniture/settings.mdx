@@ -11,17 +11,27 @@ id: settings
 item: default:test_furniture
 ```
 
+## 击打次数
+
+决定了玩家需要击打家具多少次以破坏此家具
+
+```yaml
+hit-times: 3
+```
+
 ## 音效
 
 决定家具在各种情况下的音效。
 
 * break    当玩家破坏家具时
 * place    当玩家放置家具时
+* hit      当玩家击打家具时
 
 ```yaml
 sounds:
   break: minecraft:block.bamboo_wood.break
   place: minecraft:block.bamboo_wood.place
+  hit: minecraft:block.bamboo_wood.hit
 ```
 
 :::info

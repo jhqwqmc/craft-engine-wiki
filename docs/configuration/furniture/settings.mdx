@@ -11,17 +11,27 @@ Determines the item that this furniture corresponds to. This is usually used to 
 item: default:test_furniture
 ```
 
+## hit-times
+
+This determines how many times the player needs to hit the furniture to destroy it.
+
+```yaml
+hit-times: 3
+```
+
 ## sounds
 
 Determines the sound of the furniture in various situations
 
 * break    When the player breaks this furniture
 * place    When the player places this furniture
+* hit      When the player hits this furniture
 
 ```yaml
 sounds:
   break: minecraft:block.bamboo_wood.break
   place: minecraft:block.bamboo_wood.place
+  hit: minecraft:block.bamboo_wood.hit
 ```
 
 :::info
