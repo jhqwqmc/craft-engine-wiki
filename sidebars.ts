@@ -255,6 +255,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/item/behaviors/ground_block_item",
                   label: '⬆️ Ground Block Item',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/item/behaviors/range_mining_item",
+                  label: '⛏️ Range Mining Item',
+                },
               ]
             },
             {
