@@ -121,17 +121,27 @@ images:
 
 :::
 
+## 引用
+
+“引用”允许你为某个多字符精灵图中的某个图设定别名
+
+```yaml
+images:
+  default:angry:
+    ref: default:emojis:0:1
+```
+
+```yaml
+images:
+  default:angry:
+    ref: default:emojis
+    row: 0
+    column: 1
+```
+
 ## 在游戏中预览图像
 
-你可以使用一个非常简单的命令来预览图片效果。你只需将 `\ub000` 替换为你图片对应的字符即可。
-
-```
-/tellraw @p {"text":"\ub000","font":"minecraft:icons"}
-```
-
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/image_1.png').default} alt="" />
-</div>
+你可以使用一个非常简单的命令 `/ce debug image [id]` 来预览图片效果。
 
 ## 与其他插件的兼容性
 

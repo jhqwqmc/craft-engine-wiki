@@ -118,17 +118,27 @@ images:
 
 :::
 
+## Reference
+
+"Referencing" allows you to assign an alias to a specific image within a multi-character sprite sheet.
+
+```yaml
+images:
+  default:angry:
+    ref: default:emojis:0:1
+```
+
+```yaml
+images:
+  default:angry:
+    ref: default:emojis
+    row: 0
+    column: 1
+```
+
 ## Preview the Image In Game
 
-You can use a very simple command to preview the effect of the image. All you need to do is replace `\ub000` with the character corresponding to your image.
-
-```
-/tellraw @p {"text":"\ub000","font":"minecraft:icons"}
-```
-
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/image_1.png').default} alt="" />
-</div>
+You can use a very simple command `/ce debug image [id]` to preview the effect of the image.
 
 ## Compatibility with Other Plugins
 
