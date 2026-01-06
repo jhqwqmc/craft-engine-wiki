@@ -344,8 +344,8 @@
     "description": "教程侧边栏中'扩散方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🖼️ Item Frame Block": {
-    "message": "🖼️ 物品展示方块",
-    "description": "教程侧边栏中'物品展示方块'文档项的标签"
+    "message": "🖼️ 物品展示框方块",
+    "description": "教程侧边栏中'物品展示框方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",

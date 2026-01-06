@@ -1,5 +1,5 @@
 ---
-title: 🖼️ 物品展示方块
+title: 🖼️ 物品展示框方块
 id: item_frame_block
 ---
 
@@ -7,15 +7,15 @@ id: item_frame_block
 |--------|-----------|------|
 | facing | direction | 是    |
 
-**物品展示方块**是一种用于存放并展示物品的方块类型。 \
-**特别感谢：该功能由 [SIMMC 服务器](https://simmc.cn/)赞助开发。**
+**物品展示框方块**是一种用于存放并展示物品的方块类型。 \
+**特别感谢：该功能由 [SIMMC 服务器](https://simmc.cn/)赞助 [jhqwqmc](https://github.com/jhqwqmc/) 开发。**
 
 ```yml
 blocks:
   default:item_frame_block:
     behavior:
       type: item_frame_block
-      position: 0
+      position: 0,0,0
       glow: false
       invisible: false
       render-map-item: true # 静态地图渲染有少量性能开销
