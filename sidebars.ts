@@ -536,6 +536,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/behaviors/spreading_block",
                   label: '👾 Spreading Block',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/item_frame_block",
+                  label: '🖼️ Item Frame Block',
+                },
               ]
             },
             {

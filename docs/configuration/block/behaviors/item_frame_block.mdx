@@ -1,0 +1,26 @@
+---
+title: 🖼️ Item Frame Block
+id: item_frame_block
+---
+
+| Property Name | Property Type | Required |
+|---------------|---------------|----------|
+| facing        | direction     | yes      |
+
+**Item Frame Block** is a type of block used for storing and displaying items. \
+**Special thanks: This feature was developed with the sponsorship of the [SIMMC server](https://simmc.cn/).**
+
+```yml
+blocks:
+  default:item_frame_block:
+    behavior:
+      type: item_frame_block
+      position: 0
+      glow: false
+      invisible: false
+      render-map-item: true # Static map rendering incurs a small amount of performance overhead
+      sounds:
+        put: entity.item_frame.add_item
+        take: entity.item_frame.remove_item
+        rotate: entity.item_frame.rotate_item
+```
