@@ -60,8 +60,12 @@
     "description": "教程侧边栏中'简而不凡'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🚧 Under Development": {
-    "message": "🚧 开发中",
-    "description": "教程侧边栏中'开发中'文档项的标签"
+    "message": "🚧 画饼专区",
+    "description": "教程侧边栏中'画饼专区'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.⚡ Spark": {
+    "message": "⚡ Spark",
+    "description": "教程侧边栏中'Spark'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.💎 First Item": {
     "message": "💎 首个物品",
@@ -338,6 +342,10 @@
   "sidebar.tutorialSidebar.doc.👾 Spreading Block": {
     "message": "👾 扩散方块",
     "description": "教程侧边栏中'扩散方块'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.🖼️ Item Frame Block": {
+    "message": "🖼️ 物品展示框方块",
+    "description": "教程侧边栏中'物品展示框方块'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.🫑 Block Entities": {
     "message": "🫑 方块实体",
