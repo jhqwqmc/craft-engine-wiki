@@ -21,22 +21,6 @@ items:
 :::tip
 CraftEngine's global variables are also accessible to other plugins, though it should be noted that their implementation operates through text replacement at the packet level. **This approach does not interfere with the functional logic or internal operations of the recipient plugins**.
 
-Furthermore, by design, these global variables **DO NOT support passing additional parameters**. This limitation is intentional and helps maintain optimal performance.
-
-Below are several common use cases with examples:
-
-1. Parsing variables for plugins that do not support PlaceholderAPI
-```yaml
-global-variables:
-  money: "<papi:vault_eco_balance>"
-```
-
-```yaml
-# Bossbar configuration in another plugin
-bossbar: "Current coins: <global:money>"
-```
-
-2. Using rich text formatting in plugins that do not support MiniMessage
 ```yaml
 global-variables:
   coin_without_shadow: "<!shadow><image:default:icons>"

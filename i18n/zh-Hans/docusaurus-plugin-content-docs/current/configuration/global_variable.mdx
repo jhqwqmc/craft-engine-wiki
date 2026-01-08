@@ -24,22 +24,6 @@ items#topaz_gears:
 :::tip
 CraftEngine 的全局变量支持在其他插件中调用，但需要注意的是，它们是通过数据包级别的文本替换来实现的。**这种做法不会干预其他插件的功能逻辑或内部实现**。
 
-此外在设计上**不支持传入额外参数**，该限制出于性能优化的考虑。 
-
-以下为几种常见应用场景及示例：
-
-1. 为不支持 PlaceholderAPI 的插件解析变量
-```yaml
-global-variables:
-  money: "<papi:vault_eco_balance>"
-```
-
-```yaml
-# 其他插件的Boss栏配置
-bossbar: "当前金币: <global:money>"
-```
-
-2. 在不支持 MiniMessage 的插件中使用富文本格式
 ```yaml
 global-variables:
   coin_without_shadow: "<!shadow><image:default:icons>"

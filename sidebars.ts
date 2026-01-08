@@ -38,6 +38,11 @@ const sidebars: SidebarsConfig = {
           id: "intro/under_development",
           label: '🚧 Under Development',
         },
+        {
+          type: 'doc',
+          id: "intro/spark",
+          label: '⚡ Spark',
+        },
       ]
     },
     {
