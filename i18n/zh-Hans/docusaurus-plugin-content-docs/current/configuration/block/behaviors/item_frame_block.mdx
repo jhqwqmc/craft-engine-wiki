@@ -1,0 +1,26 @@
+---
+title: 🖼️ 物品展示框方块
+id: item_frame_block
+---
+
+| 属性名称   | 属性类型      | 是否必需 |
+|--------|-----------|------|
+| facing | direction | 是    |
+
+**物品展示框方块**是一种用于存放并展示物品的方块类型。 \
+**特别感谢：该功能由 [SIMMC 服务器](https://simmc.cn/)赞助 [jhqwqmc](https://github.com/jhqwqmc/) 开发。**
+
+```yml
+blocks:
+  default:item_frame_block:
+    behavior:
+      type: item_frame_block
+      position: 0,0,0
+      glow: false
+      invisible: false
+      render-map-item: true # 静态地图渲染有少量性能开销
+      sounds:
+        put: entity.item_frame.add_item
+        take: entity.item_frame.remove_item
+        rotate: entity.item_frame.rotate_item
+```
