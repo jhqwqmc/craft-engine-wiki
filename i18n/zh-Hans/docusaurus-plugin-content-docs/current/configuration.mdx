@@ -4,6 +4,7 @@ id: configuration
 ---
 
 import Highlight from '@site/src/components/Highlight';
+import PluginFileTree from '@site/src/components/PluginFileTree';
 
 ## 简介
 
@@ -133,4 +134,145 @@ long-value: !!long 1234
 float-value: !!float 12.34
 byte-value: !!byte 1
 short-value: !!short 123
+byte-array-value: !!byte[] [1,2,3,4]
+int-array-value: !!int[] [1,2,3,4]
+long-array-value: !!long[] [1,2,3,4]
+double-array-value: !!double[] [1.1,2.2,3.3,4.4]
+int-list: !!IntList[] [1,2,3]
+long-list: !!LongList[] [1,2,3]
+double-list: !!DoubleList[] [1,2,3]
 ```
+
+### 子包
+
+子包允许您根据服务器版本选择性地加载配置，或者以统一的方式方便地管理类似类型的包。
+
+```yaml
+# pack.yml
+author: XiaoMoMi
+version: 0.0.1
+description: CraftEngine默认资产
+namespace: default
+subpacks:
+  $$>=1.21.4:
+    pack_a: true
+  $$<1.21.4:
+    pack_b: true
+  pack_c: true
+  pack_d: false
+```
+
+<PluginFileTree
+  initialTreeData={[
+    {
+      id: "resources",
+      name: "resources",
+      children: [
+        {
+          id: "default",
+          name: "default",
+          children: [
+            {
+              id: "configuration_1",
+              name: "configuration",
+              children: [
+              ]
+            },
+            {
+              id: "resourcepack_1",
+              name: "resourcepack",
+              children: [
+              ]
+            },
+            {
+              id: "subpacks",
+              name: "subpacks",
+              children: [
+                {
+                  id: "pack_a",
+                  name: "pack_a",
+                  children: [
+                    {
+                      id: "configuration_2",
+                      name: "configuration",
+                      children: [
+                        
+                      ]
+                    },
+                    {
+                      id: "resourcepack_2",
+                      name: "resourcepack",
+                      children: [
+                        
+                      ]
+                    },
+                  ]
+                },
+                {
+                  id: "pack_b",
+                  name: "pack_b",
+                  children: [
+                    {
+                      id: "configuration_3",
+                      name: "configuration",
+                      children: [
+                      ]
+                    },
+                    {
+                      id: "resourcepack_3",
+                      name: "resourcepack",
+                      children: [
+                      ]
+                    },
+                  ]
+                },
+                {
+                  id: "pack_c",
+                  name: "pack_c",
+                  children: [
+                    {
+                      id: "configuration_4",
+                      name: "configuration",
+                      children: [
+                      ]
+                    },
+                    {
+                      id: "resourcepack_4",
+                      name: "resourcepack",
+                      children: [
+                      ]
+                    },
+                  ]
+                },
+                {
+                  id: "pack_d",
+                  name: "pack_d",
+                  children: [
+                    {
+                      id: "configuration_5",
+                      name: "configuration",
+                      children: [
+                      ]
+                    },
+                    {
+                      id: "resourcepack_5",
+                      name: "resourcepack",
+                      children: [
+                        
+                      ]
+                    },
+                  ]
+                }
+              ]
+            },
+            {
+                id: "pack.yml",
+                name: "pack.yml",
+                isLeaf: true,
+            },
+          ]
+        }
+      ]
+    },
+  ]}
+/>
