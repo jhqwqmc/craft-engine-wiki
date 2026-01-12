@@ -11,22 +11,13 @@ import Highlight from '@site/src/components/Highlight';
   <img src={require('/img/equipment_1.png').default} alt="" />
 </div>
 
-CraftEngine offers two ways to create custom equipment. One method is based on **Trim** (for Minecraft 1.20+), and the other uses the **Equippable component** (introduced in 1.21.2).
+CraftEngine offers two ways to create custom equipment. One method is based on **Trim** (for 1.20 and above), and the other uses the **Equippable Component** (for 1.21.2 and above).
 
 :::warning
 
-Please note all configurations below pertain to equipment settings, not individual item specifications. To apply these equipment configurations to your armor items, please refer to **[this documentation](item/settings.mdx#equipment)**.
+**Applying Equipment to Items:**
 
-```yaml
-items:
-  my:custom_helmet:
-    settings:
-      equipment:
-        asset-id: my:custom_armor
-equipments:
-  my:custom_armor:
-    ...
-```
+To apply these equipments to your armor items, go to **[equipment settings](item/settings.mdx#equipment)**.
 
 :::
 
@@ -38,11 +29,11 @@ The creation method for 3D helmets is completely unrelated to **equipment.** Sin
 <details>
   <summary>3D Helmet</summary>
 
-  Armor items inherently come with an `equippable` component, which includes an option called `asset_id`. When this option is specified, Minecraft uses a **hardcoded renderer** to display the designated armor texture. This means that even if you assign a custom 3D item model to a diamond helmet-based item, it will still be rendered using the default **diamond helmet armor renderer** when worn by a player.
+  Armor items inherently come with an `equippable` component, which includes an option called `asset_id`. When this option is specified, Minecraft uses a **armor renderer** to display the designated armor texture. This means that even if you assign a custom 3D item model to a diamond helmet-based item, it will still be rendered using the default **armor renderer** when worn by a player.
 
   ![](/img/3d_helmet_1.png)
 
-  To fix this, you must disable the hardcoded renderer and allow the helmet to use the default item renderer instead.
+  To fix this, you must disable the armor renderer and allow the helmet to use the default renderer instead.
 
   ### Solution 1 (For 1.21.2+):
 
@@ -82,28 +73,11 @@ equipments:
   # the equipment asset id
   default:topaz:
     type: component
-    # 'namespace:path' resolves to assets/<namespace>/textures/entity/equipment/<layer_type>/<path>.png.
-    # 
-    # Example: minecraft:topaz
-    #               ↓
-    # assets/minecraft/textures/entity/equipment/humanoid/topaz.png
-    humanoid: "minecraft:topaz"
-
-    # other layer types
-    # assets/minecraft/textures/entity/equipment/humanoid_leggings/topaz.png
-    humanoid-leggings: "minecraft:topaz"
-
-    # more layer types, based on your needs
-    # assets/minecraft/textures/entity/equipment/happy_ghast_body/topaz.png
-    happy-ghast-body: "minecraft:topaz"
+    humanoid: "minecraft:entity/equipment/humanoid/topaz"
+    humanoid-leggings: "minecraft:entity/equipment/humanoid_leggings/topaz"
+    # Add more layer types based on your needs
+    happy-ghast-body: "minecraft:entity/equipment/happy_ghast_body/topaz"
 ```
-
-The image below demonstrates the mapping between configurations and actual texture paths. If a layer type contains hyphens ("-"), you must replace them with underscores ("_") in the path. Example `humanoid-leggings` -> `humanoid_leggings`
-
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/equipment_3.png').default} alt="" />
-</div>
-
 
 **Supported layer types:**
 
@@ -125,16 +99,9 @@ The image below demonstrates the mapping between configurations and actual textu
 * camel-husk-saddle
 * nautilus-body
 
-:::info
-
-❓️**Q:** Why doesn't CraftEngine let users use random texture paths and relocate them when generating the resource pack?
-
-✔️ **A:** I want users to follow Minecraft's resource pack standards - I'll only allow custom paths if Mojang breaks their own rules. Then the plugin will handle version-specific paths for you.
-:::
-
 :::tip
 
-You can also set it up as a configuration block like this for some extra options
+You can also set it up as a configuration section like this for some extra options
 
 ```yaml
 
@@ -145,7 +112,7 @@ equipments:
       texture: "minecraft:leather"
       dyeable:
         color-when-undyed: -6265536 # leather color
-      # for elytra texture
+      # elytra texture
       use-player-texture: false
 ```
 :::
@@ -190,39 +157,6 @@ equipments:
 
 When CraftEngine removes a vanilla armor's base texture, the armor becomes completely transparent when worn. By applying custom trims to this invisible armor, we can achieve custom armor textures. However, this approach has one limitation - the armor can no longer receive additional trims afterward.
 
-<details>
-  <summary>Fix the "removed" armor</summary>
-
-  Q: Will sacrificed armor still display normally? Does this mean I can't use chainmail armor at all?
-
-  A: CraftEngine anticipated this scenario. The solution is surprisingly simple, at least for CraftEngine - we apply a special trim pattern to vanilla chainmail armor to preserve its original appearance. This is achieved through CraftEngine's exclusive `client-bound-data` feature. You can fix vanilla chainmail armor by running `/ce resource enable legacy_armor`
-
-  By default, the plugin has preconfigured vanilla armor sacrificial options in `config.yml`. These settings will only take effect when you have configured at least one trim-based armor.
-
-```yaml
-# config.yml
-equipment:
-  sacrificed-vanilla-armor:
-    type: chainmail
-    asset-id: minecraft:chainmail
-    humanoid: minecraft:trims/entity/humanoid/chainmail
-    humanoid-leggings: minecraft:trims/entity/humanoid_leggings/chainmail
-
-# legacy_armor/configuration/chainmail.yml
-items:
-  minecraft:chainmail_helmet:
-    client-bound-data:
-      trim:
-        pattern: chainmail # the pattern that preserves its original appearance
-        material: custom # a hardcoded material type
-      hide-tooltip:
-        - trim
-  ...leggings, chestplate and boots
-```
-</details>
-
-This configures a trim-based armor set. The texture paths have no strict requirements - CraftEngine will automatically relocate texture directories for you.
-
 ```yaml
 equipments:
   # the equipment asset id
@@ -231,6 +165,15 @@ equipments:
     humanoid: minecraft:entity/equipment/humanoid/topaz
     humanoid-leggings: minecraft:entity/equipment/humanoid_leggings/topaz
 ```
+
+<details>
+  <summary>How to fix the "removed" armor</summary>
+
+  <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+
+  You can fix vanilla chainmail armor by running `/ce resource enable legacy_armor`. The solution is surprisingly simple - we apply a special trim pattern to vanilla chainmail armor to preserve its original appearance.
+
+</details>
 
 :::caution
 
