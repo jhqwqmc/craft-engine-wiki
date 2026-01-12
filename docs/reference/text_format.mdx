@@ -77,7 +77,9 @@ functions:
       max: "<papi:exp_multiplier:1> * 5"
 ```
 
-### \<image:\_namespace\_:\_id\_:\[\_row\_]:\[\_column\_]>
+### \<image:\_namespace\_:\_id\_:\[\_row\_]:\[\_column\_]:\[\_format\_]>
+
+### \<image:\_namespace\_:\_id\_:\[\_format\_]>
 
 `image` allows to use images registered in the plugin
 
@@ -92,6 +94,14 @@ item-name: "<!i><white><image:default:icons:0:1><#FF8C00> Topaz Rod"
 ```
 
 ![](/img/text_format_4.png)
+
+```yaml
+item-name: "<!i><red><image:default:icons:'<!shadow><white>'> Topaz Rod"
+```
+
+```yaml
+item-name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> Topaz Rod"
+```
 
 ### \<i18n:\_id\_>
 
