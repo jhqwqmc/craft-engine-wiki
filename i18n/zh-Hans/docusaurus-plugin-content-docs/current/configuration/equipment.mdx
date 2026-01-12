@@ -35,25 +35,14 @@ equipments:
 
 3D 头盔的创建方法与**装备**完全无关。由于许多用户在创建 3D 头盔时遇到了困难，我将在此说明正确的创建方法，并澄清一些可能存在的误解。
 
----
-译者注：3D 头盔的渲染<Highlight color="#FF0000">**是**</Highlight>通过<Highlight color="#e03f26ff">**渲染物品模型**</Highlight>实现的，
-而<Highlight color="#FF0000">**不是**</Highlight>通过<Highlight color="#e03f26ff">**渲染盔甲模型**</Highlight>实现的。
-
-做个小实验尝试执行 `/item replace entity @p armor.head with minecraft:glass` 看看你的头上是不是渲染了一个完整的 3D 玻璃方块，尝试把 `minecraft:glass` 替换成 `minecraft:bow` 看看头上是不是渲染了一个弓物品。
-
-但是话说回来<Highlight color="#e03f26ff">**盔甲模型**</Highlight>的渲染优先级<Highlight color="#FF0000">**高于**</Highlight><Highlight color="#e03f26ff">**物品模型**</Highlight>，
-当使用<Highlight color="#FF0000">**原版头盔物品**</Highlight>作为 `material` 的时候默认就会<Highlight color="#FF0000">**自带**</Highlight>一个<Highlight color="#e03f26ff">**盔甲模型**</Highlight>，
-所以需要把这个<Highlight color="#e03f26ff">**盔甲模型**</Highlight>删掉就可以渲染<Highlight color="#e03f26ff">**物品模型**</Highlight>了，查看下面的**3D 头盔原理**获取解决方案。
-
----
 <details>
   <summary>3D 头盔原理</summary>
 
-    盔甲类物品天生带有 `equippable` 组件，其中包含一个名为 `asset_id` 的选项。当指定该选项时，Minecraft 会使用**硬编码渲染器**来渲染指定的盔甲纹理。这意味着即使你为基于钻石头盔的物品分配了自定义 3D 物品模型，玩家穿戴时仍会使用默认的**钻石头盔盔甲渲染器**进行渲染。
+    盔甲类物品天生带有 `equippable` 组件，其中包含一个名为 `asset_id` 的选项。当指定该选项时，Minecraft 会使用**硬编码渲染器**来渲染指定的盔甲纹理。这意味着即使你为基于钻石头盔的物品分配了自定义 3D 物品模型，玩家穿戴时仍会使用默认的**盔甲渲染器**进行渲染。
 
     ![](/img/3d_helmet_1.png)
 
-    要解决这个问题，你必须禁用硬编码渲染器，并让头盔改用默认的物品渲染器。
+    要解决这个问题，你必须禁用盔甲渲染器，以让头盔改用默认的物品渲染器。
 
     ### 解决方案1（适用于 1.21.2+ 版本）：
 
@@ -93,29 +82,11 @@ equipments:
   # 装备资源命名空间ID
   default:topaz:
     type: component
-    # '命名空间:路径' 解析为 assets/<命名空间>/textures/entity/equipment/<预设模型类型>/<路径>.png。
-    # 译者注：这里的命名空间和路径不允许使用中文
-    # 
-    # 示例: minecraft:topaz
-    #               ↓
-    # assets/minecraft/textures/entity/equipment/humanoid/topaz.png
-    humanoid: "minecraft:topaz"
-
-    # 其他预设模型类型
-    # assets/minecraft/textures/entity/equipment/humanoid_leggings/topaz.png
-    humanoid-leggings: "minecraft:topaz"
-
+    humanoid: "minecraft:entity/equipment/humanoid/topaz"
+    humanoid-leggings: "minecraft:entity/equipment/humanoid_leggings/topaz"
     # 更多预设模型类型（根据需求添加）
-    # assets/minecraft/textures/entity/equipment/happy_ghast_body/topaz.png
-    happy-ghast-body: "minecraft:topaz"
+    happy-ghast-body: "minecraft:entity/equipment/happy_ghast_body/topaz"
 ```
-
-下图展示了配置与实际纹理路径之间的映射。如果图层类型包含连字符（"-"），你必须在路径中将其替换为下划线（"_"）。例如：`humanoid-leggings` -> `humanoid_leggings`。
-
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/equipment_3.png').default} alt="" />
-</div>
-
 
 **支持的预设模型类型：**
 
@@ -136,13 +107,6 @@ equipments:
 * happy-ghast-body
 * camel-husk-saddle
 * nautilus-body
-
-:::info
-
-❓️**问：** 为何 CraftEngine 不允许用户随意使用纹理路径并在生成资源包时重定位？
-
-✔️ **答：** 要求遵循 Minecraft 资源包规范——仅当 Mojang 自身违反规则时才会开放自定义路径功能，届时插件将自动处理版本适配路径。
-:::
 
 :::tip
 
@@ -202,39 +166,6 @@ equipments:
 
 当 CraftEngine 移除原版盔甲基础纹理后，装备时将呈现完全透明状态。通过对其应用自定义纹饰即可实现自定义盔甲纹理。此方法仅存在一个限制——该盔甲后续无法再接受额外纹饰。
 
-<details>
-  <summary>修复被“破坏”的原版盔甲</summary>
-
-  问：被牺牲的盔甲还能正常显示吗？这是否意味着锁链甲或是我选定的那个盔甲完全不能使用了？
-
-  答：CraftEngine 预见了这种情况。解决方案出乎意料地简单（至少对 CraftEngine 而言）—— 我们通过应用特殊纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client-bound-data` 特性实现。你可以通过执行指令 `/ce resource enable legacy_armor` 来修复原版锁链甲。
-
-  插件默认在 `config.yml` 中预置了原版盔甲牺牲选项，这些配置仅在您至少配置过一件基于纹饰的盔甲后才会生效。
-
-```yaml
-# config.yml
-equipment:
-  sacrificed-vanilla-armor:
-    type: chainmail
-    asset-id: minecraft:chainmail
-    humanoid: minecraft:trims/entity/humanoid/chainmail
-    humanoid-leggings: minecraft:trims/entity/humanoid_leggings/chainmail
-
-# legacy_armor/configuration/chainmail.yml
-items:
-  minecraft:chainmail_helmet:
-    client-bound-data:
-      trim:
-        pattern: chainmail # 用于保持原始外观的纹饰图案
-        material: custom # 这是硬编码的材料类型
-      hide-tooltip:
-        - trim
-  ...护腿、胸甲与靴子
-```
-</details>
-
-此配置用于基于纹饰的盔甲套装。纹理路径无严格限制 —— CraftEngine 将自动为您重定位纹理目录。
-
 ```yaml
 equipments:
   # 装备资源命名空间ID
@@ -243,6 +174,15 @@ equipments:
     humanoid: minecraft:entity/equipment/humanoid/topaz
     humanoid-leggings: minecraft:entity/equipment/humanoid_leggings/topaz
 ```
+
+<details>
+  <summary>修复被“破坏”的原版盔甲</summary>
+
+  <Highlight color="#f2184eff">**付费版专属**</Highlight>
+
+  你可以通过执行指令 `/ce resource enable legacy_armor` 来修复原版锁链甲）—— 我们通过应用特殊纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client-bound-data` 特性实现。
+
+</details>
 
 :::caution
 

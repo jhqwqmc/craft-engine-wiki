@@ -99,7 +99,9 @@ functions:
       max: "<papi:exp_multiplier:1> * 5"
 ```
 
-### \<image:\_命名空间\_:\_路径\_:\[\_行\_]:\[\_列\_]>
+### \<image:\_命名空间\_:\_路径\_:\[\_行\_]:\[\_列\_]:\[\_格式\_]>
+
+### \<image:\_命名空间\_:\_路径\_:\[\_格式\_]>
 
 `image` 允许你使用插件中已注册的图片。
 
@@ -114,6 +116,14 @@ item-name: "<!i><white><image:default:icons:0:1><#FF8C00>黄玉钓竿"
 ```
 
 ![](/img/i18n/zh-Hans/text_format_4.png)
+
+```yaml
+item-name: "<!i><red><image:default:icons:'<!shadow><white>'> 黄玉钓竿"
+```
+
+```yaml
+item-name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> 黄玉钓竿"
+```
 
 ### \<i18n:\_标识符\_>
 
