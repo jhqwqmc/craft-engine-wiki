@@ -70,7 +70,6 @@ billboard: fixed  # fixed / vertical / horizontal / center
 position: 0.5,0,0
 translation: 0,0.5,0
 scale: 1 # scale: 1,2,1
-apply-dyed-color: true
 glow-color: 255,255,255
 brightness:
   block-light: 15
@@ -80,6 +79,13 @@ view-range: 1.0
 rotation: 45  # Y axis
 rotation: 45,45,0  # Euler angle
 rotation: 0,0,0.7071,0.7071  # Quaternions  https://quaternions.online/
+# Select the component that affects the color of this furniture. Generally, you only need to 
+# choose one of the following component types based on the item of the furniture element.
+tint_source: 
+  - dyed_color
+  - map_color
+  - firework_explosion
+  - potion_contents
 ```
 
 :::warning
@@ -138,8 +144,14 @@ Renders a dropped item
 ```yaml
 type: item
 item: default:bench
-apply-dyed-color: true
 position: 0,1,0
+# Select the component that affects the color of this furniture. Generally, you only need to 
+# choose one of the following component types based on the item of the furniture element.
+tint_source: 
+  - dyed_color
+  - map_color
+  - firework_explosion
+  - potion_contents
 ```
 
 ### Armor stand
@@ -149,11 +161,17 @@ Renders a custom item based on armor stand
 ```yaml
 type: armor_stand
 item: default:bench
-apply-dyed-color: true
 position: 0,1,0
 scale: 1
 small: false
 glow-color: white  # black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white
+# Select the component that affects the color of this furniture. Generally, you only need to 
+# choose one of the following component types based on the item of the furniture element.
+tint_source: 
+  - dyed_color
+  - map_color
+  - firework_explosion
+  - potion_contents
 ```
 
 ## Hitboxes
