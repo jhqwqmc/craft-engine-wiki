@@ -26,12 +26,12 @@ items:
   default:palm_planks:
     material: paper
     settings:
-      fuel-time: 300
+      fuel_time: 300
       tags:
         - "minecraft:planks"
         - "minecraft:wooden_tool_materials"
     data:
-      item-name: "<!i>Palm Planks"
+      item_name: "<!i>Palm Planks"
 ```
 
 <div style={{textAlign: 'center'}}>
@@ -140,7 +140,7 @@ The **Result Post Processor** is a concept introduced to address recipe diversif
 result:
   id: default:topaz_pickaxe
   count: 1
-  post-processors:
+  post_processors:
     - type: apply_data
       data:
         enchantment:
@@ -161,13 +161,13 @@ The visual-result feature prevents players from directly anticipating the outcom
 result:
   id: default:topaz_sword
   count: 1
-visual-result:
+visual_result:
   id: default:topaz_sword
   count: 1
-  post-processors:
+  post_processors:
     - type: apply_data
       data:
-        remove-components: 
+        remove_components:
           - attribute_modifiers
         lore:
           - "<gray>Attack Damage 1~3"
@@ -209,7 +209,7 @@ If the player has all the ingredients for a recipe and meets its conditions, the
 ```yaml
 recipes:
   default:amethyst_torch:
-    unlock-on-ingredient-obtained: true
+    unlock_on_ingredient_obtained: true
 ```
 
 ## Recipe Types
@@ -218,13 +218,7 @@ recipes:
 
 **Important Notice:**
 
-To reload recipes, you must use either `/ce reload recipe` or `/ce reload all`. If you're running a Folia server, you can only use `/ce reload recipe`.
-
 After reloading the **datapacks**, please reload the recipes, otherwise the registered recipes will become invalid.
-
-**Warning for Folia Servers:**
-
-This operation is highly unsafe! Folia's recipe manager is not thread-safe, and reloading recipes during runtime may cause server crashes.
 
 :::
 
@@ -397,17 +391,17 @@ Stone Cutting Recipe is a somewhat unique recipe type. I do not recommend using 
 ```yaml
 default:topaz_bow:
   type: smithing_transform
-  template-type: default:topaz # slot 1 (Optional)
+  template_type: default:topaz # slot 1 (Optional)
   base: minecraft:bow # slot 2 (Required)
   addition: default:topaz # slot 3 (Optional)
   # merge two items' components like what vanilla does
-  merge-components: true # default: true
+  merge_components: true # default: true
   result:
     id: default:topaz_bow
     count: 1
-    post-processors: [] # see the result post processor above
+    post_processors: [] # see the result post processor above
   # This is the smithing post processor, see the guide below
-  post-processors: []
+  post_processors: []
 ```
 
 <div style={{textAlign: 'center'}}>
@@ -421,7 +415,7 @@ If you need more precise control over which components are preserved, you should
 **Important:** Do not confuse this with [result post processor](#result-post-processor) - these are completely different systems.
 
 ```yaml
-post-processors:
+post_processors:
   # Merge the enchantments of the final product and the original item, rather than choosing one of them.
   - type: merge_enchantments
 
@@ -449,7 +443,7 @@ post-processors:
 ```yaml
 default:bolt_tool_trims:
   type: smithing_trim
-  template-type: "minecraft:bolt_armor_trim_smithing_template"
+  template_type: "minecraft:bolt_armor_trim_smithing_template"
   base: "#minecraft:trimmable_tool"
   addition: "#minecraft:trim_materials"
   pattern: minecraft:bolt # required on 1.21.5+

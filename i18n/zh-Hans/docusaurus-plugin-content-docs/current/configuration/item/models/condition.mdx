@@ -15,7 +15,7 @@ import UrlCard from '@site/src/components/UrlCard';
 布尔条件型物品模型映射类型。此物品模型映射类型会先计算物品堆叠内给定的谓词，当属性为真时选择一个物品模型映射，为假时选择另一个。
 
 :::caution
-当你使用 `minecraft:condition` 时，你需要指定**谓词**，也就是下面提到的**谓词**。`on-false` 和 `on-true` 分别代表在不同条件下显示不同的模型。
+当你使用 `minecraft:condition` 时，你需要指定**谓词**，也就是下面提到的**谓词**。`on_false` 和 `on_true` 分别代表在不同条件下显示不同的模型。
 :::
 
 ```yaml
@@ -24,10 +24,10 @@ items:
     model:
       type: "minecraft:condition"
       property: "minecraft:using_item"
-      on-false:
+      on_false:
         type: "minecraft:model"
         path: "minecraft:item/custom/model_false"
-      on-true:
+      on_true:
         type: "minecraft:model"
         path: "minecraft:item/custom/model_true"
 ```

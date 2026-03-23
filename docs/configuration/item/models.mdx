@@ -117,14 +117,14 @@ items:
     model:
       type: minecraft:condition
       property: minecraft:fishing_rod/cast
-      on-false:
+      on_false:
         type: minecraft:model
         path: minecraft:item/custom/topaz_rod
         generation:
           parent: minecraft:item/fishing_rod
           textures:
             layer0: minecraft:item/custom/topaz_rod
-      on-true:
+      on_true:
         type: minecraft:model
         path: minecraft:fishing_rod/cast
         generation:
@@ -234,28 +234,28 @@ items:
 
 ## Legacy Model
 
-**Legacy Model** specifically refers to the item model format used in versions 1.21.3 and earlier. You can specify the legacy item model format using the legacy-model section. However, in most cases, you don’t need to do this because the plugin will automatically convert 1.21.4 item models into the legacy format whenever possible. You should only use this configuration section if there are issues with the legacy model format.
+**Legacy Model** specifically refers to the item model format used in versions 1.21.3 and earlier. You can specify the legacy item model format using the legacy_model section. However, in most cases, you don’t need to do this because the plugin will automatically convert 1.21.4 item models into the legacy format whenever possible. You should only use this configuration section if there are issues with the legacy model format.
 
 ```yaml
 items#topaz_gears:
   default:topaz_rod:
     material: fishing_rod
-    item-model: default:topaz_rod
+    item_model: default:topaz_rod
     settings:
       tags:
         - "default:topaz_tools"
     data:
-      item-name: "<!i><#FF8C00><i18n:item.topaz_rod>"
-      tooltip-style: minecraft:topaz
+      item_name: "<!i><#FF8C00><i18n:item.topaz_rod>"
+      tooltip_style: minecraft:topaz
     model:
       template: default:model/simplified_fishing_rod_2d
       arguments:
         path: minecraft:item/custom/topaz_rod
         cast_path: minecraft:item/custom/topaz_rod_cast
-    # If you specify a model in the legacy-model section, 
+    # If you specify a model in the legacy_model section,
     # the plugin will use your manually defined model instead of 
     # relying on the auto-converted legacy format.
-    legacy-model:
+    legacy_model:
       path: minecraft:item/custom/topaz_rod
       overrides:
         - path: minecraft:item/custom/topaz_rod_cast
@@ -264,6 +264,23 @@ items#topaz_gears:
 ```
 
 :::tip
-If you don't require support for versions above 1.21.4, you may configure only the legacy-model section and omit the model section entirely.
+If you don't require support for versions above 1.21.4, you may configure only the legacy_model section and omit the model section entirely.
 :::
+
+## transformation (26.1+)
+
+```yaml
+items:
+  default:test:
+    model:
+      type: minecraft:model
+      path: minecraft:item/custom/test
+    transformation:
+      scale: 1,1,1
+      translation: 0,0,0
+      right_rotation:
+        angle: 0.0
+        axis: 0,0,0
+      left_rotation: 0,0,0,0
+```
 

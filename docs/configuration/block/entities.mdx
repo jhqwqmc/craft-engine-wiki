@@ -28,29 +28,29 @@ Please note that some vanilla blocks use hardcoded renderers. If a block uses a 
 
 :::
 
-To configure a display entity, simply add an `entity-renderer` option. This option accepts a configuration section or list as its parameter.
+To configure a display entity, simply add an `entity_renderer` option. This option accepts a configuration section or list as its parameter.
 
 ```yaml
 blocks:
   default:sleeper_sofa:
     state:
       state: white_bed[facing=west,occupied=false,part=foot]
-      entity-renderer:
+      entity_renderer:
         - type: item_display
           ...
         - type: text_display
           ...
-      entity-culling:
+      entity_culling:
         ...
   default:table_lamp:
     states:
       appearances:
         east_off:
           state: barrier
-          entity-renderer:
+          entity_renderer:
             type: item_display
             ...
-          entity-culling:
+          entity_culling:
             ...
 ```
 
@@ -72,7 +72,7 @@ item: default:sleeper_sofa
 **Optional Arguments**
 
 ```yaml
-display-transform: none # none / third_person_left_hand / third_person_right_hand
+display_transform: none # none / third_person_left_hand / third_person_right_hand
                         # first_person_left_hand / first_person_right_hand
                         # head / gui / ground / fixed
 billboard: fixed  # fixed / vertical / horizontal / center
@@ -88,11 +88,11 @@ yaw: 0.0  # better using rotation
 pitch: 0  # better using rotation
 
 scale: 1 # scale: 1,2,1
-glow-color: 255,255,255
+glow_color: 255,255,255
 brightness:
-  block-light: 15
-  sky-light: 15
-view-range: 1.0
+  block_light: 15
+  sky_light: 15
+view_range: 1.0
 ```
 
 :::tip
@@ -128,18 +128,18 @@ yaw: 0.0  # better using rotation
 pitch: 0  # better using rotation
 
 scale: 1.5 # scale: 1,2,1
-glow-color: 255,255,255
+glow_color: 255,255,255
 brightness:
-  block-light: 15
-  sky-light: 15
-view-range: 1.0
+  block_light: 15
+  sky_light: 15
+view_range: 1.0
 
-line-width: 200
-background-color: 64,0,0,0 # ARGB
-text-opacity: -1
-has-shadow: false
-is-see-through: false
-use-default-background-color: false
+line_width: 200
+background_color: 64,0,0,0 # ARGB
+text_opacity: -1
+has_shadow: false
+is_see_through: false
+use_default_background_color: false
 alignment: center  # center / left / right
 ```
 
@@ -163,7 +163,7 @@ item: default:bench
 position: 0,1,0
 scale: 1
 small: false
-glow-color: white  # black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white
+glow_color: white  # black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white
 ```
 
 ### BetterModel
@@ -174,7 +174,7 @@ model: custom_model # Required; string; specifies the model to render
 position: 0.5,0.5,0.5 # Optional; default: 0.5
 yaw: 0 # Optional
 pitch: 0 # Optional
-sight-trace: true # Optional
+sight_trace: true # Optional
 ```
 
 ### ModelEngine
@@ -192,20 +192,20 @@ pitch: 0 # Optional
 You can individually control whether entity culling is enabled for each block entity variant
 
 ```yaml
-entity-renderer:...
-entity-culling: false # Disabled
+entity_renderer:...
+entity_culling: false # Disabled
 ```
 
 Once entity culling is enabled, you can configure the culling parameters
 
 ```yaml
-entity-renderer: ...
-entity-culling:
+entity_renderer: ...
+entity_culling:
   # Manual configuration of AABB is required if the model is huge
   # In this example, it suits a double high block entity
   aabb: -0.5,-0.5,-0.5,0.5,1.5,0.5  # x1,y1,z1,x2,y2,z2
-  view-distance: 64 # View distance culling. -1 means unlimited distance.
+  view__distance: 64 # View distance culling. -1 means unlimited distance.
                     # However, setting this to -1 is not recommended when ray tracing is enabled,
                     # as it results in excessive algorithm path length and performance impact.
-  ray-tracing: false # Whether to enable ray tracing culling.
+  ray_tracing: false # Whether to enable ray tracing culling.
 ```

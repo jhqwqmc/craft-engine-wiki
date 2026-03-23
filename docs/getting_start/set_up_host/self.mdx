@@ -21,25 +21,25 @@ resource-pack:
           port: 8163
           protocol: "http"
           # Blocks all requests from non-Minecraft clients.
-          deny-non-minecraft-request: true
+          deny_non_minecraft_request: true
           # Generates a single-use, time-limited download link for each player.
-          one-time-token: true
-          # Improved validation for deny-non-minecraft-request and one-time-token; do not enable on offline servers or validation will fail.
-          strict-validation: false
-          rate-limiting:
+          one_time_token: true
+          # Improved validation for deny_non_minecraft_request and one_time_token; do not enable on offline servers or validation will fail.
+          strict_validation: false
+          rate_limiting:
             # Maximum bandwidth per second to prevent server instability for other players during resource pack downloads
-            max-bandwidth-per-second: 5_000_000 # 5MB/s
+            max_bandwidth_per_second: 5_000_000 # 5MB/s
             # Minimum guaranteed download speed per player to ensure acceptable download performance during concurrent downloads
-            min-download-speed-per-player: 50_000 # 50KB/s
+            min_download_speed_per_player: 50_000 # 50KB/s
             # Prevent a single IP from sending too many resource pack download requests in a short time period
-            qps-per-ip: 5/60 #  5 requests per 60 seconds
+            qps_per_ip: 5/60 #  5 requests per 60 seconds
 `}
 </DiffViewer>
 
 :::info
 
-The `deny-non-minecraft-request` setting blocks all requests from non-Minecraft clients. \
-As for `one-time-token`, it generates a single-use, time-limited download link for each player.
+The `deny_non_minecraft_request` setting blocks all requests from non-Minecraft clients. \
+As for `one_time_token`, it generates a single-use, time-limited download link for each player.
 
 You can avoid using IPv4 addresses for resource pack URLs by setting a full/complete URL instead.
 ```yaml

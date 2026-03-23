@@ -97,12 +97,12 @@ CraftEngine 支持三种不同的版本指定格式，分别是：
 items:
   default:topaz_trident:
     material: trident
-    client-bound-material:
+    client_bound_material:
       $$1.20.1~1.21.1: bow
       $$1.21.2~1.21.3: honey_bottle
       $$fallback: xxx
     data:
-      item-name: <!i><#FF8C00><i18n:item.topaz_trident>
+      item_name: <!i><#FF8C00><i18n:item.topaz_trident>
       components:
         minecraft:max_damage: 300
 ```
@@ -114,11 +114,11 @@ items:
   default:topaz_trident:
     material: trident
     data:
-      item-name: <!i><#FF8C00><i18n:item.topaz_trident>
+      item_name: <!i><#FF8C00><i18n:item.topaz_trident>
       components:
         minecraft:max_damage: 300
     $$>=1.21.2:
-      client-bound-data:
+      client_bound_data:
         components:
           minecraft:consumable:
             consume_seconds: 128000
@@ -130,17 +130,17 @@ items:
 当你需要使用特定的数据类型，比如 `float`，`long`，`short` 的时候，可以在值前面加上 `!!<type>`
 
 ```yaml
-long-value: !!long 1234
-float-value: !!float 12.34
-byte-value: !!byte 1
-short-value: !!short 123
-byte-array-value: !!byte[] [1,2,3,4]
-int-array-value: !!int[] [1,2,3,4]
-long-array-value: !!long[] [1,2,3,4]
-double-array-value: !!double[] [1.1,2.2,3.3,4.4]
-int-list: !!IntList [1,2,3]
-long-list: !!LongList [1,2,3]
-double-list: !!DoubleList [1,2,3]
+long_value: !!long 1234
+float_value: !!float 12.34
+byte_value: !!byte 1
+short_value: !!short 123
+byte_array_value: !!byte[] [1,2,3,4]
+int_array_value: !!int[] [1,2,3,4]
+long_array_value: !!long[] [1,2,3,4]
+double_array_value: !!double[] [1.1,2.2,3.3,4.4]
+int_list: !!IntList [1,2,3]
+long_list: !!LongList [1,2,3]
+double_list: !!DoubleList [1,2,3]
 ```
 
 ### 子包

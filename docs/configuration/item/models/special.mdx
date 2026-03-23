@@ -56,7 +56,8 @@ Check [https://minecraft.wiki/w/Items\_model\_definition#special](https://minecr
 ```yaml
 model:
   type: "minecraft:hanging_sign"
-  wood-type: "oak"
+  attachment: "ceiling_middle" # 26.1+
+  wood_type: "oak"
   texture: ...
 ```
 
@@ -67,7 +68,8 @@ model:
 ```yaml
 model:
   type: "minecraft:standing_sign"
-  wood-type: "oak"
+  attachment: "ground" # 26.1+
+  wood_type: "oak"
   texture: ...
 ```
 
@@ -99,6 +101,7 @@ model:
 ```yaml
 model:
   type: "minecraft:chest"
+  chest_type: "single" # 26.1+
   openness: 0.0
   texture: ...
 ```
@@ -111,7 +114,7 @@ model:
 model:
   type: "minecraft:shulker_box"
   openness: 0.0
-  orientation: up
+  orientation: up # 1.21.4~1.21.11
   texture: ...
 ```
 
@@ -122,6 +125,7 @@ model:
 ```yaml
 model:
   type: "minecraft:bed"
+  part: "head" # 26.1+
   texture: ...
 ```
 
@@ -132,6 +136,7 @@ model:
 ```yaml
 model:
   type: "minecraft:banner"
+  attachment: "ground" # 26.1+
   color: white
 ```
 
@@ -144,4 +149,30 @@ model:
   type: "minecraft:copper_golem_statue"
   pose: sitting
   texture: ...
+```
+
+### minecraft\:bell (26.1+)
+
+> Render the animated part of a Bell block.
+
+### minecraft\:book (26.1+)
+
+> Render the book that normally is a part of Enchanting Table and Lectern.
+
+```yaml
+model:
+  type: "minecraft:book"
+  open_angle: 0
+  page1: 0
+  page2: 0
+```
+
+### minecraft\:end\_cube (26.1+)
+
+> Render a cube with the same texture effects as the End Portal and the End Gateway blocks.
+
+```yaml
+model:
+  type: "minecraft:end_cube"
+  effect: "portal"
 ```

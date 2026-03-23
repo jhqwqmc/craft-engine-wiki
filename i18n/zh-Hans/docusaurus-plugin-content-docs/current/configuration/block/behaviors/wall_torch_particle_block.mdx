@@ -12,16 +12,16 @@ blocks:
   default:amethyst_wall_torch:
     behavior:
       type: wall_torch_particle_block
-      tick-interval: 10
+      tick_interval: 10
       particles: # 见下方粒子参数
         - particle: smoke
           x: 0.5
           y: 0.7
           z: 0.5
           count: 1
-          offset-x: 0
-          offset-y: 0
-          offset-z: 0
+          offset_x: 0
+          offset_y: 0
+          offset_z: 0
           speed: 0
 ```
 
@@ -35,9 +35,9 @@ x: 0 # 可选; 数字; 默认值: 0
 y: 0 # 可选; 数字; 默认值: 0
 z: 0 # 可选; 数字; 默认值: 0
 count: 5 # 可选; 数字; 默认值: 1
-offset-x: 0.3 # 可选; 数字; 默认值: 0
-offset-y: 0.3 # 可选; 数字; 默认值: 0
-offset-z: 0.3 # 可选; 数字; 默认值: 0
+offset_x: 0.3 # 可选; 数字; 默认值: 0
+offset_y: 0.3 # 可选; 数字; 默认值: 0
+offset_z: 0.3 # 可选; 数字; 默认值: 0
 speed: 0 # 可选; 数字; 默认值: 0
 
 # 以下参数仅在粒子为特定类型时才有效。
@@ -46,7 +46,7 @@ speed: 0 # 可选; 数字; 默认值: 0
 item: default:chinese_lantern
 
 # 带方块粒子选项的粒子类型：block、block_marker、falling_dust、dust_pillar 和 block_crumble
-block-state: default:plam_log[axis=y]
+block_state: default:plam_log[axis=y]
 
 # 带幽匿块充能粒子选项的粒子类型：sculk_charge
 charge: 1.5
@@ -64,14 +64,14 @@ to: 0,0,0
 scale: 4.0
 
 # 带振动粒子选项的粒子类型：vibration
-target-x: 0
-target-y: 1
-target-z: 0
-arrival-time: 10
+target_x: 0
+target_y: 1
+target_z: 0
+arrival_time: 10
 
 # 带目标颜色粒子选项的粒子类型：trail
-target-x: 0
-target-y: 1
-target-z: 0
+target_x: 0
+target_y: 1
+target_z: 0
 duration: 10
 ```

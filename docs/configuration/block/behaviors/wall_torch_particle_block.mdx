@@ -12,16 +12,16 @@ blocks:
   default:amethyst_wall_torch:
     behavior:
       type: wall_torch_particle_block
-      tick-interval: 10
+      tick_interval: 10
       particles: # Defines particle effects, see Particle argument below
         - particle: smoke
           x: 0.5
           y: 0.7
           z: 0.5
           count: 1
-          offset-x: 0
-          offset-y: 0
-          offset-z: 0
+          offset_x: 0
+          offset_y: 0
+          offset_z: 0
           speed: 0
 ```
 
@@ -35,9 +35,9 @@ x: 0 # optional; number; default: 0
 y: 0 # optional; number; default: 0
 z: 0 # optional; number; default: 0
 count: 5 # optional; number; default: 1
-offset-x: 0.3 # optional; number; default: 0
-offset-y: 0.3 # optional; number; default: 0
-offset-z: 0.3 # optional; number; default: 0
+offset_x: 0.3 # optional; number; default: 0
+offset_y: 0.3 # optional; number; default: 0
+offset_z: 0.3 # optional; number; default: 0
 speed: 0 # optional; number; default: 0
 
 # The following arguments are only effective
@@ -47,7 +47,7 @@ speed: 0 # optional; number; default: 0
 item: default:chinese_lantern
 
 # block/falling_dust/dust_pillar/block_crumble/block_marker
-block-state: default:plam_log[axis=y]
+block_state: default:plam_log[axis=y]
 
 # charge
 charge: 1.5
@@ -65,14 +65,14 @@ to: 0,0,0
 scale: 4.0
 
 # vibration
-target-x: 0
-target-y: 1
-target-z: 0
-arrival-time: 10
+target_x: 0
+target_y: 1
+target_z: 0
+arrival_time: 10
 
 # trail
-target-x: 0
-target-y: 1
-target-z: 0
+target_x: 0
+target_y: 1
+target_z: 0
 duration: 10
 ```

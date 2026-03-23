@@ -35,7 +35,7 @@ items:
 
 ### minecraft\:trident
 
->  	渲染三叉戟
+> 渲染三叉戟
 
 ### minecraft\:conduit
 
@@ -51,29 +51,31 @@ items:
 
 ### minecraft\:hanging\_sign
 
-> 根据指定的纹理渲染悬挂式告示牌。
+> 根据指定的纹理渲染悬挂式告示牌
 
 ```yaml
 model:
   type: "minecraft:hanging_sign"
-  wood-type: "oak"
+  attachment: "ceiling_middle" # 26.1+
+  wood_type: "oak"
   texture: ...
 ```
 
 ### minecraft\:standing\_sign
 
-> 根据指定的纹理渲染告示牌。
+> 根据指定的纹理渲染告示牌
 
 ```yaml
 model:
   type: "minecraft:standing_sign"
-  wood-type: "oak"
+  attachment: "ground" # 26.1+
+  wood_type: "oak"
   texture: ...
 ```
 
 ### minecraft\:head
 
-> 按照指定的头颅类型渲染生物头颅。 \[当适用时，使用 `minecraft:profile` 组件中的玩家游戏档案信息。(1.21.4-1.21.5)]
+> 按照指定的头颅类型渲染生物头颅 \[当适用时，使用 `minecraft:profile` 组件中的玩家游戏档案信息。(1.21.4-1.21.5)]
 
 ```yaml
 model:
@@ -94,54 +96,83 @@ model:
 
 ### minecraft\:chest
 
-> 根据指定的纹理和开合程度渲染箱子。
+> 根据指定的纹理和开合程度渲染箱子
 
 ```yaml
 model:
   type: "minecraft:chest"
+  chest_type: "single" # 26.1+
   openness: 0.0
   texture: ...
 ```
 
 ### minecraft\:shulker\_box
 
-> 根据指定的纹理、开合程度和方向渲染潜影盒。
+> 根据指定的纹理、开合程度和方向渲染潜影盒
 
 ```yaml
 model:
   type: "minecraft:shulker_box"
   openness: 0.0
-  orientation: up
+  orientation: up # 1.21.4~1.21.11
   texture: ...
 ```
 
 ### minecraft\:bed
 
-> 根据指定的纹理渲染床。
+> 根据指定的纹理渲染床
 
 ```yaml
 model:
   type: "minecraft:bed"
+  part: "head" # 26.1+
   texture: ...
 ```
 
 ### minecraft\:banner
 
-> 根据底色和 `banner_patterns` 物品堆叠组件渲染旗帜。
+> 根据底色和 `banner_patterns` 物品堆叠组件渲染旗帜
 
 ```yaml
 model:
   type: "minecraft:banner"
+  attachment: "ground" # 26.1+
   color: white
 ```
 
 ### minecraft\:copper_golem_statue
 
-> 根据指定的纹理渲染铜傀儡像。
+> 根据指定的纹理渲染铜傀儡像
 
 ```yaml
 model:
   type: "minecraft:copper_golem_statue"
   pose: sitting
   texture: ...
+```
+
+### minecraft\:bell (26.1+)
+
+> 渲染钟的动画部分
+
+### minecraft\:book (26.1+)
+
+> 渲染附魔台和讲台上的书
+
+```yaml
+model:
+  type: "minecraft:book"
+  open_angle: 0
+  page1: 0
+  page2: 0
+```
+
+### minecraft\:end\_cube (26.1+)
+
+> 渲染末地折跃门或末地传送门
+
+```yaml
+model:
+  type: "minecraft:end_cube"
+  effect: "portal"
 ```
