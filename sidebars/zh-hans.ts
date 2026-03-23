@@ -222,6 +222,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/item/behaviors/multi_high_block_item",
+                  label: '🔢 多层方块物品',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/item/behaviors/block_item",
                   label: '🧱 方块物品',
                 },

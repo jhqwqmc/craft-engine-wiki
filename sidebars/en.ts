@@ -257,6 +257,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/item/behaviors/multi_high_block_item",
+                  label: '🔢 Multi High Block Item',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/item/behaviors/range_mining_item",
                   label: '⛏️ Range Mining Item',
                 },
