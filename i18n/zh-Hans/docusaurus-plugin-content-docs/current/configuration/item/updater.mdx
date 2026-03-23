@@ -19,7 +19,7 @@ item:
 ```
 
 :::tip
-如果你只需要更新物品的视觉元素，例如自定义模型数据（custom-model-data）、物品模型（item-model）、物品提示框中的描述信息（lore）或物品名称（name），建议使用 `client-bound-data` 而不是物品更新器。
+如果你只需要更新物品的视觉元素，例如自定义模型数据（custom_model_data）、物品模型（item_model）、物品提示框中的描述信息（lore）或物品名称（name），建议使用 `client_bound_data` 而不是物品更新器。
 :::
 
 要配置物品更新器，只需按照以下格式添加一个新的 `updater` 部分。默认情况下，物品的版本号为 0，插件会尝试将它们更新到最新版本。
@@ -36,7 +36,7 @@ items:
       1:
         type: apply_data
         data:
-          item-name: 首次更新
+          item_name: 首次更新
       # 你可以通过列表格式同时应用多个更新器。
       2:
         - type: apply_data
@@ -56,7 +56,7 @@ items:
 ```yaml
 type: apply_data
 data:
-  item-name: 首次更新
+  item_name: 首次更新
 ```
 
 ### transmute（材质置换）
@@ -75,9 +75,9 @@ material: wooden_sword
 ```yaml
 type: reset
 # 1.20.5+
-keep-components:
+keep_components:
   - minecraft:enchantments
 # 旧版本
-keep-tags:
+keep_tags:
   - Enchantments
 ```

@@ -3,20 +3,20 @@ title: 🪵 Fence Gate Block
 id: fence_gate_block
 ---
 
-| Property Name | Property Type | Required |
-|---------|---------|---------|
-| open    | boolean   | yes   |
-| powered    | boolean   | yes   |
-| in_wall    | boolean   | yes   |
-| facing     | horizontal_direction   | yes   |
+| Property Name | Property Type        | Required |
+|---------------|----------------------|----------|
+| open          | boolean              | yes      |
+| powered       | boolean              | yes      |
+| in_wall       | boolean              | yes      |
+| facing        | horizontal_direction | yes      |
 
 ```yaml
 blocks:
   default:palm_fence_gate:
     behavior:
       type: fence_gate_block
-      can-open-with-hand: true
-      can-open-by-wind-charge: true
+      can_open_with_hand: true
+      can_open_by_wind_charge: true
       sounds:
         open: block.fence_gate.open
         close: block.fence_gate.close

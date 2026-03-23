@@ -157,7 +157,7 @@ items:
   tutorial:diamond:
     material: diamond
     data:
-      item-name: "<blue>Shiny Diamond"
+      item_name: "<blue>Shiny Diamond"
       lore:
         - "<!i><red>Epic Items"
 ```
@@ -181,24 +181,24 @@ Check out the <Highlight color="#e96d7b"><ColoredLink to="https://docs.papermc.i
 
 <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
 
-How do I update an item's description? Just use CraftEngine's special client-bound-data feature! Unlike regular data, this only shows up for players - the server won't even know it exists.
+How do I update an item's description? Just use CraftEngine's special client_bound_data feature! Unlike regular data, this only shows up for players - the server won't even know it exists.
 
 ```yaml
 items:
   tutorial:diamond:
     material: diamond
-    client-bound-data:
-      item-name: "<blue>Shiny Diamond"
+    client_bound_data:
+      item_name: "<blue>Shiny Diamond"
       lore:
         - "<!i><white>Common Items"
 ```
 
-If you still have that diamond you just created, try out client-bound-data! Just trigger a server-side item update - drop it or move it in a container - and bam! Fresh new look. If it's not updating, try switching to Survival mode.
+If you still have that diamond you just created, try out client_bound_data! Just trigger a server-side item update - drop it or move it in a container - and bam! Fresh new look. If it's not updating, try switching to Survival mode.
 
 :::caution
 
-`client-bound-data` means the server won't have the real data. If you use it for item-name, any server-side name checks will fail. Use it wisely based on your server needs.
+`client_bound_data` means the server won't have the real data. If you use it for item_name, any server-side name checks will fail. Use it wisely based on your server needs.
 
-Stuff like `max_damage` and `attribute_modifiers` shouldn't be client-bound-data. They change real server gameplay, and you'll get weird visual mismatches
+Stuff like `max_damage` and `attribute_modifiers` shouldn't be client_bound_data. They change real server gameplay, and you'll get weird visual mismatches
 
 :::

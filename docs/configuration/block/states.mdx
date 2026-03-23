@@ -34,7 +34,7 @@ Most blocks can function properly with only one block state. The following examp
 blocks:
   default:chinese_lantern:
     state:
-      auto-state: note_block
+      auto_state: note_block
       model:
         path: "minecraft:block/custom/chinese_lantern"
         generation:
@@ -45,22 +45,22 @@ blocks:
 ```
 
 ### Visual States
-The visual representation of a block is controlled by either the `auto-state` or `state` option. You can choose one of them based on your precision requirements.
+The visual representation of a block is controlled by either the `auto_state` or `state` option. You can choose one of them based on your precision requirements.
 
-#### 🛠️ Using `auto-state`: Let the Plugin Choose for You
+#### 🛠️ Using `auto_state`: Let the Plugin Choose for You
 
-The parameter of `auto-state` points to a predefined set of visual states in the plugin. These states share key characteristics, such as **identical collision boxes and consistent rendering properties** (e.g., whether transparency is supported).
+The parameter of `auto_state` points to a predefined set of visual states in the plugin. These states share key characteristics, such as **identical collision boxes and consistent rendering properties** (e.g., whether transparency is supported).
 
 - What is its purpose?
 
-When creating a new block, we typically only care about its core characteristics (such as collision box size) and not which specific block state is used. `auto-state` was designed for this purpose: the plugin will automatically assign you an available state from the group that meets the characteristics.
+When creating a new block, we typically only care about its core characteristics (such as collision box size) and not which specific block state is used. `auto_state` was designed for this purpose: the plugin will automatically assign you an available state from the group that meets the characteristics.
 
 - An example
 
-For a note block, `minecraft:note_block[instrument=hat,note=0,powered=false]` and `minecraft:note_block[instrument=hat,note=1,powered=false]` are identical in terms of core characteristics. You don’t need to remember or type such long state parameters. Simply write `auto-state: note_block`, and the plugin will automatically select an available note block state for you.
+For a note block, `minecraft:note_block[instrument=hat,note=0,powered=false]` and `minecraft:note_block[instrument=hat,note=1,powered=false]` are identical in terms of core characteristics. You don’t need to remember or type such long state parameters. Simply write `auto_state: note_block`, and the plugin will automatically select an available note block state for you.
 
 :::info
-Currently available `auto-state` options:
+Currently available `auto_state` options:
 - tintable_leaves - Tintable leaves block without water
 - waterlogged_tintable_leaves - Tintable leaves block with water
 - non_tintable_leaves - Non-tintable leaves block without water
@@ -90,7 +90,7 @@ Currently available `auto-state` options:
 If multiple block appearances reference the same id, they will ultimately be assigned the same visual block state. This is helpful if you need multiple block states to share the same visual state.
 
 ```yaml
-auto-state:
+auto_state:
   type: solid
   id: namespace:id
 ```
@@ -111,7 +111,7 @@ Directly use the complete state identifier from vanilla Minecraft.
 
 2. Mapped Shorthand
 
-Use the shorthand format `block_name:ID` defined in the `block-state-mappings` configuration.
+Use the shorthand format `block_name:ID` defined in the `block_state_mappings` configuration.
 
 > Example：`note_block:100` （This indicates using the 101st mapped note block state）
 
@@ -158,7 +158,7 @@ When the plugin detects such duplicate bindings, it will log warning messages in
 blocks:
   default:chinese_lantern:
     state:
-      auto-state: note_block
+      auto_state: note_block
       model:
         path: "minecraft:block/custom/chinese_lantern"
         generation:
@@ -221,6 +221,10 @@ Unit: Degrees (°)
 Restriction: Must be a multiple of 90.
 - y
 Rotation angle of the model around the Y-axis.
+Unit: Degrees (°)
+Restriction: Must be a multiple of 90.
+- z (1.21.11+)
+Rotation angle of the model around the Z-axis.
 Unit: Degrees (°)
 Restriction: Must be a multiple of 90.
 - uvlock
@@ -305,7 +309,7 @@ blocks:
     states:
       appearances:
         axisY:
-          # You can also use "auto-state: note_block" here
+          # You can also use "auto_state: note_block" here
           state: "note_block:0" 
           model:
             path: "minecraft:block/custom/stripped_palm_log"
@@ -371,7 +375,7 @@ blocks:
           range: 1~7
       appearances:
         default:
-          auto-state: leaves
+          auto_state: leaves
           model:
             path: minecraft:block/custom/palm_leaves
             generation:
@@ -379,7 +383,7 @@ blocks:
               textures:
                 all: minecraft:block/custom/palm_leaves
         waterlogged:
-          auto-state: waterlogged_leaves
+          auto_state: waterlogged_leaves
           model:
             path: minecraft:block/custom/palm_leaves
       variants:
@@ -390,10 +394,10 @@ blocks:
           settings:
             resistance: 1200.0
             burnable: false
-            fluid-state: water
+            fluid_state: water
         distance=7,persistent=false:
           settings:
-            is-randomly-ticking: true
+            is_randomly_ticking: true
 ```
 
 </details>
@@ -437,7 +441,7 @@ blocks:
   default:chinese_lantern:
     state:
       id: 0 # Set the internal ID of this block to craftengine:custom_0.
-      auto-state: note_block
+      auto_state: note_block
       model:
         path: "minecraft:block/custom/chinese_lantern"
         generation:

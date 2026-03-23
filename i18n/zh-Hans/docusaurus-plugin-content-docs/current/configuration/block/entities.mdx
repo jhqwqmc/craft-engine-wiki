@@ -28,7 +28,7 @@ import Highlight from '@site/src/components/Highlight';
 
 :::
 
-要配置展示实体，只需添加一个 `entity-renderer` 选项。该选项需要一个配置部分或列表作为其参数。
+要配置展示实体，只需添加一个 `entity_renderer` 选项。该选项需要一个配置部分或列表作为其参数。
 
 ```yaml
 blocks:
@@ -36,7 +36,7 @@ blocks:
     state:
       id: 0
       state: white_bed[facing=west,occupied=false,part=foot]
-      entity-renderer:
+      entity_renderer:
         - type: item_display
           ...
         - type: text_display
@@ -46,10 +46,10 @@ blocks:
       appearances:
         east_off:
           state: barrier
-          entity-renderer:
+          entity_renderer:
             type: item_display
             ...
-          entity-culling:
+          entity_culling:
             ...
 ```
 
@@ -71,7 +71,7 @@ item: default:sleeper_sofa
 **可选参数**
 
 ```yaml
-display-transform: none # none  / third_person_left_hand / third_person_right_hand
+display_transform: none # none  / third_person_left_hand / third_person_right_hand
                         # 不变换 /   第三人称视角左手变换  /   第三人称视角右手变换
                         # first_person_left_hand / first_person_right_hand
                         #   第一人称视角左手变换  /   第一人称视角右手变换
@@ -91,11 +91,11 @@ yaw: 0.0  # 最好使用 rotation
 pitch: 0  # 最好使用 rotation
 
 scale: 1 # scale: 1,2,1
-glow-color: 255,255,255
+glow_color: 255,255,255
 brightness:
-  block-light: 15
-  sky-light: 15
-view-range: 1.0
+  block_light: 15
+  sky_light: 15
+view_range: 1.0
 ```
 
 :::tip
@@ -123,6 +123,7 @@ billboard: fixed  #      fixed      /  vertical   /  horizontal /         center
 
 translation: 0,0.5,0
 # rotation 支持 3 种格式
+# 译者注：我推荐这个旋转工具 https://iwatake2222.github.io/rotation_master/rotation_master.html 操作起来更方便
 rotation: 45  # 基于 Y 轴
 rotation: 45,45,0  # 欧拉角
 rotation: 0,0,0.7071,0.7071  # 四元数  https://quaternions.online/
@@ -132,18 +133,18 @@ yaw: 0.0  # 最好使用 rotation
 pitch: 0  # 最好使用 rotation
 
 scale: 1.5 # scale: 1,2,1
-glow-color: 255,255,255
+glow_color: 255,255,255
 brightness:
-  block-light: 15
-  sky-light: 15
-view-range: 1.0
+  block_light: 15
+  sky_light: 15
+view_range: 1.0
 
-line-width: 200
-background-color: 64,0,0,0 # ARGB
-text-opacity: -1
-has-shadow: false
-is-see-through: false
-use-default-background-color: false
+line_width: 200
+background_color: 64,0,0,0 # ARGB
+text_opacity: -1
+has_shadow: false
+is_see_through: false
+use_default_background_color: false
 alignment: center  # center / left  / right
                    #  居中  / 左对齐 / 右对齐
 ```
@@ -168,7 +169,7 @@ item: default:bench
 position: 0,1,0
 scale: 1
 small: false
-glow-color: white  # black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white
+glow_color: white  # black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white
 ```
 
 ### BetterModel
@@ -179,7 +180,7 @@ model: custom_model # 必填; 字符串; 指定需要渲染的模型
 position: 0.5,0.5,0.5 # 可选; 默认值: 0.5
 yaw: 0 # 可选
 pitch: 0 # 可选
-sight-trace: true # 可选
+sight_trace: true # 可选
 ```
 
 ### ModelEngine
@@ -197,20 +198,20 @@ pitch: 0 # 可选
 你可以单独控制每个方块实体变体是否启用实体剔除功能
 
 ```yaml
-entity-renderer:...
-entity-culling: false # 禁用
+entity_renderer:...
+entity_culling: false # 禁用
 ```
 
 启用实体剔除后，即可配置剔除参数
 
 ```yaml
-entity-renderer: ...
-entity-culling:
+entity_renderer: ...
+entity_culling:
   # 若模型体积庞大，则需手动配置 AABB
   # 在此示例中，该方案适用于双层方块实体
   aabb: -0.5,-0.5,-0.5,0.5,1.5,0.5  # x1,y1,z1,x2,y2,z2
-  view-distance: 64 # 视距剔除。-1 表示无限距离。
+  view_distance: 64 # 视距剔除。-1 表示无限距离。
                     # 但启用光线追踪剔除时不建议设置为 -1，
                     # 因为这会导致算法路径长度过长并影响性能。
-  ray-tracing: false # 是否启用光线追踪剔除
+  ray_tracing: false # 是否启用光线追踪剔除
 ```

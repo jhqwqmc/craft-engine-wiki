@@ -22,7 +22,7 @@ items:
   my:custom_helmet:
     settings:
       equipment:
-        asset-id: my:custom_armor
+        asset_id: my:custom_armor
 equipments:
   my:custom_armor:
     ...
@@ -59,13 +59,13 @@ equipments:
 
     ### 解决方案2（适用于1.20+版本）：
 
-    使用 `client-bound-material` 来修改头盔在客户端的渲染方式，而不影响其服务器端功能。示例如下：
+    使用 `client_bound_material` 来修改头盔在客户端的渲染方式，而不影响其服务器端功能。示例如下：
 
     ```yaml
     items:
       default:my_3d_helmet:
         material: diamond_helmet
-        client-bound-material: paper
+        client_bound_material: paper
     ```
 
     ![](/img/3d_helmet_2.png)
@@ -83,30 +83,30 @@ equipments:
   default:topaz:
     type: component
     humanoid: "minecraft:entity/equipment/humanoid/topaz"
-    humanoid-leggings: "minecraft:entity/equipment/humanoid_leggings/topaz"
+    humanoid_leggings: "minecraft:entity/equipment/humanoid_leggings/topaz"
     # 更多预设模型类型（根据需求添加）
-    happy-ghast-body: "minecraft:entity/equipment/happy_ghast_body/topaz"
+    happy_ghast_body: "minecraft:entity/equipment/happy_ghast_body/topaz"
 ```
 
 **支持的预设模型类型：**
 
 * humanoid
-* humanoid-leggings
+* humanoid_leggings
 * wings
-* wolf-body
-* horse-body
-* llama-body
-* pig-saddle
-* strider-saddle
-* camel-saddle
-* horse-saddle
-* donkey-saddle
-* mule-saddle
-* skeleton-horse-saddle
-* zombie-horse-saddle
-* happy-ghast-body
-* camel-husk-saddle
-* nautilus-body
+* wolf_body
+* horse_body
+* llama_body
+* pig_saddle
+* strider_saddle
+* camel_saddle
+* horse_saddle
+* donkey_saddle
+* mule_saddle
+* skeleton_horse_saddle
+* zombie_horse_saddle
+* happy_ghast_body
+* camel_husk_saddle
+* nautilus_body
 
 :::tip
 
@@ -119,9 +119,9 @@ equipments:
     humanoid:
       texture: "minecraft:leather"
       dyeable:
-        color-when-undyed: -6265536 # 皮革染色配置
+        color_when_undyed: -6265536 # 皮革染色配置
       # 鞘翅纹理配置
-      use-player-texture: false
+      use_player_texture: false
 ```
 :::
 
@@ -136,7 +136,7 @@ equipments:
     humanoid:
       - texture: "minecraft:dyeable_part"
         dyeable:
-          color-when-undyed: -6265536
+          color_when_undyed: -6265536
       - texture: "minecraft:undyeable_part"
 ```
 
@@ -171,7 +171,7 @@ equipments:
   default:topaz:
     type: trim
     humanoid: minecraft:entity/equipment/humanoid/topaz
-    humanoid-leggings: minecraft:entity/equipment/humanoid_leggings/topaz
+    humanoid_leggings: minecraft:entity/equipment/humanoid_leggings/topaz
 ```
 
 <details>
@@ -179,13 +179,13 @@ equipments:
 
   <Highlight color="#f2184eff">**付费版专属**</Highlight>
 
-  你可以通过执行指令 `/ce resource enable legacy_armor` 来修复原版锁链甲）—— 我们通过应用特殊纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client-bound-data` 特性实现。
+  你可以通过执行指令 `/ce resource enable legacy_armor` 来修复原版锁链甲）—— 我们通过应用特殊纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client_bound_data` 特性实现。
 
 </details>
 
 :::caution
 
-基于纹饰的盔甲仅支持 **humanoid** 和 **humanoid-leggings** 模型类型。如果你遇到**盔甲无法正确应用纹理**或是**被踢出服务器**的问题，请尝试重新进入服务器，如果无法解决则是配置存在问题。
+基于纹饰的盔甲仅支持 **humanoid** 和 **humanoid_leggings** 模型类型。如果你遇到**盔甲无法正确应用纹理**或是**被踢出服务器**的问题，请尝试重新进入服务器，如果无法解决则是配置存在问题。
 
 :::
 

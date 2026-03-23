@@ -50,13 +50,13 @@ The creation method for 3D helmets is completely unrelated to **equipment.** Sin
 
   ### Solution 2 (For 1.20+):
 
-  Use `client-bound-material` to modify how the helmet renders on the client side without affecting its server-side functionality. Here’s an example:
+  Use `client_bound_material` to modify how the helmet renders on the client side without affecting its server-side functionality. Here’s an example:
 
   ```yaml
   items:
     default:my_3d_helmet:
       material: diamond_helmet
-      client-bound-material: paper
+      client_bound_material: paper
   ```
 
   ![](/img/3d_helmet_2.png)
@@ -74,30 +74,30 @@ equipments:
   default:topaz:
     type: component
     humanoid: "minecraft:entity/equipment/humanoid/topaz"
-    humanoid-leggings: "minecraft:entity/equipment/humanoid_leggings/topaz"
+    humanoid_leggings: "minecraft:entity/equipment/humanoid_leggings/topaz"
     # Add more layer types based on your needs
-    happy-ghast-body: "minecraft:entity/equipment/happy_ghast_body/topaz"
+    happy_ghast_body: "minecraft:entity/equipment/happy_ghast_body/topaz"
 ```
 
 **Supported layer types:**
 
 * humanoid
-* humanoid-leggings
+* humanoid_leggings
 * wings
-* wolf-body
-* horse-body
-* llama-body
-* pig-saddle
-* strider-saddle
-* camel-saddle
-* horse-saddle
-* donkey-saddle
-* mule-saddle
-* skeleton-horse-saddle
-* zombie-horse-saddle
-* happy-ghast-body
-* camel-husk-saddle
-* nautilus-body
+* wolf_body
+* horse_body
+* llama_body
+* pig_saddle
+* strider_saddle
+* camel_saddle
+* horse_saddle
+* donkey_saddle
+* mule_saddle
+* skeleton_horse_saddle
+* zombie_horse_saddle
+* happy_ghast_body
+* camel_husk_saddle
+* nautilus_body
 
 :::tip
 
@@ -110,9 +110,9 @@ equipments:
     humanoid:
       texture: "minecraft:leather"
       dyeable:
-        color-when-undyed: -6265536 # leather color
+        color_when_undyed: -6265536 # leather color
       # elytra texture
-      use-player-texture: false
+      use_player_texture: false
 ```
 :::
 
@@ -127,7 +127,7 @@ equipments:
     humanoid:
       - texture: "minecraft:dyeable_part"
         dyeable:
-          color-when-undyed: -6265536
+          color_when_undyed: -6265536
       - texture: "minecraft:undyeable_part"
 ```
 
@@ -162,7 +162,7 @@ equipments:
   default:topaz:
     type: trim
     humanoid: minecraft:entity/equipment/humanoid/topaz
-    humanoid-leggings: minecraft:entity/equipment/humanoid_leggings/topaz
+    humanoid_leggings: minecraft:entity/equipment/humanoid_leggings/topaz
 ```
 
 <details>
@@ -176,7 +176,7 @@ equipments:
 
 :::caution
 
-Trim-based armor only supports the **humanoid** and **humanoid-leggings** model types.
+Trim-based armor only supports the **humanoid** and **humanoid_leggings** model types.
 
 :::
 

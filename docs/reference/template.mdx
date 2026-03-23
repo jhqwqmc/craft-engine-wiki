@@ -74,7 +74,7 @@ items:
     merges:
       data:
         food:
-          can-always-eat: true
+          can_always_eat: true
 ```
 
 ## Overrides
@@ -144,14 +144,14 @@ items:
 templates:
   default:my_template:
     data: 
-      item-name: "<lang:item.${__NAMESPACE__}.${__ID__}>"
+      item_name: "<lang:item.${__NAMESPACE__}.${__ID__}>"
 ```
 
 ```yml
 items:
   default:palm_log:
     data:
-      item-name: "<lang:item.default.palm_log>"
+      item_name: "<lang:item.default.palm_log>"
 ```
 
 :::
@@ -173,7 +173,7 @@ The default values follow Minecraft's SNBT format (the same format used when spe
 Default values also support recursively nested parameters, such as:
 
 ```yaml
-item-name: "<!i><white>${arg1:-'${arg2:-\'${arg3:-abc}\'}'}"
+item_name: "<!i><white>${arg1:-'${arg2:-\'${arg3:-abc}\'}'}"
 ```
 
 :::
@@ -224,8 +224,8 @@ arguments:
   leaves_base_model:
     type: condition
     condition: "${tintable:-false}"
-    on-true: leaves
-    on-false: cube_all
+    on_true: leaves
+    on_false: cube_all
 ```
 
 - **when**
@@ -264,7 +264,7 @@ templates:
         locale: en
   mmoitems:tier_item/internal:
     data:
-      item-name: "<!i><white><image:${tier}> ${name}"
+      item_name: "<!i><white><image:${tier}> ${name}"
       nbt:
         MMOITEMS_TIER: ${tier.uppercase}
 ```
@@ -280,7 +280,7 @@ arguments:
     from: 0
     to: 20
     step: 1
-    step-interval: 1
+    step_interval: 1
 ```
 
 - **expression**
@@ -292,5 +292,5 @@ arguments:
   damage:
     type: expression
     expression: "${base_damage:-10d} * ${damage_multiplier:-1d}"
-    value-type: double # int/double/short/long/float/boolean/byte
+    value_type: double # int/double/short/long/float/boolean/byte
 ```

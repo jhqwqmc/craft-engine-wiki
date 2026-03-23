@@ -19,7 +19,7 @@ item:
 ```
 
 :::tip
-If you only need to update visual elements of an item—such as custom-model-data, item-model, lore, or name—it is recommended to use `client-bound-data` instead of an item updater.
+If you only need to update visual elements of an item—such as custom_model_data, item_model, lore, or name—it is recommended to use `client_bound_data` instead of an item updater.
 :::
 
 To configure an item updater, simply add a new `updater` section following the format below. By default, items have a version number of 0, and the plugin will attempt to update them to the latest version.
@@ -36,7 +36,7 @@ items:
       1:
         type: apply_data
         data:
-          item-name: First Update
+          item_name: First Update
       # You can apply multiple updaters simultaneously using a list format.
       2:
         - type: apply_data
@@ -56,7 +56,7 @@ Apply any valid [item data](./data.mdx) supported by CraftEngine
 ```yaml
 type: apply_data
 data:
-  item-name: First Update
+  item_name: First Update
 ```
 
 ### transmute
@@ -75,9 +75,9 @@ Update the item to its latest state immediately while preserving specified compo
 ```yaml
 type: reset
 # 1.20.5+
-keep-components:
+keep_components:
   - minecraft:enchantments
 # legacy versions
-keep-tags:
+keep_tags:
   - Enchantments
 ```

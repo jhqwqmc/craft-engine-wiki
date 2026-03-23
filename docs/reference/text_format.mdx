@@ -41,7 +41,7 @@ If **Player A** interacts with the custom block and triggers a message broadcast
 `shift` allows you to directly use the plugin's offset characters.
 
 ```yaml
-item-name: "<!i><shift:-100><#FF8C00>Topaz Rod"
+item_name: "<!i><shift:-100><#FF8C00>Topaz Rod"
 ```
 
 ![](/img/text_format_1.png)
@@ -61,7 +61,7 @@ item-name: "<!i><shift:-100><#FF8C00>Topaz Rod"
 :::
 
 ```yaml
-item-name: "<!i><#FF8C00><papi:player_name>'s Topaz Rod"
+item_name: "<!i><#FF8C00><papi:player_name>'s Topaz Rod"
 ```
 
 ![](/img/text_format_2.png)
@@ -84,23 +84,23 @@ functions:
 `image` allows to use images registered in the plugin
 
 ```yaml
-item-name: "<!i><white><image:default:icons><#FF8C00> Topaz Rod"
+item_name: "<!i><white><image:default:icons><#FF8C00> Topaz Rod"
 ```
 
 ![](/img/text_format_3.png)
 
 ```yaml
-item-name: "<!i><white><image:default:icons:0:1><#FF8C00> Topaz Rod"
+item_name: "<!i><white><image:default:icons:0:1><#FF8C00> Topaz Rod"
 ```
 
 ![](/img/text_format_4.png)
 
 ```yaml
-item-name: "<!i><red><image:default:icons:'<!shadow><white>'> Topaz Rod"
+item_name: "<!i><red><image:default:icons:'<!shadow><white>'> Topaz Rod"
 ```
 
 ```yaml
-item-name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> Topaz Rod"
+item_name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> Topaz Rod"
 ```
 
 ### \<i18n:\_id\_>
@@ -112,7 +112,7 @@ items:
   custom:chinese_lantern:
     material: paper
     data:
-      item-name: "<i18n:item.chinese_lantern>"
+      item_name: "<i18n:item.chinese_lantern>"
 ```
 
 ### \<l10n:\_id\_>
@@ -124,7 +124,7 @@ items:
   custom:chinese_lantern:
     material: paper
     data:
-      item-name: "<l10n:item.chinese_lantern>"
+      item_name: "<l10n:item.chinese_lantern>"
 ```
 
 ### \<expr:\_format\_:\_expression\_>
@@ -132,11 +132,11 @@ items:
 Perform some math operations
 
 ```yaml
-item-name: "<!i><#FF8C00><expr:0.##:'70 / 8'>"
+item_name: "<!i><#FF8C00><expr:0.##:'70 / 8'>"
 ```
 
 ```yaml
-item-name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
+item_name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
 ```
 
 ![](/img/text_format_5.png)
@@ -209,7 +209,7 @@ In certain cases, multiple **context subjects** may coexist. By accessing parame
 global variable defined in configs
 
 ```yaml
-item-name: "<global:rare_tag> Rare spear"
+item_name: "<global:rare_tag> Rare spear"
 ```
 
 ### \<bubble:\_id\_:\_left\_:\_right\_> (requires CustomNameplates)
@@ -217,7 +217,7 @@ item-name: "<global:rare_tag> Rare spear"
 create text with bubble
 
 ```yaml
-item-name: "<bubble:chat_1:1:1:'<black><!shadow>What Happened'>"
+item_name: "<bubble:chat_1:1:1:'<black><!shadow>What Happened'>"
 ```
 
 ![](/img/bubble.png)
@@ -225,7 +225,7 @@ item-name: "<bubble:chat_1:1:1:'<black><!shadow>What Happened'>"
 ### \<nameplate:\_id\_:\_left\_:\_right\_:> (requires CustomNameplates)
 
 ```yaml
-item-name: "<nameplate:xmas:1:1:'ABCDEFG'>"
+item_name: "<nameplate:xmas:1:1:'ABCDEFG'>"
 ```
 
 create text with nameplate
@@ -237,5 +237,5 @@ create text with nameplate
 create text with background
 
 ```yaml
-item-name: "<background:bedrock_1:1:1:'ABCDEFG'>"
+item_name: "<background:bedrock_1:1:1:'ABCDEFG'>"
 ```

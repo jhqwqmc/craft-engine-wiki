@@ -16,39 +16,39 @@ blocks:
     settings:
       hardness: 0.5
       resistance: 0.5
-      is-randomly-ticking: true
-      push-reaction: NORMAL
-      map-color: 36
+      is_randomly_ticking: true
+      push_reaction: NORMAL
+      map_color: 36
       burnable: false
-      fire-spread-chance: 0
-      burn-chance: 0
+      fire_spread_chance: 0
+      burn_chance: 0
       item: custom:all_settings_item
       replaceable: false
-      is-redstone-conductor: true
-      is-suffocating: true
-      is-view-blocking: true
+      is_redstone_conductor: true
+      is_suffocating: true
+      is_view_blocking: true
       sounds:
         break: minecraft:block.deepslate.break
         step: minecraft:block.deepslate.step
         place: minecraft:block.deepslate.place
         hit: minecraft:block.deepslate.hit
         fall: minecraft:block.deepslate.fall
-      require-correct-tools: true
-      respect-tool-component: false
-      correct-tools:
+      require_correct_tools: true
+      respect_tool_component: false
+      correct_tools:
         - minecraft:wooden_pickaxe
-      incorrect-tool-dig-speed: 0.3
+      incorrect_tool_dig_speed: 0.3
       tags:
         - minecraft:mineable/pickaxe
       instrument: BASEDRUM
-      fluid-state: water
-      support-shape: minecraft:stone
+      fluid_state: water
+      support_shape: minecraft:stone
       luminance: 15
-      can-occlude: false
-      block-light: 0
-      propagate-skylight: false
-      jump-factor: 1.0
-      speed-factor: 1.0
+      can_occlude: false
+      block_light: 0
+      propagate_skylight: false
+      jump_factor: 1.0
+      speed_factor: 1.0
       friction: 0.7
 ```
 </details>
@@ -71,15 +71,15 @@ Determines the probability of the block surviving the explosion (Default: 2.0)
 resistance: 0.5
 ```
 
-### is-randomly-ticking
+### is_randomly_ticking
 
 Determines whether the block state accepts random ticks, which is relevant for some block behaviors, such as leaves. (Default: false)
 
 ```yaml
-is-randomly-ticking: true
+is_randomly_ticking: true
 ```
 
-### push-reaction
+### push_reaction
 
 Determines how the block reacts to piston pushes. Please note that some reactions may not work well with certain block types due to client visual sync issues. This problem will be fixed in future versions. (Default: NORMAL)
 
@@ -90,15 +90,15 @@ Determines how the block reacts to piston pushes. Please note that some reaction
 * PUSH\_ONLY   Blocks can be pushed by pistons, but cannot be retracted. Do not stick to sticky blocks.
 
 ```yaml
-push-reaction: NORMAL
+push_reaction: NORMAL
 ```
 
-### map-color
+### map_color
 
 Determines what color the block is displayed on the map. Available colors can be found on [https://minecraft.wiki/w/Map\_item\_format](https://minecraft.wiki/w/Map_item_format#Color_table) (Default: 0)
 
 ```yaml
-map-color: 36
+map_color: 36
 ```
 ![](/img/block_settings_1.png)
 
@@ -112,20 +112,20 @@ burnable: true
 
 ![](/img/block_settings_2.png)
 
-### fire-spread-chance
+### fire_spread_chance
 
 Determines how long the block can burn. A longer burn time means a greater chance of spreading fire to surrounding blocks. (Default: 0)
 
 ```yaml
-fire-spread-chance: 100  # 0-100
+fire_spread_chance: 100  # 0-100
 ```
 
-### burn-chance
+### burn_chance
 
 Determines the probability of being ignited (Default: 0)
 
 ```yaml
-burn-chance: 30  # 0-100
+burn_chance: 30  # 0-100
 ```
 
 ### item
@@ -144,30 +144,30 @@ Determines whether to replace the block at its original location when the player
 replaceable: false
 ```
 
-### is-redstone-conductor
+### is_redstone_conductor
 
 Determines whether this block is a redstone signal conductor (Default: UNDEFINED)
 
 ```yaml
-is-redstone-conductor: true
+is_redstone_conductor: true
 ```
 
 ![](/img/block_settings_3.png)
 
-### is-suffocating
+### is_suffocating
 
 Determines whether the player will take suffocation damage (Default: UNDEFINED)
 
 ```yaml
-is-suffocating: true
+is_suffocating: true
 ```
 
-### is-view-blocking
+### is_view_blocking
 
 Whether to block the line of sight. However, this option is useless for players, but it will affect some entity mechanisms on the server. (Default: UNDEFINED)
 
 ```yaml
-is-view-blocking: true
+is_view_blocking: true
 ```
 
 ### sounds
@@ -202,28 +202,28 @@ sounds:
 ```
 :::
 
-### require-correct-tools
+### require_correct_tools
 
 Determines if correct tool is required for the drops (Default: false)
 
 ```yaml
-require-correct-tools: false
+require_correct_tools: false
 ```
 
-### respect-tool-component
+### respect_tool_component
 
-Decides if `minecraft:tool` component's `correct_for_drops` option should work as `correct-tools` below (Default: false)
+Decides if `minecraft:tool` component's `correct_for_drops` option should work as `correct_tools` below (Default: false)
 
 ```yaml
-respect-tool-component: false
+respect_tool_component: false
 ```
 
-### correct-tools
+### correct_tools
 
 Determines the correct tool required to mine this block, otherwise no item will be dropped (Default: null)
 
 ```yaml
-correct-tools:
+correct_tools:
   - minecraft:wooden_pickaxe
   - minecraft:stone_pickaxe
   - minecraft:iron_pickaxe
@@ -233,15 +233,15 @@ correct-tools:
 ```
 
 :::tip
-If `correct-tools` is set, `require-correct-tools` would be true
+If `correct_tools` is set, `require_correct_tools` would be true
 :::
 
-### incorrect-tool-dig-speed
+### incorrect_tool_dig_speed
 
 Slows down the dig speed if the tool is incorrect (Default: 0.3)
 
 ```yaml
-incorrect-tool-dig-speed: 0.3 # 0~1
+incorrect_tool_dig_speed: 0.3 # 0~1
 ```
 
 ### tags
@@ -256,12 +256,12 @@ tags:
   - minecraft:completes_find_tree_tutorial
 ```
 
-### client-bound-tags
+### client_bound_tags
 
 This would only work for vanilla blocks
 
 ```yaml
-client-bound-tags:
+client_bound_tags:
   - minecraft:beacon_base_blocks
 ```
 
@@ -277,22 +277,22 @@ instrument: BASEDRUM
 
 ![](/img/block_settings_5.png)
 
-### fluid-state&#x20;
+### fluid_state&#x20;
 
 Decides the fluid state of this block state (Default: empty)
 
 ```yaml
-fluid-state: water
+fluid_state: water
 ```
 
 ![](/img/block_settings_6.png)
 
-### support-shape
+### support_shape
 
-Determines the support shape provided by the block. By default, custom blocks will use the **support-shape** of their corresponding visual state. However, you can manually specify the **support-shape** of a vanilla block here instead.
+Determines the support shape provided by the block. By default, custom blocks will use the **support_shape** of their corresponding visual state. However, you can manually specify the **support_shape** of a vanilla block here instead.
 
 ```yaml
-support-shape: minecraft:stone
+support_shape: minecraft:stone
 ```
 
 ![](/img/block_settings_7.png)
@@ -311,22 +311,22 @@ It affects how quickly an item slows down when sliding on a block. (Default: 0.6
 friction: 0.6
 ```
 
-### jump-factor
+### jump_factor
 
 ```yaml
-jump-factor: 1.0
+jump_factor: 1.0
 ```
 
-### speed-factor
+### speed_factor
 
 ```yaml
-speed-factor: 1.0
+speed_factor: 1.0
 ```
 
 :::caution
 The following block settings are all related to the light system. CraftEngine has implemented partial light effects as much as possible without affecting server performance. Visual issues with the light system on the client side are normal and in most cases I can't fix them.
 
-The block's occlusion of **skylight** is entirely determined by the **client-side** and **cannot be fixed** by sending packets from the server. Therefore, the **block-light** and **can-occlude** settings **only affect block-emitted light**, not skylight.
+The block's occlusion of **skylight** is entirely determined by the **client-side** and **cannot be fixed** by sending packets from the server. Therefore, the **block_light** and **can_occlude** settings **only affect block-emitted light**, not skylight.
 :::
 
 ### luminance
@@ -339,61 +339,61 @@ luminance: 15
 
 ![](/img/block_settings_8.png)
 
-### can-occlude
+### can_occlude
 
 Determines whether this block can block light. This also determines whether the block can turn below block into another type. (For instance grass\_block -> dirt) (Default: undefined)
 
 ```yaml
-can-occlude: false
+can_occlude: false
 ```
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_9.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: true</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>can_occlude: true</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_10.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: false</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>can_occlude: false</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_11.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: false</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>can_occlude: false</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_12.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: true</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>can_occlude: true</p>
 </div>
 
-### block-light
+### block_light
 
 Determines how much light level is reduced after passing through this block (Default: undefined)
 
 ```yaml
-block-light: 0
+block_light: 0
 ```
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_13.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block-light: 15</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block_light: 15</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_14.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block-light: 7</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block_light: 7</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_15.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block-light: 0</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block_light: 0</p>
 </div>
 
-### propagate-skylight
+### propagate_skylight
 
 Determines whether natural light can pass through this block.
 
 ```yaml
-propagate-skylight: true
+propagate_skylight: true
 ```

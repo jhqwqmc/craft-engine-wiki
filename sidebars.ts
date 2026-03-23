@@ -565,9 +565,19 @@ const sidebars: SidebarsConfig = {
               label: '⚙️ Furniture Settings',
             },
             {
-              type: 'doc',
-              id: "configuration/furniture/behaviors",
+              type: 'category',
               label: '🕹️ Furniture Behaviors',
+              link: {
+                type: 'doc',
+                id: "configuration/furniture/behaviors",
+              },
+              items: [
+                {
+                  type: 'doc',
+                  id: "configuration/furniture/behaviors/simple_storage_furniture",
+                  label: '📦 Simple Storage Furniture',
+                },
+              ],
             },
             {
               type: 'doc',

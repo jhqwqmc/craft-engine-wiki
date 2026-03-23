@@ -385,7 +385,7 @@ items:
   tutorial:toxic_sword:
     material: diamond_sword
     data:
-      item-name: "<#3CB371>剧毒之剑"
+      item_name: "<#3CB371>剧毒之剑"
     model:
       type: minecraft:model # 不要过于关注这里的类型，我们稍后会详细解释。
       path: tutorial:item/toxic_sword
@@ -408,10 +408,10 @@ items:
     items:
       tutorial:toxic_sword:
         material: diamond_sword
-        custom-model-data: 1000
+        custom_model_data: 1000
       tutorial:flame_sword:
         material: diamond_sword
-        custom-model-data: 1001
+        custom_model_data: 1001
     ```
 
     然而，这一限制不适用于具有不同<Comment text="译者注：也就是 material">基础物品</Comment>的自定义物品。例如：
@@ -420,10 +420,10 @@ items:
     items:
       tutorial:toxic_sword:
         material: diamond_sword
-        custom-model-data: 1000
+        custom_model_data: 1000
       tutorial:flame_sword:
         material: wooden_sword
-        custom-model-data: 1000
+        custom_model_data: 1000
     ```
 
 </details>
@@ -445,7 +445,7 @@ items:
     tutorial:toxic_sword:
       material: diamond_sword
       data:
-        item-name: "<#3CB371>剧毒之剑"
+        item_name: "<#3CB371>剧毒之剑"
       model:
         path: tutorial:item/toxic_sword
 +     generation:
@@ -570,7 +570,7 @@ items:
 
   </TabItem>
 
-  <TabItem value="gui-light" label="💡 gui-light">
+  <TabItem value="gui_light" label="💡 gui_light">
     可以设置为 `front` 或 `side`。如果设置为 `side` 则使用 3D 模型的光照，如果设置为 `front` 则使用扁平物品光照。默认值为 `side`。
 
     ![](/img/gui_light.png)
@@ -588,7 +588,7 @@ items:
           path: minecraft:item/custom/gui_head_size_1
           generation:
             parent: minecraft:item/template_skull
-            gui-light: front
+            gui_light: front
             display:
               gui:
                 translation: 0,8,0

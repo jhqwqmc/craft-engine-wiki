@@ -355,9 +355,13 @@
     "message": "⚙️ 家具设置",
     "description": "教程侧边栏中'家具设置'文档项的标签"
   },
-  "sidebar.tutorialSidebar.doc.🕹️ Furniture Behaviors": {
+  "sidebar.tutorialSidebar.category.🕹️ Furniture Behaviors": {
     "message": "🕹️ 家具行为",
     "description": "教程侧边栏中'家具行为'文档项的标签"
+  },
+  "sidebar.tutorialSidebar.doc.📦 Simple Storage Furniture": {
+    "message": "📦 简单存储家具",
+    "description": "教程侧边栏中'简单存储家具'文档项的标签"
   },
   "sidebar.tutorialSidebar.doc.📍 Furniture Variants": {
     "message": "📍 家具变体",

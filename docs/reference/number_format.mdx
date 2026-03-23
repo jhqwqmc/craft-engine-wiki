@@ -140,14 +140,14 @@ mean: 15
 # Measures the dispersion of data. A smaller value means data is more concentrated, a larger value means data is more spread out.
 # Default: (max - min) / 6.0, based on the "6σ principle" (99.7% of values fall within μ±3σ)
 # In this example: If not specified, the default value would be (20-10)/6≈1.67
-std-dev: 1
+std_dev: 1
 
 # Optional parameter: Maximum number of attempts to generate a valid random number, defaults to 128
 # Since the theoretical range of the Gaussian distribution is (-∞, +∞), but is truncated by min/max,
 # values generated outside the [min, max] range will be regenerated.
 # This parameter prevents infinite loops in extreme cases.
 # If no valid value is generated after the maximum attempts, the closest boundary value (min or max) is typically returned.
-max-attempts: 128
+max_attempts: 128
 ```
 
 ### skew_normal
@@ -167,7 +167,7 @@ max: 100
 mean: 50
 
 # Optional parameter: Standard deviation. Default: (max - min) / 6.0
-std-dev: 10
+std_dev: 10
 
 # Optional parameter: Skewness coefficient.
 # Positive value: Right-skewed (tail on the right, peaks at the left)
@@ -177,7 +177,7 @@ std-dev: 10
 skewness: 0.5
 
 # Optional parameter: Maximum generation attempts. Default: 128
-max-attempts: 128
+max_attempts: 128
 ```
 
 ### log_normal
@@ -196,7 +196,7 @@ max: 1000
 # Choice A: Direct Mean and Standard Deviation (Intuitive)
 # The provider will automatically calculate the required μ and σ parameters.
 mean: 50
-std-dev: 20
+std_dev: 20
 
 # Choice B: Logarithmic Parameters (Advanced)
 # location (μ): mean of the variable's natural logarithm
@@ -205,7 +205,7 @@ std-dev: 20
 # scale: 0.5
 
 # Optional parameter: Maximum generation attempts. Default: 128
-max-attempts: 128
+max_attempts: 128
 ```
 
 ### triangle

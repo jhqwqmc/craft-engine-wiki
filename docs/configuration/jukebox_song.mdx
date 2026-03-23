@@ -10,12 +10,12 @@ Due to the fact that Minecraft's registry becomes immutable once registered, you
 :::
 
 ```yaml
-jukebox-songs:
+jukebox_songs:
   default:credits_music:
     sound: minecraft:music.credits
     length: 100.0  # music length in seconds
     description: "Credits"  
-    comparator-output: 15
+    comparator_output: 15
     range: 32
 ```
 
@@ -26,7 +26,7 @@ items:
   default:music_stick:
     material: stick
     data:
-      jukebox-playable: default:credits_music
+      jukebox_playable: default:credits_music
 ```
 
 If you don't know how to customize a sound, please refer to [this page](./sound.mdx).
