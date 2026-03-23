@@ -48,7 +48,7 @@ const config: Config = {
       'classic',
       {
         docs: {
-          sidebarPath: './sidebars.ts',
+          sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: '/',
           editUrl: 'https://github.com/Xiao-MoMi/craft-engine-wiki/edit/main/',
           editLocalizedFiles: true,
