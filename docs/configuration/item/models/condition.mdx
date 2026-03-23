@@ -15,7 +15,7 @@ import UrlCard from '@site/src/components/UrlCard';
 Render an item model based on the condition.
 
 :::caution
-When you use `minecraft:condition`, you need to specify the condition type, which is the **property** mentioned below. `on-false` and `on-true` respectively represent displaying different models under different conditions.
+When you use `minecraft:condition`, you need to specify the condition type, which is the **property** mentioned below. `on_false` and `on_true` respectively represent displaying different models under different conditions.
 :::
 
 ```yaml
@@ -24,10 +24,10 @@ items:
     model:
       type: "minecraft:condition"
       property: "minecraft:using_item"
-      on-false:
+      on_false:
         type: "minecraft:model"
         path: "minecraft:item/custom/model_false"
-      on-true:
+      on_true:
         type: "minecraft:model"
         path: "minecraft:item/custom/model_true"
 ```

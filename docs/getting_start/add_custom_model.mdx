@@ -384,7 +384,7 @@ items:
   tutorial:toxic_sword:
     material: diamond_sword
     data:
-      item-name: "<#3CB371>Toxic Sword"
+      item_name: "<#3CB371>Toxic Sword"
     model:
       type: minecraft:model # Don't focus too much on the type here as we'll explain it in detail later.
       path: tutorial:item/toxic_sword
@@ -407,10 +407,10 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
     items:
       tutorial:toxic_sword:
         material: diamond_sword
-        custom-model-data: 1000
+        custom_model_data: 1000
       tutorial:flame_sword:
         material: diamond_sword
-        custom-model-data: 1001
+        custom_model_data: 1001
     ```
 
     However, this restriction does not apply to items with different base materials. For example:
@@ -419,10 +419,10 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
     items:
       tutorial:toxic_sword:
         material: diamond_sword
-        custom-model-data: 1000
+        custom_model_data: 1000
       tutorial:flame_sword:
         material: wooden_sword
-        custom-model-data: 1000
+        custom_model_data: 1000
     ```
 
 </details>
@@ -430,7 +430,7 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
 <details>
   <summary>What is ItemModel?</summary>
 
-  ItemModel, introduced in 1.21.2, is a data component with better rendering efficiency than CustomModelData, reducing client-side performance overhead. Normally, you don’t need to manually specify the model path (item-model), as the plugin auto-generates it.
+  ItemModel, introduced in 1.21.2, is a data component with better rendering efficiency than CustomModelData, reducing client-side performance overhead. Normally, you don’t need to manually specify the model path (item_model), as the plugin auto-generates it.
 
 </details>
 
@@ -444,7 +444,7 @@ items:
     tutorial:toxic_sword:
       material: diamond_sword
       data:
-        item-name: "<#3CB371>Toxic Sword"
+        item_name: "<#3CB371>Toxic Sword"
       model:
         path: tutorial:item/toxic_sword
 +     generation:
@@ -570,7 +570,7 @@ Let me explain the purpose of each parameter and where to obtain them:
 
   </TabItem>
 
-  <TabItem value="gui-light" label="💡 gui-light">
+  <TabItem value="gui_light" label="💡 gui_light">
     Can be `front` or `side`. If set to `side`, the model is rendered like a block. If set to `front`, model is shaded like a flat item. Defaults to `side`.
 
     ![](/img/gui_light.png)
@@ -588,7 +588,7 @@ Let me explain the purpose of each parameter and where to obtain them:
           path: minecraft:item/custom/gui_head_size_1
           generation:
             parent: minecraft:item/template_skull
-            gui-light: front
+            gui_light: front
             display:
               gui:
                 translation: 0,8,0

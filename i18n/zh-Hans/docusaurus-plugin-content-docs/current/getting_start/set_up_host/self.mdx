@@ -21,25 +21,25 @@ resource-pack:
           port: 8163
           protocol: "http"
           # 拒绝非 Minecraft 客户端请求
-          deny-non-minecraft-request: true
+          deny_non_minecraft_request: true
           # 生成一次性限时的下载链接
-          one-time-token: true
-          # 改进 deny-non-minecraft-request 和 one-time-token 的验证，如果你的服务器未完全启用正版验证请勿启用
-          strict-validation: false
-          rate-limiting:
+          one_time_token: true
+          # 改进 deny_non_minecraft_request 和 one_time_token 的验证，如果你的服务器未完全启用正版验证请勿启用
+          strict_validation: false
+          rate_limiting:
             # 每秒最大带宽限制，防止资源包下载时影响服务器其他玩家的稳定性
-            max-bandwidth-per-second: 5_000_000 # 5MB/s
+            max_bandwidth_per_second: 5_000_000 # 5MB/s
             # 每个玩家保障的最低下载速度，确保并发下载时仍能保持可接受的下载性能
-            min-download-speed-per-player: 50_000 # 50KB/s
+            min_download_speed_per_player: 50_000 # 50KB/s
             # 防止单个 IP 在短时间内发送过多资源包下载请求
-            qps-per-ip: 5/60 # 每 60 秒 5 次请求
+            qps_per_ip: 5/60 # 每 60 秒 5 次请求
 `}
 </DiffViewer>
 
 :::info
 
-`deny-non-minecraft-request` 设置会阻止所有非标准 Minecraft 客户端发起的请求。 \
-至于 `one-time-token`，它会为每位玩家生成一个一次性且限时的下载链接。
+`deny_non_minecraft_request` 设置会阻止所有非标准 Minecraft 客户端发起的请求。 \
+至于 `one_time_token`，它会为每位玩家生成一个一次性且限时的下载链接。
 
 你可以通过设置完整的 URL 来避免在资源包链接中使用 IPv4 地址。
 ```yaml

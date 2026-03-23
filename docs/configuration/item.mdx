@@ -14,29 +14,29 @@ import Highlight from '@site/src/components/Highlight';
 
 The `material` serves as the foundational template of the item, such as `paper` or `wooden_sword`.
 
-- **client-bound-material** <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+- **client_bound_material** <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
 
-The `client-bound-material` used for this item. You can use this feature to assign completely different base material for items on the server/client side, thereby affecting their specific behaviors in server/client contexts.
+The `client_bound_material` used for this item. You can use this feature to assign completely different base material for items on the server/client side, thereby affecting their specific behaviors in server/client contexts.
 
-- **custom-model-data** <Highlight color="#2E8B57">**Optional**</Highlight>
+- **custom_model_data** <Highlight color="#2E8B57">**Optional**</Highlight>
 
-The `custom-model-data` is a positive integer, and custom items of the same material should possess distinct custom-model-data values. The custom-model-data determines the model displayed for the item and is crucial for the model section below.
+The `custom_model_data` is a positive integer, and custom items of the same material should possess distinct custom_model_data values. The custom_model_data determines the model displayed for the item and is crucial for the model section below.
 
-- **item-model** (1.21.2+) <Highlight color="#2E8B57">**Optional**</Highlight>
+- **item_model** (1.21.2+) <Highlight color="#2E8B57">**Optional**</Highlight>
 
 Defines the item model resource location of this item. For instance `default:custom_book`
 
-- **client-bound-model** <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: by config.yml**</Highlight> <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+- **client_bound_model** <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: by config.yml**</Highlight> <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
 
-Makes custom-model-data and item-model client-side by default. This provides several benefits. For example, you can update model values dynamically without causing inconsistencies for players' existing items. The main drawback is that plugins relying on `custom-model-data` for item identification will not work correctly, as this data is not present in the server-side item stack.
+Makes custom_model_data and item_model client-side by default. This provides several benefits. For example, you can update model values dynamically without causing inconsistencies for players' existing items. The main drawback is that plugins relying on `custom_model_data` for item identification will not work correctly, as this data is not present in the server-side item stack.
 
 - [**data**](./item/data.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
 
 Item Data refers to the NBT (Named Binary Tag) of an item in older versions, or the item Components in version 1.20.5 and above. Through this data, we can customize various aspects of an item such as its name, description, attributes, and other functionalities provided by vanilla Minecraft.
 
-- [**client-bound-data**](./item/data.mdx#client-bound-data) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+- [**client_bound_data**](./item/data.mdx#client_bound_data) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
 
-The client-bound-data exists exclusively on the client side, with no server-side components involved. Using the client-side item component, you can effortlessly update item descriptions in real time—including properties like item_model and custom_model_data. Additionally, unlike other plugins, CraftEngine items remain permanently unaltered in creative mode!
+The client_bound_data exists exclusively on the client side, with no server-side components involved. Using the client-side item component, you can effortlessly update item descriptions in real time—including properties like item_model and custom_model_data. Additionally, unlike other plugins, CraftEngine items remain permanently unaltered in creative mode!
 
 - [**behavior(s)**](./item/behaviors.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
 
@@ -44,17 +44,19 @@ The client-bound-data exists exclusively on the client side, with no server-side
 
 Unlike data, the contents within settings pertain to special mechanisms processed by the plugin.
 
-- [**model / legacy-model**](./item/models.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
+- [**model / legacy_model**](./item/models.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
 
 - [**events**](../reference/events.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
 
 - [**category**](./category.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
 
-- **oversized-in-gui** (1.21.6+) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: true**</Highlight>
+- **oversized_in_gui** (1.21.6+) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: true**</Highlight>
 
-- **hand-animation-on-swap** <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: true**</Highlight>
+- **hand_animation_on_swap** <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: true**</Highlight>
 
-- **swap-animation-scale** (1.21.11+) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: 1.0**</Highlight>
+- **swap_animation_scale** (1.21.11+) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: 1.0**</Highlight>
+
+- [**transformation** (26.1+)](item/models.mdx#transformation-261) <Highlight color="#2E8B57">**Optional**</Highlight>
 
 <details>
   <summary>Full Config Overview</summary>
@@ -63,24 +65,24 @@ Unlike data, the contents within settings pertain to special mechanisms processe
   items:
     default:palm_log:
       material: paper
-      custom-model-data: 1000
-      item-model: default:palm_log
+      custom_model_data: 1000
+      item_model: default:palm_log
       settings:
-        fuel-time: 300
+        fuel_time: 300
         tags:
           - "default:palm_logs"
           - "minecraft:logs"
           - "minecraft:logs_that_burn"
       data:
-        display-name: "<!i>Palm Log"
+        display_name: "<!i>Palm Log"
       model:
         type: "minecraft:model"
         path: "minecraft:item/custom/palm_log"
         generation:
           parent: "minecraft:block/custom/palm_log"
-      oversized-in-gui: true
-      hand-animation-on-swap: true
-      client-bound-model: false
+      oversized_in_gui: true
+      hand_animation_on_swap: true
+      client_bound_model: false
       behavior:
         type: block_item
         block: default:palm_log

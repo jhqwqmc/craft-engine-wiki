@@ -15,24 +15,24 @@ furniture:
     variants:
       ground:
         # create offsets for the drops so they won't spawn in blocks
-        loot-spawn-offset: 0,0,0
+        loot_spawn_offset: 0,0,0
 
         # Display Elements
         elements:
           - item: default:bench
-            display-transform: NONE
+            display_transform: NONE
             billboard: FIXED
             position: 0.5,0,0
             translation: 0,0.5,0
-            apply-dyed-color: true # default: true
-            # glow-color: 255,255,255 # glow color: r,g,b
+            apply_dyed_color: true # default: true
+            # glow_color: 255,255,255 # glow color: r,g,b
 
         # Furniture Hitboxes
         hitboxes:
           - type: interaction # non-collision hitbox
-            can-use-item-on: false # default: false
-            can-be-hit-by-projectile: false # default: false
-            blocks-building: false # default: true
+            can_use_item_on: false # default: false
+            can_be_hit_by_projectile: false # default: false
+            blocks_building: false # default: true
             position: 0,0,0
             width: 1
             height: 2
@@ -63,18 +63,18 @@ item: default:bench
 **Optional Arguments**
 
 ```yaml
-display-transform: none # none / third_person_left_hand / third_person_right_hand
+display_transform: none # none / third_person_left_hand / third_person_right_hand
                         # first_person_left_hand / first_person_right_hand
                         # head / gui / ground / fixed
 billboard: fixed  # fixed / vertical / horizontal / center
 position: 0.5,0,0
 translation: 0,0.5,0
 scale: 1 # scale: 1,2,1
-glow-color: 255,255,255
+glow_color: 255,255,255
 brightness:
-  block-light: 15
-  sky-light: 15
-view-range: 1.0
+  block_light: 15
+  sky_light: 15
+view_range: 1.0
 # rotation support 3 formats
 rotation: 45  # Y axis
 rotation: 45,45,0  # Euler angle
@@ -117,21 +117,21 @@ billboard: fixed  # fixed / vertical / horizontal / center
 position: 0.5,0,0
 translation: 0,0.5,0
 scale: 1 # scale: 1,2,1
-glow-color: 255,255,255
+glow_color: 255,255,255
 brightness:
-  block-light: 15
-  sky-light: 15
-view-range: 1.0
+  block_light: 15
+  sky_light: 15
+view_range: 1.0
 # rotation support 3 formats
 rotation: 45  # Y axis based
 rotation: 45,45,0  # Euler angle
 rotation: 0,0,0.7071,0.7071  # Quaternions  https://quaternions.online/
-line-width: 200
-background-color: 64,0,0,0 # ARGB
-text-opacity: -1
-has-shadow: false
-is-see-through: false
-use-default-background-color: false
+line_width: 200
+background_color: 64,0,0,0 # ARGB
+text_opacity: -1
+has_shadow: false
+is_see_through: false
+use_default_background_color: false
 alignment: center  # center / left / right
 ```
 
@@ -164,7 +164,7 @@ item: default:bench
 position: 0,1,0
 scale: 1
 small: false
-glow-color: white  # black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white
+glow_color: white  # black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white
 # Select the component that affects the color of this furniture. Generally, you only need to 
 # choose one of the following component types based on the item of the furniture element.
 tint_source: 
@@ -188,9 +188,9 @@ Non-collision hitbox
 
 ```yaml
 type: interaction
-can-use-item-on: false
-can-be-hit-by-projectile: false
-blocks-building: false
+can_use_item_on: false
+can_be_hit_by_projectile: false
+blocks_building: false
 position: 0,0,0
 width: 1
 height: 2
@@ -217,16 +217,16 @@ Hard-collision hitbox
 
 ```yaml
 type: shulker
-can-use-item-on: true
-can-be-hit-by-projectile: true
-blocks-building: true
+can_use_item_on: true
+can_be_hit_by_projectile: true
+blocks_building: true
 position: 1,0,0
 scale: 1
 peek: 0 # 0~100
 # Relative direction. north = facing the player
 direction: UP # up/down/north/west/east/south
 # whether to summon another interaction entity for better interaction experience
-interaction-entity: true 
+interaction_entity: true
 # whether the interaction entity is interactive
 interactive: true 
 # decides if the interaction entity can be seen through F3+B
@@ -246,10 +246,10 @@ Semi-hard-collision hitbox
 
 ```yaml
 type: happy_ghast
-can-use-item-on: true
-can-be-hit-by-projectile: true
-blocks-building: true
-hard-collision: true
+can_use_item_on: true
+can_be_hit_by_projectile: true
+blocks_building: true
+hard_collision: true
 position: 1,0,0
 scale: 0.25 # default: 1
 seats:
@@ -266,7 +266,7 @@ position: 1,0,0
 scale: 5
 # You can use any entity type here
 # default: slime
-entity-type: slime 
+entity_type: slime
 seats:
   - 1,0,-0.1 0
 ```
@@ -305,19 +305,19 @@ You can individually control whether entity culling is enabled for each furnitur
 
 ```yaml
 ground:
-  entity-culling: false # Disabled
+  entity_culling: false # Disabled
 ```
 
 Once entity culling is enabled, you can configure the culling parameters
 
 ```yaml
 ground:
-  entity-culling:
+  entity_culling:
     aabb: -0.5,0,-0.5,0.5,2,0.5 # x1,y1,z1,x2,y2,z2. Manual configuration of AABB is not recommended as the plugin will calculate it automatically.
-    view-distance: 64 # View distance culling. -1 means unlimited distance.
+    view_distance: 64 # View distance culling. -1 means unlimited distance.
                       # However, setting this to -1 is not recommended when ray tracing is enabled,
                       # as it results in excessive algorithm path length and performance impact.
-    ray-tracing: false # Whether to enable ray tracing culling.
+    ray_tracing: false # Whether to enable ray tracing culling.
 ```
 
 ## External Models
@@ -329,6 +329,6 @@ furniture:
   default:bench:
     variants:
       ground:
-        model-engine: blueprint_id
-        better-model: blueprint_id
+        model_engine: blueprint_id
+        better_model: blueprint_id
 ```

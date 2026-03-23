@@ -10,22 +10,22 @@ id: global_variable
 以下是一个基础示例，其中 `<arg:0>` 格式的标签是可选参数，可由调用方动态提供：
 
 ```yaml
-global-variables:
+global_variables:
   test: "<!i><#FF8C00><arg:0>的<arg:1>"
 ```
 
 ```yaml
 items#topaz_gears:
   default:topaz_rod:
-    client-bound-data:
-      item-name: "<global:test:'<arg:player.name>':'<i18n:item.topaz_rod>'>"
+    client_bound_data:
+      item_name: "<global:test:'<arg:player.name>':'<i18n:item.topaz_rod>'>"
 ```
 
 :::tip
 CraftEngine 的全局变量支持在其他插件中调用，但需要注意的是，它们是通过数据包级别的文本替换来实现的。**这种做法不会干预其他插件的功能逻辑或内部实现**。
 
 ```yaml
-global-variables:
+global_variables:
   coin_without_shadow: "<!shadow><image:default:icons>"
 ```
 

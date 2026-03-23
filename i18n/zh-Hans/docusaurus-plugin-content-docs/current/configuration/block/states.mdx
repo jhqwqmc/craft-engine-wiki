@@ -34,7 +34,7 @@ id: states
 blocks:
   default:chinese_lantern:
     state:
-      auto-state: note_block
+      auto_state: note_block
       model:
         path: "minecraft:block/custom/chinese_lantern"
         generation:
@@ -45,21 +45,21 @@ blocks:
 ```
 
 ### 视觉状态
-方块的视觉表现由 `auto-state` 或 `state` 这两个选项来控制。你可以根据自己对精度的需求，二选一。
+方块的视觉表现由 `auto_state` 或 `state` 这两个选项来控制。你可以根据自己对精度的需求，二选一。
 
-#### 🛠️ 使用 `auto-state`：让插件帮你选
-`auto-state` 的参数指向插件预设好的一组外观状态。这些状态都共享一些关键特性，比如拥有**相同的碰撞箱和一致的渲染属性**（例如是否支持透明）。
+#### 🛠️ 使用 `auto_state`：让插件帮你选
+`auto_state` 的参数指向插件预设好的一组外观状态。这些状态都共享一些关键特性，比如拥有**相同的碰撞箱和一致的渲染属性**（例如是否支持透明）。
 
 - 它有什么用？
 
-在创建新方块时，我们通常只关心它的核心特性（比如碰撞箱大小），而不在乎它具体用了哪个方块状态。`auto-state` 就是为此而生：插件会自动从符合特性的状态组里，为你分配一个可用的。
+在创建新方块时，我们通常只关心它的核心特性（比如碰撞箱大小），而不在乎它具体用了哪个方块状态。`auto_state` 就是为此而生：插件会自动从符合特性的状态组里，为你分配一个可用的。
 
 - 举个例子
 
-对于音符盒，`minecraft:note_block[instrument=hat,note=0,powered=false]` 和 `minecraft:note_block[instrument=hat,note=1,powered=false]` 在核心特性上毫无区别。你完全无需记住或输入这么长的状态参数，只需简单地写上 `auto-state: note_block`，插件就会自动为你挑选一个空闲的音符盒状态。
+对于音符盒，`minecraft:note_block[instrument=hat,note=0,powered=false]` 和 `minecraft:note_block[instrument=hat,note=1,powered=false]` 在核心特性上毫无区别。你完全无需记住或输入这么长的状态参数，只需简单地写上 `auto_state: note_block`，插件就会自动为你挑选一个空闲的音符盒状态。
 
 :::info
-当前可用的 `auto-state` 选项:
+当前可用的 `auto_state` 选项:
 - tintable_leaves - 不含水的可着色树叶
 - waterlogged_tintable_leaves - 含水的可着色树叶
 - non_tintable_leaves - 不含水的不可着色树叶
@@ -89,7 +89,7 @@ blocks:
 如果多个方块外观引用相同的 ID，它们最终将被分配相同的视觉方块状态。如果您需要多个方块状态共享相同的视觉状态，这将非常有用。
 
 ```yaml
-auto-state:
+auto_state:
   type: solid
   id: namespace:id
 ```
@@ -110,7 +110,7 @@ auto-state:
 
 2. 映射简写
 
-使用在 `block-state-mappings` 配置中定义的简写格式 `方块名称:ID`。
+使用在 `block_state_mappings` 配置中定义的简写格式 `方块名称:ID`。
 
 > 示例：`note_block:100` （这表示使用被映射的第 101 个音符盒状态）
 
@@ -157,7 +157,7 @@ blocks:
 blocks:
   default:chinese_lantern:
     state:
-      auto-state: note_block
+      auto_state: note_block
       model:
         path: "minecraft:block/custom/chinese_lantern"
         generation:
@@ -220,6 +220,10 @@ state:
 限制：必须为 90 的倍数。
 - y
 模型绕 Y 轴 的旋转角度。
+单位：度（°）
+限制：必须为 90 的倍数。
+- z（1.21.11+）
+模型绕 Z 轴 的旋转角度。
 单位：度（°）
 限制：必须为 90 的倍数。
 - uvlock
@@ -304,7 +308,7 @@ blocks:
     states:
       appearances:
         axisY:
-          # 你也可以在此使用 "auto-state: note_block"
+          # 你也可以在此使用 "auto_state: note_block"
           state: "note_block:0" 
           model:
             path: "minecraft:block/custom/stripped_palm_log"
@@ -314,7 +318,7 @@ blocks:
                 "end": "minecraft:block/custom/palm_log_top"
                 "side": "minecraft:block/custom/palm_log"
         axisX:
-          # 你也可以在此使用 "auto-state: note_block"
+          # 你也可以在此使用 "auto_state: note_block"
           state: "note_block:1"
           model:
             x: 90
@@ -326,7 +330,7 @@ blocks:
                 "end": "minecraft:block/custom/palm_log_top"
                 "side": "minecraft:block/custom/palm_log"
         axisZ:
-          # 你也可以在此使用 "auto-state: note_block"
+          # 你也可以在此使用 "auto_state: note_block"
           state: "note_block:2"
           model:
             x: 90
@@ -372,7 +376,7 @@ blocks:
           range: 1~7
       appearances:
         default:
-          auto-state: leaves
+          auto_state: leaves
           model:
             path: minecraft:block/custom/palm_leaves
             generation:
@@ -380,7 +384,7 @@ blocks:
               textures:
                 all: minecraft:block/custom/palm_leaves
         waterlogged:
-          auto-state: waterlogged_leaves
+          auto_state: waterlogged_leaves
           model:
             path: minecraft:block/custom/palm_leaves
       variants:
@@ -391,10 +395,10 @@ blocks:
           settings:
             resistance: 1200.0
             burnable: false
-            fluid-state: water
+            fluid_state: water
         distance=7,persistent=false:
           settings:
-            is-randomly-ticking: true
+            is_randomly_ticking: true
 ```
 
 </details>
@@ -439,7 +443,7 @@ blocks:
   default:chinese_lantern:
     state:
       id: 0 # 指定该方块的内部 ID 为 0
-      auto-state: note_block
+      auto_state: note_block
       model:
         path: "minecraft:block/custom/chinese_lantern"
         generation:

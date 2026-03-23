@@ -19,6 +19,12 @@ events:
       - type: command
         command: say 2
         conditions: []
+  - on:
+      - attack
+      - left_click
+    functions:
+      - type: command
+        command: say 3
 ```
 
 ## 🧨 Event Triggers
@@ -30,6 +36,7 @@ events:
 * left\_click
 * consume
 * pick\_up
+* attack
 
 ### blocks
 
@@ -94,11 +101,11 @@ type: command
 command: "say hello <arg:player.name>" # required; stringlist/string
 target: "self" # optional; enum[all, self]/player selector; default: self
 # Execute the command as a player.
-as-player: false # optional; boolean; default: false
+as_player: false # optional; boolean; default: false
 # Run as OP (Not Recommended). This is a potential security risk. For safety, run the command from the console.
-as-op: false # optional; boolean; default: false
+as_op: false # optional; boolean; default: false
 # Some custom command plugins are event-based and may require this option to execute custom commands.
-as-event: false # optional; boolean; default: false
+as_event: false # optional; boolean; default: false
 ```
 
 ### message
@@ -130,9 +137,9 @@ Send a title
 type: title
 title: "<red>Title</red>"  # required; string
 subtitle: "<Yellow>Subtitle</yellow>" # required; string
-fade-in: 20 # optional; number; default: 10
+fade_in: 20 # optional; number; default: 10
 stay: 10 # optional; number; default: 20
-fade-out: 10 # optional; number; default: 5
+fade_out: 10 # optional; number; default: 5
 ```
 
 ### open\_window
@@ -141,7 +148,7 @@ Open a gui window
 
 ```yaml
 type: open_window #
-gui-type: anvil # required; enum[anvil, enchantment, grindstone, loom, smithing, crafting, cartography];
+gui_type: anvil # required; enum[anvil, enchantment, grindstone, loom, smithing, crafting, cartography];
 title: "Super Anvil"  # optional; string
 target: "self" # optional; enum[all, self]/player selector; default: self
 ```
@@ -163,7 +170,7 @@ Place a block
 
 ```yaml
 type: place_block
-block-state: "default:chinese_lantern" # required; string
+block_state: "default:chinese_lantern" # required; string
 x: <arg:block.block_x> # optional; number; default: <arg:position.x>
 y: <arg:block.block_y> # optional; number; default: <arg:position.y>
 z: <arg:block.block_z> # optional; number; default: <arg:position.z>
@@ -206,7 +213,7 @@ type: drop_loot
 x: <arg:block.block_x> + 0.5 # optional; number; default: <arg:position.x>
 y: <arg:block.block_y> + 0.5 # optional; number; default: <arg:position.y>
 z: <arg:block.block_z> + 0.5 # optional; number; default: <arg:position.z>
-to-inventory: false
+to_inventory: false
 loot:
   pools: ...
 ```
@@ -272,9 +279,9 @@ x: "<arg:position.x>" # optional; number; default: <arg:position.x>
 y: "<arg:position.y>" # optional; number; default: <arg:position.y>
 z: "<arg:position.z>" # optional; number; default: <arg:position.z>
 count: 5 # optional; number; default: 1
-offset-x: 0.3 # optional; number; default: 0
-offset-y: 0.3 # optional; number; default: 0
-offset-z: 0.3 # optional; number; default: 0
+offset_x: 0.3 # optional; number; default: 0
+offset_y: 0.3 # optional; number; default: 0
+offset_z: 0.3 # optional; number; default: 0
 speed: 0 # optional; number; default: 0
 
 # The following arguments are only effective
@@ -284,7 +291,7 @@ speed: 0 # optional; number; default: 0
 item: default:chinese_lantern
 
 # block/falling_dust/dust_pillar/block_crumble/block_marker
-block-state: default:plam_log[axis=y]
+block_state: default:plam_log[axis=y]
 
 # charge
 charge: 1.5
@@ -302,15 +309,15 @@ to: 0,0,0
 scale: 4.0
 
 # vibration
-target-x: 0
-target-y: 1
-target-z: 0
-arrival-time: 10
+target_x: 0
+target_y: 1
+target_z: 0
+arrival_time: 10
 
 # trail
-target-x: 0
-target-y: 1
-target-z: 0
+target_x: 0
+target_y: 1
+target_z: 0
 duration: 10
 ```
 
@@ -320,7 +327,7 @@ Add a potion effect
 
 ```yaml
 type: potion_effect
-potion-effect: minecraft:blindness # required; string
+potion_effect: minecraft:blindness # required; string
 duration: 20  # optional; number; default: 20
 amplifier: 0   # optional; number; default: 0
 ambient: false # optional; boolean; if the particle is spawned by beacon
@@ -333,7 +340,7 @@ Remove a potion effect
 
 ```yaml
 type: remove_potion_effect
-potion-effect: minecraft:blindness # optional if 'all' is true; boolean
+potion_effect: minecraft:blindness # optional if 'all' is true; boolean
 all: false  # optional; boolean; default: false
 ```
 
@@ -401,14 +408,14 @@ Spawn a furniture
 
 ```yaml
 type: spawn_furniture
-furniture-id: "default:bench" # required; string
+furniture_id: "default:bench" # required; string
 x: <arg:position.x> # optional; number; default: <arg:position.x>
 y: <arg:position.y> # optional; number; default: <arg:position.y>
 z: <arg:position.z> # optional; number; default: <arg:position.z>
 pitch: <arg:position.pitch> # optional; number; default: <arg:position.pitch>
 yaw: <arg:position.yaw> # optional; number; default: <arg:position.yaw>
 variant: ground # optional;
-play-sound: true # optional; boolean; default: true
+play_sound: true # optional; boolean; default: true
 ```
 
 ### remove\_furniture
@@ -417,8 +424,8 @@ Remove a furniture
 
 ```yaml
 type: remove_furniture
-drop-loot: true # optional; boolean; default: true
-play-sound: true # optional; boolean; default: true
+drop_loot: true # optional; boolean; default: true
+play_sound: true # optional; boolean; default: true
 ```
 
 ### replace\_furniture
@@ -427,26 +434,26 @@ Replace a furniture
 
 ```yaml
 type: replace_furniture
-furniture-id: "default:bench"
+furniture_id: "default:bench"
 x: <arg:furniture.x> # required; number; default: <arg:furniture.x>
 y: <arg:furniture.y> # required; number; default: <arg:furniture.y>
 z: <arg:furniture.z> # required; number; default: <arg:furniture.z>
 pitch: <arg:furniture.pitch> # required; number; default: <arg:furniture.pitch>
 yaw: <arg:furniture.yaw> # required; number; default: <arg:furniture.yaw>
 variant: ground # optional;
-drop-loot: true # default: true
-play-sound: true # default: true
+drop_loot: true # default: true
+play_sound: true # default: true
 ```
 
 ### rotate\_furniture
 
-Rotate a furniture. Sometimes furniture cannot be rotated due to collision shape, at which point the on-failure event will be triggered.
+Rotate a furniture. Sometimes furniture cannot be rotated due to collision shape, at which point the on_failure event will be triggered.
 
 ```yaml
 type: rotate_furniture
 degree: 90
-on-success: [] # functions
-on-failure: [] # functions
+on_success: [] # functions
+on_failure: [] # functions
 ```
 
 ### teleport
@@ -470,7 +477,7 @@ Send a toast
 ```yaml
 type: toast
 toast: This is a toast # required; string
-advancement-type: goal # optional; enum[goal,task,challenge]; default: goal
+advancement_type: goal # optional; enum[goal,task,challenge]; default: goal
 icon: minecraft:stone # required; string
 ```
 
@@ -482,7 +489,7 @@ Damage the target
 type: damage
 target: self # optional; enum[all, self]/player selector; default: self
 amount: 1.0 # optional; number; default: 1.0
-damage-type: generic # optional; string; default: generic
+damage_type: generic # optional; string; default: generic
 ```
 
 ### set\_variable
@@ -493,7 +500,7 @@ Set a variable, use \<arg:var_\[name\]\> to access it (replacing \[name\] with t
 type: set_variable
 name: my_variable # required; string
 number: 1.0 # optional; number
-as-int: false # optional; boolean; default: false
+as_int: false # optional; boolean; default: false
 text: "hello" # optional; string
 ```
 
@@ -505,14 +512,14 @@ Create a custom villager trading shop
 type: merchant_trade
 title: "Custom Merchant"
 offers:
-  - cost-1: 
+  - cost_1:
       item: iron_pickaxe
       # optional custom component predicates
       components:  
         minecraft:enchantments:
           minecraft:unbreaking: 1
-    # cost-2 is optional
-    cost-2:
+    # cost_2 is optional
+    cost_2:
       item: cobblestone
       # optional count
       count: 8
@@ -520,7 +527,7 @@ offers:
       item: default:topaz
       count: 4
   # add more trade offers
-  - cost-1: stone
+  - cost_1: stone
     result: default:topaz
     # optional
     experience: 3
@@ -671,10 +678,36 @@ target: "self" # optional; enum[all, self]/player selector; default: self
 
 Clear items from the player's inventory
 
- ```yaml
+```yaml
 type: clear_item
 id: "default:topaz" # required; string
 count: 1 # optional; number; default: 1
+```
+
+### heal
+
+Heal the player
+
+```yaml
+type: heal
+amount: 1.0 # optional; number; default: 1.0
+target: "self" # optional; enum[all, self]/player selector; default: self
+```
+
+### spawn\_mythic\_mob
+
+Spawn a mythic mob
+
+```yaml
+type: spawn_mythic_mob
+mob: "test_mob" # required; string
+level: 1.0 # optional; number; default: 1.0
+world: "world" # optional; string
+x: "<arg:position.x>" # optional; number; default: <arg:position.x>
+y: "<arg:position.y>" # optional; number; default: <arg:position.y>
+z: "<arg:position.z>" # optional; number; default: <arg:position.z>
+pitch: "<arg:position.pitch>" # optional; number; default: <arg:position.pitch>
+yaw: "<arg:position.yaw>" # optional; number; default: <arg:position.yaw>
 ```
 
 :::info

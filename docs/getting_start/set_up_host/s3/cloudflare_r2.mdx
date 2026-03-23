@@ -38,7 +38,7 @@ Click `R2 Object Storage` in the top-left corner to return to the R2 homepage, t
 ![](/img/cloudflare_r2_7_4.png)
 
 ### Step 8
-On the redirected page, locate the `Access Key ID` (to be used as `access-key-id`) and the `Secret Access Key` (to be used as `access-key-secret`). Finally, you should be able to compile the following configuration. \
+On the redirected page, locate the `Access Key ID` (to be used as `access_key_id`) and the `Secret Access Key` (to be used as `access_key_secret`). Finally, you should be able to compile the following configuration. \
 ![](/img/cloudflare_r2_8.png)
 
 ```yaml
@@ -48,15 +48,15 @@ resource-pack:
       - type: s3
         endpoint: "4asd4sdas4ds5ds4.r2.cloudflarestorage.com"
         bucket: "114514"
-        access-key-id: "asodjhadosdnoad"
-        access-key-secret: "asd541faf5asd5fs15asdf45as"
+        access_key_id: "asodjhadosdnoad"
+        access_key_secret: "asd541faf5asd5fs15asdf45as"
         protocol: "https"
-        path-style: false
+        path_style: false
         region: "auto"
-        upload-path: "server_resource_pack.zip"
-        disable-calculate-sha256: false
+        upload_path: "server_resource_pack.zip"
+        disable_calculate_sha256: false
         validity: 10
-        rate-map:
-          max-requests: 5
-          reset-interval: 20
+        rate_map:
+          max_requests: 5
+          reset_interval: 20
 ```

@@ -10,19 +10,19 @@ A global variable is a type of variable that can be accessed in any context and 
 Here is a basic example, where tags in the format `<arg:0>` are optional parameters that can be dynamically provided by the caller:
 
 ```yaml
-global-variables:
+global_variables:
   test: "<!i><#FF8C00><arg:0>'s <arg:1>"
 items:
   default:topaz_rod:
-    client-bound-data:
-      item-name: "<global:test:'<arg:player.name>':'<i18n:item.topaz_rod>'>"
+    client_bound_data:
+      item_name: "<global:test:'<arg:player.name>':'<i18n:item.topaz_rod>'>"
 ```
 
 :::tip
 CraftEngine's global variables are also accessible to other plugins, though it should be noted that their implementation operates through text replacement at the packet level. **This approach does not interfere with the functional logic or internal operations of the recipient plugins**.
 
 ```yaml
-global-variables:
+global_variables:
   coin_without_shadow: "<!shadow><image:default:icons>"
 ```
 

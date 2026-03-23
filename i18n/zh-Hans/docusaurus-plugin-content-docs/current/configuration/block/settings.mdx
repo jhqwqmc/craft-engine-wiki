@@ -16,39 +16,39 @@ blocks:
     settings:
       hardness: 0.5
       resistance: 0.5
-      is-randomly-ticking: true
-      push-reaction: NORMAL
-      map-color: 36
+      is_randomly_ticking: true
+      push_reaction: NORMAL
+      map_color: 36
       burnable: false
-      fire-spread-chance: 0
-      burn-chance: 0
+      fire_spread_chance: 0
+      burn_chance: 0
       item: custom:all_settings_item
       replaceable: false
-      is-redstone-conductor: true
-      is-suffocating: true
-      is-view-blocking: true
+      is_redstone_conductor: true
+      is_suffocating: true
+      is_view_blocking: true
       sounds:
         break: minecraft:block.deepslate.break
         step: minecraft:block.deepslate.step
         place: minecraft:block.deepslate.place
         hit: minecraft:block.deepslate.hit
         fall: minecraft:block.deepslate.fall
-      require-correct-tools: true
-      respect-tool-component: false
-      correct-tools:
+      require_correct_tools: true
+      respect_tool_component: false
+      correct_tools:
         - minecraft:wooden_pickaxe
-      incorrect-tool-dig-speed: 0.3
+      incorrect_tool_dig_speed: 0.3
       tags:
         - minecraft:mineable/pickaxe
       instrument: BASEDRUM
-      fluid-state: water
-      support-shape: minecraft:stone
+      fluid_state: water
+      support_shape: minecraft:stone
       luminance: 15
-      can-occlude: false
-      block-light: 0
-      propagate-skylight: false
-      jump-factor: 1.0
-      speed-factor: 1.0
+      can_occlude: false
+      block_light: 0
+      propagate_skylight: false
+      jump_factor: 1.0
+      speed_factor: 1.0
       friction: 0.7
 ```
 </details>
@@ -76,7 +76,7 @@ resistance: 0.5
 决定方块状态是否接受随机刻，这与某些方块行为有关，例如树叶。（默认值：false）
 
 ```yaml
-is-randomly-ticking: true
+is_randomly_ticking: true
 ```
 
 ### 活塞推动行为
@@ -90,7 +90,7 @@ is-randomly-ticking: true
 * PUSH\_ONLY 可推动，不可拉动
 
 ```yaml
-push-reaction: NORMAL
+push_reaction: NORMAL
 ```
 
 ### 地图颜色
@@ -98,7 +98,7 @@ push-reaction: NORMAL
 决定了地图在表示此方块时会使用的颜色的基色。可用颜色可以在 [https://zh.minecraft.wiki/w/地图存储格式#地图基色](https://zh.minecraft.wiki/w/地图存储格式#地图基色) 查找。（默认值：0）
 
 ```yaml
-map-color: 36
+map_color: 36
 ```
 ![](/img/block_settings_1.png)
 
@@ -117,7 +117,7 @@ burnable: true
 影响火与其相邻时破坏该方块的几率和速率。方块烧毁几率为正数时，其所有表面均可燃烧，否则只有其完整的上表面可以燃烧。（默认值：0）
 
 ```yaml
-fire-spread-chance: 100  # 0-100
+fire_spread_chance: 100  # 0-100
 ```
 
 ### 引燃几率
@@ -125,7 +125,7 @@ fire-spread-chance: 100  # 0-100
 影响火在其附近时传播到该方块表面上的几率和速率。引燃几率为正数的方块被称为可燃方块。（默认值：0）
 
 ```yaml
-burn-chance: 30  # 0-100
+burn_chance: 30  # 0-100
 ```
 
 ### 物品
@@ -149,7 +149,7 @@ replaceable: false
 决定了方块在红石信号传播中的影响。具有红石导体属性的方块被称为红石导体。（默认值：未定义）
 
 ```yaml
-is-redstone-conductor: true
+is_redstone_conductor: true
 ```
 
 ![](/img/block_settings_3.png)
@@ -159,7 +159,7 @@ is-redstone-conductor: true
 决定了生物视平线处于其中时会发生窒息的方块。（默认值：未定义）
 
 ```yaml
-is-suffocating: true
+is_suffocating: true
 ```
 
 ### 视野阻挡
@@ -167,7 +167,7 @@ is-suffocating: true
 会使视平线处于其中的非旁观模式玩家渲染阻挡视线的效果。绝大多数窒息方块都是视野阻挡方块。但是，此选项对玩家毫无用处，但是它将影响服务器上的某些实体机制。（默认值：未定义）
 
 ```yaml
-is-view-blocking: true
+is_view_blocking: true
 ```
 
 ### 音效
@@ -207,15 +207,15 @@ sounds:
 决定了是否需要合适挖掘工具才能有效的挖掘这个方块（默认值：false）
 
 ```yaml
-require-correct-tools: false
+require_correct_tools: false
 ```
 
 ### 尊重 tool 组件
 
-决定 `minecraft:tool` 组件的 `correct_for_drops` 选项是否应像下面的 `correct-tools` 一样工作。（默认值：false）
+决定 `minecraft:tool` 组件的 `correct_for_drops` 选项是否应像下面的 `correct_tools` 一样工作。（默认值：false）
 
 ```yaml
-respect-tool-component: false
+respect_tool_component: false
 ```
 
 ### 合适挖掘工具
@@ -223,7 +223,7 @@ respect-tool-component: false
 决定了什么物品可以有效地挖掘这个方块。（默认值：null）
 
 ```yaml
-correct-tools:
+correct_tools:
   - minecraft:wooden_pickaxe
   - minecraft:stone_pickaxe
   - minecraft:iron_pickaxe
@@ -233,7 +233,7 @@ correct-tools:
 ```
 
 :::tip
-如果设置了 `correct-tools`，那么 `require-correct-tools` 默认为 `true`。
+如果设置了 `correct_tools`，那么 `require_correct_tools` 默认为 `true`。
 :::
 
 ### 挖掘惩罚
@@ -241,7 +241,7 @@ correct-tools:
 决定了如果不使用合适挖掘工具的挖掘速度是正常的多少倍（默认值：0.3）
 
 ```yaml
-incorrect-tool-dig-speed: 0.3 # 0~1
+incorrect_tool_dig_speed: 0.3 # 0~1
 ```
 
 ### 标签
@@ -261,7 +261,7 @@ tags:
 这只适用于原版方块
 
 ```yaml
-client-bound-tags:
+client_bound_tags:
   - minecraft:beacon_base_blocks
 ```
 
@@ -282,7 +282,7 @@ instrument: BASEDRUM
 决定了方块状态的包含的流体状态。（默认值：empty）
 
 ```yaml
-fluid-state: water # empty/water
+fluid_state: water # empty/water
 ```
 
 ![](/img/block_settings_6.png)
@@ -292,7 +292,7 @@ fluid-state: water # empty/water
 决定了方块提供的**支撑形状**。默认情况下，自定义方块会使用其对应视觉状态的**支撑形状**。但是，你可以在这里手动指定一个原版方块的**支撑形状**来代替。
 
 ```yaml
-support-shape: minecraft:stone
+support_shape: minecraft:stone
 ```
 
 ![](/img/block_settings_7.png)
@@ -314,19 +314,19 @@ friction: 0.6
 ### 跳跃乘数
 
 ```yaml
-jump-factor: 1.0
+jump_factor: 1.0
 ```
 
 ### 速度乘数
 
 ```yaml
-speed-factor: 1.0
+speed_factor: 1.0
 ```
 
 :::caution
 剩余的方块设置都与**光照系统**有关。CraftEngine 已尽可能在不影响服务器性能的情况下实现了部分光照效果。客户端光照系统的视觉问题属于正常现象，在大多数情况下我也无法修复。
 
-方块对**天空光照**的遮挡完全由**客户端决定**，**无法通过服务器发送数据包来修复**。因此，`block-light` 和 `can-occlude` 设置**仅影响方块自身发出的光**，不影响天空光照。
+方块对**天空光照**的遮挡完全由**客户端决定**，**无法通过服务器发送数据包来修复**。因此，`block_light` 和 `can_occlude` 设置**仅影响方块自身发出的光**，不影响天空光照。
 :::
 
 ### 亮度
@@ -344,27 +344,27 @@ luminance: 15
 决定方块是否能阻挡光线。这也会决定该方块是否能将下方的方块转换为另一种类型（例如，草方块变为泥土）。（默认值：未定义）
 
 ```yaml
-can-occlude: false
+can_occlude: false
 ```
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_9.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: true</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>can_occlude: true</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_10.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: false</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>can_occlude: false</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_11.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: false</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>can_occlude: false</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_12.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>occlude: true</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>can_occlude: true</p>
 </div>
 
 ### 散射光照
@@ -372,22 +372,22 @@ can-occlude: false
 决定光线穿过此方块后降低的光照等级。（默认值：未定义）
 
 ```yaml
-block-light: 0
+block_light: 0
 ```
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_13.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block-light: 15</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block_light: 15</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_14.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block-light: 7</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block_light: 7</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/block_settings_15.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block-light: 0</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>block_light: 0</p>
 </div>
 
 ### 传播天空光照
@@ -395,5 +395,5 @@ block-light: 0
 决定天空光照能否穿过该方块。
 
 ```yaml
-propagate-skylight: true
+propagate_skylight: true
 ```

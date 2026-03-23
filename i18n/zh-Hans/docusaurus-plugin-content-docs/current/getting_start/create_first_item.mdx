@@ -158,7 +158,7 @@ items:
   tutorial:diamond:
     material: diamond
     data:
-      item-name: "<blue>闪瞎24K狗眼的钻石"
+      item_name: "<blue>闪瞎24K狗眼的钻石"
       lore:
         - "<!i><red>史诗物品"
 ```
@@ -188,8 +188,8 @@ items:
 items:
   tutorial:diamond:
     material: diamond
-    client-bound-data:
-      item-name: "<blue>闪瞎24K狗眼的钻石"
+    client_bound_data:
+      item_name: "<blue>闪瞎24K狗眼的钻石"
       lore:
         - "<!i><red>史诗物品"
 ```
@@ -198,9 +198,9 @@ items:
 
 :::caution
 
-`client-bound-data` 意味着服务器不会拥有真实数据。如果将其用于 `item-name`，任何服务器端的名称检查都将失败。请根据您的服务器需求谨慎使用。
+`client_bound_data` 意味着服务器不会拥有真实数据。如果将其用于 `item_name`，任何服务器端的名称检查都将失败。请根据您的服务器需求谨慎使用。
 
-像 `max_damage` 和 `attribute_modifiers` 这样的数据组件不应使用 `client-bound-data`。它们会改变真实的服务器游戏体验，否则会导致奇怪的视觉同步问题。
+像 `max_damage` 和 `attribute_modifiers` 这样的数据组件不应使用 `client_bound_data`。它们会改变真实的服务器游戏体验，否则会导致奇怪的视觉同步问题。
 
 译者注：不恰当的使用很有可能导致反作弊的误判
 

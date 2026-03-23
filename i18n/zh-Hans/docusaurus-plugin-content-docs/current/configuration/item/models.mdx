@@ -117,14 +117,14 @@ items:
     model:
       type: minecraft:condition
       property: minecraft:fishing_rod/cast
-      on-false:
+      on_false:
         type: minecraft:model
         path: minecraft:item/custom/topaz_rod
         generation:
           parent: minecraft:item/fishing_rod
           textures:
             layer0: minecraft:item/custom/topaz_rod
-      on-true:
+      on_true:
         type: minecraft:model
         path: minecraft:fishing_rod/cast
         generation:
@@ -234,28 +234,28 @@ items:
 
 ## 旧版模型
 
-**旧版模型**特指 1.21.3 及更早版本中使用的物品模型格式。你可以通过 legacy-model 部分来指定旧版物品模型格式。然而，在大多数情况下，你无需这样做，因为插件会尽可能自动将 1.21.4 的物品模型转换为旧版格式。只有当旧版模型格式出现问题时，你才应该使用此配置部分。
+**旧版模型**特指 1.21.3 及更早版本中使用的物品模型格式。你可以通过 legacy_model 部分来指定旧版物品模型格式。然而，在大多数情况下，你无需这样做，因为插件会尽可能自动将 1.21.4 的物品模型转换为旧版格式。只有当旧版模型格式出现问题时，你才应该使用此配置部分。
 
 ```yaml
 items#topaz_gears:
   default:topaz_rod:
     material: fishing_rod
-    item-model: default:topaz_rod
+    item_model: default:topaz_rod
     settings:
       tags:
         - "default:topaz_tools"
     data:
-      item-name: "<!i><#FF8C00><i18n:item.topaz_rod>"
-      tooltip-style: minecraft:topaz
+      item_name: "<!i><#FF8C00><i18n:item.topaz_rod>"
+      tooltip_style: minecraft:topaz
     model:
       template: default:model/simplified_fishing_rod_2d
       arguments:
         path: minecraft:item/custom/topaz_rod
         cast_path: minecraft:item/custom/topaz_rod_cast
-    # 如果你在 legacy-model 部分中指定了模型，
+    # 如果你在 legacy_model 部分中指定了模型，
     # 插件将使用你手动定义的模型，
     # 而不是依赖自动转换的旧版格式。
-    legacy-model:
+    legacy_model:
       path: minecraft:item/custom/topaz_rod
       overrides:
         - path: minecraft:item/custom/topaz_rod_cast
@@ -264,5 +264,22 @@ items#topaz_gears:
 ```
 
 :::tip
-如果你不需要支持 1.21.4 以上的版本，你可以只配置 legacy-model 部分，并完全省略 model 部分。
+如果你不需要支持 1.21.4 以上的版本，你可以只配置 legacy_model 部分，并完全省略 model 部分。
 :::
+
+## 模型变换（26.1+）
+
+```yaml
+items:
+  default:test:
+    model:
+      type: minecraft:model
+      path: minecraft:item/custom/test
+    transformation:
+      scale: 1,1,1
+      translation: 0,0,0
+      right_rotation:
+        angle: 0.0
+        axis: 0,0,0
+      left_rotation: 0,0,0,0
+```

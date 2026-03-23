@@ -63,7 +63,7 @@ message: -|
 `shift` 允许你直接使用插件的偏移字符。
 
 ```yaml
-item-name: "<!i><shift:-100><#FF8C00>黄玉钓竿"
+item_name: "<!i><shift:-100><#FF8C00>黄玉钓竿"
 ```
 
 ![](/img/i18n/zh-Hans/text_format_1.png)
@@ -83,7 +83,7 @@ item-name: "<!i><shift:-100><#FF8C00>黄玉钓竿"
 :::
 
 ```yaml
-item-name: "<!i><#FF8C00><papi:player_name>的黄玉钓竿"
+item_name: "<!i><#FF8C00><papi:player_name>的黄玉钓竿"
 ```
 
 ![](/img/i18n/zh-Hans/text_format_2.png)
@@ -106,23 +106,23 @@ functions:
 `image` 允许你使用插件中已注册的图片。
 
 ```yaml
-item-name: "<!i><white><image:default:icons><#FF8C00>黄玉钓竿"
+item_name: "<!i><white><image:default:icons><#FF8C00>黄玉钓竿"
 ```
 
 ![](/img/i18n/zh-Hans/text_format_3.png)
 
 ```yaml
-item-name: "<!i><white><image:default:icons:0:1><#FF8C00>黄玉钓竿"
+item_name: "<!i><white><image:default:icons:0:1><#FF8C00>黄玉钓竿"
 ```
 
 ![](/img/i18n/zh-Hans/text_format_4.png)
 
 ```yaml
-item-name: "<!i><red><image:default:icons:'<!shadow><white>'> 黄玉钓竿"
+item_name: "<!i><red><image:default:icons:'<!shadow><white>'> 黄玉钓竿"
 ```
 
 ```yaml
-item-name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> 黄玉钓竿"
+item_name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> 黄玉钓竿"
 ```
 
 ### \<i18n:\_标识符\_>
@@ -134,7 +134,7 @@ items:
   custom:chinese_lantern:
     material: paper
     data:
-      item-name: "<i18n:item.chinese_lantern>"
+      item_name: "<i18n:item.chinese_lantern>"
 ```
 
 ### \<l10n:\_标识符\_>
@@ -146,7 +146,7 @@ items:
   custom:chinese_lantern:
     material: paper
     data:
-      item-name: "<l10n:item.chinese_lantern>"
+      item_name: "<l10n:item.chinese_lantern>"
 ```
 
 ### \<expr:\_格式\_:\_表达式\_>
@@ -154,11 +154,11 @@ items:
 进行一些数学运算
 
 ```yaml
-item-name: "<!i><#FF8C00><expr:0.##:'70 / 8'>"
+item_name: "<!i><#FF8C00><expr:0.##:'70 / 8'>"
 ```
 
 ```yaml
-item-name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
+item_name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
 ```
 
 ![](/img/text_format_5.png)
@@ -167,9 +167,7 @@ item-name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
 
 **常用链接**
 
-[（英文） https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html)
-
-[（中文） https://doc.qzxdp.cn/jdk/17/zh/api/java.base/java/text/DecimalFormat.html](https://doc.qzxdp.cn/jdk/17/zh/api/java.base/java/text/DecimalFormat.html)
+[https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html)
 
 [https://ezylang.github.io/EvalEx/references/references.html](https://ezylang.github.io/EvalEx/references/references.html)
 
@@ -233,7 +231,7 @@ internal.cooking_info.1: "经验：<arg:cooking_experience>"
 在配置中定义的全局变量。
 
 ```yaml
-item-name: "<global:rare_tag> 稀有三叉戟"
+item_name: "<global:rare_tag> 稀有三叉戟"
 ```
 
 ### \<bubble:\_id\_:\_left\_:\_right\_> (需要 CustomNameplates)
@@ -241,7 +239,7 @@ item-name: "<global:rare_tag> 稀有三叉戟"
 创建带有气泡的文字
 
 ```yaml
-item-name: "<bubble:chat_1:1:1:'<black><!shadow>What Happened'>"
+item_name: "<bubble:chat_1:1:1:'<black><!shadow>What Happened'>"
 ```
 
 ![](/img/bubble.png)
@@ -249,7 +247,7 @@ item-name: "<bubble:chat_1:1:1:'<black><!shadow>What Happened'>"
 ### \<nameplate:\_id\_:\_left\_:\_right\_:> (需要 CustomNameplates)
 
 ```yaml
-item-name: "<nameplate:xmas:1:1:'ABCDEFG'>"
+item_name: "<nameplate:xmas:1:1:'ABCDEFG'>"
 ```
 
 创建带有铭牌的文字
@@ -261,5 +259,5 @@ item-name: "<nameplate:xmas:1:1:'ABCDEFG'>"
 创建带有背景的文字
 
 ```yaml
-item-name: "<background:bedrock_1:1:1:'ABCDEFG'>"
+item_name: "<background:bedrock_1:1:1:'ABCDEFG'>"
 ```

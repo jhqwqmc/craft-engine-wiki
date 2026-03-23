@@ -58,6 +58,13 @@ properties:
   facing:
     type: direction
     default: north
+    values: # Optional
+      - north
+      - east
+      - south
+      - west
+      - up
+      - down
 ```
 
 ### horizontal\_direction
@@ -69,6 +76,11 @@ properties:
   facing:
     type: horizontal_direction
     default: north
+    values: # Optional
+      - north
+      - south
+      - west
+      - east
 ```
 
 ### axis
@@ -80,6 +92,10 @@ properties:
   axis:
     type: axis
     default: y
+    values: # Optional
+      - x
+      - y
+      - z
 ```
 
 ### single\_block\_half
@@ -91,6 +107,9 @@ properties:
   half:
     type: single_block_half
     default: bottom
+    values: # Optional
+      - top
+      - bottom
 ```
 
 ### double\_block\_half
@@ -102,6 +121,9 @@ properties:
   half:
     type: double_block_half
     default: lower
+    values: # Optional
+      - upper
+      - lower
 ```
 
 ### hinge
@@ -113,6 +135,9 @@ properties:
   hinge:
     type: hinge
     default: left
+    values: # Optional
+      - left
+      - right
 ```
 
 
@@ -125,6 +150,10 @@ properties:
   type:
     type: slab_type
     default: bottom
+    values: # Optional
+      - top
+      - bottom
+      - double
 ```
 
 ### stairs\_shape
@@ -136,6 +165,12 @@ properties:
   shape:
     type: stairs_shape
     default: straight
+    values: # Optional
+      - straight
+      - inner_left
+      - inner_right
+      - outer_left
+      - outer_right
 ```
 
 ### sofa\_shape
@@ -147,6 +182,10 @@ properties:
   shape:
     type: sofa_shape
     default: straight
+    values: # Optional
+      - straight
+      - inner_left
+      - inner_right
 ```
 
 ### anchor\_type
@@ -158,6 +197,10 @@ properties:
   face:
     type: anchor_type
     default: floor
+    values: # Optional
+      - floor
+      - wall
+      - ceiling
 ```
 
 ## Hard-coded Names
@@ -177,6 +220,10 @@ properties:
   axis:
     type: axis
     default: y
+    values: # Optional
+      - x
+      - y
+      - z
 ```
 
 ### waterlogged
@@ -203,6 +250,13 @@ properties:
   facing:
     type: direction
     default: north
+    values: # Optional
+      - north
+      - east
+      - south
+      - west
+      - up
+      - down
 ```
 
 ### facing\_clockwise
@@ -214,6 +268,11 @@ properties:
   facing_clockwise:
     type: horizontal_direction
     default: north
+    values: # Optional
+      - north
+      - south
+      - west
+      - east
 ```
 
 ### rotation

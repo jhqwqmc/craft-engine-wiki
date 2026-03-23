@@ -38,7 +38,7 @@ id: cloudflare_r2
 ![](/img/i18n/zh-Hans/cloudflare_r2_7_4.png)
 
 ### 第八步
-查看跳转的页面，找到 `访问密钥 ID` 作为 `access-key-id`，找到 `机密访问密钥` 作为 `access-key-secret`。最后你应该会编写出以下配置。 \
+查看跳转的页面，找到 `访问密钥 ID` 作为 `access_key_id`，找到 `机密访问密钥` 作为 `access_key_secret`。最后你应该会编写出以下配置。 \
 ![](/img/i18n/zh-Hans/cloudflare_r2_8.png)
 
 ```yaml
@@ -49,15 +49,15 @@ resource-pack:
       - type: s3
         endpoint: "4asd4sdas4ds5ds4.r2.cloudflarestorage.com"
         bucket: "114514"
-        access-key-id: "asodjhadosdnoad"
-        access-key-secret: "asd541faf5asd5fs15asdf45as"
+        access_key_id: "asodjhadosdnoad"
+        access_key_secret: "asd541faf5asd5fs15asdf45as"
         protocol: "https"
-        path-style: false
+        path_style: false
         region: "auto"
-        upload-path: "server_resource_pack.zip"
-        disable-calculate-sha256: false
+        upload_path: "server_resource_pack.zip"
+        disable_calculate_sha256: false
         validity: 10
-        rate-map:
-          max-requests: 5
-          reset-interval: 20
+        rate_map:
+          max_requests: 5
+          reset_interval: 20
 ```
