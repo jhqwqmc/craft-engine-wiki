@@ -106,23 +106,23 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: "getting_start/set_up_host/openlist",
+              label: 'OpenList',
+            },
+            {
+              type: 'doc',
               id: "getting_start/set_up_host/onedrive",
               label: 'OneDrive',
             },
             {
               type: 'doc',
-              id: "getting_start/set_up_host/dropbox",
-              label: 'Dropbox',
-            },
-            {
-              type: 'doc',
-              id: "getting_start/set_up_host/alist",
-              label: 'Alist',
-            },
-            {
-              type: 'doc',
               id: "getting_start/set_up_host/gitlab",
               label: 'Gitlab',
+            },
+            {
+              type: 'doc',
+              id: "getting_start/set_up_host/dropbox",
+              label: 'Dropbox',
             },
           ]
         },
