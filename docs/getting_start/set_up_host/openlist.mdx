@@ -1,0 +1,37 @@
+---
+title: OpenList
+id: openlist
+---
+
+:::warning
+[OpenList](https://github.com/OpenListTeam/OpenList) is a community-driven fork of AList.
+In June 2025, it was revealed that the AList project had been sold, and it was discovered that the relevant download links had been compromised, sparking widespread concern and a boycott within the community ([source](https://linux.do/t/topic/715019)).
+Subsequently, 123pan, 115, and Aliyundrive successively revoked their authorisation for AList, resulting in certain features becoming unavailable ([source](https://linux.do/t/topic/720642)).
+Furthermore, AList’s original API services may have been sold as part of the package, posing a certain risk of data leakage.
+
+Users still using AList are advised to migrate to OpenList as soon as possible.
+For migration instructions, please see: https://doc.oplist.org/guide/migrate
+:::
+
+```yaml
+resource-pack:
+  delivery:
+    hosting:
+      - type: openlist
+        api-url: ""
+        username: ""
+        password: ""
+        upload_path: "server_resource_pack.zip"
+        # Optional options
+        use_environment_variables: false
+        disable_upload: false
+        # file_password: ""
+        # otp_code: ""
+```
+
+<details>
+  <summary>Enviroment Variables</summary>
+  - CE_OPENLIST_USERNAME
+  - CE_OPENLIST_PASSWORD
+  - CE_OPENLIST_FILE_PASSWORD
+</details>

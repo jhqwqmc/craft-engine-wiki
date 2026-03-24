@@ -116,8 +116,8 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: "getting_start/set_up_host/alist",
-              label: 'Alist',
+              id: "getting_start/set_up_host/openlist",
+              label: 'OpenList',
             },
             {
               type: 'doc',
