@@ -1,13 +1,23 @@
 ---
-title: Alist
-id: alist
+title: OpenList
+id: openlist
 ---
+
+:::warning
+[OpenList](https://github.com/OpenListTeam/OpenList) 是由社区驱动的 AList 分支。
+2025 年 6 月，AList 项目被曝出已被出售，相关下载链接亦被发现存在投毒行为，引发社区广泛关注与抵制（[相关链接](https://linux.do/t/topic/715019)）。
+此后，123云盘、115、阿里云盘相继撤销了对 AList 的授权，导致部分功能无法正常使用（[相关链接](https://linux.do/t/topic/720642)）。
+同时，AList 原有的 API 服务也可能被一并打包出售，存在一定的信息泄露风险。
+
+建议仍在使用 AList 的用户尽快迁移至 OpenList。
+迁移教程详见：https://doc.oplist.org.cn/guide/migrate
+:::
 
 ```yaml
 resource-pack:
   delivery:
     hosting:
-      - type: alist
+      - type: openlist
         api_url: "http://localhost:5244" # 填写你的站点地址
         username: "admin" # 填写该用户的用户名
         password: "your_password" # 填写该用户的密码
@@ -17,15 +27,11 @@ resource-pack:
         disable_upload: false # 用于某些不支持上传的存储类型，默认为 false
         # file_password: "" # 访问文件的密码
         # otp_code: "" # 该用户的OTP验证码（不推荐开启因为这样你每隔 30 秒都要改一次）
-        ## 可选代理配置
-        # proxy:
-        #   host: "127.0.0.1"
-        #   port: 7890
 ```
 
 <details>
   <summary>可用环境变量</summary>
-  - CE_ALIST_USERNAME
-  - CE_ALIST_PASSWORD
-  - CE_ALIST_FILE_PASSWORD
+  - CE_OPENLIST_USERNAME
+  - CE_OPENLIST_PASSWORD
+  - CE_OPENLIST_FILE_PASSWORD
 </details>
