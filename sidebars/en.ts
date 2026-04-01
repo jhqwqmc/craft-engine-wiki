@@ -579,6 +579,11 @@ const sidebars: SidebarsConfig = {
               items: [
                 {
                   type: 'doc',
+                  id: "configuration/furniture/behaviors/display_item_furniture",
+                  label: '📷 Display Item Furniture',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/furniture/behaviors/simple_storage_furniture",
                   label: '📦 Simple Storage Furniture',
                 },
