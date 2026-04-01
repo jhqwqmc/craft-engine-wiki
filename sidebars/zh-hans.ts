@@ -582,6 +582,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/furniture/behaviors/simple_storage_furniture",
                   label: '📦 简单存储家具',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/furniture/behaviors/display_item_furniture",
+                  label: '📷 物品展示家具',
+                },
               ],
             },
             {
