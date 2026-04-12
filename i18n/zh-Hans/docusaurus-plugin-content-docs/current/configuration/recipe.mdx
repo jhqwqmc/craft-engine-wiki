@@ -416,6 +416,11 @@ default:topaz_bow:
 
 ```yaml
 post_processors:
+  # 将物品数据应用于合并的物品上
+  - type: apply_data
+    data: 
+      item_name: "new name"
+
   # 合并结果和原料的魔咒信息，而不是保留其中之一
   - type: merge_enchantments
 
