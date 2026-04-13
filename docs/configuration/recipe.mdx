@@ -416,6 +416,11 @@ If you need more precise control over which components are preserved, you should
 
 ```yaml
 post_processors:
+  # Apply data to the combined item
+  - type: apply_data
+    data: 
+      item_name: "new name"
+
   # Merge the enchantments of the final product and the original item, rather than choosing one of them.
   - type: merge_enchantments
 
