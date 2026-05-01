@@ -6,8 +6,9 @@ id: bluemap
 1. Install and configure BlueMap according to the [BlueMap official documentation](https://bluemap.bluecolored.de/wiki/getting-started/Installation.html)
 2. Locate the `config.yml` configuration file in the CraftEngine plugin folder
 3. Set `resource-pack.map-plugin-compatibility.enable` to `true`
-4. Set `resource-pack.map-plugin-compatibility.path` to `../BlueMap/packs/craftengine_resource_pack.zip`
-5. Run the command `/ce reload all`
-6. Run the command `/bluemap purge <map>` to clear all worlds rendered by BlueMap that contain custom blocks. For more details, please refer to the [BlueMap official documentation](https://bluemap.bluecolored.de/wiki/customization/ResourcePacks.html)
+4. Change `resource-pack.map-plugin-compatibility.path` to `../BlueMap/packs/craftengine_resource_pack.zip`
+5. Change `chunk-system.restore-vanilla-blocks-on-chunk-unload` to `false`
+6. Run the command `/ce reload all`
+7. Run the command `/bluemap purge <map>` to clear all worlds rendered by BlueMap that contain custom blocks. For more details, please refer to the [BlueMap official documentation](https://bluemap.bluecolored.de/wiki/customization/ResourcePacks.html)
 
 ![](/img/bluemap_1.png)
