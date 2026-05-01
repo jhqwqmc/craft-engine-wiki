@@ -789,6 +789,11 @@ const sidebars: SidebarsConfig = {
           id: "compatibility/quickshop_hikari",
           label: '📦 QuickShop-Hikari',
         },
+        {
+          type: 'doc',
+          id: "compatibility/bluemap",
+          label: '🗺️ BlueMap',
+        },
       ]
     },
     {
