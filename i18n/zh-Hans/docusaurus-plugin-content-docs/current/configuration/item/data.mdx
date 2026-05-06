@@ -119,6 +119,48 @@ items:
         - "我去这鱼竿直接把我24K狗眼闪瞎了"
 ```
 
+### insert_lore (插入描述)
+
+用于在物品现有的 Lore 中动态插入新行。它比普通的 lore 更加强大，因为它支持基于正则表达式的定位插入以及失败后的回退（Fallback）机制。
+
+```yaml
+items:
+  default:example_item:
+    data:
+      insert_lore:
+        # 插入的位置: HEAD, TAIL, BEFORE, AFTER
+        position: AFTER
+        # 匹配现有 Lore 行的正则表达式 (仅用于 BEFORE 和 AFTER)
+        pattern: "Match this line"
+        # 待插入的内容，支持高级 Lore 格式
+        lore:
+          - content: "<green>Inserted line"
+            priority: 1
+        # 如果 pattern 没有匹配到任何行，执行的回退操作 (可选)
+        fallback:
+          position: TAIL
+          lore:
+            - content: "<red>Fallback to tail"
+```
+
+:::info
+
+当 `position` 为 `HEAD` 或 `TAIL` 时，不需要配置 `pattern`
+
+:::
+
+### remove_lore (移除描述)
+
+用于根据正则表达式从物品的现有 Lore 中移除匹配的行。
+
+```yaml
+items:
+  default:example_item:
+    data:
+      # 移除正则匹配到的行
+      remove_lore: "Remove this line"
+```
+
 ### overwritable_item_name（可覆写的物品名称）
 
 类似于 `overwritable_lore`，但专为 `item_name` 设计
