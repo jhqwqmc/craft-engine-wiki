@@ -117,6 +117,48 @@ items:
         - "What a shiny rod!"
 ```
 
+### insert_lore
+
+Used to dynamically insert new lines into an item's existing Lore. It is more powerful than the standard lore configuration as it supports positional insertion based on regular expressions and a fallback mechanism.
+
+```yaml
+items:
+  default:example_item:
+    data:
+      insert_lore:
+        # Insertion position: HEAD, TAIL, BEFORE, AFTER
+        position: AFTER
+        # Regular expression to match existing Lore lines (only for BEFORE and AFTER)
+        pattern: "Match this line"
+        # Content to be inserted, supports advanced Lore format
+        lore:
+          - content: "<green>Inserted line"
+            priority: 1
+        # Fallback operation if the pattern does not match any line (Optional)
+        fallback:
+          position: TAIL
+          lore:
+            - content: "<red>Fallback to tail"
+```
+
+:::info
+
+When `position` is `HEAD` or `TAIL`, the `pattern` configuration is not required.
+
+:::
+
+### remove_lore
+
+Used to remove matching lines from an item's existing Lore based on regular expressions.
+
+```yaml
+items:
+  default:example_item:
+    data:
+      # Remove lines matched by the regular expression
+      remove_lore: "Remove this line"
+```
+
 ### overwritable_item_name
 
 Similar to `overwritable_lore` but designed for item_name
