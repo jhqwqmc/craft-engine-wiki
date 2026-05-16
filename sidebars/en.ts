@@ -584,6 +584,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/furniture/behaviors/glowing_furniture",
+                  label: '💡 Glowing Furniture',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/furniture/behaviors/simple_storage_furniture",
                   label: '📦 Simple Storage Furniture',
                 },

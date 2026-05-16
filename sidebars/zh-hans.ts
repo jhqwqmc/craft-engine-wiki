@@ -584,6 +584,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/furniture/behaviors/glowing_furniture",
+                  label: '💡 发光家具',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/furniture/behaviors/display_item_furniture",
                   label: '📷 物品展示家具',
                 },
