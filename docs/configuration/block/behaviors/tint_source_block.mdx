@@ -1,0 +1,19 @@
+---
+title: 🎨 Tint Source Block
+id: tint_source_block
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+
+Stores the item in hand as a tint source into the block entity, providing coloring for the block entity's render elements.
+
+```yaml
+blocks:
+  default:copper_coil:
+    behavior:
+      type: tint_source_block
+      # Whether to drop the stored item when the block is destroyed
+      drop_item: true
+```

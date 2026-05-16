@@ -333,6 +333,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/block/behaviors/drawer_block",
+                  label: '🗄️ 抽屉方块',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/block/behaviors/vertical_crop_block",
                   label: '🎍 垂直作物方块',
                 },
@@ -492,6 +497,11 @@ const sidebars: SidebarsConfig = {
                   label: '🍁 树叶方块',
                 },
                 {
+                  "type": "doc",
+                  "id": "configuration/block/behaviors/decay_block",
+                  "label": "🍂 衰变方块"
+                },
+                {
                   type: 'doc',
                   id: "configuration/block/behaviors/change_over_time_block",
                   label: '🔄 随时间更改方块',
@@ -540,6 +550,11 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/block/behaviors/chime_block",
                   label: '🔔 震响方块',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/tint_source_block",
+                  label: '🎨 着色源方块',
                 },
                 {
                   type: 'doc',
