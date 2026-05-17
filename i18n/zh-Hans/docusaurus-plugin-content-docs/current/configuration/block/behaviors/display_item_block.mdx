@@ -1,11 +1,11 @@
 ---
-title: 🖼️ 方块实体
+title: 🖼️ 物品展示方块
 id: display_item_block
 ---
 
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+<Highlight color="#3B6B60">**方块实体**</Highlight>​
 
 用于将物品显示在此方块上
 
@@ -20,6 +20,6 @@ blocks:
       sounds:
         put: minecraft:block.decorated_pot.insert
         take: minecraft:block.decorated_pot.insert_fail
-      # 存储的物品是否可以作为方块实体渲染元素的着色源
+      # 存储的物品是否可以作为方块实体渲染元素的颜色提供器
       tint_source: true
 ```

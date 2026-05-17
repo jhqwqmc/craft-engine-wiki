@@ -193,10 +193,10 @@ yaw: 0 # 可选
 pitch: 0 # 可选
 ```
 
-## 着色源
+## 颜色提供器
 
-方块实体渲染器的着色源来自方块实体本身，这需要一个有效的方块行为——例如 `tint_source_block` 或 `display_item_block`。
-对于 99% 的配置，你只需按照以下配置，即可为渲染的元素添加着色。
+方块实体渲染器的颜色提供器来自方块实体本身，这需要一个有效的方块行为——例如 `tint_source_block` 或 `display_item_block`。
+对于 99% 的配置，你只需按照以下配置，即可为渲染的元素添加着色颜色。
 
 ```yaml
 entity_renderer:
@@ -205,7 +205,7 @@ entity_renderer:
   tint_source: minecraft:dyed_color
 ```
 
-当然，你也可以通过 API 注册着色源。一个展示元素支持多个着色源，只要你正确指定其索引（即支持色源的方块行为的顺序）。
+当然，你也可以通过 API 注册颜色提供器。一个展示元素支持多个颜色提供器，只要你正确指定其着色索引（即支持颜色提供器的方块行为的顺序）。
 
 ```yaml
 entity_renderer:
@@ -229,7 +229,7 @@ entity_renderer:
         index: 2
 ```
 
-下图展示了一个配置了三个 `display_item_block` 行为组合的方块。它同时拥有三个鸭舌帽元素，每个鸭舌帽分别使用三个沙发的着色。
+下图展示了一个配置了有三个 `display_item_block` 行为的一个方块。它同时拥有三个渲染的鸭舌帽元素，每个鸭舌帽分别使用三个沙发的 `dyed_color` 组件信息作为着色颜色。
 
 ![](/img/block_tint_source.png)
 

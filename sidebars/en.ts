@@ -681,6 +681,11 @@ const sidebars: SidebarsConfig = {
           id: "configuration/global_variable",
           label: '🔢 Global Variables',
         },
+        {
+          type: 'doc',
+          id: "configuration/painting",
+          label: '🖼️ Painting',
+        },
       ]
     },
     {
