@@ -1,11 +1,13 @@
-export default Highlight = ({children, color}) => (
-  <span
-    style={{
-      backgroundColor: color,
-      borderRadius: '4px',
-      color: '#fff',
-      padding: '0.2rem',
-    }}>
-    {children}
-  </span>
-);
+export default function Highlight({children, color}) {
+    return (
+        <span
+            style={{
+                backgroundColor: color,
+                borderRadius: '4px',
+                color: '#fff',
+                padding: '0.2rem',
+            }}>
+      {children}
+    </span>
+    );
+}
