@@ -111,6 +111,15 @@ anvil_repair_item:
 renameable: false
 ```
 
+### allowed_projectiles (可装载的弹射物)
+
+决定了什么弹药可以装在弩和弓上
+
+```yaml
+allowed_projectiles:
+  - gun_world:gun_ammo
+```
+
 ### projectile（弹射物）
 
 基于该物品创建一个自定义弹射物实体。支持 `trident`、`arrow`、`snowball` 等类型。
@@ -126,6 +135,12 @@ projectile:
     throw: minecraft:item.trident.throw
     hit_entity: minecraft:item.trident.hit
     hit_block: minecraft:item.trident.hit_ground
+  # 作为弹药时是否忽略无限附魔
+  ignore_infinity_enchantment: false
+  # 射出命中后是否可以被捡起来
+  pickupable: true
+  # 是否在命中后移除
+  remove_on_hit: false
 ```
 
 :::tip
