@@ -187,6 +187,46 @@ yaw: 0 # Optional
 pitch: 0 # Optional
 ```
 
+## Tint Source
+
+The tint source for the block entity renderer comes from the block entity itself, which requires a valid block behavior — such as `tint_source_block` or `display_item_block`. 
+For 99% of configurations, you only need to follow the setup below to apply tinting to the rendered elements.
+
+```yaml
+entity_renderer:
+  type: item_display
+  item: default:sofa
+  tint_source: minecraft:dyed_color
+```
+
+Of course, you can also register a color source through the API. A display element supports multiple tint sources, as long as you correctly specify its index (i.e., the order of block behaviors that support color sources).
+
+```yaml
+entity_renderer:
+  - item: example:element_1
+    tint_source:
+      - type: default
+        components:
+          - minecraft:dyed_color
+        index: 0
+  - item: example:element_2
+    tint_source:
+      - type: default
+        components:
+          - minecraft:dyed_color
+        index: 1
+  - item: example:element_3
+    tint_source:
+      - type: default
+        components:
+          - minecraft:dyed_color
+        index: 2
+```
+
+The image below shows a block configured with three `display_item_block` behaviors. It also has three cap elements, each using the tinting from one of the three sofas.
+
+![](/img/block_tint_source.png)
+
 ## Entity Culling
 
 You can individually control whether entity culling is enabled for each block entity variant
