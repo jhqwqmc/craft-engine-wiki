@@ -681,6 +681,11 @@ const sidebars: SidebarsConfig = {
           id: "configuration/global_variable",
           label: '🔢 Global Variables',
         },
+        {
+          type: 'doc',
+          id: "configuration/painting",
+          label: '🖼️ Painting',
+        },
       ]
     },
     {
@@ -813,6 +818,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "compatibility/quickshop_hikari",
           label: '📦 QuickShop-Hikari',
+        },
+        {
+          type: 'doc',
+          id: "compatibility/bluemap",
+          label: '🗺️ BlueMap',
         },
       ]
     },

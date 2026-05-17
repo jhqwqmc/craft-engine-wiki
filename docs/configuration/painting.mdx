@@ -1,0 +1,37 @@
+---
+title: 🖼️ Painting
+id: painting
+---
+
+:::caution
+
+Due to the fact that Minecraft's registry becomes immutable once registered, you will need to rejoin the server in order to apply any new modifications.
+
+:::
+
+```yaml
+paintings:
+  default:momi:
+    width: 1 # Optional; Default is 1; The width of the painting in blocks, between 1 and 16.
+    height: 1 # Optional; Default is 1; The height of the painting in blocks, between 1 and 16.
+    asset_id: default:momi # Optional; Defaults to the identifier of this entry; The texture used by the painting. At render time, the game resolves this value to assets/<namespace>/textures/painting/<path>.png
+    title: <lang:painting.default.momi.title> # Optional; Requires 1.21.2+; On older versions the translation key is fixed to painting.<namespace>.<path>.title — The title of the painting
+    author: <lang:painting.default.momi.author> # Optional; Requires 1.21.2+; On older versions the translation key is fixed to painting.<namespace>.<path>.author — The author of the painting
+    show_in_op_tab: false # Optional; Default is false; On 1.21–1.21.1 a server restart is required for this to take effect; Whether to show the painting in the Operator Utilities tab — if false, it appears in the Tools & Utilities tab instead
+```
+
+:::tip
+
+To use a painting on an item, refer to the configuration below:
+
+```yaml
+items:
+  default:momi_painting:
+    material: painting
+    data:
+      painting_variant: default:momi
+```
+
+To allow the painting to appear in randomly generated paintings, set `show_in_op_tab` to `false`.
+
+:::

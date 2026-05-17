@@ -86,7 +86,7 @@ items:
 
 :::info
 
-出于性能考虑，当我们需要动态将一行描述文本分割为多行或使用条件时，需要更复杂的配置。以下是高级描述文本配置格式，该格式更为精细，同时提供了更强的灵活性。"priority"（优先级）决定了文本段的最终显示位置——优先级数值越低，文本段将越靠近顶部。
+出于性能考虑，当我们需要动态将一行描述信息分割为多行或使用条件时，需要更复杂的配置。以下是高级描述信息配置格式，该格式更为精细，同时提供了更强的灵活性。"priority"（优先级）决定了文本段的最终显示位置——优先级数值越低，文本段将越靠近顶部。
 
 ```yaml
 lore:
@@ -119,9 +119,9 @@ items:
         - "我去这鱼竿直接把我24K狗眼闪瞎了"
 ```
 
-### insert_lore (插入描述)
+### insert_lore（插入物品提示框中的描述信息）
 
-用于在物品现有的 Lore 中动态插入新行。它比普通的 lore 更加强大，因为它支持基于正则表达式的定位插入以及失败后的回退（Fallback）机制。
+用于在物品提示框中现有的描述信息里动态插入新行。它比普通的物品提示框中的描述信息更加强大，因为它支持基于正则表达式的定位插入以及失败后的回退机制。
 
 ```yaml
 items:
@@ -130,17 +130,17 @@ items:
       insert_lore:
         # 插入的位置: HEAD, TAIL, BEFORE, AFTER
         position: AFTER
-        # 匹配现有 Lore 行的正则表达式 (仅用于 BEFORE 和 AFTER)
-        pattern: "Match this line"
-        # 待插入的内容，支持高级 Lore 格式
+        # 匹配现有描述信息中某一行的正则表达式 (仅用于 BEFORE 和 AFTER)
+        pattern: "匹配此行"
+        # 待插入的内容，支持高级描述信息配置格式
         lore:
-          - content: "<green>Inserted line"
+          - content: "<green>插入的行"
             priority: 1
         # 如果 pattern 没有匹配到任何行，执行的回退操作 (可选)
         fallback:
           position: TAIL
           lore:
-            - content: "<red>Fallback to tail"
+            - content: "<red>回退到尾部"
 ```
 
 :::info
@@ -149,16 +149,16 @@ items:
 
 :::
 
-### remove_lore (移除描述)
+### remove_lore（移除物品提示框中的描述信息）
 
-用于根据正则表达式从物品的现有 Lore 中移除匹配的行。
+用于根据正则表达式从物品提示框中现有的描述信息里移除匹配的行。
 
 ```yaml
 items:
   default:example_item:
     data:
       # 移除正则匹配到的行
-      remove_lore: "Remove this line"
+      remove_lore: "删除此行"
 ```
 
 ### overwritable_item_name（可覆写的物品名称）
@@ -439,7 +439,7 @@ items:
 要创建物品提示框背景和边框样式，您必须将纹理放置在以下目录中：https://zh.minecraft.wiki/w/数据组件#tooltip_style
 :::
 
-### use_remainder (使用后返回物) (1.21.2+)
+### use_remainder（使用后返还物品）(1.21.2+)
 
 ```yaml
 items:
@@ -518,7 +518,7 @@ pdc:
     key: "value"
 ```
 
-### profile (档案)
+### profile（玩家游戏档案信息）
 
 此组件用于显示玩家的头像
 
@@ -567,6 +567,15 @@ items:
           item_name: "????剑"
           lore:
             - "????????"
+```
+
+### painting_variant（画变种）
+
+```yaml
+items:
+  default:custom_painting:
+    data:
+      painting_variant: default:painting_custom
 ```
 
 ## 自定义数据

@@ -12,7 +12,7 @@ const config: Config = {
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
-    experimental_faster: { // 提升编译速度，如果编译失败可以关闭一些配置
+    faster: { // 提升编译速度，如果编译失败可以关闭一些配置
       rspackBundler: true,
       rspackPersistentCache: true,
     },

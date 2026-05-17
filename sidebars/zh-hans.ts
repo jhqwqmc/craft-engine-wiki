@@ -518,6 +518,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/block/behaviors/display_item_block",
+                  label: '🖼️ 物品展示方块'
+                },
+                {
+                  type: 'doc',
                   id: "configuration/block/behaviors/item_frame_block",
                   label: '🖼️ 物品展示框方块',
                 },
@@ -538,6 +543,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/block/behaviors/tint_source_block",
+                  label: '🎨 颜色提供器方块',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/block/behaviors/fence_block",
                   label: '🚧 栅栏方块',
                 },
@@ -550,11 +560,6 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/block/behaviors/chime_block",
                   label: '🔔 震响方块',
-                },
-                {
-                  type: 'doc',
-                  id: "configuration/block/behaviors/tint_source_block",
-                  label: '🎨 着色源方块',
                 },
                 {
                   type: 'doc',
@@ -675,6 +680,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "configuration/global_variable",
           label: '🔢 全局变量',
+        },
+        {
+          type: 'doc',
+          id: "configuration/painting",
+          label: '🖼️ 画',
         },
       ]
     },
@@ -808,6 +818,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "compatibility/quickshop_hikari",
           label: '📦 QuickShop-Hikari',
+        },
+        {
+          type: 'doc',
+          id: "compatibility/bluemap",
+          label: '🗺️ BlueMap',
         },
       ]
     },

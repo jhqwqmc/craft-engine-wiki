@@ -1,0 +1,37 @@
+---
+title: 🖼️ 画
+id: painting
+---
+
+:::caution
+
+由于 Minecraft 的注册表在注册后不可变，因此你需要重新进入服务器才能应用新的修改
+
+:::
+
+```yaml
+paintings:
+  default:momi:
+    width: 1 # 可选; 默认为 1; 范围 1~16; 画的宽度，以方块为单位
+    height: 1 # 可选; 默认为 1; 范围 1~16; 画的高度，以方块为单位
+    asset_id: default:momi # 可选; 默认为该配置的命名空间ID; 画使用的纹理，游戏在渲染时将此值解析为 assets/<命名空间>/textures/painting/<路径>.png
+    title: <lang:painting.default.momi.title> # 可选; 需要 1.21.2+; 低版本固定翻译键 painting.<命名空间>.<路径>.title 画的标题
+    author: <lang:painting.default.momi.author> # 可选; 需要 1.21.2+; 低版本固定翻译键 painting.<命名空间>.<路径>.author 画的作者
+    show_in_op_tab: false # 可选; 默认为 false; 在 1.21-1.21.1 需要重启服务器才能生效; 是否在管理员用品标签页显示，否则在工具与实用物品标签页显示
+```
+
+:::tip
+
+对于在物品上使用画可以参考下面的配置
+
+```yaml
+items:
+  default:momi_painting:
+    material: painting
+    data:
+      painting_variant: default:momi
+```
+
+如需在随机画中生成请将 `show_in_op_tab` 设置为 `false`
+
+:::
