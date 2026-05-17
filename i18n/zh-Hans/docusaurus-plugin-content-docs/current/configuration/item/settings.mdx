@@ -122,7 +122,35 @@ projectile:
   rotation: 1,1,1,1
   display_transform: NONE
   scale: 0.5
+  sounds:
+    throw: minecraft:item.trident.throw
+    hit_entity: minecraft:item.trident.hit
+    hit_block: minecraft:item.trident.hit_ground
 ```
+
+:::tip
+任何声音配置均支持高级配置格式
+
+```yaml
+sounds:
+  throw:
+    id: minecraft:item.trident.throw
+    pitch: 0.9~1
+    volume: 1
+```
+
+`hit_block` 和 `hit_entity` 支持根据命中目标改变音效类型
+
+```yaml
+sounds:
+  hit_block:
+    default: minecraft:item.trident.hit
+    overrides:
+      minecraft:stone: minecraft:item.trident.hit_stone
+      default:palm_log: minecraft:item.trident.hit_log
+```
+
+:::
 
 ![](/img/item_settings_4.png)
 
