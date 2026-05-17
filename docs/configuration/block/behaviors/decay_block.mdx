@@ -1,0 +1,27 @@
+---
+title: 🍂 Decay Block
+id: decay_block
+---
+
+| Property Name | Property Type        | Required |
+|---------------|----------------------|----------|
+| age           | int                  | yes      |
+
+
+Decay block increases its age at fixed time intervals, and when the age exceeds the maximum value, it transforms into another block — for example, ice turning into water.
+
+```yaml
+blocks:
+  default:ice:
+    behavior:
+      type: decay_block
+      decay_into: water
+      delay: 100~200
+      chance: 0.5
+```
+
+:::tip
+
+If `delay` is set to `-1`, the behavior will use random ticks instead of fixed interval
+
+:::

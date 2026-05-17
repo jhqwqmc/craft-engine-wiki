@@ -1,0 +1,19 @@
+---
+title: 🎨 着色源方块
+id: tint_source_block
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#3B6B60">**方块实体**</Highlight>​
+
+将手中物品作为着色源存入方块实体中，为方块实体渲染元素提供着色
+
+```yaml
+blocks:
+  default:copper_coil:
+    behavior:
+      type: tint_source_block
+      # 是否在破坏后掉落存入的物品
+      drop_item: true
+```

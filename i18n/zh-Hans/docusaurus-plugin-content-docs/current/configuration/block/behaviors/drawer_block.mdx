@@ -1,0 +1,34 @@
+---
+title: 🗄️ 抽屉方块
+id: drawer_block
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#3B6B60">**方块实体**</Highlight>​
+
+抽屉方块是一种特殊的存储容器，它只能存放一种物品，但能够大量存储该种物品。
+左键单击可取出一个物品；潜行 + 左键单击可取出一组物品。
+右键单击可存入一组物品；连续右键单击可将背包中的所有物品存入。
+
+```yaml
+blocks:
+  default:drawer_block:
+    behavior:
+      type: drawer_block
+      item_position: 0,0,-0.52
+      text_position: 0,-0.4,-0.52
+      item_scale: 0.6,0.6,0.6
+      text_scale: 0.5,0.5,0.5
+      max_stacks: 20
+      sounds:
+        put: minecraft:block.decorated_pot.insert
+        take: minecraft:block.decorated_pot.insert_fail
+      has_signal: true
+      allow_input: true
+      allow_output: true
+      data_key: "craftengine:drawer"
+      compatible_mode: false
+```
+
+![](/img/drawer_block.png)

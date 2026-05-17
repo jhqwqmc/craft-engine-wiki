@@ -1,0 +1,37 @@
+---
+title: 🕯️ Glowing Furniture
+id: glowing_furniture
+---
+
+You can uniformly configure the light position and brightness level for all variants like this.
+
+```yaml
+furniture:
+  default:candelabrum:
+    behaviors:
+      type: glowing_furniture
+      lights:
+        - position: 0,0,0
+          level: 15
+```
+
+Or individually configure the light position for each variant.
+
+```yaml
+furniture:
+  default:candelabrum:
+    behaviors:
+      type: glowing_furniture
+      variants:
+        ground_lit:
+          - position: 0,0,0
+            level: 15
+        wall_lit:
+          - position: 0,0,0.3
+            level: 15
+        ceiling_lit:
+          - position: 0,-1,0
+            level: 15
+```
+
+![](/img/glowing_furniture.png)

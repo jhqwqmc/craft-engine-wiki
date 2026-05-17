@@ -193,6 +193,46 @@ yaw: 0 # 可选
 pitch: 0 # 可选
 ```
 
+## 着色源
+
+方块实体渲染器的着色源来自方块实体本身，这需要一个有效的方块行为——例如 `tint_source_block` 或 `display_item_block`。
+对于 99% 的配置，你只需按照以下配置，即可为渲染的元素添加着色。
+
+```yaml
+entity_renderer:
+  type: item_display
+  item: default:sofa
+  tint_source: minecraft:dyed_color
+```
+
+当然，你也可以通过 API 注册着色源。一个展示元素支持多个着色源，只要你正确指定其索引（即支持色源的方块行为的顺序）。
+
+```yaml
+entity_renderer:
+  - item: example:element_1
+    tint_source:
+      - type: default
+        components:
+          - minecraft:dyed_color
+        index: 0
+  - item: example:element_2
+    tint_source:
+      - type: default
+        components:
+          - minecraft:dyed_color
+        index: 1
+  - item: example:element_3
+    tint_source:
+      - type: default
+        components:
+          - minecraft:dyed_color
+        index: 2
+```
+
+下图展示了一个配置了三个 `display_item_block` 行为组合的方块。它同时拥有三个鸭舌帽元素，每个鸭舌帽分别使用三个沙发的着色。
+
+![](/img/block_tint_source.png)
+
 ## 实体剔除
 
 你可以单独控制每个方块实体变体是否启用实体剔除功能
