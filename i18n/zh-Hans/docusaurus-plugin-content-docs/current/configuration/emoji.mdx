@@ -46,6 +46,22 @@ emoji:
   <img src={require('/img/i18n/zh-Hans/emoji_1.png').default} alt="" />
 </div>
 
+你可以通过 `content_overrides` 选项控制一个表情在具体使用场景下的内容。可用的场景包含: `[chat, book, anvil, sign, command]`
+
+```yaml
+emoji:
+  default:time:
+    permission: emoji.time
+    image: "default:icons:0:0"
+    keywords:
+      - ":time:"
+    content: <!shadow><white><arg:emoji></white></!shadow>
+    content_overrides:
+      chat: <hover:show_text:'<l10n:emoji.tip:"<arg:keyword>":"<arg:emoji>">'><!shadow><white><arg:emoji></white></!shadow></hover>
+      book: <hover:show_text:'<arg:keyword>'><!shadow><white><arg:emoji></white></!shadow></hover>
+      anvil: <!i><!shadow><white><arg:emoji></white></!shadow></!i>
+```
+
 :::tip
 
 为提升复杂配置的可读性，我们新增了多行格式支持。CraftEngine在处理时会自动合并为单行字符串，使复杂配置的编写和维护更简便，同时保持完整功能。
@@ -90,7 +106,7 @@ public class ChatListener implements Listener {
     public void onAsyncChat(AsyncChatEvent event) {
         Component chatMessage = event.message();
         Component formattedChatMessage = MiniMessage.miniMessage().deserialize(CHAT_FORMAT, new PlayerTagResolver(event.getPlayer()), new ChatMessageTagResolver(chatMessage));
-        // 执行后续处理
+        // do further process
     }
 
     public static class PlayerTagResolver implements TagResolver {
@@ -107,6 +123,9 @@ public class ChatListener implements Listener {
 
         @Override
         public @Nullable Tag resolve(@NotNull String name, @NotNull ArgumentQueue arguments, @NotNull Context ctx) throws ParsingException {
+            if (!has(name)) {
+                return null;
+            }
             return Tag.inserting(Component.text(sender.getName()));
         }
     }
@@ -125,11 +144,13 @@ public class ChatListener implements Listener {
 
         @Override
         public @Nullable Tag resolve(@NotNull String name, @NotNull ArgumentQueue arguments, @NotNull Context ctx) throws ParsingException {
+            if (!has(name)) {
+                return null;
+            }
             return Tag.selfClosingInserting(this.chatMessage);
         }
     }
 }
-
   ```
 
 </details>

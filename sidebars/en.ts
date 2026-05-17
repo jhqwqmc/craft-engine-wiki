@@ -363,8 +363,18 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   "type": "doc",
+                  "id": "configuration/block/behaviors/decay_block",
+                  "label": "🍂 Decay Block"
+                },
+                {
+                  "type": "doc",
                   "id": "configuration/block/behaviors/directional_attached_block",
                   "label": "➡️ Directional Attached Block"
+                },
+                {
+                  "type": "doc",
+                  "id": "configuration/block/behaviors/display_item_block",
+                  "label": "🖼️ Display Item Block"
                 },
                 {
                   "type": "doc",
@@ -375,6 +385,11 @@ const sidebars: SidebarsConfig = {
                   "type": "doc",
                   "id": "configuration/block/behaviors/double_high_block",
                   "label": "2️⃣ Double High Block"
+                },
+                {
+                  "type": "doc",
+                  "id": "configuration/block/behaviors/drawer_block",
+                  "label": "🗄️ Drawer Block"
                 },
                 {
                   "type": "doc",
@@ -528,6 +543,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   "type": "doc",
+                  "id": "configuration/block/behaviors/tint_source_block",
+                  "label": "🎨 Tint Source Block"
+                },
+                {
+                  "type": "doc",
                   "id": "configuration/block/behaviors/toggleable_lamp_block",
                   "label": "💡 Toggleable Lamp Block"
                 },
@@ -581,6 +601,11 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/furniture/behaviors/display_item_furniture",
                   label: '📷 Display Item Furniture',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/furniture/behaviors/glowing_furniture",
+                  label: '💡 Glowing Furniture',
                 },
                 {
                   type: 'doc',
@@ -655,6 +680,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "configuration/global_variable",
           label: '🔢 Global Variables',
+        },
+        {
+          type: 'doc',
+          id: "configuration/painting",
+          label: '🖼️ Painting',
         },
       ]
     },

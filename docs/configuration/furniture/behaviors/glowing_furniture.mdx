@@ -1,0 +1,46 @@
+---
+title: 🕯️ Glowing Furniture
+id: glowing_furniture
+---
+
+:::danger
+
+Unless you know exactly what you're doing, we do not recommend using this feature, as it is highly likely to leave light blocks lingering in the world.
+This can cause issues such as water flow being blocked, the light blocks being washed away by water, or the emitted light failing to prevent monster spawning because it might not be treated as a real server-side light-emitting.
+If you need glowing furniture, please consider [🫑 Block Entities](../../../block/entities) instead of this feature.
+Additionally, if you are certain you do not need this feature, please disable `furniture.light-system.enable` in the plugin’s `config.yml` to conserve server resources.
+
+:::
+
+You can uniformly configure the light position and brightness level for all variants like this.
+
+```yaml
+furniture:
+  default:candelabrum:
+    behaviors:
+      type: glowing_furniture
+      lights:
+        - position: 0,0,0
+          level: 15
+```
+
+Or individually configure the light position for each variant.
+
+```yaml
+furniture:
+  default:candelabrum:
+    behaviors:
+      type: glowing_furniture
+      variants:
+        ground_lit:
+          - position: 0,0,0
+            level: 15
+        wall_lit:
+          - position: 0,0,0.3
+            level: 15
+        ceiling_lit:
+          - position: 0,-1,0
+            level: 15
+```
+
+![](/img/glowing_furniture.png)

@@ -1,0 +1,46 @@
+---
+title: 🕯️ 发光家具
+id: glowing_furniture
+---
+
+:::danger
+
+除非你知道你在做什么，否则不推荐使用该功能，因为这很有可能会导致世界上残留光源方块，
+并且有可能会出现阻断水流或被水流冲掉导致无法发光，发出的光有可能并非真实的服务端光照导致无法防止刷怪等奇异现象。
+如果你需要发光的家具请优先考虑[🫑 方块实体](../../../block/entities)而不是该功能，
+另外如果确认不需要此功能请将插件的 `config.yml` 中的 `furniture.light-system.enable` 禁用以节约服务器资源。
+
+:::
+
+你可以像这样为所有变体统一配置光源位置和亮度等级
+
+```yaml
+furniture:
+  default:candelabrum:
+    behaviors:
+      type: glowing_furniture
+      lights:
+        - position: 0,0,0
+          level: 15
+```
+
+或者为每个变体单独配置光源位置
+
+```yaml
+furniture:
+  default:candelabrum:
+    behaviors:
+      type: glowing_furniture
+      variants:
+        ground_lit:
+          - position: 0,0,0
+            level: 15
+        wall_lit:
+          - position: 0,0,0.3
+            level: 15
+        ceiling_lit:
+          - position: 0,-1,0
+            level: 15
+```
+
+![](/img/glowing_furniture.png)

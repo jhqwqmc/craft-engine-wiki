@@ -333,6 +333,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/block/behaviors/drawer_block",
+                  label: '🗄️ 抽屉方块',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/block/behaviors/vertical_crop_block",
                   label: '🎍 垂直作物方块',
                 },
@@ -492,6 +497,11 @@ const sidebars: SidebarsConfig = {
                   label: '🍁 树叶方块',
                 },
                 {
+                  "type": "doc",
+                  "id": "configuration/block/behaviors/decay_block",
+                  "label": "🍂 衰变方块"
+                },
+                {
                   type: 'doc',
                   id: "configuration/block/behaviors/change_over_time_block",
                   label: '🔄 随时间更改方块',
@@ -505,6 +515,11 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/block/behaviors/sturdy_base_block",
                   label: '🏗️ 稳固基底方块',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/display_item_block",
+                  label: '🖼️ 物品展示方块'
                 },
                 {
                   type: 'doc',
@@ -525,6 +540,11 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/block/behaviors/on_liquid_block",
                   label: '🌊 液面方块',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/tint_source_block",
+                  label: '🎨 颜色提供器方块',
                 },
                 {
                   type: 'doc',
@@ -581,6 +601,11 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/furniture/behaviors/simple_storage_furniture",
                   label: '📦 简单存储家具',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/furniture/behaviors/glowing_furniture",
+                  label: '💡 发光家具',
                 },
                 {
                   type: 'doc',
@@ -655,6 +680,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "configuration/global_variable",
           label: '🔢 全局变量',
+        },
+        {
+          type: 'doc',
+          id: "configuration/painting",
+          label: '🖼️ 画',
         },
       ]
     },

@@ -439,7 +439,7 @@ items:
 要创建物品提示框背景和边框样式，您必须将纹理放置在以下目录中：https://zh.minecraft.wiki/w/数据组件#tooltip_style
 :::
 
-### use_remainder (使用后返回物) (1.21.2+)
+### use_remainder（使用后返还物品）(1.21.2+)
 
 ```yaml
 items:
@@ -518,7 +518,7 @@ pdc:
     key: "value"
 ```
 
-### profile (档案)
+### profile（玩家游戏档案信息）
 
 此组件用于显示玩家的头像
 
@@ -567,6 +567,15 @@ items:
           item_name: "????剑"
           lore:
             - "????????"
+```
+
+### painting_variant（画变种）
+
+```yaml
+items:
+  default:custom_painting:
+    data:
+      painting_variant: default:painting_custom
 ```
 
 ## 自定义数据

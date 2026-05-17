@@ -1,0 +1,25 @@
+---
+title: 🖼️ Display Item Block
+id: display_item_block
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+
+Used to display the item on this block
+
+```yaml
+blocks:
+  default:display_item_block:
+    behavior:
+      type: display_item_block
+      has_signal: true
+      data_key: "craftengine:display_item"
+      position: "0.5,0.5,0.5"
+      sounds:
+        put: minecraft:block.decorated_pot.insert
+        take: minecraft:block.decorated_pot.insert_fail
+      # Is the stored item allowed to serve as the tint source for the block entity render elements?
+      tint_source: true
+```
