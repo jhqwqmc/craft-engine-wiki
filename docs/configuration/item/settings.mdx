@@ -104,21 +104,46 @@ Determines if the item can be renamed in anvil. (Default: true)
 renameable: false
 ```
 
+### allowed_projectiles
+
+Determines which item can be loaded into crossbows and bows
+
+```yaml
+allowed_projectiles:
+  - gun_world:gun_ammo
+  - minecraft:ender_pearl
+```
+
 ### projectile
 
 Creates a custom projectile entity based on the item. It supports `trident`, `arrow`, `snowball` and more.
 
 ```yaml
 projectile:
-  item: default:topaz_trident # the item to display
-  translation: 0,0,0
-  rotation: 1,1,1,1
-  display_transform: NONE
-  scale: 0.5
+  display:
+    item: default:topaz_trident # the item to display
+    translation: 0,0,0
+    rotation: 1,1,1,1
+    display_transform: NONE
+    scale: 0.5
   sounds:
     throw: minecraft:item.trident.throw
     hit_entity: minecraft:item.trident.hit
     hit_block: minecraft:item.trident.hit_ground
+  # Whether to ignore the Infinity enchantment when used as ammunition
+  ignore_infinity_enchantment: false
+  # Whether the projectile can be picked up after hitting a target
+  pickupable: true
+  # Whether to remove the projectile upon impact
+  remove_on_hit: false
+  # Whether the projectile is affected by gravity
+  gravity: true
+  # Projectile velocity
+  velocity: 1
+  # Base damage
+  damage: 10
+  # The number of times this arrow can pierce through an entity
+  pierce_level: 5
 ```
 
 :::tip
