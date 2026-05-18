@@ -111,6 +111,7 @@ Determines which item can be loaded into crossbows and bows
 ```yaml
 allowed_projectiles:
   - gun_world:gun_ammo
+  - minecraft:ender_pearl
 ```
 
 ### projectile
@@ -139,6 +140,10 @@ projectile:
   gravity: true
   # Projectile velocity
   velocity: 1
+  # Base damage
+  damage: 10
+  # The number of times this arrow can pierce through an entity
+  pierce_level: 5
 ```
 
 :::tip

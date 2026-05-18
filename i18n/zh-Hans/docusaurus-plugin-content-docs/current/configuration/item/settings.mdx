@@ -118,6 +118,7 @@ renameable: false
 ```yaml
 allowed_projectiles:
   - gun_world:gun_ammo
+  - minecraft:ender_pearl
 ```
 
 ### projectile（弹射物）
@@ -146,6 +147,10 @@ projectile:
   gravity: true
   # 弹射物速度
   velocity: 1
+  # 基础伤害
+  damage: 10
+  # 穿透等级（即可以穿透几个实体）
+  pierce_level: 5
 ```
 
 :::tip
