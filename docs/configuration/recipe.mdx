@@ -400,22 +400,46 @@ default:topaz_bow:
     id: default:topaz_bow
     count: 1
     post_processors: [] # see the result post processor above
-  # This is the smithing post processor, see the guide below
-  post_processors: []
+  transform_processors: []
 ```
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/recipe_10.png').default} alt="" />
 </div>
 
-
-:::tip
-If you need more precise control over which components are preserved, you should specify a post-processor as shown below.
-
-**Important:** Do not confuse this with [result post processor](#result-post-processor) - these are completely different systems.
+### Shaped Transform Recipe
 
 ```yaml
-post_processors:
+default:topaz_crossbow_transform:
+  type: shaped_transform
+  pattern:
+    - 'BBB'
+    - 'B  '
+    - 'A  '
+  ingredients:
+    A:
+      item: minecraft:crossbow
+      source: true  # Mark as the source item
+    B: default:topaz
+  result:
+    id: default:topaz_crossbow
+    count: 1
+  transform_processors:
+    - type: keep_components
+      components:
+        - enchantments
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/shaped_transform.png').default} alt="" />
+</div>
+
+:::tip
+
+Tranform Processors (Applicable to both smithing_transform and shaped_transform)
+
+```yaml
+transform_processors:
   # Apply data to the combined item
   - type: apply_data
     data: 

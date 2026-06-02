@@ -400,19 +400,43 @@ default:topaz_bow:
     id: default:topaz_bow
     count: 1
     post_processors: [] # 结果后处理器，看上面的文档解释
-  # 锻造配方后处理器，参见下方指南
-  post_processors: []
+  transform_processors: []
 ```
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/i18n/zh-Hans/recipe_10.png').default} alt="" />
 </div>
 
+### 有序转化配方
+
+```yaml
+default:topaz_crossbow_transform:
+  type: shaped_transform
+  pattern:
+    - 'BBB'
+    - 'B  '
+    - 'A  '
+  ingredients:
+    A:
+      item: minecraft:crossbow
+      source: true  # 设置为源物品
+    B: default:topaz
+  result:
+    id: default:topaz_crossbow
+    count: 1
+  transform_processors:
+    - type: keep_components
+      components:
+        - enchantments
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/shaped_transform.png').default} alt="" />
+</div>
 
 :::tip
-如需更精确控制保留哪些组件，应按以下方式指定后处理器。
 
-**重要说明：** 不要与[结果后处理器](#结果后处理器)混淆——这是完全不同的系统。
+Tranform Processors 转化处理器（适用于锻造升级配方与有序转化配方）
 
 ```yaml
 post_processors:
