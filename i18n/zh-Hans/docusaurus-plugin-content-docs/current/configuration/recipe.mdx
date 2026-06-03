@@ -407,7 +407,7 @@ default:topaz_bow:
   <img src={require('/img/i18n/zh-Hans/recipe_10.png').default} alt="" />
 </div>
 
-### 有序转化配方
+### 有序合成转化配方
 
 ```yaml
 default:topaz_crossbow_transform:
@@ -436,10 +436,10 @@ default:topaz_crossbow_transform:
 
 :::tip
 
-Tranform Processors 转化处理器（适用于锻造升级配方与有序转化配方）
+转化处理器（适用于锻造升级配方与有序合成转化配方）
 
 ```yaml
-post_processors:
+transform_processors
   # 将物品数据应用于合并的物品上
   - type: apply_data
     data: 
