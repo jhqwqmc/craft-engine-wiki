@@ -14,7 +14,7 @@ Item Data refers to the <Highlight color="#3c5cb3ff">**NBT**</Highlight> (Named 
 
 If you want a CraftEngine item to retain the data of an external plugin's item, follow this configuration:
 
-```yml
+```yaml
 items:
   default:example_item:
     data:
@@ -74,7 +74,7 @@ items:
 
 Determines the displayed description of the item.
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     data:
@@ -86,7 +86,7 @@ items:
 
 For performance considerations, more complex configuration is required when we need to dynamically split a line of lore into multiple lines or add custom conditions. Below is the advanced lore configuration format, which is more intricate but offers greater flexibility. The "priority" determines the final position of the text segment—the lower the priority, the closer it will be to the top.
 
-```yml
+```yaml
 lore:
   - content: 
       - "hello"
@@ -109,7 +109,7 @@ lore:
 
 This is a specialized data type designed for `client_bound_data`. The `overwritable_lore` will only be applied if the item has no existing lore. The name `overwritable_lore` reflects its behavior—it prioritizes and displays lore set by other plugins. For example, if a shop plugin is compatible with CraftEngine, you can purchase a CraftEngine item from the shop without the client_bound_data `lore` overriding the shop item's description.
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     client_bound_data:
@@ -163,7 +163,7 @@ items:
 
 Similar to `overwritable_lore` but designed for item_name
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     client_bound_data:
@@ -174,7 +174,7 @@ items:
 
 Determines whether the item is unbreakable.
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     data:
@@ -214,7 +214,7 @@ items:
 
 Determines the color of the item
 
-```yml
+```yaml
 items:
   default:sofa:
     data:
@@ -427,7 +427,7 @@ items:
 
 Determines the tooltip style of the item.
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     data:
@@ -463,7 +463,7 @@ items:
 
 If present, this item can be equipped in the specified slot.
 
-```yml
+```yaml
 items:
   default:my_helmet:
     data:
@@ -491,7 +491,7 @@ items:
 
 The [Persistent Data Container](https://docs.papermc.io/paper/dev/pdc/) is a method for storing custom data on various objects, here specifically used to define item data. It is commonly employed to store custom plugin data, allowing you to define item data for recognition by other plugins.
 
-```yml
+```yaml
 pdc:
   key1: string_value # String
   key2: 114514 # Number

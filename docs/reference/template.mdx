@@ -137,7 +137,7 @@ If you need to use curly braces `{}` as normal text (not as parameters), just es
 
 In addition, there are two special parameters, `${__NAMESPACE__}` and `${__ID__}`, which are automatically derived from the resource location of the current non-template entry and passed into any referenced template. For example:
 
-```yml
+```yaml
 items:
   default:palm_log:
     template: default:my_template
@@ -147,7 +147,7 @@ templates:
       item_name: "<lang:item.${__NAMESPACE__}.${__ID__}>"
 ```
 
-```yml
+```yaml
 items:
   default:palm_log:
     data:
@@ -184,7 +184,7 @@ While most parameters are simple strings or numbers, some scenarios benefit from
 
 - **list**
 
-```yml
+```yaml
 arguments:
   arg1:
     - value1
@@ -193,7 +193,7 @@ arguments:
 
 - **map**
 
-```yml
+```yaml
 arguments:
   arg_1:
     option1: value1
@@ -219,7 +219,7 @@ arguments:
 
 It selects a parameter value based on a condition. This allows the conversion of some string-required parameters into a boolean value.
 
-```yml
+```yaml
 arguments:
   leaves_base_model:
     type: condition
@@ -232,7 +232,7 @@ arguments:
 
 It selects a value by matching the source value against a set of predefined cases. This allows mapping different input values to specific outputs, with an optional fallback value for unmatched cases.
 
-```yml
+```yaml
 arguments:
   slot: 
     type: when
@@ -247,7 +247,7 @@ arguments:
 
 - **to_upper_case** / **to_lower_case**
 
-```yml
+```yaml
 items:
   default:test:
     template: mmoitems:tier_item
@@ -273,7 +273,7 @@ templates:
 
 Whenever `${id}` is replaced, an increment or decrement operation is performed.
 
-```yml
+```yaml
 arguments:
   id:
     type: self_increase_int
@@ -287,7 +287,7 @@ arguments:
 
 Execute an expression and convert it to the desired numeric type.
 
-```yml
+```yaml
 arguments:
   damage:
     type: expression

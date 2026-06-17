@@ -15,7 +15,7 @@ import DiffViewer from '@site/src/components/DiffViewer';
 
 如果您希望 CraftEngine 物品保留外部插件物品的数据，请按照以下配置进行配置：
 
-```yml
+```yaml
 items:
   default:example_item:
     data:
@@ -111,7 +111,7 @@ lore:
 
 这是一种专为 `client_bound_data` 设计的特殊数据类型。`overwritable_lore` 仅在物品提示框中的描述信息为空时才会生效。该名称的可覆写体现了它的特性——它会优先显示其他插件设置的物品提示框中的描述信息。例如，当商店插件支持从 CraftEngine 获取物品时，在 `client_bound_data` 使用 `overwritable_lore` 不会像 `lore` 那样覆盖商店在展示售卖的物品时显示的描述信息。
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     client_bound_data:
@@ -165,7 +165,7 @@ items:
 
 类似于 `overwritable_lore`，但专为 `item_name` 设计
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     client_bound_data:
@@ -176,7 +176,7 @@ items:
 
 控制物品是否无法被破坏。
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     data:
@@ -216,7 +216,7 @@ items:
 
 控制物品存储的颜色。
 
-```yml
+```yaml
 items:
   default:sofa:
     data:
@@ -428,7 +428,7 @@ items:
 
 控制物品的提示框的外观。
 
-```yml
+```yaml
 items:
   default:topaz_rod:
     data:
@@ -470,7 +470,7 @@ items:
 
 控制物品是否可被生物装备穿戴。
 
-```yml
+```yaml
 items:
   default:my_helmet:
     data:
@@ -506,7 +506,7 @@ items:
 
 [持久化数据容器](https://docs.papermc.io/paper/dev/pdc/)是一种可在多种对象上存储自定义数据的方法，这里仅作用于定义物品的数据。它通常用于存储插件的自定义数据，你可以通过此物品数据定义以便其他插件识别。
 
-```yml
+```yaml
 pdc:
   key1: string_value # 字符串
   key2: 114514 # 数字

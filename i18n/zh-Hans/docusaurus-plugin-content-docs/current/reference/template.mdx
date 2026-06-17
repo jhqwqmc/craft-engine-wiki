@@ -139,7 +139,7 @@ arguments:
 
 此外，还有两个特殊参数 `${__NAMESPACE__}` 和 `${__ID__}`，它们会自动从当前非模板配置的命名空间ID中获取，并传递给任何被引用的模板。例如：
 
-```yml
+```yaml
 items:
   default:palm_log:
     template: default:my_template
@@ -149,7 +149,7 @@ templates:
       item_name: "<lang:item.${__NAMESPACE__}.${__ID__}>"
 ```
 
-```yml
+```yaml
 items:
   default:palm_log:
     data:
@@ -186,7 +186,7 @@ item_name: "<!i><white>${arg1:-'${arg2:-\'${arg3:-abc}\'}'}"
 
 - **列表**
 
-```yml
+```yaml
 arguments:
   arg1:
     - value1
@@ -195,7 +195,7 @@ arguments:
 
 - **映射**
 
-```yml
+```yaml
 arguments:
   arg_1:
     option1: value1
@@ -221,7 +221,7 @@ arguments:
 
 它根据条件选择参数值。这允许将某些需要字符串的参数转换为布尔值。
 
-```yml
+```yaml
 arguments:
   leaves_base_model:
     type: condition
@@ -234,7 +234,7 @@ arguments:
 
 它通过将源值与一组预定义的情况进行匹配来选择值。这允许将不同的输入值映射到特定的输出，并为未匹配的情况提供可选的回退值。
 
-```yml
+```yaml
 arguments:
   slot:
     type: when
@@ -249,7 +249,7 @@ arguments:
 
 - <Comment text="转换为大写">**to_upper_case**</Comment> / <Comment text="转换为小写">**to_lower_case**</Comment>
 
-```yml
+```yaml
 items:
   default:test:
     template: mmoitems:tier_item
@@ -275,7 +275,7 @@ templates:
 
 每当 `${id}` 被替换时，都会执行递增或递减操作。
 
-```yml
+```yaml
 arguments:
   id:
     type: self_increase_int
@@ -289,7 +289,7 @@ arguments:
 
 执行表达式并将其转换为所需的数值类型。
 
-```yml
+```yaml
 arguments:
   damage:
     type: expression
