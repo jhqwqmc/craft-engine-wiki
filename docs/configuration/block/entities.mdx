@@ -5,18 +5,18 @@ id: entities
 
 import Highlight from '@site/src/components/Highlight';
 
-## Entity-Like Behaviors
+## Introduction
 
 A block entity combines the properties of a block and an entity. It occupies a block position in the world but can **store data, perform updates, and support custom rendering** like an entity. With the **Block Entity API**, you can bring advanced functionality to your blocks, such as:
 
-- A battery block that visually changes its model based on its current energy level.
-- A generator that runs on a tick-based logic, consuming fuel periodically to produce power.
+- A battery block that visually changes its model based on current energy level.
+- A Stirling generator that runs on tick-based logic, periodically burning fuel to produce power.
 
 While the current library of built-in block entity types is still growing, future versions of CraftEngine will significantly expand these offerings with more versatile and ready-to-use components.
 
 ## Entity-Based Rendering
 
-### How it works?
+### How It Works
 
 As we all know, the number of variants for a single block is limited. For example, a tripwire only has 128 variants, meaning that without sacrificing the original tripwire, we can create at most 127 custom block states. However, if we remove the texture of one of these states, make it appear completely transparent, and place a display entity at the center of the block, we can achieve virtually unlimited custom blocks.
 
@@ -28,224 +28,355 @@ Please note that some vanilla blocks use hardcoded renderers. If a block uses a 
 
 :::
 
-To configure a display entity, simply add an `entity_renderer` option. This option accepts a configuration section or list as its parameter.
+To configure a display entity, add an `entity_renderer` option within the `state` or `appearances` appearance.
+
+## Basic Usage
+
+`entity_renderer` accepts an object or a list of objects. Each object describes one rendering element; multiple elements can be combined.
 
 ```yaml
-blocks:
-  default:sleeper_sofa:
-    state:
-      state: white_bed[facing=west,occupied=false,part=foot]
-      entity_renderer:
-        - type: item_display
-          ...
-        - type: text_display
-          ...
-      entity_culling:
-        ...
-  default:table_lamp:
-    states:
-      appearances:
-        east_off:
-          state: barrier
-          entity_renderer:
-            type: item_display
-            ...
-          entity_culling:
-            ...
+# Single rendering element (object form)
+entity_renderer:
+  type: item_display
+  item: default:sofa
+
+# Multiple rendering elements (list form)
+entity_renderer:
+  - type: item_display
+    item: default:sofa
+  - type: text_display
+    text: Sofa
 ```
 
-:::info
-When no type is specified, it defaults to using `item_display`.
+:::info Type auto-detection
+
+If `type` is not specified, the plugin infers it from other fields:
+- Contains `text` → `text_display`
+- Contains `item` → `item_display`
+
+So the simplest form can omit `type`:
+
+```yaml
+entity_renderer:
+  item: default:sofa     # auto-infers item_display
+```
 :::
 
-### Item Display
+## Display Parameters
 
-https://minecraft.wiki/w/Display
+The following parameters apply to `item_display` and `text_display` display entity types.
 
-**Required Arguments**
+<details>
+<summary>Expand display parameter list</summary>
+
+```yaml
+# Position & transform
+translation: 0,0.5,0       # Offset (x,y,z). Recommended over position
+position: 0.5,0.5,0.5      # Absolute position (x,y,z), default block center
+scale: 1,1,1               # Scale (x,y,z). Single number like scale: 1.5 also works
+
+# Rotation (choose one, rotation recommended)
+yaw: 0                     # Around Y axis
+pitch: 0                   # Around X axis
+rotation: 45               # Single number → around Y axis
+rotation: 45,45,0          # Euler angles (x,y,z)
+rotation: 0,0,0.707,0.707  # Quaternion (x,y,z,w)
+
+# Display
+billboard: fixed           # fixed / vertical / horizontal / center
+glow_color: 255,255,255    # Glow color (RGB)
+brightness:                # Brightness override
+  block_light: 15
+  sky_light: 15
+view_range: 1.0            # View distance coefficient
+
+# Shadows
+shadow_radius: 0           # Shadow radius
+shadow_strength: 1         # Shadow strength
+```
+
+</details>
+
+`position`, `yaw`, and `pitch` also apply to `armor_stand`; `item` (dropped item) only supports `position`.
+
+:::tip
+Use `translation` instead of `position`, and `rotation` instead of `yaw`/`pitch`. This avoids sending position synchronization packets and ensures the best visual performance.
+:::
+
+## Render Element Types
+
+### item_display
+
+Renders a custom item model based on the vanilla item display entity. **When `type` is omitted and `item` is present, this type is auto-inferred.**
+
+**Required:**
 
 ```yaml
 type: item_display
-item: default:sleeper_sofa
+item: default:sofa          # Item ID
 ```
 
-**Optional Arguments**
+**Optional:**
 
 ```yaml
-display_transform: none # none / third_person_left_hand / third_person_right_hand
-                        # first_person_left_hand / first_person_right_hand
-                        # head / gui / ground / fixed
-billboard: fixed  # fixed / vertical / horizontal / center
-
-translation: 0,0.5,0  
-# rotation support 3 formats
-rotation: 45  # Y axis based
-rotation: 45,45,0  # Euler angle
-rotation: 0,0,0.7071,0.7071  # Quaternions  https://quaternions.online/
-
-position: 0.5,0,0  # better using translation
-yaw: 0.0  # better using rotation
-pitch: 0  # better using rotation
-
-scale: 1 # scale: 1,2,1
-glow_color: 255,255,255
-brightness:
-  block_light: 15
-  sky_light: 15
-view_range: 1.0
+display_transform: none     # Item display transform mode:
+                            # none / third_person_left_hand / third_person_right_hand
+                            # first_person_left_hand / first_person_right_hand
+                            # head / gui / ground / fixed
 ```
 
-:::tip
+`display_transform` (also writable as `display_context`) controls the item model's transform mode. In most cases, the default `none` is sufficient; use other modes when you need to simulate how items look in hand, on ground, etc.
 
-When using display entities as block entity renderers, it is recommended to use `translation` instead of `position`, and `rotation` instead of `yaw` and `pitch`. This avoids sending position synchronization packets and ensures the best visual performance.
-
-:::
-
-### Text Display
-
-https://minecraft.wiki/w/Display
-
-**Required Arguments**
-
-```yaml
-type: text_display
-text: Hello <papi:player_name>
-```
-
-**Optional Arguments**
-
-```yaml
-billboard: fixed  # fixed / vertical / horizontal / center
-
-translation: 0,0.5,0
-# rotation support 3 formats
-rotation: 45  # Y axis based
-rotation: 45,45,0  # Euler angle
-rotation: 0,0,0.7071,0.7071  # Quaternions  https://quaternions.online/
-
-position: 0.5,0,0  # better using translation
-yaw: 0.0  # better using rotation
-pitch: 0  # better using rotation
-
-scale: 1.5 # scale: 1,2,1
-glow_color: 255,255,255
-brightness:
-  block_light: 15
-  sky_light: 15
-view_range: 1.0
-
-line_width: 200
-background_color: 64,0,0,0 # ARGB
-text_opacity: -1
-has_shadow: false
-is_see_through: false
-use_default_background_color: false
-alignment: center  # center / left / right
-```
-
-### Item
-
-Renders a dropped item
-
-```yaml
-type: item
-item: default:sleeper_sofa # Required; string; specifies the item to display
-position: 0.5,0.5,0.5 # Optional; default: 0.5
-```
-
-### Armor stand
-
-Renders a custom item based on armor stand
-
-```yaml
-type: armor_stand
-item: default:bench
-position: 0,1,0
-scale: 1
-small: false
-glow_color: white  # black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white
-```
-
-### BetterModel
-
-```yaml
-type: better_model
-model: custom_model # Required; string; specifies the model to render
-position: 0.5,0.5,0.5 # Optional; default: 0.5
-yaw: 0 # Optional
-pitch: 0 # Optional
-sight_trace: true # Optional
-```
-
-### ModelEngine
-
-```yaml
-type: model_engine
-model: custom_model # Required; string; specifies the model to render
-position: 0.5,0.5,0.5 # Optional; default: 0.5
-yaw: 0 # Optional
-pitch: 0 # Optional
-```
-
-## Tint Source
-
-The tint source for the block entity renderer comes from the block entity itself, which requires a valid block behavior — such as `tint_source_block` or `display_item_block`. 
-For 99% of configurations, you only need to follow the setup below to apply tinting to the rendered elements.
+<details>
+<summary>Full example</summary>
 
 ```yaml
 entity_renderer:
   type: item_display
   item: default:sofa
-  tint_source: minecraft:dyed_color
+  translation: 0,0.5,0
+  scale: 1,1,1
+  rotation: 0,45,0
+  billboard: fixed
+  glow_color: 255,200,100
+  brightness:
+    block_light: 15
+    sky_light: 15
+  view_range: 1.0
+  shadow_radius: 0
+  shadow_strength: 1
+  display_transform: none
+  tint_source:              # Tint source (see below)
+    type: default
+    components:
+      - minecraft:dyed_color
 ```
 
-Of course, you can also register a color source through the API. A display element supports multiple tint sources, as long as you correctly specify its index (i.e., the order of block behaviors that support color sources).
+</details>
+
+### text_display
+
+Renders text based on the vanilla text display entity. **When `type` is omitted and `text` is present, this type is auto-inferred.**
+
+**Required:**
+
+```yaml
+type: text_display
+text: Hello <papi:player_name>      # Text content, supports MiniMessage and PAPI placeholders
+```
+
+**Optional:**
+
+```yaml
+line_width: 200                    # Line width (pixels)
+background_color: 64,0,0,0         # Background color (ARGB), default 0x40000000 (semi-transparent black)
+text_opacity: -1                   # Text opacity (0-255), -1 = default
+has_shadow: false                  # Whether text has a shadow
+is_see_through: false              # Whether text back face is visible
+use_default_background_color: false # Whether to use default background color
+alignment: center                  # Text alignment: center / left / right
+```
+
+<details>
+<summary>Full example</summary>
+
+```yaml
+entity_renderer:
+  type: text_display
+  text: <yellow>Click to interact</yellow>
+  translation: 0,1.2,0
+  scale: 1.5
+  billboard: center
+  alignment: center
+  line_width: 200
+  background_color: 0,0,0,0        # ARGB, fully transparent background
+  text_opacity: 200
+  has_shadow: true
+  is_see_through: false
+  view_range: 0.8
+```
+
+</details>
+
+### item (Dropped Item)
+
+Renders a spinning dropped item entity, similar to items on the ground.
+
+```yaml
+type: item
+item: default:sleeper_sofa         # Required: item ID
+position: 0.5,0.5,0.5              # Optional: position (x,y,z), default block center
+```
+
+`item` only supports `position`; other display parameters do not apply. Dropped items automatically have a spinning animation, suitable for simple item display.
+
+<details>
+<summary>Example with tint source</summary>
+
+```yaml
+entity_renderer:
+  type: item
+  item: default:colored_block
+  position: 0.5,0.5,0.5
+  tint_source:
+    type: default
+    components:
+      - minecraft:dyed_color
+```
+
+</details>
+
+### armor_stand
+
+Renders an item model based on an armor stand. The armor stand supports equipping a helmet item and rendering it at the correct position.
+
+```yaml
+type: armor_stand
+item: default:bench                 # Required: item ID
+position: 0,0.2,0                   # Optional: position (x,y,z), default block center
+yaw: 0                              # Optional: rotation around Y axis
+pitch: 0                            # Optional: rotation around X axis
+scale: 1                            # Optional: scale, default 1
+small: false                        # Optional: small armor stand, default false
+glow_color: white                   # Optional: glow color (legacy color names)
+```
+
+Supported `glow_color` names: `black, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray, dark_gray, blue, green, aqua, red, light_purple, yellow, white`.
+
+### better_model (BetterModel)
+
+:::info Requires the BetterModel plugin
+:::
+
+Renders a custom model from the BetterModel plugin.
+
+```yaml
+type: better_model
+model: custom_model                 # Required: model name
+position: 0.5,0.5,0.5               # Optional: position (x,y,z), default block center
+yaw: 0                              # Optional: rotation around Y axis
+pitch: 0                            # Optional: rotation around X axis
+sight_trace: true                   # Optional: whether to participate in ray tracing, default true
+```
+
+### model_engine (ModelEngine)
+
+:::info Requires the ModelEngine plugin
+:::
+
+Renders a custom model from the ModelEngine plugin.
+
+```yaml
+type: model_engine
+model: custom_model                 # Required: model name
+position: 0.5,0.5,0.5               # Optional: position (x,y,z), default block center
+yaw: 0                              # Optional: rotation around Y axis
+pitch: 0                            # Optional: rotation around X axis
+```
+
+## Tint Source
+
+The tint source dynamically **tints** items rendered by block entity elements. It reads color data from block behaviors (such as `tint_source_block` or `display_item_block`) and applies it to the rendered items.
+
+### Simple Usage
+
+In most cases, a single line is enough:
+
+```yaml
+entity_renderer:
+  type: item_display
+  item: default:sofa
+  tint_source: minecraft:dyed_color       # String shorthand
+```
+
+Equivalent to:
+
+```yaml
+entity_renderer:
+  type: item_display
+  item: default:sofa
+  tint_source:
+    type: default
+    components:
+      - minecraft:dyed_color
+    index: 0                              # Tint source index, default 0
+```
+
+### Multi-Element Tinting
+
+When a block has multiple rendering elements, each can bind a different tint index. The index corresponds to the order in which block behaviors register tint sources:
 
 ```yaml
 entity_renderer:
   - item: example:element_1
     tint_source:
-      - type: default
-        components:
-          - minecraft:dyed_color
-        index: 0
+      type: default
+      components:
+        - minecraft:dyed_color
+      index: 0                            # Corresponds to the 1st tint source
   - item: example:element_2
     tint_source:
-      - type: default
-        components:
-          - minecraft:dyed_color
-        index: 1
+      type: default
+      components:
+        - minecraft:dyed_color
+      index: 1                            # Corresponds to the 2nd tint source
   - item: example:element_3
     tint_source:
-      - type: default
-        components:
-          - minecraft:dyed_color
-        index: 2
+      type: default
+      components:
+        - minecraft:dyed_color
+      index: 2                            # Corresponds to the 3rd tint source
 ```
 
-The image below shows a block configured with three `display_item_block` behaviors. It also has three cap elements, each using the tinting from one of the three sofas.
+The `components` list specifies which item components to apply the tint to. Common ones include `minecraft:dyed_color` (dye color), `minecraft:custom_model_data`, etc. A single `tint_source` can apply to multiple components simultaneously.
 
 ![](/img/block_tint_source.png)
 
 ## Entity Culling
 
-You can individually control whether entity culling is enabled for each block entity variant
+Entity culling controls the visibility management of block entities on the client side, used to optimize performance.
+
+**Disable culling** (entity always visible):
 
 ```yaml
-entity_renderer:...
-entity_culling: false # Disabled
+entity_renderer: ...
+entity_culling: false
 ```
 
-Once entity culling is enabled, you can configure the culling parameters
+**Enable culling** (default behavior, customizable parameters):
 
 ```yaml
 entity_renderer: ...
 entity_culling:
-  # Manual configuration of AABB is required if the model is huge
-  # In this example, it suits a double high block entity
-  aabb: -0.5,-0.5,-0.5,0.5,1.5,0.5  # x1,y1,z1,x2,y2,z2
-  view__distance: 64 # View distance culling. -1 means unlimited distance.
-                    # However, setting this to -1 is not recommended when ray tracing is enabled,
-                    # as it results in excessive algorithm path length and performance impact.
-  ray_tracing: false # Whether to enable ray tracing culling.
+  aabb: -0.5,-0.5,-0.5,0.5,1.5,0.5     # Culling bounding box (minX,minY,minZ,maxX,maxY,maxZ)
+                                         # Default covers the entire block
+  view_distance: 64                      # Max view distance (blocks), -1 = unlimited
+  aabb_expansion: 0.5                    # Bounding box expansion, default 0.5
+  ray_tracing: true                      # Whether to enable ray tracing culling
 ```
+
+Parameter descriptions:
+
+| Parameter | Type | Default | Description |
+|:---|:---|:---|:---|
+| `aabb` | 6 numbers | Block bounds | Custom culling bounding box. Increase for large models |
+| `view_distance` | integer | From config.yml | Entities beyond this distance are no longer rendered. Not recommended to set -1 with `ray_tracing` enabled |
+| `aabb_expansion` | number | 0.5 | Bounding box expansion, affects ray tracing detection range |
+| `ray_tracing` | boolean | true | Whether to determine entity occlusion via ray tracing |
+
+## Conditions
+
+Each rendering element can configure `conditions`, making the element visible only to players who satisfy the conditions.
+
+```yaml
+entity_renderer:
+  - type: item_display
+    item: default:secret_block
+    conditions:
+      - type: permission
+        permission: "vip.secret"
+      - type: world
+        world: "world_nether"
+```
+
+Conditions use **AND** logic — all must be satisfied for visibility. See the conditions system documentation for supported condition types.

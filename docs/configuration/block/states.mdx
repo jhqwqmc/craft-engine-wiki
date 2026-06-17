@@ -5,358 +5,526 @@ id: states
 
 ## Introduction
 
-In Minecraft's block system, each block can have one or more block states. For example, wood can have different orientations, and leaves can detect their "distance" from a tree. These states collectively determine the block's appearance and physical behavior in the game.
+In Minecraft, every block can have one or more **block states**. For example, logs have different orientations (`axis=x/y/z`), and leaves can detect their "distance" from a tree (`distance=1~7`). These states collectively determine the block's appearance and physical behavior.
 
-To better understand how plugins operate, we first need to distinguish two core concepts:
+In CraftEngine, we need to distinguish two core concepts:
 
-#### 🎨 Visual Block States
+#### 🎨 Visual Block State (what the client sees)
 
-This refers to the block states that players **actually see** on the client side, hence also known as **vanilla block states**.
+This is what players **actually see** on the client side, also called the **vanilla block state**.
 
-- Plugins achieve various unique block rendering effects by attaching custom models to these specific vanilla states (e.g., a note block with a specific note and instrument).
-- In simple terms, **visual states determine "what it looks like."**
+- The plugin attaches custom models to specific vanilla states (e.g., a particular note block) to achieve unique block rendering.
+- In short: **visual state = "what it looks like"**
 
-#### ⚙️ Internal Block States
+#### ⚙️ Internal Block State (what the server computes)
 
-This refers to the block states that are **actually stored and processed** on the server side, hence also known as **server-side block states**.
+This is what is **actually stored and processed** on the server side, also called the **server-side block state**.
 
-- It handles all the logic and physical behaviors of blocks, such as collision boxes, redstone signals, and entity interactions.
-- The server "maps" or "converts" this internal state into a visual state through specific network protocols and sends it to the client for rendering.
-- In simple terms, **internal states determine "how it actually works."**
+- It handles all block logic and physics — collision boxes, redstone signals, entity interactions, etc.
+- The server "maps" the internal state to a visual state via specific network protocols and sends it to the client for rendering.
+- In short: **internal state = "how it actually works"**
 
 ![](/img/block_states_1.png)
 
+---
+
+The `state`/`states` config section does one thing: **assigns each internal block state a visual appearance for the client**.
+
+Depending on block complexity, there are two modes:
+
+| Mode | Config key | Use case |
+|:---|:---|:---|
+| Single-state | `state` | Block has only one internal state (e.g., lanterns, decorations) |
+| Multi-state | `states` | Block has multiple internal states (e.g., logs with orientation, leaves with distance/waterlogging) |
+
+Let's start from the simplest single-state and progressively move to multi-state.
+
 ## Single-State Blocks
 
-Most blocks can function properly with only one block state. The following example demonstrates how to configure a single-state block.
-
-```yaml
-blocks:
-  default:chinese_lantern:
-    state:
-      auto_state: note_block
-      model:
-        path: "minecraft:block/custom/chinese_lantern"
-        generation:
-          parent: "minecraft:block/cube_column"
-          textures:
-            "end": "minecraft:block/custom/chinese_lantern_top"
-            "side": "minecraft:block/custom/chinese_lantern"
-```
-
-### Visual States
-The visual representation of a block is controlled by either the `auto_state` or `state` option. You can choose one of them based on your precision requirements.
-
-#### 🛠️ Using `auto_state`: Let the Plugin Choose for You
-
-The parameter of `auto_state` points to a predefined set of visual states in the plugin. These states share key characteristics, such as **identical collision boxes and consistent rendering properties** (e.g., whether transparency is supported).
-
-- What is its purpose?
-
-When creating a new block, we typically only care about its core characteristics (such as collision box size) and not which specific block state is used. `auto_state` was designed for this purpose: the plugin will automatically assign you an available state from the group that meets the characteristics.
-
-- An example
-
-For a note block, `minecraft:note_block[instrument=hat,note=0,powered=false]` and `minecraft:note_block[instrument=hat,note=1,powered=false]` are identical in terms of core characteristics. You don’t need to remember or type such long state parameters. Simply write `auto_state: note_block`, and the plugin will automatically select an available note block state for you.
-
-:::info
-Currently available `auto_state` options:
-- tintable_leaves - Tintable leaves block without water
-- waterlogged_tintable_leaves - Tintable leaves block with water
-- non_tintable_leaves - Non-tintable leaves block without water
-- waterlogged_non_tintable_leaves - Non-tintable leaves block with water
-- leaves - Any leaves block without water
-- waterlogged_leaves - Any leaves block with water
-- lower_tripwire - Tripwire with a smaller collision box
-- higher_tripwire - Tripwire with a larger collision box
-- tripwire - Any tripwire
-- note_block - Note block
-- mushroom_stem - Mushroom stem
-- red_mushroom_block - Red mushroom block
-- brown_mushroom_block - Brown mushroom block
-- mushroom - Mushroom block
-- solid - Any solid block (including note blocks and mushroom blocks)
-- sapling - Any sapling
-- cactus - Any cactus
-- sugar_cane - Any sugar cane
-- weeping_vine - Any weeping vine
-- twisting_vine - Any twisting vine
-- cave_vine - Any cave vine
-- kelp - Any kelp
-- chorus - Any chorus plant
-:::
-
-:::tip
-If multiple block appearances reference the same id, they will ultimately be assigned the same visual block state. This is helpful if you need multiple block states to share the same visual state.
-
-```yaml
-auto_state:
-  type: solid
-  id: namespace:id
-```
-
-:::
-
-#### 🎯 Using `state`: Precise Control Over Every Detail
-
-When you need to **precisely specify a particular state**, you should use the `state` parameter. This is crucial for blocks with multiple variants such as doors, fences, and trapdoors, as only precise control can achieve the expected collision box and appearance.
-
-The `state` parameter supports two formats:
-
-1. Full Block State
-
-Directly use the complete state identifier from vanilla Minecraft.
-
-> Example：minecraft:note_block\[instrument=hat,note=0,powered=false]
-
-2. Mapped Shorthand
-
-Use the shorthand format `block_name:ID` defined in the `block_state_mappings` configuration.
-
-> Example：`note_block:100` （This indicates using the 101st mapped note block state）
-
-Below is a complete single-state block configuration example using `state`:
-
-```yaml
-blocks:
-  default:chinese_lantern:
-    state:
-      state: minecraft:note_block[instrument=hat,note=0,powered=false]
-      model:
-        path: "minecraft:block/custom/chinese_lantern"
-        generation:
-          parent: "minecraft:block/cube_column"
-          textures:
-            "end": "minecraft:block/custom/chinese_lantern_top"
-            "side": "minecraft:block/custom/chinese_lantern"
-```
-
-:::caution
-⚠️ Note: Avoid duplicate binding of states and models
-
-When you use the `state` option to specify a block state precisely, ensure that this state is bound to only **one unique custom model**.
-
-**❌ What is a conflict?**
-
-For example:
-
-- You set the state `minecraft:note_block[instrument=hat,note=0,powered=false]` for Block A and bind it to Model A.
-- Then, you set the exact same state `minecraft:note_block[instrument=hat,note=0,powered=false]` for Block B but attempt to bind it to Model B.
-
-This creates a conflict because the same vanilla block state cannot represent two different custom models simultaneously.
-
-**🔍 What happens in case of a conflict?**
-
-When the plugin detects such duplicate bindings, it will log warning messages in the console. Be sure to pay attention to these warnings and adjust your configuration promptly. Otherwise, unexpected issues may arise with model display.
-:::
-
-### Model
-
-#### Basic Model Configuration
-
-```yaml
-blocks:
-  default:chinese_lantern:
-    state:
-      auto_state: note_block
-      model:
-        path: "minecraft:block/custom/chinese_lantern"
-        generation:
-          parent: "minecraft:block/cube_column"
-          textures:
-            "end": "minecraft:block/custom/chinese_lantern_top"
-            "side": "minecraft:block/custom/chinese_lantern"
-```
-
-The `model` determines what your chosen visual state will ultimately look like on the client side.
-
-:::info
-
-If you're unsure about how to configure properties like `path` (model path) and `generation` (model generation), we strongly recommend first completing the **[Getting Started](../../getting_start.mdx)** Tutorial, which will help you systematically understand the basic workflow.
-
-Of course, here’s a simple guideline to help you get started quickly:
-
-- **Scenario 1: I already have a pre-made model file**
-
-If you already have a model file in .json format ready, simply fill in the `path` field in the configuration to directly specify the path to this model.
-
-- **Scenario 2: I need the plugin to automatically create a basic model**
-
-If you don’t have a model file yet and want the plugin to generate a basic model for you, you should use the `generation` option and fill in the corresponding generation parameters.
-:::
-
-#### Weighted Model Configuration
-
-The `weight` parameter is used to set the probability weight for a model to be randomly selected from the candidate list, with a default value of 1.
-
-**🎲 How It Works**
-
-- **Trigger Condition**：When a block has multiple candidate models, the game calculates which model to use based on its position. For the same position, the calculation result is fixed.
-- **Probability Calculation**：The probability of each model being selected is determined by the ratio of its own `weight` value to the total weight of all candidate models.
-
-The specific calculation formula is:
-**Probability of selecting a single model = Model's own weight / Sum of weights of all candidate models**
+When a block has only one internal state, use the `state` config section. Its core is the **visual state** + **model** combination: the visual state determines "which vanilla block to use as the carrier," and the model determines "what it renders as."
 
 ```yaml
 state:
-  models: # model(s)
-    - path: "minecraft:block/custom/fairy_flower_1"
-      weight: 8
-    - path: "minecraft:block/custom/fairy_flower_2"
-      weight: 5
-    - path: "minecraft:block/custom/fairy_flower_3"
-      weight: 2
+  auto_state: note_block
+  model:
+    path: "minecraft:block/custom/my_block"
 ```
 
-![](/img/block_states_4.png)
+`auto_state` lets the plugin auto-pick a note block state, and `model` specifies the rendering model. Each is explained in detail below.
 
-#### Rotating Model Configuration
+### Visual State Details
 
-If you need to apply basic rotations to a model **without modifying the model file** itself, you can directly use the following options in the configuration instead of creating new model files:
+#### `auto_state`: Let the Plugin Auto-Assign
 
-**🔧 Available Options**
-- x
-Rotation angle of the model around the X-axis.
-Unit: Degrees (°)
-Restriction: Must be a multiple of 90.
-- y
-Rotation angle of the model around the Y-axis.
-Unit: Degrees (°)
-Restriction: Must be a multiple of 90.
-- z (1.21.11+)
-Rotation angle of the model around the Z-axis.
-Unit: Degrees (°)
-Restriction: Must be a multiple of 90.
-- uvlock
-Whether to lock the rotation direction of the block texture.
-Default value: false
-Effect: When set to true, the block texture will not rotate with the model and will retain its original orientation.
+```yaml
+auto_state: note_block
+```
+
+The plugin automatically picks an available vanilla state from a preset **state group**. All states in the same group share key characteristics (collision box, rendering properties) — you don't need to care which specific one is used.
+
+:::info Available auto_state groups
+
+| Group | Vanilla blocks used | Notes |
+|:---|:---|:---|
+| `solid` | Note Block + Mushroom Blocks | Most universal solid block group |
+| `note_block` | Note Block | Common, full-block collision box |
+| `mushroom_stem` | Mushroom Stem | Full block |
+| `red_mushroom_block` | Red Mushroom Block | Full block |
+| `brown_mushroom_block` | Brown Mushroom Block | Full block |
+| `mushroom` | All three mushroom blocks above | Any mushroom block |
+| `tintable_leaves` | Oak/Jungle/Acacia/Dark Oak/Mangrove | Tintable leaves, non-waterlogged |
+| `waterlogged_tintable_leaves` | Same as above | Tintable leaves, waterlogged |
+| `non_tintable_leaves` | Spruce/Birch/Cherry/Pale Oak/Azalea | Non-tintable leaves, non-waterlogged |
+| `waterlogged_non_tintable_leaves` | Same as above | Non-tintable leaves, waterlogged |
+| `leaves` | All leaves | Non-waterlogged |
+| `waterlogged_leaves` | All leaves | Waterlogged |
+| `lower_tripwire` | Tripwire (attached=true) | Smaller collision box |
+| `higher_tripwire` | Tripwire (attached=false) | Larger collision box |
+| `tripwire` | Tripwire | Any tripwire |
+| `sapling` | All saplings | — |
+| `pressure_plate` | Weighted Pressure Plates | — |
+| `cactus` / `sugar_cane` / `weeping_vine` / `twisting_vine` / `cave_vine` / `kelp` / `chorus` | Corresponding plants | — |
+
+:::
+
+**Expanded form: sharing visual states**
+
+When multiple appearances need to share the **same** vanilla state, use the expanded form:
+
+```yaml
+# Simple form — each gets its own independent visual state
+auto_state: solid
+
+# Expanded form — appearances with the same id share one visual state
+auto_state:
+  type: solid
+  id: "my_shared_id"
+```
+
+Without `id`, each `auto_state: solid` gets its own independent assignment. With the same `id`, they are bound to the **same** vanilla block state.
+
+#### `state`: Precise Vanilla State Specification
+
+When you need precise control over which vanilla state to use, use `state`.
+
+```yaml
+# Format 1: Full vanilla state identifier
+state: "minecraft:note_block[instrument=hat,note=0,powered=false]"
+
+# Format 2: Mapped shorthand (requires block_state_mappings to be pre-configured)
+state: "note_block:0"
+```
+
+:::caution
+A single vanilla block state can only be bound to **one unique** custom model. If you bind the same vanilla state to two different custom models, the plugin will log a conflict warning in the console.
+:::
+
+### Model Configuration
+
+`model` determines what the visual state renders as on the client. It has several mutually exclusive configuration combinations:
+
+<details>
+<summary>① path only — existing model file</summary>
 
 ```yaml
 model:
-  path: "minecraft:block/custom/chinese_lantern"
-  x: 90
-  y: 180
-  uvlock: false
+  path: "minecraft:block/custom/my_block"
 ```
+
+</details>
+
+<details>
+<summary>② path + generation — auto-generate model</summary>
+
+```yaml
+model:
+  path: "minecraft:block/custom/my_block"
+  generation:
+    parent: "minecraft:block/cube_column"
+    textures:
+      end: "minecraft:block/custom/top"
+      side: "minecraft:block/custom/side"
+```
+
+</details>
+
+<details>
+<summary>③ path + textures — textures only, plugin infers model structure</summary>
+
+```yaml
+model:
+  path: "minecraft:block/custom/my_block"
+  textures:
+    - "minecraft:block/custom/bottom"
+    - "minecraft:block/custom/top"
+    - "minecraft:block/custom/side"
+```
+
+</details>
+
+<details>
+<summary>④ texture only — single texture, simplest form</summary>
+
+```yaml
+model:
+  texture: "minecraft:block/custom/my_block"
+```
+
+Equivalent forms:
+
+```yaml
+# Equivalent to
+model:
+  textures: "minecraft:block/custom/my_block"
+
+# Also equivalent to
+model:
+  textures:
+    - "minecraft:block/custom/my_block"
+```
+
+With a single texture, `path` can be omitted (defaults to the texture path). `texture` and `textures` are equivalent; list and string forms are also equivalent.
+
+</details>
+
+<details>
+<summary>⑤ models list — multi-model weighted random</summary>
+
+```yaml
+models:
+  - path: "minecraft:block/custom/flower_1"
+    weight: 8
+  - path: "minecraft:block/custom/flower_2"
+    weight: 5
+```
+
+</details>
+
+<details>
+<summary>⑥ transparent — remove original model</summary>
+
+Used to remove the block's original model, typically to free up a state for block entity renderer use.
+
+```yaml
+transparent: true
+```
+
+</details>
+
+**All sub-keys of `model`:**
+
+| Key | Type | Description |
+|:---|:---|:---|
+| `path` | string | Model file path. **Required** when using `textures` (2+ entries) or `generation`, to specify where the generated model is saved |
+| `textures` / `texture` | list or string | Simplified texture config; infers model structure from texture count (mutually exclusive with `generation`). Both key names are equivalent; a single texture can use string shorthand |
+| `generation` | object | Auto-generate the model; requires `parent` and `textures` (mutually exclusive with `textures` list) |
+| `x` / `y` / `z` | integer | Rotation angle around axis, must be a multiple of 90 (`z` requires 1.21.11+) |
+| `uvlock` | boolean | Lock texture direction, default `false` |
+| `weight` | integer | Only used in `models` lists; selection weight, default `1` |
+
+**`textures` auto-inference rules:**
+
+| Texture count | Inferred model | `path` required? | Texture order | Example blocks |
+|:---:|:---|:---:|:---|:---|
+| 1 | `cube_all` | No (defaults to texture path) | All six faces same | Netherrack |
+| 2 | `cube_column` | **Yes** | End faces, side | Log |
+| 3 | `cube_bottom_top` | **Yes** | Bottom, top, side | Grass Block |
+| 4 | `orientable` | **Yes** | Bottom, top, front, side | Furnace |
+| 5+ | Five-face independent | **Yes** | Bottom, top, north, east, south, west | Crafter |
+
+Prefix a texture with `^` to also use it as the particle texture (particles emitted when breaking the block):
+
+```yaml
+textures:
+  - "^minecraft:block/custom/top"     # top face → also used as particle
+  - "minecraft:block/custom/bottom"
+  - "minecraft:block/custom/side"
+```
+
+:::tip `textures` vs `generation`
+
+Both are under `model` and mutually exclusive:
+
+| | `textures` (list) | `generation` (object) |
+|:---|:---|:---|
+| Syntax | `model` with `path` + `textures` | `model` with `path` + `generation` |
+| Use case | Simple blocks, textures only | Blocks needing a specific `parent` (e.g., `leaves`, `cross`, `stairs`) |
+| `path` | Optional for 1 texture, required for 2+ | Required |
+
+```yaml
+# textures list (auto-infer model structure)
+model:
+  path: "minecraft:block/custom/my_block"
+  textures:
+    - "minecraft:block/custom/my_block_bottom"
+    - "minecraft:block/custom/my_block_top"
+    - "minecraft:block/custom/my_block_side"
+
+# generation object (manually specify parent model)
+model:
+  path: "minecraft:block/custom/my_leaves"
+  generation:
+    parent: "minecraft:block/leaves"
+    textures:
+      all: "minecraft:block/custom/my_leaves"
+```
+:::
 
 ## Multi-State Blocks
 
-:::warning
+When a block needs multiple internal states, use the `states` config section.
 
-warning The following content may be challenging to understand. I will explain it in as much detail as possible. Please be sure to read it **word by word** carefully.
-
+:::tip When do you need multi-state?
+- Block has **orientation** (logs, pillars, stairs…)
+- Block can be **waterlogged** (`waterlogged`)
+- Block needs **multiple variants** (leaves' distance/persistent)
+- Block needs **redstone interaction** (`powered`, `open`)
 :::
 
-### Step 1: Define Properties
+The `states` section consists of three sub-sections, configured in order:
 
-In this example, we define a property named `axis`:
-
-```yaml
-blocks:
-  default:palm_log:
-    states: # state(s)
-      properties:
-        axis:
-          type: "axis"
-          default: "y"
+```
+states:
+  properties:   # ① Define internal properties
+  appearances:  # ② Define available visual appearances
+  variants:     # ③ Map internal states to appearances (optional)
 ```
 
-**✍️ Property Definition Notes**
+### Progressive Examples
 
-- **Property Name**：Be sure to use a combination of lowercase English letters and underscores for naming.
-- type：Specifies the type of the property. You can view all available property types in the [ℹ️ Properties](states/properties.mdx) subpage.
-- default：（Optional）Sets the default value for this property. When the block state does not explicitly specify this property, the default value will be used.
+Using a log block as an example, showing the configuration from simplest to most complete.
 
-:::tip
-**Behavior of Special Names**
-
-Property names can be set with considerable flexibility, but it's important to note a special mechanism: the plugin hardcodes specific placement behaviors for certain reserved property names.
-
-For example, when a property is named `axis`:
-
-- The plugin will automatically align its orientation during placement to match the direction the player is facing.
-- This process is fully automated and requires no additional configuration.
-
-If the property name is not one of these reserved names (e.g., `custom_axis` as shown below):
-
-```yaml
-custom_axis:
-  type: axis
-  default: y
-```
-
-- The plugin will not apply any automatic rotation during placement.
-- Regardless of the placement direction, the block will always use the default state defined in the configuration (in this case, `custom_axis=y`).
-:::
-
-### Step 2: Define Visual Appearance
-
-In the second step, we need to configure the possible visual appearances of the custom block. For example, a log block requires three orientations, so we need to specify three vanilla block states as its visual representations.
-
-In the configuration below, state names such as `axisX`, `axisZ`, and `axisY` can be freely defined:
-
-- **Naming Freedom**：You can use any names that clearly describe the corresponding visual states, without restrictions such as lowercase letters.
-- **Uniqueness Requirement**：The only requirement is to ensure that the names of each state are unique and not duplicated within the same block.
-
-The `state(s)` and `model(s)` configurations under each state follow the exact same rules as those for single-state blocks.
-
-If you are unsure about any specific details of these configurations, it is recommended to review the documentation section on single-state blocks.
+<details>
+<summary>① Simplest: define properties only, no explicit appearances (uses default)</summary>
 
 ```yaml
 blocks:
   default:palm_log:
     states:
+      properties:
+        axis:
+          type: axis
+          default: "y"
+      appearances:
+        default:
+          auto_state: solid
+          model:
+            path: "minecraft:block/custom/palm_log"
+```
+
+Only one `default` appearance. Since the plugin falls back to the first appearance when no variant matches, all three internal states (`axis=x`, `axis=y`, `axis=z`) will **all use this default appearance**. Because the property name is `axis` (a special name), the plugin automatically handles placement direction.
+
+</details>
+
+<details>
+<summary>② Different models for different directions</summary>
+
+```yaml
+blocks:
+  default:palm_log:
+    states:
+      properties:
+        axis:
+          type: axis
+          default: "y"
       appearances:
         axisY:
-          # You can also use "auto_state: note_block" here
-          state: "note_block:0" 
+          auto_state: solid
           model:
-            path: "minecraft:block/custom/stripped_palm_log"
+            path: "minecraft:block/custom/palm_log"
             generation:
               parent: "minecraft:block/cube_column"
               textures:
-                "end": "minecraft:block/custom/palm_log_top"
-                "side": "minecraft:block/custom/palm_log"
+                end: "minecraft:block/custom/palm_log_top"
+                side: "minecraft:block/custom/palm_log"
         axisX:
-          state: "note_block:1"
+          auto_state: solid
           model:
             x: 90
             y: 90
-            path: "minecraft:block/custom/stripped_palm_log_horizontal"
+            path: "minecraft:block/custom/palm_log_horizontal"
             generation:
               parent: "minecraft:block/cube_column_horizontal"
               textures:
-                "end": "minecraft:block/custom/palm_log_top"
-                "side": "minecraft:block/custom/palm_log"
+                end: "minecraft:block/custom/palm_log_top"
+                side: "minecraft:block/custom/palm_log"
         axisZ:
-          state: "note_block:2"
+          auto_state: solid
           model:
             x: 90
-            path: "minecraft:block/custom/stripped_palm_log_horizontal"
+            path: "minecraft:block/custom/palm_log_horizontal"
             generation:
               parent: "minecraft:block/cube_column_horizontal"
               textures:
-                "end": "minecraft:block/custom/palm_log_top"
-                "side": "minecraft:block/custom/palm_log"
+                end: "minecraft:block/custom/palm_log_top"
+                side: "minecraft:block/custom/palm_log"
+      variants:
+        axis=y:
+          appearance: axisY
+        axis=x:
+          appearance: axisX
+        axis=z:
+          appearance: axisZ
 ```
 
-### Step 3: Configure Variants (Optional)
+Three directions mapped to three appearances. `axis=y` gets the vertical model, `axis=x` and `axis=z` get horizontal models (with different rotation angles).
 
-This final step is optional, but in most practical scenarios, you will need to configure it.
-
-In this part, you need to assign corresponding **visual appearances** (defined in Step 2) and properties (block settings) to all possible internal block states (i.e., **real block** variants).
-
-**💡 Variant Key Format**
-Under `variants`, the key for each entry must be constructed by concatenating the property name and its corresponding value:
-
-- **Single Property**：The format is property_name=value, e.g., `axis=y`.
-- **Multiple Properties**：Separate them with English commas, e.g., `axis=y,age=7`. The order of properties does not affect matching.
-
-Under each variant key, there are two optional configuration options: `appearance` (used to assign the visual appearance) and `settings` (used to override settings). Below, we use a leaves block configuration example to help you understand how variants work:
+</details>
 
 <details>
-  <summary>Complete states section configuration</summary>
+<summary>③ Using textures shorthand</summary>
+
+```yaml
+blocks:
+  default:palm_log:
+    states:
+      properties:
+        axis:
+          type: axis
+          default: "y"
+      appearances:
+        axisY:
+          auto_state: solid
+          model:
+            path: "minecraft:block/custom/palm_log"
+            textures:
+              - "minecraft:block/custom/palm_log_top"
+              - "minecraft:block/custom/palm_log_side"
+        axisX:
+          auto_state: solid
+          model:
+            x: 90
+            y: 90
+            path: "minecraft:block/custom/palm_log_horizontal"
+            generation:
+              parent: "minecraft:block/cube_column_horizontal"
+              textures:
+                end: "minecraft:block/custom/palm_log_top"
+                side: "minecraft:block/custom/palm_log"
+        axisZ:
+          auto_state: solid
+          model:
+            x: 90
+            path: "minecraft:block/custom/palm_log_horizontal"
+      variants:
+        axis=y:
+          appearance: axisY
+        axis=x:
+          appearance: axisX
+        axis=z:
+          appearance: axisZ
+```
+
+The `axisY` appearance uses `textures` shorthand (2 textures → plugin infers `cube_bottom_top`), no need to write `generation` manually.
+
+Note: `axisX` and `axisZ` need rotation + a different parent model that `textures` inference doesn't cover, so they still use `model` + `generation`.
+
+</details>
+
+### Property Details
+
+Properties define all possible internal states of a block. The plugin computes the **Cartesian product** of all properties to automatically generate every internal state.
+
+```yaml
+properties:
+  waterlogged:
+    type: boolean          # true / false
+    default: false
+  distance:
+    type: int              # integer range
+    default: 7
+    range: 1~7             # min~max
+  facing:
+    type: horizontal_direction  # north / south / west / east
+    default: north
+```
+
+Each `type` corresponds to a fixed set of possible values. E.g., `boolean` = `{true, false}`, `horizontal_direction` = `{north, south, west, east}`. The Cartesian product of all property values gives all possible states.
+
+> Example: `waterlogged`(2) × `distance`(7) = 14 internal states
+
+For a complete list of property types, see the [ℹ️ Properties](states/properties.mdx) subpage.
+
+:::tip Special property names
+Some property names trigger hardcoded placement behaviors:
+
+| Property name | Triggered behavior |
+|:---|:---|
+| `axis` | Auto-align to player's facing axis on placement |
+| `facing` | Auto-align to player's facing direction (6 directions) |
+| `facing_clockwise` | Auto-align to player's facing direction (4 directions, rotated 90°) |
+| `rotation` | Precise rotation control (`type: int`, `range: 0~7` or `0~15`) |
+| `waterlogged` | Determines whether the block is waterlogged |
+
+If you don't use these special names (e.g., `custom_axis`), no automatic rotation is triggered — the block always uses the default value.
+:::
+
+### Appearance Details
+
+`appearances` defines all possible **visual appearances** for a block. Each appearance follows the exact same configuration rules as single-state blocks (`auto_state`/`state` + `model`/`models`/`textures`/`transparent`/`entity_renderer`).
+
+Appearance names can be freely defined, as long as they are unique within the same block. **The first defined appearance is the "default"** — when an internal state doesn't match any variant's `appearance`, it automatically uses this one.
+
+```yaml
+appearances:
+  anyNameA:        # ← first = default appearance
+    auto_state: solid
+    model: ...
+  anyNameB:
+    auto_state: solid
+    model: ...
+```
+
+### Variant Matching Rules
+
+`variants` maps internal states to visual appearances. Its core is the **variant key** matching logic.
+
+#### Variant Key Format
+
+```yaml
+variants:
+  waterlogged=false:           # constrains one property
+    appearance: default
+  waterlogged=true:            # constrains one property + overrides settings
+    appearance: waterlogged
+    settings:
+      resistance: 1200.0
+      fluid_state: water
+  facing=up:                   # constrains one property, overrides settings only
+    settings:
+      luminance: 15
+```
+
+Variant key = `property_name=value` pairs, multiple properties separated by commas. **Order does not affect matching**.
+
+#### Three Core Matching Rules
+
+**Rule 1 — Wildcard semantics**
+
+Properties **not listed** in a variant key match **all possible values** of that property. You constrain what you write; what you don't write has no restriction.
+
+| Variant key | Actual match |
+|:---|:---|
+| `waterlogged=false` | All `waterlogged=false` states, **regardless** of persistent and distance values |
+| `facing=up` | All `facing=up` states, other properties unrestricted |
+| `axis=y` | All `axis=y` states, other properties unrestricted |
+
+**Rule 2 — Multi-entry overlay**
+
+When the same internal state matches **multiple variant entries**:
+- `appearance`: takes the value from the **first matching entry** (later entries don't override)
+- `settings`: all matching entries' settings are **merged and overlaid**; later entries override earlier ones for the same key
+
+**Rule 3 — Default fallback**
+
+States that don't match any variant with an `appearance` → use the **first appearance** under `appearances`.
+
+#### Complete Example: Leaves
+
+A leaves block with 3 properties: `waterlogged`(2) × `persistent`(2) × `distance`(7) = **28 internal states**.
+
+<details>
+<summary>Expand full configuration</summary>
 
 ```yaml
 blocks:
@@ -373,104 +541,125 @@ blocks:
           type: int
           default: 7
           range: 1~7
+
       appearances:
-        default:
+        default:                          # first appearance → default fallback
           auto_state: leaves
           model:
-            path: minecraft:block/custom/palm_leaves
-            generation:
-              parent: minecraft:block/leaves
-              textures:
-                all: minecraft:block/custom/palm_leaves
+            path: "minecraft:block/custom/palm_leaves"  # path optional for 1 texture, shown explicitly
+            textures:
+              - "minecraft:block/custom/palm_leaves"
         waterlogged:
           auto_state: waterlogged_leaves
           model:
             path: minecraft:block/custom/palm_leaves
+
       variants:
-        waterlogged=false:
+        waterlogged=false:                # → covers 14 states
           appearance: default
-        waterlogged=true:
+        waterlogged=true:                 # → covers 14 states
           appearance: waterlogged
           settings:
             resistance: 1200.0
             burnable: false
             fluid_state: water
-        distance=7,persistent=false:
-          settings:
-            is_randomly_ticking: true
 ```
 
 </details>
 
+**Matching walkthrough** — using internal state `waterlogged=true, distance=7, persistent=true` as an example:
 
-1. **Basic Waterlogged States**
+```
+Iterating variants:
+  waterlogged=false             → ❌ no match (waterlogged value differs)
+  waterlogged=true              → ✅ match → appearance=waterlogged
+                                 → inherits settings: {resistance:1200, burnable:false, fluid_state:water}
 
-I first defined the appearance models for all leaves states when waterlogged and non-waterlogged using `waterlogged=true` and `waterlogged=false`.
-
-2. **Dynamically Adjusting Block Settings**
-
-Subsequently, by configuring states such as `distance=7,persistent=false`, leaves that meet the conditions (e.g., sufficiently far from a tree and not permanently retained) can participate in random ticks, enabling natural decay behavior in the game.
-
-:::tip
-
-**Inheritance and Override Rules for Settings**
-
-A key feature is that you can configure `settings` for different variant keys, and the application of these settings follows clear priority rules: 
-- **Inheritance First**: Variants first inherit the global `settings` defined at the root of the block configuration. 
-- **Layering Next**: Then, the settings defined for the variant itself are layered on top of the inherited settings. For the same configuration item, the variant settings will override the previously inherited global settings.
-
-For example, in this case, I configured certain settings for `waterlogged=true` and other settings for `distance=7,persistent=false`. When a block's actual state matches both conditions (i.e., `waterlogged=true,distance=7,persistent=false`), it will inherit and apply all settings from both variant keys. This mechanism allows you to flexibly combine block attributes and ensure that visual effects correspond precisely to block behaviors.
-
-:::
-
-
-## Configuring Real Block ID (Optional)
-
-If you wish to specify the real block ID used on the server side, you can configure it as follows. However, please note:
-
-- **Global Uniqueness**：The specified ID must be globally unique across the entire server.
-- **Quantity Limit**：The number of IDs cannot exceed the `serverside-blocks` limit set in `config.yml`.
-
-> 💡 In most cases, you do not need to manually configure the ID. Only when you need to ensure that the internal ID remains fixed (for example, when using data packs or other systems that rely on strict ID mapping) should you set it manually.
-
-
-### ID Configuration for Single-State Blocks
-
-```yaml
-blocks:
-  default:chinese_lantern:
-    state:
-      id: 0 # Set the internal ID of this block to craftengine:custom_0.
-      auto_state: note_block
-      model:
-        path: "minecraft:block/custom/chinese_lantern"
-        generation:
-          parent: "minecraft:block/cube_column"
-          textures:
-            "end": "minecraft:block/custom/chinese_lantern_top"
-            "side": "minecraft:block/custom/chinese_lantern"
+Result:
+  appearance = waterlogged
+  settings = {resistance:1200, burnable:false, fluid_state:water}
 ```
 
-### Multi-State Block ID Configuration
+Just 2 variant entries cover all 28 internal states — using wildcard semantics, `waterlogged=false` and `waterlogged=true` each cover 14.
 
-For multi-state blocks, you only need to specify a starting ID. The plugin will automatically allocate a continuous range of IDs based on the total number of variants for that block.
+<details>
+<summary>More variants examples</summary>
 
-In the example below, this leaves block has a total of `2 (waterlogged) × 2 (persistent) × 7 (distance) = 28` variants. With the starting ID configured as 100, the plugin will automatically assign IDs 100 to 127 (a total of 28 consecutive IDs) to it.
+**Example A: Single variant constraining multiple properties**
 
 ```yaml
-blocks:
-  default:palm_leaves:
-    states:
-      id: 100 # The starting id
-      properties:
-        waterlogged:
-          type: boolean
-          default: false
-        persistent:
-          type: boolean
-          default: true
-        distance:
-          type: int
-          default: 7
-          range: 1~7
+variants:
+  waterlogged=true,facing=north:
+    appearance: waterlogged_north
 ```
+
+Only matches internal states that satisfy both `waterlogged=true` **and** `facing=north`.
+
+**Example B: Override settings only, no appearance change**
+
+```yaml
+variants:
+  powered=true:
+    settings:
+      luminance: 7
+```
+
+All `powered=true` states get luminance 7, appearance falls back to default.
+
+**Example C: Same state matching multiple variants**
+
+```yaml
+variants:
+  waterlogged=true:
+    settings:
+      resistance: 100.0
+      fluid_state: water
+  facing=up:
+    settings:
+      resistance: 50.0     # ← overrides the previous 100.0, final resistance=50.0
+      luminance: 15        # ← new addition, final luminance=15
+```
+
+If an internal state matches both `waterlogged=true` and `facing=up`, its final settings are:
+`{resistance:50.0, fluid_state:water, luminance:15}` (`resistance` overridden by the second entry).
+
+</details>
+
+### Variant Count Quick Reference
+
+When configuring multi-state blocks, knowing the variant total helps estimate ID usage:
+
+```
+Total variants = ∏ possibleValues count of each property
+
+boolean        → 2
+int(range)     → max - min + 1
+axis           → 3
+direction      → 6
+horizontal_dir → 4
+half / hinge   → 2
+slab_type      → 3
+stairs_shape   → 5
+```
+
+> E.g., `waterlogged(2) × persistent(2) × distance(7) = 28 variants`
+
+## Configuring Internal Block ID
+
+Usually unnecessary. Only configure when you need **fixed internal IDs** (e.g., for data pack compatibility).
+
+```yaml
+# Single-state: directly specify
+state:
+  id: 0
+  auto_state: note_block
+  model: ...
+
+# Multi-state: specify starting ID; subsequent variants auto-occupy a continuous range
+states:
+  id: 100      # 28 variants → occupies 100~127
+  properties: ...
+```
+
+- ID must be **globally unique**
+- Cannot exceed the `serverside-blocks` limit in `config.yml`
