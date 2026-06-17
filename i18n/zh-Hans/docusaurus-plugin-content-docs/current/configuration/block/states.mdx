@@ -62,7 +62,8 @@ auto_state: note_block
 
 插件会从预设的**状态组**中自动挑选一个空闲的原版状态。同一组内的所有状态共享关键特性（碰撞箱、渲染属性），你无需关心具体用了哪一个。
 
-:::info 可用的 auto_state 组
+:::info 
+可用的 auto_state 组
 
 | 组名 | 包含的原版方块 | 说明 |
 |:---|:---|:---|
@@ -261,7 +262,8 @@ textures:
   - "minecraft:block/custom/side"
 ```
 
-:::tip `textures` vs `generation`
+:::tip 
+`textures` vs `generation`
 
 两者都在 `model` 下，互斥：
 
@@ -294,7 +296,8 @@ model:
 
 当方块需要多种内部状态时，使用 `states` 配置节。
 
-:::tip 何时需要多状态？
+:::tip 
+何时需要多状态？
 - 方块有**朝向**（原木、柱子、楼梯……）
 - 方块可以**含水**（`waterlogged`）
 - 方块需要**多种变体**（树叶的 distance/persistent）
@@ -465,7 +468,8 @@ properties:
 
 完整属性类型列表见 [ℹ️ 属性](states/properties.mdx) 子页面。
 
-:::tip 特殊属性名
+:::tip 
+特殊属性名
 部分属性名会被插件硬编码特殊的放置行为：
 
 | 属性名 | 触发的行为 |

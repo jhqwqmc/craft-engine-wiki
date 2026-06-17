@@ -45,3 +45,78 @@
 .theme-doc-markdown > header > h1::first-letter {
   font-family: 'Segoe UI Emoji', sans-serif;
 }
+
+/* =========================================================================
+   Custom YAML syntax highlighting (high-contrast vibrant)
+   Applies ONLY to language-yaml code blocks; other languages keep the
+   default github / dracula themes. Overrides prism-react-renderer's inline
+   token styles via !important, scoped to .language-yaml.
+   ========================================================================= */
+
+/* ---- Light mode ---- */
+.language-yaml .token.key {
+  color: #6182f0 !important;          /* 蓝 — keys */
+}
+.language-yaml .token.string,
+.language-yaml .token.scalar {        /* block scalars (| >) alias to string */
+  color: #1ca6a6 !important;          /* 青蓝 — string values */
+}
+.language-yaml .token.number,
+.language-yaml .token.datetime {      /* datetime aliases number */
+  color: #ff8c42 !important;          /* 橙 — numbers / dates */
+}
+.language-yaml .token.comment {
+  color: #5c6b6b !important;          /* 灰绿 — comments */
+  font-style: italic !important;
+}
+.language-yaml .token.important {     /* &anchor / *alias */
+  color: #f06595 !important;          /* 粉 — anchors & aliases */
+  font-weight: normal !important;
+}
+.language-yaml .token.tag {           /* !tag */
+  color: #f06595 !important;
+}
+/* boolean / null / directive also carry the `important` alias — override
+   AFTER .token.important so source order wins. */
+.language-yaml .token.boolean,
+.language-yaml .token.null,
+.language-yaml .token.directive {
+  color: #c678dd !important;          /* 紫 — constants / directives */
+}
+.language-yaml .token.punctuation,
+.language-yaml .token.operator {
+  color: #8b93a7 !important;          /* 中性灰 — punctuation */
+}
+
+/* ---- Dark mode ---- */
+[data-theme='dark'] .language-yaml .token.key {
+  color: #8aa0ff !important;
+}
+[data-theme='dark'] .language-yaml .token.string,
+[data-theme='dark'] .language-yaml .token.scalar {
+  color: #4fd1d1 !important;
+}
+[data-theme='dark'] .language-yaml .token.number,
+[data-theme='dark'] .language-yaml .token.datetime {
+  color: #ffa45c !important;
+}
+[data-theme='dark'] .language-yaml .token.comment {
+  color: #7d8a8a !important;
+  font-style: italic !important;
+}
+[data-theme='dark'] .language-yaml .token.important {
+  color: #ff7eb0 !important;
+  font-weight: normal !important;
+}
+[data-theme='dark'] .language-yaml .token.tag {
+  color: #ff7eb0 !important;
+}
+[data-theme='dark'] .language-yaml .token.boolean,
+[data-theme='dark'] .language-yaml .token.null,
+[data-theme='dark'] .language-yaml .token.directive {
+  color: #d39bff !important;
+}
+[data-theme='dark'] .language-yaml .token.punctuation,
+[data-theme='dark'] .language-yaml .token.operator {
+  color: #9aa3b8 !important;
+}
