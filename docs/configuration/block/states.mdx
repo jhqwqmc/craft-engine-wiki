@@ -62,7 +62,7 @@ auto_state: note_block
 
 The plugin automatically picks an available vanilla state from a preset **state group**. All states in the same group share key characteristics (collision box, rendering properties) — you don't need to care which specific one is used.
 
-:::info 
+:::info
 Available auto_state groups
 
 | Group | Vanilla blocks used | Notes |
@@ -242,7 +242,7 @@ textures:
   - "minecraft:block/custom/side"
 ```
 
-:::tip 
+:::tip
 `textures` vs `generation`
 
 Both are under `model` and mutually exclusive:
@@ -276,7 +276,7 @@ model:
 
 When a block needs multiple internal states, use the `states` config section.
 
-:::tip 
+:::tip
 When do you need multi-state?
 - Block has **orientation** (logs, pillars, stairs…)
 - Block can be **waterlogged** (`waterlogged`)
@@ -448,7 +448,7 @@ Each `type` corresponds to a fixed set of possible values. E.g., `boolean` = `{t
 
 For a complete list of property types, see the [ℹ️ Properties](states/properties.mdx) subpage.
 
-:::tip 
+:::tip
 Special property names
 Some property names trigger hardcoded placement behaviors:
 
