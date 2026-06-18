@@ -3,12 +3,16 @@ title: 🎢 楼梯方块
 id: stairs_block
 ---
 
+**楼梯方块**行为与原版楼梯一致。放置时根据点击位置自动设置 `facing` 和 `half`。其 `shape`（直梯、内角、外角）会在相邻方块变化时自动重新计算——楼梯通过检测相邻同半高楼梯来实现"连接"效果。
+
 | 属性名称        | 属性类型                 | 是否必需 |
 |-------------|----------------------|------|
 | shape       | stairs_shape         | 是    |
 | half        | single_block_half    | 是    |
 | facing      | horizontal_direction | 是    |
 | waterlogged | boolean              | 否    |
+
+## 示例
 
 ```yaml
 blocks:
@@ -18,12 +22,6 @@ blocks:
 ```
 
 ![](/img/stairs_block.png)
-
-:::tip
-
-最多可创建 4 种新楼梯
-
-:::
 
 :::warning
 

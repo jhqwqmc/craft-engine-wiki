@@ -3,14 +3,22 @@ title: 🌿 Grass Block
 id: grass_block
 ---
 
-**Grass Block** allows you to perform bonemeal on them to grow grass and flowers. Don't forget to add tag `minecraft:dirt` and `minecraft:supports_vegetation` to your blocks otherwise grass won't survive on them.
+**Grass Block** reacts to bone meal by growing grass and flowers on and near it. Internally it resolves a vanilla [placed feature](https://minecraft.wiki/w/Placed_feature) — a set of placement rules for what vegetation to spawn and where.
+
+## Example
 
 ```yaml
 blocks:
   default:grass_block:
     behavior:
       type: grass_block
-      feature: minecraft:grass_bonemeal
+      feature: minecraft:grass_bonemeal   # the placed feature to run when bonemealed (required)
 ```
 
 ![](/img/grass_block.png)
+
+:::warning
+
+- The block **must** have the tags `minecraft:dirt` and `minecraft:supports_vegetation`, or grass and flowers spawned on it won't survive.
+
+:::

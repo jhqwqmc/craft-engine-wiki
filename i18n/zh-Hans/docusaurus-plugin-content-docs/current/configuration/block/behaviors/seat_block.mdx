@@ -5,20 +5,17 @@ id: seat_block
 
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#3B6B60">**方块实体**</Highlight>​
+<Highlight color="#3B6B60">**方块实体**</Highlight>
 
-| 属性名称   | 属性类型                 | 是否必需 |
-|--------|----------------------|------|
+**座椅方块**让玩家通过右键点击坐在上面。每个 `seats` 条目定义一个坐位和一个可选 yaw 旋转锁定角度。
+
+可选的 `facing` 属性会自动变换座椅位置——位置随方块朝向旋转，因此一组坐标适用于所有方向。
+
+| 属性名称 | 属性类型             | 是否必需 |
+|------|------------------|------|
 | facing | horizontal_direction | 否    |
 
-```yaml
-blocks:
-  default:sofa:
-    behavior:
-      type: seat_block
-      seats:
-        - 0,0,0 0   # x,y,z [角度]
-```
+## 示例
 
 ```yaml
 blocks:
@@ -26,11 +23,5 @@ blocks:
     behavior:
       type: seat_block
       seats:
-        - 0,0,0   
+        - 0,0,0 0      # x,y,z [角度] —— 角度限制玩家视角旋转，省略则可自由环顾
 ```
-
-:::tip
-x、y、z的数值会根据方块的朝向属性自动调整。
-
-您会注意到在 `0,0,0` 后面还有一个额外的 `0`。如果填写此参数，表示将限制玩家在座位中的旋转角度。您可以尝试添加/移除该参数，并在椅子上环顾四周来感受差异。
-:::

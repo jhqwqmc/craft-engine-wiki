@@ -3,16 +3,27 @@ title: 🏗️ 稳固基底方块
 id: sturdy_base_block
 ---
 
-**稳固基底方块**指需要坚固支撑面的方块类型。例如门无法在滴水石锥上放置。支撑类型包含 `full` 、`rigid` 和 `center` 三种。
+**稳固基底方块**需要在指定方向上有一个坚固的支撑面。若支撑被移除，方块会破坏。
+
+三种支撑类型可用：`full`、`rigid` 和 `center`。
+
+## 堆叠
+
+启用 `stackable` 后，方块也可通过堆叠在同类型方块上来存活——在支撑方向上最多可有 `max_height` 个连续堆叠的同类型方块。一旦连续数量超过 `max_height`，最顶端的方块会破坏。
+
+## 示例
 
 ```yaml
 blocks:
   default:pebble:
     behavior:
       type: sturdy_base_block
-      direction: down
-      support_types:
+      direction: down                # 检查支撑的方向（默认 down）
+      support_types:                 # 所需的支撑类型（默认 ["full"]）
         - full
+      stackable: false               # 是否允许堆叠在同类型方块上
+      max_height: 0                  # 堆叠时的最大高度（需 >1）
+      delay: 0                       # 检查延迟（刻），0 = 立即破坏
 ```
 
 ![](/img/sturdy_base_block.png)

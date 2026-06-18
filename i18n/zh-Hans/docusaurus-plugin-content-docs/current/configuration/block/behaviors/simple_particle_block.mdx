@@ -5,24 +5,28 @@ id: simple_particle_block
 
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#3B6B60">**方块实体**</Highlight>​
+<Highlight color="#3B6B60">**方块实体**</Highlight>
+
+**简单粒子方块**按固定间隔生成粒子效果。每个粒子条目定义效果类型、位置偏移、扩散范围、数量与速度。需要特定参数的粒子类型（物品、方块、粉末颜色等）可使用相应子字段。
+
+## 示例
 
 ```yaml
 blocks:
   default:amethyst_torch:
     behavior:
       type: simple_particle_block
-      tick_interval: 10
-      particles: # 见下方粒子参数
-        - particle: smoke
-          x: 0.5
-          y: 0.7
-          z: 0.5
-          count: 1
-          offset_x: 0
-          offset_y: 0
-          offset_z: 0
-          speed: 0
+      tick_interval: 10            # 粒子生成间隔，单位：刻（默认 10）
+      particles:
+        - particle: smoke           # 粒子类型 ID（必需）
+          x: 0.5                    # 生成位置 x（默认 0）
+          y: 0.7                    # 生成位置 y（默认 0）
+          z: 0.5                    # 生成位置 z（默认 0）
+          count: 1                  # 每次生成数量（默认 1）
+          offset_x: 0               # x 方向随机扩散（默认 0）
+          offset_y: 0               # y 方向随机扩散（默认 0）
+          offset_z: 0               # z 方向随机扩散（默认 0）
+          speed: 0                  # 粒子速度（默认 0）
 ```
 
 <div style={{textAlign: 'center'}}>

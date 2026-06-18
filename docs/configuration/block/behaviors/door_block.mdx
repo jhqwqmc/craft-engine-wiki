@@ -3,6 +3,16 @@ title: 🚪 Door Block
 id: door_block
 ---
 
+**Door Block** is a two-block-tall structure with lower and upper halves. Placing one block automatically creates both halves. The door can be opened by hand, redstone, or wind charge.
+
+- **By hand:** right-click toggles open/closed.
+- **By redstone:** opening is synced — both halves toggle together. The lower half handles the activation.
+- **By wind charge:** a wind charge hitting the lower half toggles it (only if not redstone-powered).
+
+The `hinge` side is determined automatically on placement based on which adjacent blocks have full collision shapes, mimicking vanilla door hinge logic.
+
+When one half is destroyed with the correct tool or in creative mode, the other half is removed too, so only one item drops.
+
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | open          | boolean              | yes      |
@@ -11,28 +21,24 @@ id: door_block
 | facing        | horizontal_direction | yes      |
 | hinge         | hinge                | yes      |
 
+## Example
+
 ```yaml
 blocks:
   default:palm_door:
     behavior:
       type: door_block
-      can_open_with_hand: true
-      can_open_by_wind_charge: true
+      can_open_with_hand: true        # allow right-click to toggle (default true)
+      can_open_by_wind_charge: true   # allow wind charges to toggle (default true)
       sounds:
-        open: block.wooden_door.open
-        close: block.wooden_door.close
+        open: block.wooden_door.open       # sound played when opening (optional)
+        close: block.wooden_door.close     # sound played when closing (optional)
 ```
 
 ![](/img/door_block.png)
 
-:::tip
-
-You can create at most 25 new doors
-
-:::
-
 :::warning
 
-Custom doors cannot be interacted with by villagers or zombies, even if you add the relevant block tags. This is because door opening/closing is hardcoded in Minecraft, and support for this may only be added in future versions.
+Custom doors cannot be interacted with by villagers or zombies, even with the relevant block tags. Door opening/closing is hardcoded in vanilla Minecraft and may only be supported in future versions.
 
 :::

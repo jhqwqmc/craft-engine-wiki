@@ -3,16 +3,25 @@ title: 🌊 On Liquid Block
 id: on_liquid_block
 ---
 
-**On Liquid Block** is a type of block that can only be placed on the surface of fluid sources. Currently, there are only two fluid options available (water and lava).
+**On Liquid Block** sits on the surface of a liquid source, like a lily pad. Unlike `near_liquid_block`, it requires the block directly beneath to be a liquid **source** block — flowing liquid does not count. Ice counts as a water source.
+
+When `stackable` is enabled, the block can also survive on another block of the same type.
+
+| What | How |
+|------|-----|
+| **Stacking mode** (`stackable: true`) | Survives when stacked on the same block type, even without liquid below. |
+| **Non-stacking mode** (`stackable: false`) | Requires a liquid source directly beneath. |
+
+## Example
 
 ```yaml
 blocks:
   default:reed:
     behavior:
       type: on_liquid_block
-      stackable: false
-      liquid_type:
-        - water # lava
+      liquid_type:                 # which liquids it can sit on (default ["water"])
+        - water
+      stackable: false             # allow stacking on same block type
 ```
 
 ![](/img/on_liquid_block_1.png)

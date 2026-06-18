@@ -3,17 +3,29 @@ title: 🌱 Budding Block
 id: budding_block
 ---
 
-**Budding Block** is used to generate or stimulate the growth of nearby blocks.
+**Budding Block** grows nearby blocks in stages, like budding amethyst. On each random tick, it picks a random adjacent side and checks:
+
+- If the side is **air or water**, it places the **first** block in the `blocks` list.
+- If the side is already **one of the listed blocks** (except the last stage), it promotes it to the **next** block in the list.
+
+When placing a new block, `facing` and `waterlogged` are carried over from the target position if the replacement block supports those properties.
+
+## Example
 
 ```yaml
 blocks:
   default:infected_palm_log:
     behavior:
       type: budding_block
-      growth_chance: 0.2
-      blocks:
+      growth_chance: 0.2            # chance per random tick to attempt growth (default 0.2)
+      blocks:                       # staged block ID list (required)
         - default:small_mushroom
         - default:medium_mushroom
         - default:large_mushroom
 ```
 
+:::warning
+
+This is a **random-tick** behavior — it only grows when the block receives random ticks.
+
+:::

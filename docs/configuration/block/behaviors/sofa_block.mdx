@@ -3,11 +3,15 @@ title: 🛋️ Sofa Block
 id: sofa_block
 ---
 
+**Sofa Block** behaves like a connectable seat. Its `shape` is automatically detected — straight or inner corner — based on whether another sofa of the same type sits at a right angle behind it. The `shape` updates whenever a neighboring block changes.
+
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | shape         | sofa_shape           | yes      |
 | facing        | horizontal_direction | yes      |
 | waterlogged   | boolean              | no       |
+
+## Example
 
 ```yaml
 blocks:

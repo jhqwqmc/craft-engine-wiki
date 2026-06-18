@@ -3,21 +3,37 @@ title: 🍄 Stem Block
 id: stem_block
 ---
 
+**Stem Block** grows over time like a vanilla melon or pumpkin stem. On each random tick it advances one `age` stage. Once fully mature, it picks a random horizontal direction, checks that the block below is valid, and places a fruit there — then transforms itself into the `attached_stem` block facing the fruit.
+
+Bone meal skips several age stages and, if the stem reaches max age, immediately attempts to grow the fruit.
+
+Growth only happens within a light range — between `light_requirement` (low, default 0) and `max_light_requirement` (high, default 15).
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | age           | int           | yes      |
+
+## Example
 
 ```yaml
 blocks:
   default:hami_melon_stem:
     behavior:
       type: stem_block
-      fruit: default:hami_melon
-      attached_stem: default:attached_hami_melon_stem
-      fruit_bottom_block_tags: []
-      fruit_bottom_blocks: 
+      fruit: default:hami_melon                              # the fruit block this stem produces (required)
+      attached_stem: default:attached_hami_melon_stem        # the attached stem block to become (required)
+      light_requirement: 0                                   # minimum light level for growth (default 0)
+      max_light_requirement: 15                            # maximum light level for growth (default 15)
+      fruit_bottom_blocks:                                   # blocks the fruit can sit on (whitelist)
         - minecraft:farmland
         - minecraft:dirt
+      fruit_bottom_block_tags: []                            # block tags the fruit can sit on (whitelist)
 ```
 
 ![](/img/stem_block.png)
+
+:::info
+
+`fruit_bottom_blocks` and `fruit_bottom_block_tags` use a **whitelist** — the fruit only grows if the block below the target position matches. An empty list means no block qualifies. This differs from bush_block which supports both blacklist and whitelist modes.
+
+:::

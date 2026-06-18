@@ -3,12 +3,17 @@ title: 🪣 Liquid Flowable Block
 id: liquid_flowable_block
 ---
 
-**Liquid Flowable Block** enables blocks to be destroyed by fluids
+**Liquid Flowable Block** can be washed away by water or lava, like grass or torches. When liquid flows into it, the block is destroyed and replaced with the fluid.
+
+- **Water:** the block drops as an item if `drop_item` is `true`.
+- **Lava:** the block is always destroyed without dropping items (lava burns them); a lava conversion effect plays instead.
+
+## Example
 
 ```yaml
 blocks:
   default:amethyst_torch:
     behavior:
       type: liquid_flowable_block
-      drop_item: true
+      drop_item: true        # drop items when washed away by water (default true)
 ```

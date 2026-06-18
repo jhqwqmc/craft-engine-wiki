@@ -5,25 +5,38 @@ id: simple_storage_block
 
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+<Highlight color="#3B6B60">**Block Entity**</Highlight>
+
+**Simple Storage Block** is a chest-like container with a configurable number of rows. Right-click to open its GUI and store items. A built-in 0–15 comparator signal reflects how full the inventory is.
+
+The optional `open` property tracks whether the GUI is open — useful for switching to an "open" visual state in your block model.
 
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | open          | boolean       | no       |
+
+## Example
 
 ```yaml
 blocks:
   default:safe_block:
     behavior:
       type: simple_storage_block
-      title: "Safe Block"
-      rows: 1 # 1~6
+      title: "Safe Block"               # GUI title, supports MiniMessage formatting (default "<lang:container.chest>")
+      rows: 1                           # number of rows, 1~6 (default 1)
+      has_signal: true                  # output comparator signal proportional to fill level (default true)
+      allow_input: true                 # allow putting items in (default true)
+      allow_output: true                # allow taking items out (default true)
+      data_key: "craftengine:simple_storage"   # NBT key for persistent data (default "craftengine:simple_storage")
       sounds:
-        open: minecraft:block.iron_trapdoor.open
-        close: minecraft:block.iron_trapdoor.close
-      has_signal: true # Detects redstone signals
-      allow_input: true # Permits item input
-      allow_output: true # Permits item output
+        open: minecraft:block.iron_trapdoor.open    # sound played when GUI opens (optional)
+        close: minecraft:block.iron_trapdoor.close   # sound played when GUI closes (optional)
 ```
 
 ![](/img/simple_storage_block.png)
+
+:::info
+
+The block exposes its inventory to hoppers and other vanilla container interactions. `allow_input` and `allow_output` control both manual and hopper access.
+
+:::

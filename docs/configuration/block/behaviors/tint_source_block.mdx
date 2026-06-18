@@ -5,15 +5,19 @@ id: tint_source_block
 
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+<Highlight color="#3B6B60">**Block Entity**</Highlight>
 
-Stores the item in hand as a tint source into the block entity, providing coloring for the block entity's render elements.
+**Tint Source Block** stores an item as a tint provider for the block's render elements, allowing the block's color to be dynamically tinted based on the stored item.
+
+The stored item is returned when the block is broken if `drop_item` is enabled.
+
+## Example
 
 ```yaml
 blocks:
   default:copper_coil:
     behavior:
       type: tint_source_block
-      # Whether to drop the stored item when the block is destroyed
-      drop_item: true
+      drop_item: true             # whether to drop the stored item when destroyed (default true)
+      data_key: "craftengine:tint_source"   # NBT key for persistent data (default "craftengine:tint_source")
 ```

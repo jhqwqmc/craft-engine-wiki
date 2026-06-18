@@ -3,22 +3,36 @@ title: 🏢 多层方块
 id: multi_high_block
 ---
 
-| 属性名称 | 属性类型 | 是否必需 |
-|------|------|------|
-| 自定义  | int  | 是    |
+**多层方块**在放置时堆叠自身的多个副本，形成一个高耸的整体结构——就像门或高草丛。段数由一个 `int` 属性控制，其 `range`（max − min）决定堆叠高度。
 
-**多层方块**根据指定的 `int` 类型的属性的范围差决定方块高度。
+堆叠是相连的：若任一中段失去上方或下方的相邻方块，整列都会破坏。顶端或底端失去唯一的相邻方块时，整列同样破坏。
+
+用正确的工具破坏任一段，或在创造模式下，底端也会被移除——确保整个结构正确掉落。
+
+若上方空间不够或超出建筑高度上限，放置会失败。
+
+| 属性名称 | 属性类型                 | 是否必需 |
+|------|----------------------|------|
+| 自定义  | int           | 是    |
+
+## 示例
 
 ```yaml
 blocks:
   default:multi_high_block:
     states:
       properties:
-        height:
+        height:                   # 声明一个自定义 int 属性
           type: int
           default: 0
-          range: 0~2
+          range: 0~2              # range 决定段数：0=底部，1=中部，2=顶部
     behavior:
       type: multi_high_block
-      property: height
+      property: height            # 用于控制高度的 int 属性名（必需）
 ```
+
+:::info
+
+属性名可自定——`property` 告诉行为使用哪一个。range 的 `min` 为底段，`max` 为顶段。至少需要 2 个值的 range（`max > min`）才能形成堆叠。
+
+:::

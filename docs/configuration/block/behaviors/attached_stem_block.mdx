@@ -3,18 +3,27 @@ title: 🍄 Attached Stem Block
 id: attached_stem_block
 ---
 
+**Attached Stem Block** connects a stem to its fruit, like a vanilla attached pumpkin or melon stem. It faces the fruit block and continuously validates that the fruit is still there. When the fruit is broken, the attached stem automatically reverts to the regular stem block (with its `age` set to the maximum, so it won't regrow immediately).
+
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | facing        | horizontal_direction | yes      |
+
+## Example
 
 ```yaml
 blocks:
   default:attached_hami_melon_stem:
     behavior:
       type: attached_stem_block
-      fruit: default:hami_melon
-      stem: default:hami_melon_stem
+      fruit: default:hami_melon          # the fruit block this stem is attached to (required)
+      stem: default:hami_melon_stem      # the regular stem block to revert to when the fruit breaks (required)
 ```
 
 ![](/img/attached_stem_block.png)
 
+:::info
+
+`fruit` and `stem` are both **required**. The `stem` block should have an `age` property — when reverting, the behavior sets age to its max value so the stem appears fully grown and won't try to attach again immediately.
+
+:::

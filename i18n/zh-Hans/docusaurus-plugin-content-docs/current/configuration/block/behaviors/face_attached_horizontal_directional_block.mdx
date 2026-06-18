@@ -3,21 +3,34 @@ title: ➡️ 水平面定向附着方块
 id: face_attached_horizontal_directional_block
 ---
 
-| 属性名称   | 属性类型                 | 是否必需 |
-|--------|----------------------|------|
-| face   | anchor_type          | 是    |
+**水平面定向附着方块**附着在另一个方块的面（地板、天花板或墙面）上，类似按钮或拉杆。若支撑面被移除，方块会自动破坏。
+
+放置时在玩家朝向的邻近方块面中扫描，选择第一个有效的面附着。若无有效面，放置会被取消。
+
+附着行为由 `blacklist` 和方块/标签列表控制：
+
+- **黑名单模式**（`blacklist: true`，默认）：可附着到任何坚固的面，**除了**列表中的。
+- **白名单模式**（`blacklist: false`）：**只能**附着到列表中的面。
+
+若在黑名单模式下不指定任何列表，方块可附着到任意坚固面。
+
+| 属性名称 | 属性类型             | 是否必需 |
+|------|------------------|------|
+| face | anchor_type       | 是    |
 | facing | horizontal_direction | 是    |
+
+## 示例
 
 ```yaml
 blocks:
   default:palm_button:
     behavior:
       type: face_attached_horizontal_directional_block
-      blacklist: true
-      attached_blocks:
+      blacklist: true                   # true = 黑名单，false = 白名单（默认 true）
+      attached_blocks:                  # 要检查的方块列表（可选）
         - custom:xxx
         - minecraft:stone
-      attached_block_tags:
+      attached_block_tags:              # 要检查的方块标签列表（可选）
         - minecraft:dirt
         - minecraft:farmland
 ```

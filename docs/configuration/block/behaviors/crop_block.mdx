@@ -3,21 +3,30 @@ title: 🌽 Crop Block
 id: crop_block
 ---
 
+**Crop Block** grows through age stages on random ticks, like wheat or potatoes. Growth only happens within a light range — between `light_requirement` (low) and `max_light_requirement` (high). Bone meal boosts growth by a configurable amount.
+
+`grow_speed` determines how fast the crop matures. The integer part is added to `age` every random tick; the fractional part gives a bonus +1 with that probability. For example `0.25` means 25% chance of +1 age per tick.
+
+`spawn_light_requirement` and `max_spawn_light_requirement` are separate thresholds used only during world generation — the crop won't spawn in chunks outside this light range.
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | age           | int           | yes      |
 
-**Crop Block** is a type of block that grows over time. When receiving random ticks, it has a chance to advance to the next growth stage. However, if the plant lacks sufficient light, it will either stop growing or drop as an item. 
+## Example
 
 ```yaml
 blocks:
   default:ender_pearl_flower:
     behavior:
       type: crop_block
-      grow_speed: 0.25  # 0~1, the chance of growing on random tick
-      light_requirement: 9  # light requirement for this crop
-      is_bone_meal_target: true # default true
-      bone_meal_age_bonus:
+      grow_speed: 0.25                # age increase per random tick (default 0.125)
+      light_requirement: 9            # minimum light to grow
+      max_light_requirement: 15       # maximum light to grow (default 15)
+      spawn_light_requirement: 9      # minimum light to spawn during world gen (defaults to light_requirement)
+      max_spawn_light_requirement: 15 # maximum light to spawn during world gen (defaults to max_light_requirement)
+      is_bone_meal_target: true       # whether bone meal works on this crop (default true)
+      bone_meal_age_bonus:            # age to add on bone meal, supports ranges (default 1)
         type: uniform
         min: 1
         max: 3

@@ -3,15 +3,28 @@ title: 💎 Drop Experience Block
 id: drop_experience_block
 ---
 
+**Drop Experience Block** drops experience orbs when broken. The amount and conditions are fully configurable — you can gate XP behind a correct tool, a specific enchantment, or any other condition.
+
+If the block requires a correct tool (via [require correct tools](../settings.mdx#require_correct_tools)) and the player breaks it with the wrong one, no experience is dropped.
+
+## Example
+
 ```yaml
 blocks:
   default:topaz_ore:
     behavior:
       type: drop_exp_block
-      amount: 3~7
+      amount: 3~7                        # XP amount, supports ranges like "3~7" or fixed values (default 0)
       conditions:
-        type: enchantment
+        type: enchantment                # condition: only drop XP when not using Silk Touch
         predicate: minecraft:silk_touch<=0
 ```
 
 ![](/img/drop_experience_block.png)
+
+:::info
+
+`amount` uses a **number provider** — it accepts fixed integers (`5`), ranges (`3~7` for a random value between 3 and 7), or expressions.
+`conditions` is optional; omit it to always drop XP. When present, all conditions must be met for XP to drop.
+
+:::

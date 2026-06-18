@@ -3,12 +3,24 @@ title: 🔄 Change Over Time Block
 id: change_over_time_block
 ---
 
+**Change Over Time Block** slowly transforms into another block on random ticks, like copper oxidation. Each random tick has a `change_speed` chance of converting the block to `next_block`.
+
+The original block's properties are carried over, except for those listed in `excluded_properties` — these stay at the target block's defaults.
+
+## Example
+
 ```yaml
 blocks:
   default:iron_block:
     behavior:
       type: change_over_time_block
-      change_speed: 0.05
-      next_block: default:oxidized_iron_block
-      excluded_properties: []  # properties to ignore when transforming
+      change_speed: 0.057               # chance per random tick to transform (default 0.057)
+      next_block: default:oxidized_iron_block   # the block to become (required)
+      excluded_properties: []           # properties to skip copying from the original (default empty)
 ```
+
+:::warning
+
+This is a **random-tick** behavior — it only transforms when the block receives random ticks.
+
+:::

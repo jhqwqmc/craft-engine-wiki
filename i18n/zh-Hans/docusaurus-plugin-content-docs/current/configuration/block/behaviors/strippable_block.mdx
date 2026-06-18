@@ -3,15 +3,23 @@ title: 🪓 可剥离方块
 id: strippable_block
 ---
 
-**可剥离方块**是一种可用斧右键点击剥离的方块类型，主要用于树木原木。
+**可剥离方块**可用斧右键剥离，就像原版原木。它会转换为 `stripped` 方块，同时保留原方块的属性值——除了 `excluded_properties` 中列出的属性，这些将保持目标方块的默认值。
+
+## 示例
 
 ```yaml
 blocks:
   default:palm_log:
     behavior:
       type: strippable_block
-      stripped: default:stripped_palm_log
-      excluded_properties: [] # 转变时忽略的属性
+      stripped: default:stripped_palm_log   # 剥离后转化成的方块（必需）
+      excluded_properties: []               # 转化时不从原方块复制的属性（默认空列表）
 ```
 
 ![](/img/strippable_block.png)
+
+:::info
+
+当剥离变体的属性范围与原方块不同时，`excluded_properties` 很有用。例如，如果原木和去皮原木都有 `axis`，但去皮原木总是默认为 `y`，你可以排除 `axis` 以免意外复制 `x` 或 `z`。
+
+:::

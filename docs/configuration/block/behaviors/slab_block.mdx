@@ -3,11 +3,16 @@ title: ➖️ Slab Block
 id: slab_block
 ---
 
+**Slab Block** behaves like a vanilla slab. Placing it on the bottom or top half of a block creates a bottom or top slab. Placing the same slab on an existing single slab converts both into a double slab (full block).
+
+Double slabs cannot be waterlogged. Liquid cannot flow into a double slab.
+
 | Property Name | Property Type     | Required |
 |---------------|-------------------|----------|
 | type          | slab_type         | yes      |
-| half          | single_block_half | yes      |
 | waterlogged   | boolean           | no       |
+
+## Example
 
 ```yaml
 blocks:
@@ -17,9 +22,3 @@ blocks:
 ```
 
 ![](/img/slab_block.png)
-
-:::tip
-
-You can create at most 5 new slabs
-
-:::

@@ -3,24 +3,34 @@ title: 🖼️ Item Frame Block
 id: item_frame_block
 ---
 
+**Item Frame Block** is a high-performance replacement for vanilla item frames. It stores and displays a single item.
+
+- **Right-click** with an item in hand to place it.
+- **Right-click** with an empty main hand to take the item back.
+- **Sneak + right-click** to rotate the displayed item through 8 directions.
+
+The comparator signal equals `rotation + 1` when an item is present, and `0` when empty — so a freshly placed frame with no rotation emits signal **1**.
+
+**Special Thanks: This feature was developed by [jhqwqmc](https://github.com/jhqwqmc/) with sponsorship from the [SIMMC server](https://simmc.cn/).**
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | facing        | direction     | yes      |
 
-**Item Frame Block** is a type of block used for storing and displaying items. Used to replace the vanilla item frame, providing better performance. \
-**Special Thanks: This feature was developed by [jhqwqmc](https://github.com/jhqwqmc/) with sponsorship from the [SIMMC server](https://simmc.cn/).**
+## Example
 
 ```yaml
 blocks:
   default:item_frame_block:
     behavior:
       type: item_frame_block
-      position: 0,0,0
-      glow: false
-      invisible: false
-      render_map_item: true # Rendering map items is supported, but this requires additional performance overhead.
+      position: 0,0,0                  # display-item position offset (default 0,0,0)
+      glow: false                      # whether the item glows
+      invisible: false                 # whether the frame border is invisible
+      render_map_item: true            # render maps in the frame (default true, has performance cost)
+      data_key: "craftengine:item_frame"   # NBT key for persistent data (default "craftengine:item_frame")
       sounds:
-        put: entity.item_frame.add_item
-        take: entity.item_frame.remove_item
-        rotate: entity.item_frame.rotate_item
+        put: entity.item_frame.add_item       # sound when placing an item (optional)
+        take: entity.item_frame.remove_item   # sound when taking an item (optional)
+        rotate: entity.item_frame.rotate_item  # sound when rotating an item (optional)
 ```

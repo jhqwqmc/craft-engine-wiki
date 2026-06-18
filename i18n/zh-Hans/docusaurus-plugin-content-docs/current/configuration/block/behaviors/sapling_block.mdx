@@ -3,26 +3,30 @@ title: 🌴 树苗方块
 id: sapling_block
 ---
 
-| 属性名称  | 属性类型 | 是否必需 |
-|-------|------|------|
+**树苗方块**通过 `stage` 等级在随机刻中生长，最终生成完整的树木（通过 configured feature）。仅在一定光照范围内生长——`light_requirement`（下限，默认 9）与 `max_light_requirement`（上限，默认 15）之间。
+
+骨粉可立即推进一个阶段（绕过光照检查）。骨粉是否"成功"产生粒子效果取决于 `bone_meal_success_chance`——无论粒子如何，阶段始终会推进。
+
+| 属性名称 | 属性类型 | 是否必需 |
+|------|------|------|
 | stage | int  | 是    |
 
-当指定 `configured_feature` 后，**树苗方块**可在随机刻事件中生长为指定的树木配置。
+## 示例
 
 ```yaml
 blocks:
   default:palm_sapling:
     behavior:
       type: sapling_block
-      feature: default:palm_tree
-      bone_meal_success_chance: 0.45
-      grow_speed: 0.7  # (0-1)
+      feature: default:palm_tree                # 完全成熟时生成的 configured feature（必需）
+      light_requirement: 9                      # 生长所需最低光照（默认 9）
+      max_light_requirement: 15                 # 生长所需最高光照（默认 15）
+      grow_speed: 0.7                           # 每随机刻推进阶段的概率（默认约 0.143）
+      bone_meal_success_chance: 0.45            # 骨粉产生成功粒子的概率（默认 0.45）
 ```
 
 ![](/img/sapling_block.png)
 
 :::tip
-
-树苗的生长阶段值越多，所需的生长时间越长。
-
+树苗的阶段值越多，所需生长时间越长——每个阶段都需要自己的随机刻。
 :::

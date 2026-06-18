@@ -3,24 +3,28 @@ title: 🟨 Falling Block
 id: falling_block
 ---
 
-**Falling Block** will become a falling entity when there are no blocks beneath it.
+**Falling Block** becomes a falling entity when there are no blocks beneath it, like sand or gravel. After placement it schedules a check in 2 ticks; if the block below is free and above the minimum world height, a falling entity spawns with the block's appearance.
+
+When both `hurt_amount` and `max_hurt` are positive, the falling entity damages entities it hits.
+
+## Example
 
 ```yaml
 blocks:
   default:falling_block_example:
     behavior:
       type: falling_block
-      hurt_amount: -1 # Optional
-      max_hurt: -1 # Optional
-      sounds: # Optional
-        land: minecraft:block.anvil.land
-        destroy: minecraft:block.anvil.destroy
+      hurt_amount: -1             # damage per hit, -1 = disabled (default -1)
+      max_hurt: -1                # max entities hurt per fall, -1 = disabled (default -1)
+      sounds:
+        land: minecraft:block.anvil.land       # sound played on landing (optional)
+        destroy: minecraft:block.anvil.destroy  # sound played on break (optional)
 ```
 
 ![](/img/falling_block.png)
 
 :::info
 
-The options `hurt_amount` and `max_hurt` are optional, but they must be configured in pair. Their effect is to determine the damage inflicted on entities when struck by a falling block.
+`hurt_amount` and `max_hurt` must be configured together — both need to be positive (`> 0`) for the falling block to hurt entities. If either is `-1` or `0`, no damage is dealt.
 
 :::

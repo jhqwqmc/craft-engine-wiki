@@ -3,14 +3,28 @@ title: 💦 混凝土粉末方块
 id: concrete_powder_block
 ---
 
-**混凝土粉末方块**是一种遇水会硬化的方块类型。
+**混凝土粉末方块**遇水会硬化成固体方块。硬化发生在以下情况：
+
+- **放置时**——若直接放在水中或水旁。
+- **下落后**——若落在水中或水旁（常与 [`falling_block`](falling_block.mdx) 组合使用）。
+- **相邻更新时**——若水流到已放置的粉末方块旁。
+
+当任意一侧检测到水时，方块会触发 `BlockFormEvent` 并用 `solid_block` 替换自身。
+
+## 示例
 
 ```yaml
 blocks:
   default:gunpowder_block:
     behavior:
       type: concrete_powder_block
-      solid_block: default:solid_gunpowder_block
+      solid_block: default:solid_gunpowder_block   # 硬化后转化成的方块（必需）
 ```
 
 ![](/img/concrete_powder_block.png)
+
+:::info
+
+`solid_block` 接受任意有效的方块 ID 或完整方块状态（如 `minecraft:stone[axis=y]`）。此字段为**必需**——省略则无法硬化。
+
+:::

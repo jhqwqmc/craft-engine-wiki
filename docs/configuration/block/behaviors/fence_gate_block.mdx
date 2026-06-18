@@ -3,6 +3,10 @@ title: 🪵 Fence Gate Block
 id: fence_gate_block
 ---
 
+**Fence Gate Block** behaves like a vanilla fence gate. It opens and closes when toggled by hand, redstone, or wind charge. When opening by hand, the gate swings away from the player — if the player is behind it, `facing` flips automatically.
+
+The `in_wall` property is auto-detected: it turns on when `minecraft:walls` blocks sit on both sides perpendicular to the gate's facing direction.
+
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | open          | boolean              | yes      |
@@ -10,22 +14,18 @@ id: fence_gate_block
 | in_wall       | boolean              | yes      |
 | facing        | horizontal_direction | yes      |
 
+## Example
+
 ```yaml
 blocks:
   default:palm_fence_gate:
     behavior:
       type: fence_gate_block
-      can_open_with_hand: true
-      can_open_by_wind_charge: true
+      can_open_with_hand: true        # allow right-click to toggle (default true)
+      can_open_by_wind_charge: true   # allow wind charges to toggle (default true)
       sounds:
-        open: block.fence_gate.open
-        close: block.fence_gate.close
+        open: block.fence_gate.open        # sound played when opening (optional)
+        close: block.fence_gate.close      # sound played when closing (optional)
 ```
 
 ![](/img/fence_gate_block.png)
-
-:::tip
-
-You can create at most 12 new fence gates
-
-:::

@@ -5,20 +5,17 @@ id: seat_block
 
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+<Highlight color="#3B6B60">**Block Entity**</Highlight>
+
+**Seat Block** lets players sit on it by right-clicking. Each `seats` entry defines a sitting position and an optional yaw rotation lock.
+
+The optional `facing` property automatically transforms seat positions — positions rotate with the block's facing direction, so one set of coordinates works for all orientations.
 
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | facing        | horizontal_direction | no       |
 
-```yaml
-blocks:
-  default:sofa:
-    behavior:
-      type: seat_block
-      seats:
-        - 0,0,0 0   # x,y,z [angle]
-```
+## Example
 
 ```yaml
 blocks:
@@ -26,11 +23,5 @@ blocks:
     behavior:
       type: seat_block
       seats:
-        - 0,0,0   
+        - 0,0,0 0      # x,y,z [yaw] — yaw limits the player's view rotation, omit for free look
 ```
-
-:::tip
-The values of x, y, and z are automatically adjusted based on the block's facing property.
-
-You will notice that there is an additional `0` after `0,0,0`. If you fill in this parameter, it means the player's rotation angle in the seat is limited. You can try adding/removing this parameter and looking around in the chair to feel the difference.
-:::

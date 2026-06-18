@@ -3,21 +3,32 @@ title: 🪻 灌木方块
 id: bush_block
 ---
 
-**灌木方块**是一种必须在特定支撑方块上生长的行为类型。若下方方块被破坏或处于无效位置，该方块将会破坏或掉落为物品。
+**灌木方块**只能生长在特定的支撑方块上——类似花或树苗。若支撑方块被破坏或无效，灌木即会破坏。
+
+可选择堆叠：开启 `stackable` 后，多个同类型灌木可互相堆叠，最多 `max_height` 层。堆叠的灌木会计算下方的同类型方块数量；若过多则破坏。
+
+放置后立即检查支撑。若 `delay` 设为正值，检查会延迟相应刻数，而非每次相邻更新时立即执行——适用于需要在短暂方块替换过程中存活的灌木。
+
+| 模式 | 说明 |
+|------|------|
+| **黑名单模式**（`blacklist: true`） | 灌木可生长在**除了**列表中以外的任何方块上。 |
+| **白名单模式**（`blacklist: false`） | 灌木**只能**生长在列表中的方块上。 |
+
+## 示例
 
 ```yaml
 blocks:
   default:fairy_flower:
     behavior:
       type: bush_block
-      stackable: false
-      blacklist: false # 使用黑名单模式
-      max_height: 0 # 大于 1 时启用
-      delay: 0
-      bottom_blocks:
+      blacklist: false                # true = 黑名单，false = 白名单
+      stackable: false                # 是否允许同类型灌木向上堆叠
+      max_height: 0                   # 最大堆叠高度，仅在 stackable 为 true 时生效（需 >1）
+      delay: 0                        # 检查延迟（刻），0 = 支撑无效时立即破坏
+      bottom_blocks:                  # 要检查的特定方块（可选）
         - custom:xxx
         - minecraft:stone
-      bottom_block_tags:
+      bottom_block_tags:              # 要检查的方块标签（可选）
         - minecraft:dirt
         - minecraft:farmland
 ```

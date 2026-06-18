@@ -3,21 +3,32 @@ title: 🪻 Bush Block
 id: bush_block
 ---
 
-**Bush Block** is a type of block behavior that must grow on specific supporting blocks. If the block beneath it is destroyed, or if it is found to be in an invalid position, it will either break or drop as an item.
+**Bush Block** can only survive on specific blocks directly beneath it — like flowers or saplings. If the supporting block is destroyed or invalid, the bush breaks.
+
+It can optionally stack: when `stackable` is enabled, multiple bushes of the same type can pile on top of each other up to `max_height`. A stacked bush counts the same-type blocks below it; if there are too many it breaks.
+
+Immediately after placement the block checks its support. If `delay` is set to a positive value, the check is postponed by that many ticks instead of running instantly on every neighbor update — useful for bushes that should survive brief block-replacement transitions.
+
+| What | How |
+|------|-----|
+| **Blacklist mode** (`blacklist: true`) | The bush can grow on any block **except** those listed. |
+| **Whitelist mode** (`blacklist: false`) | The bush can **only** grow on blocks listed. |
+
+## Example
 
 ```yaml
 blocks:
   default:fairy_flower:
     behavior:
       type: bush_block
-      blacklist: false # use blacklist mode
-      stackable: false
-      max_height: 0 # max stack height
-      delay: 0
-      bottom_blocks:
+      blacklist: false                # true = blacklist, false = whitelist
+      stackable: false                # allow same-type stacking on top of each other
+      max_height: 0                   # max stack height, only meaningful when stackable is true (>1 required)
+      delay: 0                        # check delay in ticks, 0 = instant break on invalid support
+      bottom_blocks:                  # specific blocks to check (optional)
         - custom:xxx
         - minecraft:stone
-      bottom_block_tags:
+      bottom_block_tags:              # block tags to check (optional)
         - minecraft:dirt
         - minecraft:farmland
 ```

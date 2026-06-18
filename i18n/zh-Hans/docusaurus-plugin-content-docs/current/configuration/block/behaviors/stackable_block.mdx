@@ -3,20 +3,28 @@ title: 🥪 可堆叠方块
 id: stackable_block
 ---
 
+**可堆叠方块**允许你将相同方块放置在已有方块上来增加数量，就像海泡菜或蜡烛。用配置的 `items` 之一右键点击，方块内部计数会递增，上限为对应 int 属性的 `max` 值。每个计数等级在方块模型中可有独立的视觉状态。
+
 | 属性名称 | 属性类型 | 是否必需 |
 |------|------|------|
 | 自定义  | int  | 是    |
 
-**可堆叠方块**允许使用指定物品堆叠该方块，将其转换为数量更多的形态。
+## 示例
 
 ```yaml
 blocks:
   default:pebble:
     behavior:
       type: stackable_block
-      property: pebble  # 用于表示数量的属性名称
-      items:
+      property: pebble           # 用于追踪堆叠数量的 int 属性名（默认 "amount"）
+      items:                     # 可用于增加堆叠的物品（必需）
         - default:pebble
 ```
 
 ![](/img/stackable_block.png)
+
+:::info
+
+堆叠上限为属性的 `max` 值——放置足够多物品后，`max` 即为最高视觉/功能状态。属性名称可自定，`property` 告诉行为使用哪一个。
+
+:::

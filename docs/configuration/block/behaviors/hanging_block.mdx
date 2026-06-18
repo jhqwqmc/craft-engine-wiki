@@ -3,18 +3,31 @@ title: 🚟 Hanging Block
 id: hanging_block
 ---
 
-**Hanging Block** is a type of block that must be attached beneath another block. If the block above it is destroyed, the hanging block itself will also break.
+**Hanging Block** attaches to the underside of another block, like a stalactite. If the supporting block above is removed, the hanging block breaks.
+
+| What | How |
+|------|-----|
+| **Blacklist mode** (`blacklist: true`) | The block can hang from any block **except** those listed. |
+| **Whitelist mode** (`blacklist: false`) | The block can **only** hang from blocks listed. |
+
+It can optionally stack: when `stackable` is enabled, hanging blocks of the same type can chain downward from each other up to `max_height`.
+
+## Example
 
 ```yaml
 blocks:
   default:stalactites:
     behavior:
       type: hanging_block
-      stackable: false
-      blacklist: false # use blacklist mode
-      above_block_tags: []
-      above_blocks: []
-      delay: 0
+      blacklist: false                # true = blacklist, false = whitelist
+      stackable: false                # allow same-type chaining downward
+      max_height: 0                   # max chain length, only meaningful when stackable is true (>1 required)
+      delay: 0                        # check delay in ticks, 0 = instant break
+      above_blocks:                   # specific blocks to check above (optional)
+        - custom:xxx
+        - minecraft:stone
+      above_block_tags:               # block tags to check above (optional)
+        - minecraft:dirt
 ```
 
 ![](/img/hanging_block.png)

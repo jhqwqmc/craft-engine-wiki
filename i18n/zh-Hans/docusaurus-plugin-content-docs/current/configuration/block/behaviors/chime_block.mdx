@@ -3,7 +3,9 @@ title: 🔔 震响方块
 id: chime_block
 ---
 
-**震响方块**被弹射物击中会发出声音。
+**震响方块**被弹射物（箭、三叉戟、火球等）击中时发出声音，类似紫水晶块。
+
+## 示例
 
 ```yaml
 blocks:
@@ -11,6 +13,5 @@ blocks:
     behavior:
       type: chime_block
       sounds:
-        projectile_hit: minecraft:block.amethyst_block.chime
-        # 或者使用 `chime: minecraft:block.amethyst_block.chime`
+        chime: minecraft:block.amethyst_block.chime   # 被弹射物击中时播放的声音（可选）
 ```

@@ -3,15 +3,23 @@ title: 🪓 Strippable Block
 id: strippable_block
 ---
 
-**Strippable Block** is a type of block that can be stripped by right-clicking with an axe, and it is primarily used for tree logs.
+**Strippable Block** can be stripped by right-clicking with an axe, like vanilla logs. It transforms into the `stripped` block while keeping the original block's property values — except for those listed in `excluded_properties`, which are left at the target block's defaults.
+
+## Example
 
 ```yaml
 blocks:
   default:palm_log:
     behavior:
       type: strippable_block
-      stripped: default:stripped_palm_log
-      excluded_properties: []  # properties to ignore when transforming
+      stripped: default:stripped_palm_log   # the block to transform into when stripped (required)
+      excluded_properties: []               # properties to skip copying from the original (default empty)
 ```
 
 ![](/img/strippable_block.png)
+
+:::info
+
+`excluded_properties` is useful when the stripped variant has a different property range than the original. For example, if both log and stripped log have `axis` but the stripped log always defaults to `y`, you would exclude `axis` to avoid accidentally copying `x` or `z`.
+
+:::

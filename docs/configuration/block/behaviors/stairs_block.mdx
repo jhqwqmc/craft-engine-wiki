@@ -3,12 +3,16 @@ title: 🎢 Stairs Block
 id: stairs_block
 ---
 
+**Stairs Block** behaves like vanilla stairs. On placement it sets the correct `facing` and `half` based on where you click. Its `shape` (straight, inner corner, outer corner) is automatically recalculated whenever neighboring blocks change — the stairs "connect" visually by detecting adjacent stairs of the same half.
+
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | shape         | stairs_shape         | yes      |
 | half          | single_block_half    | yes      |
 | facing        | horizontal_direction | yes      |
 | waterlogged   | boolean              | no       |
+
+## Example
 
 ```yaml
 blocks:
@@ -19,14 +23,8 @@ blocks:
 
 ![](/img/stairs_block.png)
 
-:::tip
-
-You can create at most 4 new stairs
-
-:::
-
 :::warning
 
-Custom stairs cannot seamlessly connect with vanilla stairs automatically due to Minecraft's hardcoded stair behavior.
+Custom stairs cannot seamlessly connect with vanilla stairs due to Minecraft's hardcoded stair behavior.
 
 :::

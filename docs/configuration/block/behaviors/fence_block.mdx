@@ -3,6 +3,10 @@ title: 🚧 Fence Block
 id: fence_block
 ---
 
+**Fence Block** connects to neighboring blocks in all four horizontal directions. The `north`/`east`/`south`/`west` properties update automatically — they turn on when the adjacent block is a sturdy face, a fence with a matching `connectable_block_tag`, or a fence gate.
+
+If `can_leash` is enabled, right-clicking with a lead ties the lead to the fence.
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | north         | boolean       | yes      |
@@ -10,13 +14,15 @@ id: fence_block
 | south         | boolean       | yes      |
 | west          | boolean       | yes      |
 
+## Example
+
 ```yaml
 blocks:
   default:palm_fence:
     behavior:
       type: fence_block
-      connectable_block_tag: minecraft:wooden_fences
-      can_leash: true
+      connectable_block_tag: minecraft:wooden_fences   # tag for connecting to other fences (default minecraft:wooden_fences)
+      can_leash: true                                  # whether leads can be attached
 ```
 
 ![](/img/fence_block.png)

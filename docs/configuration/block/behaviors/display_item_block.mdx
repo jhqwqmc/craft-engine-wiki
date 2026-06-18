@@ -5,21 +5,30 @@ id: display_item_block
 
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+<Highlight color="#3B6B60">**Block Entity**</Highlight>
 
-Used to display the item on this block
+**Display Item Block** shows a single dropped item on the block. Right-click with an item in hand to place it; right-click with an empty hand to take it back. Only one item can be displayed at a time.
+
+A comparator outputs signal **15** when an item is present and **0** when empty (if `has_signal` is enabled).
+
+The optional `facing` property rotates the displayed item to face a specific direction.
+
+| Property Name | Property Type | Required | Used For                                   |
+|---------------|---------------|----------|--------------------------------------------|
+| facing        | direction     | no       | Rotates the displayed item to face a side. |
+
+## Example
 
 ```yaml
 blocks:
   default:display_item_block:
     behavior:
       type: display_item_block
-      has_signal: true
-      data_key: "craftengine:display_item"
-      position: "0.5,0.5,0.5"
+      position: "0.5,0.5,0.5"          # display-item position offset (default 0.5,0.5,0.5)
+      has_signal: true                  # comparator signal: 15 if item present, 0 if empty (default true)
+      data_key: "craftengine:display_item"  # NBT key for persistent data (default "craftengine:display_item")
+      tint_source: true                 # whether the stored item tints block render elements (default false)
       sounds:
-        put: minecraft:block.decorated_pot.insert
-        take: minecraft:block.decorated_pot.insert_fail
-      # Is the stored item allowed to serve as the tint source for the block entity render elements?
-      tint_source: true
+        put: minecraft:block.decorated_pot.insert       # sound played when placing an item (optional)
+        take: minecraft:block.decorated_pot.insert_fail  # sound played when taking an item (optional)
 ```

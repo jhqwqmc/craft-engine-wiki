@@ -3,16 +3,27 @@ title: 🤽 邻液方块
 id: near_liquid_block
 ---
 
-与**液面方块**不同，**邻液方块**不要求液体必须是源方块。
+**邻液方块**必须放置在靠近水或熔岩的位置才能存活。与 `on_liquid_block` 不同，它不要求液体必须是源方块——流动液体也有效。冰视为水源。
+
+它检查方块周围的特定相对位置（通过 `positions` 配置）。对于每个位置，其下方必须是目标液体（或冰），且上方不能有任何流体（否则会妨碍方块）。
+
+若启用 `stackable`，当同类型方块在正下方时也能存活。
+
+| 模式 | 说明 |
+|------|------|
+| **堆叠模式**（`stackable: true`） | 堆叠在同类型方块上即可存活，即使附近无液体。 |
+| **非堆叠模式**（`stackable: false`） | 至少需要在某个 `positions` 处有液体。 |
+
+## 示例
 
 ```yaml
 blocks:
   default:flame_cane:
     behavior:
       type: near_liquid_block
-      liquid_type: lava
-      stackable: true
-      positions:
+      liquid_type: lava              # "water"、"lava" 或两者 ["water", "lava"]（默认 ["water"]）
+      stackable: true                # 允许堆叠在同类型方块上（默认 false）
+      positions:                     # 检查液体的相对位置（必需）
         - -1,-1,0
         - 1,-1,0
         - 0,-1,-1

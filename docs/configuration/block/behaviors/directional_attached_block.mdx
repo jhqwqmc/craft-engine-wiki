@@ -3,23 +3,37 @@ title: ➡️ Directional Attached Block
 id: directional_attached_block
 ---
 
+**Directional Attached Block** attaches to a side face of another block, like a wall torch or a lever. It breaks automatically if the supporting face is removed.
+
+On placement it scans nearby block faces in the player's looking direction and picks the first valid one. If no face can support it, placement is cancelled.
+
+The block-face-to-attach behavior is determined by the `blacklist` mode and the block / tag lists:
+
+- **Blacklist mode** (`blacklist: true`, default): can attach to any sturdy face **except** those listed.
+- **Whitelist mode** (`blacklist: false`): can **only** attach to faces listed.
+
+If you specify no lists at all in blacklist mode, the block can attach to any sturdy face.
+
+## Properties
+
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | facing        | horizontal_direction | yes      |
+
+## Example
 
 ```yaml
 blocks:
   default:amethyst_wall_torch:
     behavior:
       type: directional_attached_block
-      blacklist: true
-      attached_blocks:
+      blacklist: true                   # true = blacklist, false = whitelist (default true)
+      attached_blocks:                  # blocks to check against (optional)
         - custom:xxx
         - minecraft:stone
-      attached_block_tags:
+      attached_block_tags:              # block tags to check against (optional)
         - minecraft:dirt
         - minecraft:farmland
 ```
 
 ![](/img/wall_torch_particle_block.png)
-

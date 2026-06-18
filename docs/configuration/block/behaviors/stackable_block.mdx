@@ -3,20 +3,28 @@ title: 🥪 Stackable Block
 id: stackable_block
 ---
 
+**Stackable Block** lets you place the same block on top of an existing one to increase a count, like sea pickles or candles. Right-clicking with one of the configured `items` increments the block's internal count, up to the int property's `max` value. Each count level can have its own visual state in the block model.
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
-| CUSTOM        | int           | yes      |
+| (custom)      | int           | yes      |
 
-**Stackable Block** allows you to use a specified item to stack this block, transforming it into a form with a larger quantity.
+## Example
 
 ```yaml
 blocks:
   default:pebble:
     behavior:
       type: stackable_block
-      property: pebble  # the name of the property for amount
-      items:
+      property: pebble           # the int property that tracks the stack count (default "amount")
+      items:                     # items that can add to the stack (required)
         - default:pebble
 ```
 
 ![](/img/stackable_block.png)
+
+:::info
+
+The stacking cap is the property's `max` value — place enough items and `max` defines the highest visual/functional state. The property name is up to you; `property` tells the behavior which one to use.
+
+:::

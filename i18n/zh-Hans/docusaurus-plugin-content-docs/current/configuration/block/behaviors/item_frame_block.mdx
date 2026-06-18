@@ -3,24 +3,34 @@ title: 🖼️ 物品展示框方块
 id: item_frame_block
 ---
 
-| 属性名称   | 属性类型      | 是否必需 |
-|--------|-----------|------|
+**物品展示框方块**是原版物品展示框的高性能替代。用于存放和展示单个物品。
+
+- **右键**手持物品放入。
+- **空主手右键**取出物品。
+- **潜行 + 右键**旋转展示的物品（共 8 个方向）。
+
+比较器信号等于 `rotation + 1`（有物品时），空时为 `0`——刚放置未旋转的展示框发出信号 **1**。
+
+**特别感谢：该功能由 [SIMMC 服务器](https://simmc.cn/) 赞助 [jhqwqmc](https://github.com/jhqwqmc/) 开发。**
+
+| 属性名称 | 属性类型 | 是否必需 |
+|------|------|------|
 | facing | direction | 是    |
 
-**物品展示框方块**是一种用于存放并展示物品的方块类型。用于取代原版展示框，提供更好的性能。 \
-**特别感谢：该功能由 [SIMMC 服务器](https://simmc.cn/)赞助 [jhqwqmc](https://github.com/jhqwqmc/) 开发。**
+## 示例
 
 ```yaml
 blocks:
   default:item_frame_block:
     behavior:
       type: item_frame_block
-      position: 0,0,0
-      glow: false
-      invisible: false
-      render_map_item: true # 静态地图渲染有少量性能开销
+      position: 0,0,0                  # 展示物品的位置偏移（默认 0,0,0）
+      glow: false                      # 是否发光
+      invisible: false                 # 是否隐藏展示框边框
+      render_map_item: true            # 是否渲染地图（默认 true，有性能开销）
+      data_key: "craftengine:item_frame"   # 持久化数据的 NBT 键（默认 "craftengine:item_frame"）
       sounds:
-        put: entity.item_frame.add_item
-        take: entity.item_frame.remove_item
-        rotate: entity.item_frame.rotate_item
+        put: entity.item_frame.add_item       # 放入时播放的声音（可选）
+        take: entity.item_frame.remove_item   # 取出时播放的声音（可选）
+        rotate: entity.item_frame.rotate_item  # 旋转时播放的声音（可选）
 ```

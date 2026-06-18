@@ -3,10 +3,19 @@ title: 👾 Spreading Block
 id: spreading_block
 ---
 
+**Spreading Block** spreads to nearby blocks on random ticks. Each tick it picks a random position nearby and, if that block matches `target_block`, replaces it with itself.
+## Example
+
 ```yaml
 blocks:
   default:corruption_block:
     behavior:
       type: spreading_block
-      target_block: minecraft:stone
+      target_block: minecraft:stone   # the block to convert when spreading (required)
 ```
+
+:::warning
+
+This is a **random-tick** behavior — it only spreads when the block receives random ticks.
+
+:::

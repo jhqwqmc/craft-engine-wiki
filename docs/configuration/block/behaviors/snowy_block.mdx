@@ -3,9 +3,15 @@ title: ❄️ Snowy Block
 id: snowy_block
 ---
 
+**Snowy Block** automatically detects whether snow sits on top of it and sets the `snowy` flag accordingly. This is the same mechanic vanilla grass blocks use to switch to their snow-covered texture — when a block tagged `minecraft:snow` (snow layer or powder snow) is placed directly above, `snowy` becomes `true`.
+
+It also checks on placement, so the initial state is always correct.
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | snowy         | boolean       | yes      |
+
+## Example
 
 ```yaml
 blocks:

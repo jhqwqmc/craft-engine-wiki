@@ -3,9 +3,13 @@ title: 🚟 Hangable Block
 id: hangable_block
 ---
 
+**Hangable Block** can hang from a ceiling or stand on the floor, like a lantern. On placement it tries both orientations and picks the first valid one. If the supporting block above or below is removed, the block breaks.
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | hanging       | boolean       | yes      |
+
+## Example
 
 ```yaml
 blocks:
@@ -13,3 +17,4 @@ blocks:
     behavior:
       type: hangable_block
 ```
+

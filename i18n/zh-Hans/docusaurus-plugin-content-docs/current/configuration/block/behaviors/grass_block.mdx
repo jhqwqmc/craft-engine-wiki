@@ -3,14 +3,22 @@ title: 🌿 草方块
 id: grass_block
 ---
 
-**草方块**允许你对其使用骨粉来生成草和花。请确保为你的方块添加 `minecraft:dirt` 和 `minecraft:supports_vegetation` 标签，否则草方块无法在其上存活。
+**草方块**会对骨粉做出反应，在其上及附近生成草和花。它在内部解析一个原版[地物](https://minecraft.wiki/w/Placed_feature)——一套决定生成何种植被及生成位置的放置规则。
+
+## 示例
 
 ```yaml
 blocks:
   default:grass_block:
     behavior:
       type: grass_block
-      feature: minecraft:grass_bonemeal
+      feature: minecraft:grass_bonemeal   # 骨粉时执行的 placed feature（必需）
 ```
 
 ![](/img/grass_block.png)
+
+:::warning
+
+- 方块**必须**拥有标签 `minecraft:dirt` 和 `minecraft:supports_vegetation`，否则其上生成的草和花无法存活。
+
+:::

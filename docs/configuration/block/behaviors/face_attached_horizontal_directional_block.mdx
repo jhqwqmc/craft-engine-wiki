@@ -3,21 +3,34 @@ title: ➡️ Face Attached Horizontal Directional Block
 id: face_attached_horizontal_directional_block
 ---
 
+**Face Attached Horizontal Directional Block** attaches to a face of another block — floor, ceiling, or wall — like a button or lever. It breaks automatically if the supporting face is removed.
+
+On placement it scans nearby faces in the player's looking direction and picks the first valid one. If no valid face is found, placement is cancelled.
+
+The attachment behavior is controlled by `blacklist` and the block / tag lists:
+
+- **Blacklist mode** (`blacklist: true`, default): can attach to any sturdy face **except** those listed.
+- **Whitelist mode** (`blacklist: false`): can **only** attach to faces listed.
+
+If you specify no lists in blacklist mode, the block can attach to any sturdy face.
+
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | face          | anchor_type          | yes      |
 | facing        | horizontal_direction | yes      |
+
+## Example
 
 ```yaml
 blocks:
   default:palm_button:
     behavior:
       type: face_attached_horizontal_directional_block
-      blacklist: true
-      attached_blocks:
+      blacklist: true                   # true = blacklist, false = whitelist (default true)
+      attached_blocks:                  # blocks to check against (optional)
         - custom:xxx
         - minecraft:stone
-      attached_block_tags:
+      attached_block_tags:              # block tags to check against (optional)
         - minecraft:dirt
         - minecraft:farmland
 ```

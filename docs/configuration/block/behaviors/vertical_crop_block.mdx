@@ -3,23 +3,43 @@ title: 🎍 Vertical Crop Block
 id: vertical_crop_block
 ---
 
+**Vertical Crop Block** grows upward or downward on random ticks, like sugar cane or kelp. It accumulates an internal `age` and places a new block of the same type once it reaches the maximum.
+
+The crop's root keeps growing even after new segments appear above — each segment grows independently, so a tall stalk can produce new segments from multiple positions at once.
+
+Growth only triggers when the space ahead (above for `up`, below for `down`) is air and fewer than `max_height` segments of the same block already exist below the tip.
+
+## Properties
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | age           | int           | yes      |
 
-**Vertical Crop Block** is a type of block that grows upward/downward over time. 
+## Example
 
 ```yaml
 blocks:
   default:flame_cane:
     behaviors:
       - type: vertical_crop_block
-        max_height: 4
-        grow_speed: 0.333
-        direction: down  # up/down
+        max_height: 4            # max number of segments in one stalk (default 3)
+        grow_speed: 0.333        # age increase per random tick, fractional part = chance of +1 (default 1)
+        direction: down          # growth direction: "up" or "down" (default up)
       - type: hanging_block
         stackable: true
         delay: 1
 ```
 
 ![](/img/vertical_crop_block.png)
+
+:::info
+
+`grow_speed` determines how fast a segment matures. The integer part is added to `age` every random tick; the fractional part gives a bonus +1 with that probability. For example `0.333` means the crop has a 33.3% chance of gaining 1 age per tick.
+
+:::
+
+:::warning
+
+This is a **random-tick** behavior — it only grows when the block receives random ticks.
+
+:::

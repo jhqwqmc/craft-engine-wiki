@@ -3,18 +3,26 @@ title: ⏏️ 弹跳方块
 id: bouncing_block
 ---
 
-**弹跳方块**可以让你在方块上弹起来。
+**弹跳方块**让落在其上的实体弹回空中。实体落到方块上时，其下落速度会被反转——`bounce_height` 控制保留多少反弹速度。潜行的实体不会弹跳，正常落地。
+
+掉落伤害仍然生效，但会按 `fall_damage_multiplier` 等比缩放。设为 `0` 可完全禁用掉落伤害。
+
+## 示例
 
 ```yaml
 blocks:
   default:sofa:
     behavior:
       type: bouncing_block
-      bounce_height: 0.66 # 弹跳高度
-      # 此选项采用了一种略显粗糙的方法来同步玩家的位置。
-      # 如果客户端使用的方块状态表现得像某些基础弹跳方块（例如床或黏液块），则可将此选项设为 false。
-      sync_player_position: true
-      fall_damage_multiplier: 0.5 # 掉落伤害倍数
+      bounce_height: 0.66              # 反弹速度倍率，0 为不反弹（默认 0.66）
+      fall_damage_multiplier: 0.5      # 掉落伤害倍率，0 为无伤害（默认 0.5）
+      sync_player_position: true       # 弹跳后强制客户端与服务端同步位置（默认 true）
 ```
 
 ![](/img/bouncing_block.png)
+
+:::info
+
+**sync_player_position：** 设为 `true` 时，服务器会在弹跳 1 刻后向客户端发送位置修正，防止与原版弹跳方块（床、黏液块）产生位置不同步。如果你的自定义方块在客户端侧的行为已与这些原版方块一致，可设为 `false`。
+
+:::

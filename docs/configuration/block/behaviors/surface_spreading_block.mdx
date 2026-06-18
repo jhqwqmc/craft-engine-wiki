@@ -3,17 +3,39 @@ title: 🌿 Surface Spreading Block
 id: surface_spreading_block
 ---
 
-| Property Name | Property Type | Required |
-|---------------|---------------|----------|
-| snowy         | boolean       | no       |
+**Surface Spreading Block** spreads to nearby blocks over time, just like vanilla grass spreading across dirt. On each random tick it tries to convert nearby `base_block`s into copies of itself — and if it can no longer survive where it stands (light blocked or water above), it turns back into the `base_block`.
+
+It only spreads to a target if the target receives light within the configured range and has no water on top.
+
+## Properties
+
+| Property Name | Property Type | Required | Used For                                                              |
+|---------------|---------------|----------|-----------------------------------------------------------------------|
+| snowy         | boolean       | no       | Tracks whether snow is sitting on top, for snow-covered visual states. |
+
+:::note
+
+`snowy` is optional. If declared, the block automatically sets it to `true` when snow lies on top — handy for switching to a snowy texture, like vanilla grass blocks.
+
+:::
+
+## Example
 
 ```yaml
 blocks:
   default:grass_block:
     behavior:
       type: surface_spreading_block
-      required_light: 9
-      base_block: minecraft:dirt
+      light_requirement: 9          # minimum light needed to spread (default 0)
+      max_light_requirement: 15     # maximum light for spreading (default 15)
+      base_block: minecraft:dirt   # the block this one spreads onto, and reverts to when it dies (default minecraft:dirt)
 ```
 
 ![](/img/surface_spreading_block.png)
+
+:::warning
+
+- This is a **random-tick** behavior — it only grows when the block receives random ticks. No random ticks, no spreading.
+- When light above the block falls outside the `light_requirement`–`max_light_requirement` range, it stops spreading. When the block itself can no longer survive (light fully blocked or water above), it turns back into `base_block`.
+
+:::

@@ -3,6 +3,14 @@ title: 🪟 Trapdoor Block
 id: trapdoor_block
 ---
 
+**Trapdoor Block** is a hinged panel that opens and closes. It can be toggled by hand, redstone, or wind charges.
+
+- **By hand:** right-click opens/closes it.
+- **By redstone:** a neighbor signal flips it open, cutting the signal flips it closed.
+- **By wind charge:** a wind charge hitting the trapdoor toggles it.
+
+On placement, the trapdoor auto-detects redstone and water — it opens if powered and waterlogs if placed in water.
+
 | Property Name | Property Type        | Required |
 |---------------|----------------------|----------|
 | open          | boolean              | yes      |
@@ -11,22 +19,19 @@ id: trapdoor_block
 | facing        | horizontal_direction | yes      |
 | waterlogged   | boolean              | no       |
 
+## Example
+
 ```yaml
 blocks:
   default:palm_trapdoor:
     behavior:
       type: trapdoor_block
-      can_open_with_hand: true
-      can_open_by_wind_charge: true
+      can_open_with_hand: true        # allow right-click to toggle (default true)
+      can_open_by_wind_charge: true   # allow wind charges to toggle (default true)
       sounds:
-        open: block.wooden_trapdoor.open
-        close: block.wooden_trapdoor.close
+        open: block.wooden_trapdoor.open     # sound played when opening (optional)
+        close: block.wooden_trapdoor.close   # sound played when closing (optional)
 ```
 
 ![](/img/trapdoor_block.png)
 
-:::tip
-
-You can create at most 25 new trapdoors
-
-:::

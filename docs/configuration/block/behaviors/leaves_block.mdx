@@ -3,13 +3,17 @@ title: 🍁 Leaves Block
 id: leaves_block
 ---
 
+**Leaves Block** decays when disconnected from a log. Each leaf block continuously computes its `distance` to the nearest log: logs are 0, directly adjacent leaves are 1, and so on. Leaves at the maximum distance (the largest value in the `distance` property's range) will decay on a random tick, dropping their items.
+
+Setting `persistent` to `true` prevents decay entirely. Persistent leaves do not participate in distance calculation and will never decay regardless of distance.
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | distance      | int           | yes      |
 | persistent    | boolean       | yes      |
 | waterlogged   | boolean       | no       |
 
-**Leaves blocks** are blocks that naturally decay after detaching from the tree trunk. When `persistent` is set to true, they will never decay. The `distance` property determines the maximum allowed distance from the trunk.
+## Example
 
 ```yaml
 blocks:
@@ -22,6 +26,6 @@ blocks:
 
 :::tip
 
-You can increase or decrease the distance value as needed. For particularly large trees, to prevent leaf decay, you can set the distance to 10 or higher. In the vanilla game, the maximum distance for leaves is 7.
+You can set the `distance` property's range higher for larger trees — e.g. a range of `1~10` gives leaves up to 10 blocks from a log before they decay. Vanilla leaves use a maximum of 7.
 
 :::

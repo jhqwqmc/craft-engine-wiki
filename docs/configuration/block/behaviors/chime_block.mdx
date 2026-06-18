@@ -3,7 +3,9 @@ title: 🔔 Chime Block
 id: chime_block
 ---
 
-**Chime Block** emits a sound when struck by projectiles.
+**Chime Block** plays a sound when struck by a projectile (arrow, trident, fireball, etc.), like an amethyst block.
+
+## Example
 
 ```yaml
 blocks:
@@ -11,7 +13,5 @@ blocks:
     behavior:
       type: chime_block
       sounds:
-        projectile_hit: minecraft:block.amethyst_block.chime
-        # Or use `chime: minecraft:block.amethyst_block.chime`
+        chime: minecraft:block.amethyst_block.chime   # sound played on projectile hit (optional)
 ```
-

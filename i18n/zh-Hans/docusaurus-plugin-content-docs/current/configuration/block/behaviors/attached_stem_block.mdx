@@ -3,17 +3,27 @@ title: 🍄 附着茎方块
 id: attached_stem_block
 ---
 
-| 属性名称   | 属性类型                 | 是否必需 |
-|--------|----------------------|------|
+**附着茎方块**将茎与其果实相连，就像原版附着的南瓜茎或西瓜茎。它朝向果实方块并持续验证果实是否还在。当果实被破坏时，附着茎会自动退化为普通茎方块（`age` 设为最大值，不会立即重新生长）。
+
+| 属性名称 | 属性类型             | 是否必需 |
+|------|------------------|------|
 | facing | horizontal_direction | 是    |
+
+## 示例
 
 ```yaml
 blocks:
   default:attached_hami_melon_stem:
     behavior:
       type: attached_stem_block
-      fruit: default:hami_melon
-      stem: default:hami_melon_stem
+      fruit: default:hami_melon          # 此茎所附着的果实方块（必需）
+      stem: default:hami_melon_stem      # 果实被破坏后退化成的普通茎方块（必需）
 ```
 
 ![](/img/attached_stem_block.png)
+
+:::info
+
+`fruit` 和 `stem` 均为**必需**。`stem` 方块应具有 `age` 属性——退化时行为将其 age 设为最大值，使茎呈现完全成熟的外观且不会立即再次附着。
+
+:::

@@ -3,20 +3,36 @@ title: ⬜️ Pressure Plate Block
 id: pressure_plate_block
 ---
 
+**Pressure Plate Block** is a redstone power source triggered by entities standing on it. When an entity steps on the plate, it outputs a full-strength **15** signal and stays pressed for `pressed_time` ticks after the entity leaves.
+
+The `sensitivity` controls which entities can activate it:
+- **`all` (default):** any entity.
+- **`mob`:** only living entities.
+
+The plate requires a rigid or center-supporting block beneath it.
+
 | Property Name | Property Type | Required |
-|---------|---------|---------|
-| powered    | boolean   | yes   |
+|---------------|---------------|----------|
+| powered       | boolean       | yes      |
+
+## Example
 
 ```yaml
 blocks:
   default:palm_pressure_plate:
     behavior:
       type: pressure_plate_block
-      sensitivity: all # all, mob
-      pressed_time: 20
+      sensitivity: all           # "all" or "mob" (default all)
+      pressed_time: 20           # ticks to stay pressed after entity leaves (default 20)
       sounds:
-        on: minecraft:block.wooden_pressure_plate.click_on
-        off: minecraft:block.wooden_pressure_plate.click_off
+        on: minecraft:block.wooden_pressure_plate.click_on    # sound played when pressed (optional)
+        off: minecraft:block.wooden_pressure_plate.click_off  # sound played when released (optional)
 ```
 
 ![](/img/pressure_plate_block.png)
+
+:::info
+
+The signal is always **15** — it is an on/off signal, not pressure-sensitive like vanilla weighted pressure plates.
+
+:::

@@ -3,16 +3,27 @@ title: 🤽 Near Liquid Block
 id: near_liquid_block
 ---
 
-Unlike **On Liquid Block**, **Near Liquid Block** does not require the liquid to be a source block.
+**Near Liquid Block** must be placed near water or lava to survive. Unlike `on_liquid_block`, it does not require the liquid to be a source — flowing liquid also counts. Ice counts as a water source.
+
+It checks specific positions relative to the block (configured via `positions`). For each position, the block below must be the target liquid (or ice), and the space above must not contain any fluid (which would obstruct the block).
+
+If `stackable` is enabled, the block also survives when the same block type is directly beneath it.
+
+| What | How |
+|------|-----|
+| **Stacking mode** (`stackable: true`) | Survives when stacked on the same block type, even if no liquid is nearby. |
+| **Non-stacking mode** (`stackable: false`) | Requires liquid at one of the `positions`. |
+
+## Example
 
 ```yaml
 blocks:
   default:flame_cane:
     behavior:
       type: near_liquid_block
-      liquid_type: lava
-      stackable: true
-      positions:
+      liquid_type: lava              # "water", "lava", or both ["water", "lava"] (default ["water"])
+      stackable: true                # allow stacking on same block type (default false)
+      positions:                     # relative positions to check for liquid (required)
         - -1,-1,0
         - 1,-1,0
         - 0,-1,-1

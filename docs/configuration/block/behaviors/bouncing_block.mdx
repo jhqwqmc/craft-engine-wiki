@@ -3,18 +3,26 @@ title: ⏏️ Bouncing Block
 id: bouncing_block
 ---
 
-**Bouncing Block** let you bounce off the block.
+**Bouncing Block** bounces entities that land on it back into the air. When an entity falls onto the block, its downward velocity is reversed — `bounce_height` controls how much of that speed is preserved. Sneaking entities do not bounce and land normally.
+
+Fall damage is still applied, scaled by `fall_damage_multiplier`. Set it to `0` to disable fall damage entirely.
+
+## Example
 
 ```yaml
 blocks:
   default:sofa:
     behavior:
       type: bouncing_block
-      bounce_height: 0.66 # Bounce Height
-      # This option uses a somewhat hacky method to synchronize the player's position.
-      # If the block state you used on the client side behaves like some vanilla bouncing blocks (such as beds or slime blocks), you can set this to false.
-      sync_player_position: true
-      fall_damage_multiplier: 0.5 # Fall damage multiplier
+      bounce_height: 0.66              # bounce velocity multiplier, 0 = no bounce (default 0.66)
+      fall_damage_multiplier: 0.5      # fall damage multiplier, 0 = no damage (default 0.5)
+      sync_player_position: true       # force client-server position sync after bounce (default true)
 ```
 
 ![](/img/bouncing_block.png)
+
+:::info
+
+**sync_player_position:** When `true`, the server sends a position correction to the client 1 tick after a bounce. This prevents desync with vanilla bouncing blocks (beds, slime blocks). If your custom block already looks like one of those on the client side, you can set this to `false`.
+
+:::

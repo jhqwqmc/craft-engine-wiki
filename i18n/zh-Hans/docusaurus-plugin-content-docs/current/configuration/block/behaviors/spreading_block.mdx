@@ -3,10 +3,19 @@ title: 👾 扩散方块
 id: spreading_block
 ---
 
+**扩散方块**在随机刻中向附近的方块扩散。每刻随机选取附近一个位置，若该处方块匹配 `target_block`，则用自身替换。
+## 示例
+
 ```yaml
 blocks:
   default:corruption_block:
     behavior:
       type: spreading_block
-      target_block: minecraft:stone
+      target_block: minecraft:stone   # 扩散时转化的目标方块（必需）
 ```
+
+:::warning
+
+这是一个**随机刻**行为——只有方块收到随机刻时才会扩散。
+
+:::

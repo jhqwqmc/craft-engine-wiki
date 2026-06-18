@@ -5,25 +5,30 @@ id: behaviors
 
 ## Introduction
 
-Block behavior refers to a block's unique mechanics and physics. Some block behaviors work based on some properties. For example:
-- Crop blocks need an `age` property to track growth stages
-- Doors require a `hinge` property to determine left/right part
+A block behavior defines the unique mechanics and physics of a block — how it grows, falls, opens, spreads, or reacts to its neighbors. Vanilla Minecraft hardcodes these mechanics into specific blocks; Craft Engine lets you attach the same mechanics to any block through configuration.
 
-In subsequent pages, you'll find a table header like this one, specifying the property names and types required by this block behavior.
+Some behaviors rely on specific block properties to function. For example:
+
+- [Crop blocks](behaviors/crop_block.mdx) need an `age` property to track their growth stage
+- [Doors](behaviors/door_block.mdx) need a `hinge` property to decide which side the hinge sits on
+
+Every behavior page that follows opens with a property table like the one below, listing the property names and types the behavior expects, and whether each one is required.
 
 | Property Name | Property Type | Required |
-|---------|---------|---------|
-| facing   | direction   | yes   |
-| waterlogged   | boolean   | no   |
+|---------------|---------------|----------|
+| facing        | direction     | yes      |
+| waterlogged   | boolean       | no       |
 
 :::info
-
-Future versions may support custom property names, but the current implementation uses hardcoded names for simpler configuration.
+Future versions may support custom property names. For now, property names are hardcoded to keep configuration simple. See the [Properties](states/properties.mdx) page for the full list of types and reserved names.
 :::
 
-## Composite Behaviors
+## Assigning a behavior
 
-You can combine multiple behaviors to create composite behaviors. Below are examples of single-behavior and multi-behavior blocks.
+You attach a behavior to a block under its `behavior` or `behaviors` field:
+
+- Use **`behavior`** when the block has exactly one behavior.
+- Use **`behaviors`** (a list) when the block combines several behaviors.
 
 ```yaml
 blocks:
@@ -34,6 +39,11 @@ blocks:
         - minecraft:dirt
         - minecraft:farmland
 ```
+
+## Composite behaviors
+
+List multiple entries under `behaviors` to combine them into a composite block. The example below makes a block that both behaves like [concrete powder](behaviors/concrete_powder_block.mdx) (turns solid on contact with water) and [falls like sand](behaviors/falling_block.mdx):
+
 ```yaml
 blocks:
   default:gunpowder_block:
@@ -45,18 +55,9 @@ blocks:
 
 :::warning
 
-Please note: combining some block behaviors may cause unexpected conflicts. If you run into problems, please contact support and we will try to resolve any conflicts.
+**Combining behaviors — keep in mind:**
 
-:::
-
-:::caution
-
-When combining multiple block behaviors, you must also merge their required properties.
-
-:::
-
-:::danger
-
-You cannot combine multiple instances of the same block behaviour, as this will cause a conflict.
-
+- **Merge required properties.** Each behavior lists the properties it needs; when combining, your block must satisfy all of them, or some behaviors won't work as expected.
+- **Some combinations conflict.** Certain behaviors don't play well together and may behave unexpectedly. If something seems off, reach out to support and we will help resolve it.
+- **No duplicates.** You can't list the same behavior type more than once on a single block — this always causes a conflict.
 :::

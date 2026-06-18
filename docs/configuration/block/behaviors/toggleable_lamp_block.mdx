@@ -3,20 +3,28 @@ title: 💡 Toggleable Lamp Block
 id: toggleable_lamp_block
 ---
 
+**Toggleable Lamp Block** toggles its `lit` state between on and off. It can be switched by redstone, by hand, or both.
+
+- **By redstone:** each rising edge of a neighbor signal flips the lamp between lit and unlit. The `powered` property tracks whether a signal is currently present; `lit` toggles on the transition from unpowered → powered.
+- **By hand:** right-click cycles the lamp on/off. When `can_open_with_hand` is enabled, `powered` becomes optional — the lamp can be purely hand-operated.
+
+## Properties
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | lit           | boolean       | yes      |
-| powered       | boolean       | no       |
+| powered       | boolean       | no*      |
 
-**Toggleable Lamp Block** allow blocks to toggle their `lit` state when activated by a redstone signal while holding the `powered` property,
-or when enabled with `can_toggle_with_hand`, by right-clicking to toggle the `lit` state.
+\* Required when `can_open_with_hand` is `false`; optional when `true`.
+
+## Example
 
 ```yaml
 blocks:
   default:copper_coil:
     behavior:
       type: toggleable_lamp_block
-      can_toggle_with_hand: false # When set to true, the powered property is optional
+      can_open_with_hand: false       # allow right-click to toggle (default false)
 ```
 
 ![](/img/toggleable_lamp_block.png)

@@ -3,16 +3,27 @@ title: 🏗️ Sturdy Base Block
 id: sturdy_base_block
 ---
 
-**Sturdy Base Block** refers to blocks that need a sturdy supporting face. For example, doors won't work on dripstones. Support types include `full`, `rigid`, and `center`.
+**Sturdy Base Block** requires a solid supporting face in a given direction. The block breaks if the support is removed.
+
+Three support types are available: `full`, `rigid`, and `center`.
+
+## Stacking
+
+When `stackable` is enabled, the block can also survive by stacking on another block of the same type — up to `max_height` consecutive stacked copies in the support direction. Once the chain exceeds `max_height`, the top block breaks.
+
+## Example
 
 ```yaml
 blocks:
   default:pebble:
     behavior:
       type: sturdy_base_block
-      direction: down
-      support_types:
+      direction: down                # direction to check for support (default down)
+      support_types:                 # support types required (default ["full"])
         - full
+      stackable: false               # allow stacking on same block type
+      max_height: 0                  # max stack height when stackable (requires >1)
+      delay: 0                       # check delay in ticks, 0 = instant break
 ```
 
 ![](/img/sturdy_base_block.png)

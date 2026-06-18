@@ -3,22 +3,36 @@ title: 🏢 Multi High Block
 id: multi_high_block
 ---
 
-| Property Name | Property Type | Required |
-|---------------|---------------|----------|
-| CUSTOM        | int           | yes      |
+**Multi High Block** places multiple stacked copies of itself on placement, forming a single tall structure — like a door or tall grass. The number of segments is controlled by an `int` property whose `range` (max − min) defines the stack height.
 
-**Multi High Block** determines the block height based on the range difference of the specified `int` type property.
+The stack is connected: if any middle segment loses its neighbor above or below, the whole column breaks. The column also breaks if the top or bottom segment's only neighbor vanishes.
+
+When breaking any segment with the correct tool or in creative mode, the base segment is destroyed too — so the entire structure drops correctly.
+
+Placement fails if there isn't enough air above or the column would extend past the build height limit.
+
+| Property Name | Property Type              | Required |
+|---------------|----------------------------|----------|
+| (custom)      | int           | yes      |
+
+## Example
 
 ```yaml
 blocks:
   default:multi_high_block:
     states:
       properties:
-        height:
+        height:                   # declare a custom int property
           type: int
           default: 0
-          range: 0~2
+          range: 0~2              # range determines stack segments: 0=base, 1=middle, 2=top
     behavior:
       type: multi_high_block
-      property: height
+      property: height            # which int property controls the height (required)
 ```
+
+:::info
+
+The property name is up to you — `property` tells the behavior which one to use. The range's `min` is the base segment and `max` is the top segment. At least a 2-value range (`max > min`) is needed for the stack to form.
+
+:::

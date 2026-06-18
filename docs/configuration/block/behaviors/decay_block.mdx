@@ -3,25 +3,34 @@ title: 🍂 Decay Block
 id: decay_block
 ---
 
-| Property Name | Property Type        | Required |
-|---------------|----------------------|----------|
-| age           | int                  | yes      |
+**Decay Block** advances through `age` stages and eventually transforms into another block — like ice melting into water.
 
+It works in one of two modes:
 
-Decay block increases its age at fixed time intervals, and when the age exceeds the maximum value, it transforms into another block — for example, ice turning into water.
+- **Fixed interval** (`delay` set to a positive value or range): the block ticks on a timer. After each interval it checks the light level and `chance`, increments `age` if the check passes, and re-schedules itself. When `age` reaches max, the block becomes `decay_into`.
+- **Random tick** (`delay` not set or ≤ 0): the block listens for random ticks instead. Same logic applies on each successful tick.
+
+If `required_light` is set above 0, decay only triggers when the light level at or around the block meets the threshold.
+
+| Property Name | Property Type | Required |
+|---------------|---------------|----------|
+| age           | int           | yes      |
+
+## Example
 
 ```yaml
 blocks:
   default:ice:
     behavior:
       type: decay_block
-      decay_into: water
-      delay: 100~200
-      chance: 0.5
+      decay_into: water          # the block to become when fully decayed (default air)
+      delay: 100~200             # ticks between age increments, omit for random-tick mode (optional)
+      chance: 0.5                # probability of advancing each interval (default 1)
+      required_light: 0          # minimum light required for decay, 0 = always (default 0)
 ```
 
 :::tip
 
-If `delay` is set to `-1`, the behavior will use random ticks instead of fixed interval
+Omitting `delay` or setting it to a non-positive value switches the behavior to **random-tick mode** — the block advances on random ticks instead of a fixed timer.
 
 :::

@@ -3,16 +3,25 @@ title: 🌊 液面方块
 id: on_liquid_block
 ---
 
-**液面方块**是一种只能放置在流体源表面的方块类型。当前仅支持两种流体（水和熔岩）。
+**液面方块**坐在液体源的表面上，类似睡莲。与 `near_liquid_block` 不同，它要求正下方必须是液体**源**方块——流动液体不算。冰视为水源。
+
+启用 `stackable` 后，方块也可堆叠在同类型方块上存活。
+
+| 模式 | 说明 |
+|------|------|
+| **堆叠模式**（`stackable: true`） | 堆叠在同类型方块上即可存活，即使下方无液体。 |
+| **非堆叠模式**（`stackable: false`） | 需要正下方有液体源。 |
+
+## 示例
 
 ```yaml
 blocks:
   default:reed:
     behavior:
       type: on_liquid_block
-      stackable: false
-      liquid_type:
-        - water # lava
+      liquid_type:                 # 可坐落的液体类型（默认 ["water"]）
+        - water
+      stackable: false             # 是否允许堆叠在同类型方块上
 ```
 
 ![](/img/on_liquid_block_1.png)

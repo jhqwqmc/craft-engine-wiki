@@ -3,14 +3,28 @@ title: 💦 Concrete Powder Block
 id: concrete_powder_block
 ---
 
-**Concrete Powder Block** is a type of block that hardens when it comes into contact with water.
+**Concrete Powder Block** hardens into a solid block when it touches water. This happens:
+
+- **On placement** — if placed directly in water or next to water.
+- **After falling** — if it lands in water or next to water (common combo with [`falling_block`](falling_block.mdx)).
+- **On neighbor update** — if water flows next to an already-placed powder block.
+
+When water is detected on any side, the block fires a `BlockFormEvent` and replaces itself with `solid_block`.
+
+## Example
 
 ```yaml
 blocks:
   default:gunpowder_block:
     behavior:
       type: concrete_powder_block
-      solid_block: default:solid_gunpowder_block
+      solid_block: default:solid_gunpowder_block   # the block to turn into when hardening (required)
 ```
 
 ![](/img/concrete_powder_block.png)
+
+:::info
+
+`solid_block` accepts any valid block ID or full block state (e.g. `minecraft:stone[axis=y]`). It is **required** — if omitted the block can't harden.
+
+:::

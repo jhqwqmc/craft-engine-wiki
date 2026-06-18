@@ -3,26 +3,30 @@ title: 🌴 Sapling Block
 id: sapling_block
 ---
 
+**Sapling Block** grows through `stage` levels on random ticks and eventually generates a full tree via a configured feature. Growth only happens within a light range — between `light_requirement` (low, default 9) and `max_light_requirement` (high, default 15).
+
+Bone meal advances one stage immediately (bypassing the light check). Whether the bone meal "succeeds" for particle effects depends on `bone_meal_success_chance` — the stage still advances regardless.
+
 | Property Name | Property Type | Required |
 |---------------|---------------|----------|
 | stage         | int           | yes      |
 
-Once a `configured feature` is specified, the **Sapling Block** can grow into the designated tree configuration during a random tick event.
+## Example
 
 ```yaml
 blocks:
   default:palm_sapling:
     behavior:
       type: sapling_block
-      feature: default:palm_tree
-      bone_meal_success_chance: 0.45
-      grow_speed: 0.7  # (0-1)
+      feature: default:palm_tree                # the configured feature to generate when fully grown (required)
+      light_requirement: 9                      # minimum light to grow (default 9)
+      max_light_requirement: 15                 # maximum light to grow (default 15)
+      grow_speed: 0.7                           # chance per random tick to advance a stage (default ~0.143)
+      bone_meal_success_chance: 0.45            # chance bone meal triggers success particles (default 0.45)
 ```
 
 ![](/img/sapling_block.png)
 
 :::tip
-
-The more stage values a sapling has, the longer its required growth time.
-
+The more stage values a sapling has, the longer its required growth time — each stage needs its own random tick.
 :::

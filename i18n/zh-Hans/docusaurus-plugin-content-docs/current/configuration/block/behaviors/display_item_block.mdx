@@ -5,21 +5,30 @@ id: display_item_block
 
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#3B6B60">**方块实体**</Highlight>​
+<Highlight color="#3B6B60">**方块实体**</Highlight>
 
-用于将物品显示在此方块上
+**物品展示方块**在方块上展示一个掉落的物品。手中持有物品时右键放入；空手右键取出。同一时间只能展示一件物品。
+
+比较器在存在物品时输出信号 **15**，空时输出 **0**（若 `has_signal` 启用）。
+
+可选的 `facing` 属性使展示物品朝向特定方向。
+
+| 属性名称 | 属性类型 | 是否必需 | 作用                 |
+|------|------|------|--------------------|
+| facing | direction | 否    | 使展示物品朝向特定方向。 |
+
+## 示例
 
 ```yaml
 blocks:
   default:display_item_block:
     behavior:
       type: display_item_block
-      has_signal: true
-      data_key: "craftengine:display_item"
-      position: "0.5,0.5,0.5"
+      position: "0.5,0.5,0.5"          # 展示物品的位置偏移（默认 0.5,0.5,0.5）
+      has_signal: true                  # 比较器信号：有物品时 15，空时 0（默认 true）
+      data_key: "craftengine:display_item"  # 持久化数据的 NBT 键（默认 "craftengine:display_item"）
+      tint_source: true                 # 存储物品是否为方块实体提供颜色（默认 false）
       sounds:
-        put: minecraft:block.decorated_pot.insert
-        take: minecraft:block.decorated_pot.insert_fail
-      # 存储的物品是否可以作为方块实体渲染元素的颜色提供器
-      tint_source: true
+        put: minecraft:block.decorated_pot.insert       # 放入时播放的声音（可选）
+        take: minecraft:block.decorated_pot.insert_fail  # 取出时播放的声音（可选）
 ```

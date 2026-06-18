@@ -3,12 +3,17 @@ title: 🪣 流体推动方块
 id: liquid_flowable_block
 ---
 
-**流体推动方块**可使方块被流体破坏
+**流体推动方块**可被水或熔岩冲走，就像草丛或火把。当流体流入时，方块会被破坏并替换为流体。
+
+- **水：** 若 `drop_item` 为 `true`，方块掉落为物品。
+- **熔岩：** 方块总是被破坏且不掉落物品（熔岩会烧毁物品），改为播放熔岩转化效果。
+
+## 示例
 
 ```yaml
 blocks:
   default:amethyst_torch:
     behavior:
       type: liquid_flowable_block
-      drop_item: true
+      drop_item: true        # 被水冲走时是否掉落物品（默认 true）
 ```

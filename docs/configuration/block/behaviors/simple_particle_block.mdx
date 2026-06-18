@@ -5,31 +5,35 @@ id: simple_particle_block
 
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#3B6B60">**Block Entity**</Highlight>​
+<Highlight color="#3B6B60">**Block Entity**</Highlight>
+
+**Simple Particle Block** spawns particle effects at a fixed interval. Each particle entry defines the effect type, position offset, spread, count, and speed. Type-specific parameters (item, block, dust color, etc.) are available for particles that require them.
+
+## Example
 
 ```yaml
 blocks:
   default:amethyst_torch:
     behavior:
       type: simple_particle_block
-      tick_interval: 10
-      particles: # Defines particle effects, see Particle argument below
-        - particle: smoke
-          x: 0.5
-          y: 0.7
-          z: 0.5
-          count: 1
-          offset_x: 0
-          offset_y: 0
-          offset_z: 0
-          speed: 0
+      tick_interval: 10            # how often particles spawn, in ticks (default 10)
+      particles:
+        - particle: smoke           # particle type ID (required)
+          x: 0.5                    # spawn position x (default 0)
+          y: 0.7                    # spawn position y (default 0)
+          z: 0.5                    # spawn position z (default 0)
+          count: 1                  # particles per spawn (default 1)
+          offset_x: 0               # random x spread (default 0)
+          offset_y: 0               # random y spread (default 0)
+          offset_z: 0               # random z spread (default 0)
+          speed: 0                  # particle speed (default 0)
 ```
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/simple_particle_block.png').default} alt="" />
 </div>
 
-## Particle argument
+## Particle arguments
 
 ```yaml
 particle: minecraft:end_rod # required; string
@@ -42,16 +46,15 @@ offset_y: 0.3 # optional; number; default: 0
 offset_z: 0.3 # optional; number; default: 0
 speed: 0 # optional; number; default: 0
 
-# The following arguments are only effective
-# when the particles are of a certain type.
+# The following arguments are only effective when the particles are of a certain type.
 
 # item
 item: default:chinese_lantern
 
-# block/falling_dust/dust_pillar/block_crumble/block_marker
+# block / falling_dust / dust_pillar / block_crumble / block_marker
 block_state: default:plam_log[axis=y]
 
-# charge
+# sculk_charge
 charge: 1.5
 
 # shriek
