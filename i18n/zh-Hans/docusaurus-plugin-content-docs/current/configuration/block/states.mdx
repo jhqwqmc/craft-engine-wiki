@@ -307,13 +307,15 @@ state:
     item: default:my_decoration
 ```
 
-:::tip `transparent` 约定
+:::tip
+`transparent` 约定
 始终给透明的 `auto_state` 设一个固定 `id` —— 推荐命名为 **`transparent`**。使用相同 `id` 的方块会绑定到**同一个**被清空的原版方块，于是每个方块不再各自占用一个状态，而是共享同一个。遵循此约定还能让你的透明渲染在各资源包间行为可预期，并与他人兼容。推荐其他开发者与用户也采用同样的 `transparent` id。
 :::
 
 `entity_renderer` 接受单个对象或列表，`type` 通常可省略（由 `item` / `text` 推断）。所有元素类型（`item_display`、`text_display`、`item`、`armor_stand`……）、显示参数、着色、剔除与条件，见[方块实体渲染器](states/entity_renderer.mdx)。
 
-:::important `transparent` 与 `entity_renderer`
+:::important
+`transparent` 与 `entity_renderer`
 不设 `transparent: true` 时，方块保留自己的 `model`，实体渲染在**它之上** —— 两者都可见。在同一个 `state`/`appearance` 上设 `transparent: true`，可**彻底去掉方块自身模型**，让方块完全由 `entity_renderer` 渲染。这样能腾出原版方块容量 —— 一个被清空的原版方块可支撑多种不同渲染。
 :::
 
