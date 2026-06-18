@@ -1,22 +1,9 @@
 ---
-title: 🫑 Block Entities
-id: entities
+title: 🫑 Block Entity Renderer
+id: entity_renderer
 ---
 
-import Highlight from '@site/src/components/Highlight';
-
-## Introduction
-
-A block entity combines the properties of a block and an entity. It occupies a block position in the world but can **store data, perform updates, and support custom rendering** like an entity. With the **Block Entity API**, you can bring advanced functionality to your blocks, such as:
-
-- A battery block that visually changes its model based on current energy level.
-- A Stirling generator that runs on tick-based logic, periodically burning fuel to produce power.
-
-While the current library of built-in block entity types is still growing, future versions of CraftEngine will significantly expand these offerings with more versatile and ready-to-use components.
-
-## Entity-Based Rendering
-
-### How It Works
+## How It Works
 
 As we all know, the number of variants for a single block is limited. For example, a tripwire only has 128 variants, meaning that without sacrificing the original tripwire, we can create at most 127 custom block states. However, if we remove the texture of one of these states, make it appear completely transparent, and place a display entity at the center of the block, we can achieve virtually unlimited custom blocks.
 

@@ -3,127 +3,200 @@ title: 🧱 Block
 id: block
 ---
 
-import OverallYamlConfig from '@site/src/components/OverallYamlConfig';
-import ClickableYamlFragment from '@site/src/components/ClickableYamlFragment';
+import UrlCard from '@site/src/components/UrlCard';
 
 ## Overview
 
-<OverallYamlConfig >
-  <ClickableYamlFragment
-    highlightColor="#e41616ff"
-    yamlContent={`blocks:
-    default:palm_log: `}
-  />
+A custom block is a single entry under `blocks:` in your configuration. Each entry is keyed by its id — `namespace:path`, e.g. `default:palm_log` — and is assembled from a handful of **independent sections**. You configure only the ones you need.
 
-  <ClickableYamlFragment
-    to="block/behaviors"
-    highlightColor="#f1a10bff"
-    yamlContent={`    behavior:
-        type: "strippable_block"
-        stripped: "default:stripped_palm_log"`}
-  />
+Only one section is mandatory: **state** / **states** — it tells the plugin what the block looks like. Everything else (physics, mechanics, drops, interaction) is optional layering you add when the block needs it.
 
-  <ClickableYamlFragment
-    to="block/settings"
-    highlightColor="#ebe717ff"
-    yamlContent={`    settings:
-        sounds:
-          break: "minecraft:block.wood.break"
-          step: "minecraft:block.wood.step"
-          place: "minecraft:block.wood.place"
-          hit: "minecraft:block.wood.hit"
-          fall: "minecraft:block.wood.fall"
-        burnable: true
-        burn_chance: 5
-        fire_spread_chance: 5
-        hardness: 2.0
-        resistance: 2.0
-        push_reaction: "NORMAL"
-        replaceable: false
-        is_redstone_conductor: true
-        is_suffocating: true
-        instrument: "BASS"
-        can_occlude: true
-        tags:
-          - minecraft:mineable/axe
-          - minecraft:logs_that_burn
-          - minecraft:logs
-          - minecraft:completes_find_tree_tutorial`}
-  />
+## Anatomy
 
-  <ClickableYamlFragment
-    to="block/states"
-    highlightColor="#1fe05fff"
-    yamlContent={`    states:
-        properties:
-          axis:
-            type: "axis"
-            default: "y"
-        appearances:
-          axisY:
-            state: "note_block:0"
-            model:
-              path: "minecraft:block/custom/palm_log"
-              generation:
-                parent: "minecraft:block/cube_column"
-                textures:
-                  end: "minecraft:block/custom/palm_log_top"
-                  side: "minecraft:block/custom/palm_log"
-          axisX:
-            state: "note_block:1"
-            model:
-              x: 90
-              y: 90
-              path: "minecraft:block/custom/palm_log_horizontal"
-              generation:
-                parent: "minecraft:block/cube_column_horizontal"
-                textures:
-                  end: "minecraft:block/custom/palm_log_top"
-                  side: "minecraft:block/custom/palm_log"
-          axisZ:
-            state: "note_block:2"
-            model:
-              x: 90
-              path: "minecraft:block/custom/palm_log_horizontal"
-              generation:
-                parent: "minecraft:block/cube_column_horizontal"
-                textures:
-                  end: "minecraft:block/custom/palm_log_top"
-                  side: "minecraft:block/custom/palm_log"
-        variants:
-          axis=x:
-            appearance: "axisX"
-          axis=y:
-            appearance: "axisY"
-          axis=z:
-            appearance: "axisZ"`}
-  />
+Every block follows the same skeleton. Each top-level key answers one question about the block:
 
-  <ClickableYamlFragment
-    to="../reference/loot_table"
-    highlightColor="#1fc9e0ff"
-    yamlContent={`    loot:
-        pools:
-          - rolls: 1
-            conditions:
-              - type: "survives_explosion"
-            entries:
-              - type: "item"
-                item: "default:palm_log"`}
-  />
+```yaml
+blocks:
+  default:my_block:     # the block id — referenced everywhere as default:my_block
+    state:              # REQUIRED  → what it looks like   (model, texture, orientation)
+      ...
+    settings:           # optional  → how it physically behaves (hardness, sounds, light, tools, tags)
+      ...
+    behavior:           # optional  → its unique mechanics (grow, fall, open, spread, …)
+      ...
+    loot:               # optional  → what it drops when broken
+      ...
+    events:             # optional  → reactions to player interaction (click, break, …)
+      ...
+```
 
-  <ClickableYamlFragment
-    to="../reference/events"
-    highlightColor="#c91fe0ff"
-    yamlContent={`    events:
-        - on: "right_click"
-          functions:
-            - type: "open_window"
-              gui_type: "anvil"
-            - type: "cancel_event"
-          conditions:
-            - type: "expression"
-              expression: '!<arg:player.is_sneaking>'`}
-  />
+:::note
+`state` (singular) is for blocks with a single internal state. `states` (plural) is for blocks with multiple — orientation, waterlogging, growth stages — and adds `properties` / `appearances` / `variants`. See [Block States](./block/states.mdx).
+:::
 
-</OverallYamlConfig>
+## Sections to Configure
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard
+  url="block/states"
+  title="🔣 Block States"
+  subtitle="Model, texture, orientation & variants — what the block looks like"
+/>
+
+<UrlCard
+  url="block/settings"
+  title="🔧 Block Settings"
+  subtitle="Hardness, sounds, light, burn, mining tools, tags — physical properties"
+/>
+
+<UrlCard
+  url="block/behaviors"
+  title="🕹️ Block Behaviors"
+  subtitle="Mechanics — grow, fall, open, doors, crops, fences, seats, …"
+/>
+
+<UrlCard
+  url="../reference/loot_table"
+  title="🎲 Loot Table"
+  subtitle="What the block drops when broken"
+/>
+
+<UrlCard
+  url="../reference/events"
+  title="🪇 Events"
+  subtitle="React to clicks & breaks with functions, gated by conditions"
+/>
+
+</div>
+
+## Quick Start
+
+### 1. The smallest possible block
+
+One state, one texture, nothing else — already a fully working block:
+
+```yaml
+blocks:
+  default:my_block:
+    state:
+      auto_state: note_block                       # let the plugin auto-pick a carrier state
+      model:
+        texture: "minecraft:block/custom/my_block" # single texture → cube_all model
+```
+
+### 2. Tune its physics
+
+Add a `settings` section so it behaves like stone — sound, hardness, the right tool:
+
+```yaml
+blocks:
+  default:my_block:
+    state:
+      auto_state: note_block
+      model:
+        texture: "minecraft:block/custom/my_block"
+    settings:
+      hardness: 1.5
+      resistance: 6.0
+      sounds:
+        break: minecraft:block.stone.break
+        step: minecraft:block.stone.step
+        place: minecraft:block.stone.place
+        hit: minecraft:block.stone.hit
+        fall: minecraft:block.stone.fall
+      tags:
+        - minecraft:mineable/pickaxe
+```
+
+### 3. Add mechanics
+
+Drop in a `behavior` to give it real function. Here it becomes a log you can strip with an axe:
+
+```yaml
+blocks:
+  default:my_block:
+    state:
+      auto_state: note_block
+      model:
+        texture: "minecraft:block/custom/my_block"
+    settings:
+      hardness: 1.5
+      tags: [minecraft:mineable/axe, minecraft:logs]
+    behavior:
+      type: strippable_block
+      stripped: default:stripped_my_block
+```
+
+Keep layering the same way — `loot` for drops, `events` for interaction, an `entity_renderer` inside a state for custom rendering. Each section is independent.
+
+## Binding an Item to a Block
+
+A block and the item players hold to place it are **two separate things** — you connect them from either side:
+
+### From the block side: `settings.item`
+
+Tells the plugin which item this block corresponds to. Mainly used so the right item is picked in **creative middle-click** and for block→item lookups. Optional.
+
+```yaml
+blocks:
+  default:my_block:
+    state: { ... }
+    settings:
+      item: default:my_block    # the item id this block maps to
+```
+
+### From the item side: the `block_item` behavior
+
+This is what actually makes the block **placeable** by right-clicking. Attach a `block_item` behavior to the item, and point its `block` field at the block id:
+
+```yaml
+items:
+  default:my_block:
+    behavior:
+      type: block_item
+      block: default:my_block   # the block this item places
+
+blocks:
+  default:my_block:
+    state: { ... }
+    settings: { ... }
+```
+
+`block` can also hold the **entire block config inline** instead of an id, when you'd rather keep them in one place:
+
+```yaml
+items:
+  default:my_block:
+    behavior:
+      type: block_item
+      block:
+        state: { ... }
+        settings: { ... }
+        loot: { ... }
+```
+
+:::tip Placement variants
+Plain `block_item` places the block where you aim. For special placement rules, Craft Engine offers variants that all take the same `block` field: [Ceiling Block Item](./item/behaviors/ceiling_block_item.mdx), [Wall Block Item](./item/behaviors/wall_block_item.mdx), [Ground Block Item](./item/behaviors/ground_block_item.mdx), [Double High Block Item](./item/behaviors/double_high_block_item.mdx), [Multi High Block Item](./item/behaviors/multi_high_block_item.mdx), and [Liquid Collision Block Item](./item/behaviors/liquid_collision_block_item.mdx).
+:::
+
+:::note
+In short: `settings.item` is **block → item** (what item this block shows as). The `block_item` behavior is **item → block** (what block this item places). For a block players can place by hand, you need the `block_item` behavior on the item — `settings.item` alone won't make it placeable.
+:::
+
+## Where to Look When You're Stuck
+
+Match what you're trying to do to the right page:
+
+| You want to… | Go to |
+|:---|:---|
+| Give it a model, texture, or orientation | [Block States](./block/states.mdx) |
+| Change hardness, sounds, light, burn, mining tools, friction | [Block Settings](./block/settings.mdx) |
+| Make it grow, fall, open, spread, or act like a door / crop / fence / seat | [Block Behaviors](./block/behaviors.mdx) |
+| Find which property types a behavior expects | [Properties](./block/states/properties.mdx) |
+| Control what it drops | [Loot Table](../reference/loot_table.mdx) |
+| Make it drop experience | [Drop Experience Block](./block/behaviors/drop_experience_block.mdx) |
+| React to clicks or breaks | [Events](../reference/events.mdx) · [Conditions](../reference/conditions.mdx) |
+| Store per-block data or render items / text / 3D models | [Block Entity Renderer](./block/states/entity_renderer.mdx) |
+| Make the block placeable by hand (bind it to an item) | [Binding an Item](#binding-an-item-to-a-block) · [Block Item](./item/behaviors/block_item.mdx) |
+| Add it to a vanilla tag group (mineable, logs, beacon base…) | [Block Tags](../reference/block_tags.mdx) |

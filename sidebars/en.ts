@@ -306,6 +306,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/states/properties",
                   label: 'ℹ️ Properties',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/states/entity_renderer",
+                  label: '🫑 Block Entity Renderer',
+                },
               ]
             },
             {
@@ -567,11 +572,6 @@ const sidebars: SidebarsConfig = {
                   "label": "✨ Wall Torch Particle Block"
                 }
               ]
-            },
-            {
-              type: 'doc',
-              id: "configuration/block/entities",
-              label: '🫑 Block Entities',
             },
           ]
         },

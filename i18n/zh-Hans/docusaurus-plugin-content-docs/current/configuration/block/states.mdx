@@ -204,7 +204,7 @@ models:
 <details>
 <summary>⑥ transparent — 移除原始模型</summary>
 
-用于移除方块的原始模型，通常用于空出状态以供方块实体渲染器使用。
+用于移除方块的原始模型，通常用于空出状态以供[方块实体渲染器](states/entity_renderer.mdx)使用。
 
 ```yaml
 transparent: true
@@ -290,6 +290,31 @@ model:
     textures:
       all: "minecraft:block/custom/my_leaves"
 ```
+:::
+
+### 实体渲染器
+
+方块实体渲染器最主要的用途，是绕开方块变体数量有限的限制 —— 每个原版方块能提供的状态有限，能创建的自定义方块也就有上限。用 `transparent: true` 清空某个原版方块的状态，并在方块上放置一个展示实体，即可渲染物品、悬浮文字或 3D 模型，从而近乎无限地创建自定义方块。
+
+```yaml
+state:
+  auto_state:                            # 多个自定义方块共享同一个被清空的原版方块
+    type: sugar_cane
+    id: transparent
+  transparent: true                      # 清空原版方块自身的模型
+  entity_renderer:                       # 通过展示实体来渲染方块
+    type: item_display
+    item: default:my_decoration
+```
+
+:::tip `transparent` 约定
+始终给透明的 `auto_state` 设一个固定 `id` —— 推荐命名为 **`transparent`**。使用相同 `id` 的方块会绑定到**同一个**被清空的原版方块，于是每个方块不再各自占用一个状态，而是共享同一个。遵循此约定还能让你的透明渲染在各资源包间行为可预期，并与他人兼容。推荐其他开发者与用户也采用同样的 `transparent` id。
+:::
+
+`entity_renderer` 接受单个对象或列表，`type` 通常可省略（由 `item` / `text` 推断）。所有元素类型（`item_display`、`text_display`、`item`、`armor_stand`……）、显示参数、着色、剔除与条件，见[方块实体渲染器](states/entity_renderer.mdx)。
+
+:::important `transparent` 与 `entity_renderer`
+不设 `transparent: true` 时，方块保留自己的 `model`，实体渲染在**它之上** —— 两者都可见。在同一个 `state`/`appearance` 上设 `transparent: true`，可**彻底去掉方块自身模型**，让方块完全由 `entity_renderer` 渲染。这样能腾出原版方块容量 —— 一个被清空的原版方块可支撑多种不同渲染。
 :::
 
 ## 多状态方块
@@ -444,6 +469,71 @@ blocks:
 
 </details>
 
+<details>
+<summary>④ 每个外观各自配 <code>entity_renderer</code></summary>
+
+每个外观都能像 `model` 一样携带自己的 `entity_renderer`。下面的方块让展示物品随 `facing` 朝向旋转 —— 四个外观通过 `auto_state` 的 `id`（`transparent`）共用同一个原版方块（一个 `sugar_cane` 状态），并都设 `transparent: true` 清空其模型，于是仅用一个原版方块就支撑了全部朝向，每个朝向各自由 `entity_renderer` 绘制。
+
+```yaml
+blocks:
+  default:sign_post:
+    states:
+      properties:
+        facing:
+          type: horizontal_direction
+          default: north
+      appearances:
+        north:
+          auto_state:                  # 所有朝向共享同一个被清空的原版方块
+            type: sugar_cane
+            id: transparent
+          transparent: true            # 去掉方块自身模型
+          entity_renderer:             # 完全由实体渲染
+            type: item_display
+            item: default:sign_post
+            rotation: 0                # 朝北
+        east:
+          auto_state:
+            type: sugar_cane
+            id: transparent         # 相同 id → 同一个被清空的原版方块
+          transparent: true
+          entity_renderer:
+            type: item_display
+            item: default:sign_post
+            rotation: 90               # 朝东
+        south:
+          auto_state:
+            type: sugar_cane
+            id: transparent
+          transparent: true
+          entity_renderer:
+            type: item_display
+            item: default:sign_post
+            rotation: 180
+        west:
+          auto_state:
+            type: sugar_cane
+            id: transparent
+          transparent: true
+          entity_renderer:
+            type: item_display
+            item: default:sign_post
+            rotation: 270
+      variants:
+        facing=north:
+          appearance: north
+        facing=east:
+          appearance: east
+        facing=south:
+          appearance: south
+        facing=west:
+          appearance: west
+```
+
+旋转、平移及其它元素类型见[方块实体渲染器](states/entity_renderer.mdx)。
+
+</details>
+
 ### 属性详解
 
 属性定义了方块所有可能的内部状态。插件会计算所有属性的**笛卡尔积**，自动生成全部内部状态。
@@ -485,7 +575,7 @@ properties:
 
 ### 外观详解
 
-`appearances` 定义方块所有可能的**视觉外观**。每个外观内部的配置规则与单状态方块完全一致：`auto_state`/`state` + `model`（其下可选 `path`、`textures`、`generation` 等）/ `transparent` / `entity_renderer`。
+`appearances` 定义方块所有可能的**视觉外观**。每个外观内部的配置规则与单状态方块完全一致：`auto_state`/`state` + `model`（其下可选 `path`、`textures`、`generation` 等）/ `transparent` / `entity_renderer`。`entity_renderer` 选项详见[方块实体渲染器](states/entity_renderer.mdx)。
 
 外观名称自由定义，只需同一方块内不重复。**第一个定义的外观是"默认外观"**——当某个内部状态未匹配到任何 variant 的 `appearance` 时，自动使用它。
 

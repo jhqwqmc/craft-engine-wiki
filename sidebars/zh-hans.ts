@@ -306,6 +306,11 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/block/states/properties",
                   label: 'ℹ️ 属性',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/block/states/entity_renderer",
+                  label: '🫑 方块实体渲染器',
+                },
               ]
             },
             {
@@ -567,11 +572,6 @@ const sidebars: SidebarsConfig = {
                   label: '💺 座椅方块',
                 },
               ]
-            },
-            {
-              type: 'doc',
-              id: "configuration/block/entities",
-              label: '🫑 方块实体',
             },
           ]
         },

@@ -204,7 +204,7 @@ models:
 <details>
 <summary>⑥ transparent — remove original model</summary>
 
-Used to remove the block's original model, typically to free up a state for block entity renderer use.
+Used to remove the block's original model, typically to free up a state for [block entity renderer](states/entity_renderer.mdx) use.
 
 ```yaml
 transparent: true
@@ -270,6 +270,31 @@ model:
     textures:
       all: "minecraft:block/custom/my_leaves"
 ```
+:::
+
+### Entity Renderer
+
+The main use of a block entity renderer is to work around the limit on block variants — each vanilla block only provides so many states, so the number of custom blocks you can create is bounded. By clearing a vanilla block's state with `transparent: true` and placing a display entity on the block, you can render items, floating text, or 3D models and create virtually unlimited custom blocks.
+
+```yaml
+state:
+  auto_state:                            # share one cleared vanilla block across many custom blocks
+    type: sugar_cane
+    id: transparent
+  transparent: true                      # clear the vanilla block's own model
+  entity_renderer:                       # render the block through a display entity
+    type: item_display
+    item: default:my_decoration
+```
+
+:::tip The `transparent` convention
+Always give the transparent `auto_state` a fixed `id` — the recommended name is **`transparent`**. Blocks that use the same `id` bind to the **same** cleared vanilla block, so instead of each block consuming its own state, they all share one. Following this convention also makes your transparent renders predictable across packs and compatible with others'. Other developers and users are encouraged to adopt the same `transparent` id.
+:::
+
+`entity_renderer` accepts a single object or a list, and `type` can often be omitted (inferred from `item` / `text`). For all element types (`item_display`, `text_display`, `item`, `armor_stand`, …), display parameters, tinting, culling, and conditions, see [Block Entity Renderer](states/entity_renderer.mdx).
+
+:::important `transparent` + `entity_renderer`
+Without `transparent: true`, the block keeps its `model` and the entity renders **on top of it** — both are visible. Set `transparent: true` on the same `state`/`appearance` to **strip the block's own model entirely**, so the block is rendered solely by the `entity_renderer`. This frees up vanilla block capacity, since one cleared vanilla block can back many different renders.
 :::
 
 ## Multi-State Blocks
@@ -424,6 +449,71 @@ Note: `axisX` and `axisZ` need rotation + a different parent model that `texture
 
 </details>
 
+<details>
+<summary>④ Rendering with an <code>entity_renderer</code> per appearance</summary>
+
+Each appearance can carry its own `entity_renderer`, just like `model`. This block rotates a display item to match its `facing` direction. All four appearances share the **same cleared vanilla block** (a `sugar_cane` state, via the `transparent` `id`) and set `transparent: true`, so one cleared block backs every facing — the block is drawn entirely by the entity in each direction.
+
+```yaml
+blocks:
+  default:sign_post:
+    states:
+      properties:
+        facing:
+          type: horizontal_direction
+          default: north
+      appearances:
+        north:
+          auto_state:                  # share one cleared vanilla block across all facings
+            type: sugar_cane
+            id: transparent
+          transparent: true            # drop the block's own model
+          entity_renderer:             # render solely via the entity
+            type: item_display
+            item: default:sign_post
+            rotation: 0                # facing north
+        east:
+          auto_state:
+            type: sugar_cane
+            id: transparent         # same id → same cleared vanilla block
+          transparent: true
+          entity_renderer:
+            type: item_display
+            item: default:sign_post
+            rotation: 90               # facing east
+        south:
+          auto_state:
+            type: sugar_cane
+            id: transparent
+          transparent: true
+          entity_renderer:
+            type: item_display
+            item: default:sign_post
+            rotation: 180
+        west:
+          auto_state:
+            type: sugar_cane
+            id: transparent
+          transparent: true
+          entity_renderer:
+            type: item_display
+            item: default:sign_post
+            rotation: 270
+      variants:
+        facing=north:
+          appearance: north
+        facing=east:
+          appearance: east
+        facing=south:
+          appearance: south
+        facing=west:
+          appearance: west
+```
+
+See [Block Entity Renderer](states/entity_renderer.mdx) for rotation, translation, and the other element types.
+
+</details>
+
 ### Property Details
 
 Properties define all possible internal states of a block. The plugin computes the **Cartesian product** of all properties to automatically generate every internal state.
@@ -465,7 +555,7 @@ If you don't use these special names (e.g., `custom_axis`), no automatic rotatio
 
 ### Appearance Details
 
-`appearances` defines all possible **visual appearances** for a block. Each appearance follows the exact same configuration rules as single-state blocks (`auto_state`/`state` + `model`/`models`/`textures`/`transparent`/`entity_renderer`).
+`appearances` defines all possible **visual appearances** for a block. Each appearance follows the exact same configuration rules as single-state blocks (`auto_state`/`state` + `model`/`models`/`textures`/`transparent`/`entity_renderer`). See [Block Entity Renderer](states/entity_renderer.mdx) for the `entity_renderer` option.
 
 Appearance names can be freely defined, as long as they are unique within the same block. **The first defined appearance is the "default"** — when an internal state doesn't match any variant's `appearance`, it automatically uses this one.
 

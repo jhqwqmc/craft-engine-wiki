@@ -3,127 +3,200 @@ title: 🧱 方块
 id: block
 ---
 
-import OverallYamlConfig from '@site/src/components/OverallYamlConfig';
-import ClickableYamlFragment from '@site/src/components/ClickableYamlFragment';
+import UrlCard from '@site/src/components/UrlCard';
 
 ## 概览
 
-<OverallYamlConfig >
-  <ClickableYamlFragment
-    highlightColor="#e41616ff"
-    yamlContent={`blocks:
-    default:palm_log: `}
-  />
+一个自定义方块就是配置里 `blocks:` 下的一条条目。每条以它的 id —— `命名空间:路径`，如 `default:palm_log` —— 作为键，由若干**相互独立的配置段**拼装而成，你只需配置自己需要的部分。
 
-  <ClickableYamlFragment
-    to="block/behaviors"
-    highlightColor="#f1a10bff"
-    yamlContent={`    behavior:
-        type: "strippable_block"
-        stripped: "default:stripped_palm_log"`}
-  />
+只有一段是必填的：**state** / **states** —— 它告诉插件方块长什么样。其余一切（物理、机制、掉落、交互）都是按需叠加的可选层。
 
-  <ClickableYamlFragment
-    to="block/settings"
-    highlightColor="#ebe717ff"
-    yamlContent={`    settings:
-        sounds:
-          break: "minecraft:block.wood.break"
-          step: "minecraft:block.wood.step"
-          place: "minecraft:block.wood.place"
-          hit: "minecraft:block.wood.hit"
-          fall: "minecraft:block.wood.fall"
-        burnable: true
-        burn_chance: 5
-        fire_spread_chance: 5
-        hardness: 2.0
-        resistance: 2.0
-        push_reaction: "NORMAL"
-        replaceable: false
-        is_redstone_conductor: true
-        is_suffocating: true
-        instrument: "BASS"
-        can_occlude: true
-        tags:
-          - minecraft:mineable/axe
-          - minecraft:logs_that_burn
-          - minecraft:logs
-          - minecraft:completes_find_tree_tutorial`}
-  />
+## 结构图解
 
-  <ClickableYamlFragment
-    to="block/states"
-    highlightColor="#1fe05fff"
-    yamlContent={`    states:
-        properties:
-          axis:
-            type: "axis"
-            default: "y"
-        appearances:
-          axisY:
-            state: "note_block:0"
-            model:
-              path: "minecraft:block/custom/palm_log"
-              generation:
-                parent: "minecraft:block/cube_column"
-                textures:
-                  end: "minecraft:block/custom/palm_log_top"
-                  side: "minecraft:block/custom/palm_log"
-          axisX:
-            state: "note_block:1"
-            model:
-              x: 90
-              y: 90
-              path: "minecraft:block/custom/palm_log_horizontal"
-              generation:
-                parent: "minecraft:block/cube_column_horizontal"
-                textures:
-                  end: "minecraft:block/custom/palm_log_top"
-                  side: "minecraft:block/custom/palm_log"
-          axisZ:
-            state: "note_block:2"
-            model:
-              x: 90
-              path: "minecraft:block/custom/palm_log_horizontal"
-              generation:
-                parent: "minecraft:block/cube_column_horizontal"
-                textures:
-                  end: "minecraft:block/custom/palm_log_top"
-                  side: "minecraft:block/custom/palm_log"
-        variants:
-          axis=x:
-            appearance: "axisX"
-          axis=y:
-            appearance: "axisY"
-          axis=z:
-            appearance: "axisZ"`}
-  />
+每个方块都遵循同样的骨架。每个顶层键回答关于方块的一个问题：
 
-  <ClickableYamlFragment
-    to="../reference/loot_table"
-    highlightColor="#1fc9e0ff"
-    yamlContent={`    loot:
-        pools:
-          - rolls: 1
-            conditions:
-              - type: "survives_explosion"
-            entries:
-              - type: "item"
-                item: "default:palm_log"`}
-  />
+```yaml
+blocks:
+  default:my_block:     # 方块 id —— 以 default:my_block 在各处被引用
+    state:              # 必填   → 它长什么样   （模型、贴图、朝向）
+      ...
+    settings:           # 可选   → 物理表现（硬度、声音、光照、工具、标签）
+      ...
+    behavior:           # 可选   → 独有机制（生长、下落、开启、蔓延……）
+      ...
+    loot:               # 可选   → 被破坏时掉落什么
+      ...
+    events:             # 可选   → 对玩家交互的反应（点击、破坏……）
+      ...
+```
 
-  <ClickableYamlFragment
-    to="../reference/events"
-    highlightColor="#c91fe0ff"
-    yamlContent={`    events:
-        - on: "right_click"
-          functions:
-            - type: "open_window"
-              gui_type: "anvil"
-            - type: "cancel_event"
-          conditions:
-            - type: "expression"
-              expression: '!<arg:player.is_sneaking>'`}
-  />
+:::note
+`state`（单数）用于只有一个内部状态的方块。`states`（复数）用于多状态方块 —— 有朝向、含水、生长阶段等，会额外带 `properties` / `appearances` / `variants`。见[方块状态](./block/states.mdx)。
+:::
 
-</OverallYamlConfig>
+## 可配置的各部分
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard
+  url="block/states"
+  title="🔣 方块状态"
+  subtitle="模型、贴图、朝向与变体 —— 方块长什么样"
+/>
+
+<UrlCard
+  url="block/settings"
+  title="🔧 方块设置"
+  subtitle="硬度、声音、光照、燃烧、挖掘工具、标签 —— 物理属性"
+/>
+
+<UrlCard
+  url="block/behaviors"
+  title="🕹️ 方块行为"
+  subtitle="机制 —— 生长、下落、开启、门、作物、栅栏、座位……"
+/>
+
+<UrlCard
+  url="../reference/loot_table"
+  title="🎲 战利品表"
+  subtitle="方块被破坏时掉落什么"
+/>
+
+<UrlCard
+  url="../reference/events"
+  title="🪇 事件"
+  subtitle="对点击与破坏做出反应（函数 + 条件把关）"
+/>
+
+</div>
+
+## 快速上手
+
+### 1. 最小的方块
+
+一个状态、一张贴图，别无其它 —— 已经是一个完整可用的方块：
+
+```yaml
+blocks:
+  default:my_block:
+    state:
+      auto_state: note_block                       # 让插件自动选一个载体状态
+      model:
+        texture: "minecraft:block/custom/my_block" # 单张贴图 → cube_all 模型
+```
+
+### 2. 调整物理表现
+
+加上 `settings`，让它像石头一样 —— 声音、硬度、正确的工具：
+
+```yaml
+blocks:
+  default:my_block:
+    state:
+      auto_state: note_block
+      model:
+        texture: "minecraft:block/custom/my_block"
+    settings:
+      hardness: 1.5
+      resistance: 6.0
+      sounds:
+        break: minecraft:block.stone.break
+        step: minecraft:block.stone.step
+        place: minecraft:block.stone.place
+        hit: minecraft:block.stone.hit
+        fall: minecraft:block.stone.fall
+      tags:
+        - minecraft:mineable/pickaxe
+```
+
+### 3. 加入机制
+
+放进一个 `behavior`，让它拥有真正的功能。下面让它成为可以用斧子剥皮的木头：
+
+```yaml
+blocks:
+  default:my_block:
+    state:
+      auto_state: note_block
+      model:
+        texture: "minecraft:block/custom/my_block"
+    settings:
+      hardness: 1.5
+      tags: [minecraft:mineable/axe, minecraft:logs]
+    behavior:
+      type: strippable_block
+      stripped: default:stripped_my_block
+```
+
+就这样继续叠加 —— `loot` 管掉落，`events` 管交互，在某个 state 里放 `entity_renderer` 做自定义渲染。各段彼此独立。
+
+## 把物品绑定到方块
+
+方块和玩家手里拿来放置它的物品是**两回事** —— 你可以从任意一侧把它们关联起来：
+
+### 从方块侧：`settings.item`
+
+告诉插件这个方块对应哪个物品。主要用于**创造模式中键拾取**时选对物品，以及方块→物品的查询。可选。
+
+```yaml
+blocks:
+  default:my_block:
+    state: { ... }
+    settings:
+      item: default:my_block    # 该方块映射到的物品 id
+```
+
+### 从物品侧：`block_item` 行为
+
+真正让方块能被**右键放置**的就是它。给物品附加一个 `block_item` 行为，把它的 `block` 字段指向方块 id：
+
+```yaml
+items:
+  default:my_block:
+    behavior:
+      type: block_item
+      block: default:my_block   # 该物品放置的方块
+
+blocks:
+  default:my_block:
+    state: { ... }
+    settings: { ... }
+```
+
+`block` 也可以**直接内联整段方块配置**而不仅是 id，当你想把两者放一起时：
+
+```yaml
+items:
+  default:my_block:
+    behavior:
+      type: block_item
+      block:
+        state: { ... }
+        settings: { ... }
+        loot: { ... }
+```
+
+:::tip 放置变体
+普通 `block_item` 朝你瞄准处放置。需要特殊放置规则时，CraftEngine 提供了若干变体，它们都接受同样的 `block` 字段：[天花板方块物品](./item/behaviors/ceiling_block_item.mdx)、[墙壁方块物品](./item/behaviors/wall_block_item.mdx)、[地面方块物品](./item/behaviors/ground_block_item.mdx)、[两格高方块物品](./item/behaviors/double_high_block_item.mdx)、[多格高方块物品](./item/behaviors/multi_high_block_item.mdx)、[液体碰撞方块物品](./item/behaviors/liquid_collision_block_item.mdx)。
+:::
+
+:::note
+简而言之：`settings.item` 是**方块 → 物品**（方块显示为哪个物品）。`block_item` 行为是**物品 → 方块**（该物品放置哪个方块）。要让玩家能徒手放置的方块，必须在物品上配置 `block_item` 行为 —— 仅设 `settings.item` 不会让它变得可放置。
+:::
+
+## 遇到不知道怎么配置时该看哪里
+
+按你想做的事找到对应页面：
+
+| 你想要…… | 去看 |
+|:---|:---|
+| 给它模型、贴图或朝向 | [方块状态](./block/states.mdx) |
+| 改硬度、声音、光照、燃烧、挖掘工具、摩擦力 | [方块设置](./block/settings.mdx) |
+| 让它能生长、下落、开启、蔓延，或像门 / 作物 / 栅栏 / 座位 | [方块行为](./block/behaviors.mdx) |
+| 查某个行为需要哪些属性类型 | [属性](./block/states/properties.mdx) |
+| 控制掉落物 | [战利品表](../reference/loot_table.mdx) |
+| 让它掉落经验 | [掉落经验方块](./block/behaviors/drop_experience_block.mdx) |
+| 对点击或破坏做出反应 | [事件](../reference/events.mdx) · [条件](../reference/conditions.mdx) |
+| 存储方块级数据或渲染物品 / 文字 / 3D 模型 | [方块实体渲染器](./block/states/entity_renderer.mdx) |
+| 让方块能徒手放置（绑定物品） | [绑定物品](#把物品绑定到方块) · [方块物品](./item/behaviors/block_item.mdx) |
+| 加入原版标签组（可挖掘、原木、信标基座……） | [方块标签](../reference/block_tags.mdx) |
