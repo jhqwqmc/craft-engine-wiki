@@ -9,13 +9,13 @@ id: surface_spreading_block
 
 ## 属性
 
-| 属性名称 | 属性类型 | 是否必需 | 作用                                            |
-|------|------|------|-----------------------------------------------|
-| snowy | boolean | 否    | 记录顶部是否有雪，用于切换被雪覆盖的视觉状态。 |
+| 属性名称  | 属性类型    | 是否必需 | 作用                 |
+|-------|---------|------|--------------------|
+| snowy | boolean | 否    | 记录顶部是否有雪，用于切换到覆雪状态 |
 
 :::note
 
-`snowy` 为可选属性。若声明，当顶部有雪时方块会自动将其置为 `true`——便于切换到雪覆盖的材质，类似原版草方块。
+`snowy` 为可选属性。若声明，当顶部有雪时方块会自动将其置为 `true`——便于切换到覆雪的材质，类似原版草方块。
 
 :::
 
@@ -28,14 +28,14 @@ blocks:
       type: surface_spreading_block
       light_requirement: 9          # 扩散所需的最低光照（默认 0）
       max_light_requirement: 15     # 扩散所需的最高光照（默认 15）
-      base_block: minecraft:dirt   # 本方块向其扩散、且无法存活时退化成的方块（默认 minecraft:dirt）
+      base_block: minecraft:dirt    # 本方块向其扩散、且无法存活时退化成的方块（默认 minecraft:dirt）
 ```
-
-![](/img/surface_spreading_block.png)
 
 :::warning
 
-- 这是一个**随机刻**行为——只有方块收到随机刻时才会生长。没有随机刻就不会扩散。
+- 这是一个**随机刻**行为——只有方块收到随机刻时才会扩散。没有随机刻就不会扩散。
 - 当方块上方光照超出 `light_requirement`–`max_light_requirement` 范围时停止扩散；当方块自身无法存活（光照完全被遮挡或上方有水）时，退化回 `base_block`。
 
 :::
+
+![](/img/surface_spreading_block.png)

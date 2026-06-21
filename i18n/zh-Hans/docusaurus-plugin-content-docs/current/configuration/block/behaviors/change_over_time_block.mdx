@@ -3,7 +3,7 @@ title: 🔄 随时间更改方块
 id: change_over_time_block
 ---
 
-**随时间更改方块**在随机刻中缓慢转变为另一种方块，类似铜的氧化。每个随机刻有 `change_speed` 的概率将方块转化为 `next_block`。
+**随时间更改方块**在接受到随机刻后会尝试转化层另一种方块，类似铜的氧化。每个随机刻有 `change_speed` 的概率将方块转化为 `next_block`。
 
 原方块的属性会被携带到目标方块，除了 `excluded_properties` 中列出的属性——这些将保持目标方块的默认值。
 
@@ -14,9 +14,9 @@ blocks:
   default:iron_block:
     behavior:
       type: change_over_time_block
-      change_speed: 0.057               # 每随机刻转化的概率（默认 0.057）
-      next_block: default:oxidized_iron_block   # 转化成的目标方块（必需）
-      excluded_properties: []           # 转化时忽略的属性（默认空列表）
+      change_speed: 0.057                     # 每随机刻转化的概率（默认 0.057）
+      next_block: default:oxidized_iron_block # 转化成的目标方块（必需）
+      excluded_properties: []                 # 转化时忽略的属性（默认空列表）
 ```
 
 :::warning

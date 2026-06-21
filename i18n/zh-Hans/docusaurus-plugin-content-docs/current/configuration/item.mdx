@@ -16,7 +16,7 @@ import Highlight from '@site/src/components/Highlight';
 
 - **client_bound_material** <Highlight color="#2E8B57">**可选**</Highlight> <Highlight color="#f2184eff">**付费版专属**</Highlight>
 
-`client_bound_material` 表示客户端用于渲染该物品的基础材质。你可以使用此功能为服务器端侧和客户端侧的物品分配完全不同的基础材质，从而影响它们在服务器或客户端环境中的特定行为。
+`client_bound_material` 表示客户端用于渲染该物品的基础材质。你可以使用此功能为服务端侧和客户端侧的物品分配完全不同的基础材质，从而影响它们在服务器或客户端环境中的特定行为。
 
 - **custom_model_data** <Highlight color="#2E8B57">**可选**</Highlight>
 
@@ -28,7 +28,7 @@ import Highlight from '@site/src/components/Highlight';
 
 - **client_bound_model** <Highlight color="#2E8B57">**可选**</Highlight> <Highlight color="#272ad8ff">**默认值: config.yml**</Highlight> <Highlight color="#f2184eff">**付费版专属**</Highlight>
 
-默认情况下，使 custom_model_data 和 item_model 在客户端生效。这带来了一些好处。例如，您可以动态更新模型值，而不会导致玩家现有物品出现不一致。主要缺点是依赖 custom_model_data 进行物品识别的插件将无法正常工作，因为该数据不存在于服务器端的物品实例中。
+默认情况下，使 custom_model_data 和 item_model 在客户端生效。这带来了一些好处。例如，您可以动态更新模型值，而不会导致玩家现有物品出现不一致。主要缺点是依赖 custom_model_data 进行物品识别的插件将无法正常工作，因为该数据不存在于服务端的物品实例中。
 
 - [**data**](item/data.mdx) <Highlight color="#2E8B57">**可选**</Highlight>
 
@@ -36,7 +36,7 @@ import Highlight from '@site/src/components/Highlight';
 
 - [**client_bound_data**](./item/data.mdx#客户端侧数据) <Highlight color="#2E8B57">**可选**</Highlight> <Highlight color="#f2184eff">**付费版专属**</Highlight>
 
-client_bound_data 仅存在于客户端，不涉及任何服务器端组件。使用客户端物品组件，您可以轻松地实时更新物品描述——包括 item_model 和 custom_model_data 等属性。此外，与其他插件不同，CraftEngine 物品在创造模式下会永久保持不变！
+client_bound_data 仅存在于客户端，不涉及任何服务端组件。使用客户端物品组件，您可以轻松地实时更新物品描述——包括 item_model 和 custom_model_data 等属性。此外，与其他插件不同，CraftEngine 物品在创造模式下会永久保持不变！
 
 - [**behavior(s)**](item/behaviors.mdx) <Highlight color="#2E8B57">**可选**</Highlight>
 

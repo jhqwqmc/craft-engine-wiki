@@ -30,7 +30,7 @@ items:
 
 对于使用命名空间ID的插件物品，只需使用 `<命名空间>:<路径>` 作为 ID。例如：
 
-译者注：原则上不允许使用中文作为命名空间ID，请参阅[**此页面**](../../getting_start/add_custom_model.mdx#什么是命名空间id)，还有请先查看[<Highlight color="#FF0000">**注意事项**</Highlight>](../../reference/text_format.mdx#注意事项)
+译者注：原则上不允许使用中文作为命名空间ID，请参考[**此页面**](../../getting_start/add_custom_model.mdx#什么是命名空间id)，还有请先查看[<Highlight color="#FF0000">**注意事项**</Highlight>](../../reference/text_format.mdx#注意事项)
 
 ```yaml
 id: test_namespace:test/my_path
@@ -374,7 +374,7 @@ items:
 
 :::tip
 
-对于在旧版 Minecraft 中设置食物相关属性，请参阅 [food](settings.mdx#food可食用)。
+对于在旧版 Minecraft 中设置食物相关属性，请参考 [food](settings.mdx#food可食用)。
 
 :::
 
@@ -456,8 +456,8 @@ items:
   default:my_chestplate:
     data:
       trim:
-        pattern: eye # 参阅下方的盔甲纹饰图案
-        material: iron # 参阅下方的盔甲纹饰材料
+        pattern: eye # 参考下方的盔甲纹饰图案
+        material: iron # 参考下方的盔甲纹饰材料
 ```
 :::tip
 你可以从 [<Comment text="你将访问 GitHub 请准备合适的网络环境">**盔甲纹饰图案**</Comment>](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/data/minecraft/trim_pattern)
@@ -735,7 +735,7 @@ items:
 
 <Highlight color="#f2184eff">**付费版专属**</Highlight>
 
-client_bound_data 仅存在于客户端侧，不涉及任何服务器端侧数据。通过使用客户端侧物品数据，您可以轻松实时更新物品提示框中的描述信息，包括 item_model 和 custom_model_data 等数据。此外，与其他插件不同，CraftEngine 的客户端侧物品数据在创造模式不会被<Comment text="也就是仅客户端侧的数据永久留存在了服务端侧">摸坏</Comment>。
+client_bound_data 仅存在于客户端侧，不涉及任何服务端侧数据。通过使用客户端侧物品数据，您可以轻松实时更新物品提示框中的描述信息，包括 item_model 和 custom_model_data 等数据。此外，与其他插件不同，CraftEngine 的客户端侧物品数据在创造模式不会被<Comment text="也就是仅客户端侧的数据永久留存在了服务端侧">摸坏</Comment>。
 
 :::caution
 如果你启用了 `paper-global.yml` 的 [`enable-item-obfuscation`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_enable_item_obfuscation) 则需要将 `minecraft:custom_data` 添加到 [`dont-obfuscate`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_all_models_dont_obfuscate) 部分内，否则在查看其他实体时无法正确显示。
@@ -756,7 +756,7 @@ items:
 :::
 
 :::tip
-client_bound_data 对冒险模式中的玩家非常有用，它允许玩家在服务器端破坏某些真自定义方块。我建议在这里尽可能使用方块标签，而不是具体的方块 id。这有助于解决一些客户端网络协议问题。
+client_bound_data 对冒险模式中的玩家非常有用，它允许玩家在服务端破坏某些真自定义方块。我建议在这里尽可能使用方块标签，而不是具体的方块 id。这有助于解决一些客户端网络协议问题。
 
 ```yaml
 items:

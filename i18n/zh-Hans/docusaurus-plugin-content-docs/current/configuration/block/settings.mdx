@@ -5,9 +5,7 @@ id: settings
 
 ## 概览
 
-`settings` 配置段定义方块的**基础物理属性** —— 硬度、声音、可燃性、光照、挖掘工具、活塞反应等，是方块的"材质档案"，与所挂的[行为](./behaviors.mdx)无关。每一项都**可选**（省略即用默认值），并可通过 [variant](./states.mdx) 按状态覆盖。
-
-本页分两组：**稳定设置**（完全支持）与**不稳定设置**（尽力而为，每项注明其注意事项）。
+`settings` 配置部分定义了方块的基础属性，例如硬度、音效、熔岩可燃性、亮度、合适挖掘工具等，其次这与[🕹️ 方块行为](behaviors)不在同一个配置部分。此外所有设置项均为**可选**（省略时使用默认值），并能通过[变体](states#变体匹配规则)按状态覆盖。以下是包含所有可用设置类型的示例：
 
 <details>
   <summary>示例</summary>
@@ -18,7 +16,6 @@ blocks:
     settings:
       hardness: 0.5
       resistance: 0.5
-      is_randomly_ticking: true
       push_reaction: NORMAL
       map_color: 36
       burnable: false
@@ -42,7 +39,7 @@ blocks:
       incorrect_tool_dig_speed: 0.3
       tags:
         - minecraft:mineable/pickaxe
-      instrument: BASEDRUM
+      instrument: basedrum
       fluid_state: water
       support_shape: minecraft:stone
       luminance: 15
@@ -52,8 +49,11 @@ blocks:
       jump_factor: 1.0
       speed_factor: 1.0
       friction: 0.7
+      bounce_restitution: 0.0
 ```
 </details>
+
+本页分两部分：[**稳定设置**](#稳定设置)（完全支持）与[**不稳定设置**](#不稳定设置)（尽可能支持，可能出现服务端与客户端不同步的问题）。
 
 ## 稳定设置
 
@@ -265,8 +265,10 @@ client_bound_tags:
 
 决定了方块被放在音符盒下时，音符盒使用的乐器类型。（默认值：harp）
 
+译者注：全部的乐器名称可以在[这里](https://zh.minecraft.wiki/w/音符盒#方块状态)查到
+
 ```yaml
-instrument: BASEDRUM
+instrument: basedrum
 ```
 
 ![](/img/block_settings_5.png)
@@ -295,6 +297,20 @@ support_shape: minecraft:stone
 
 :::caution
 接下来的方块设置只对非玩家实体生效
+:::
+
+### 弹性碰撞系数（26.2+）
+
+决定了生物下落到方块上后可以反弹多高。绝大多数方块的弹性碰撞系数为0，黏液块的弹性碰撞系数为1，床的弹性碰撞系数为0.75。如果是非生物实体下落导致的碰撞，则计算使用的弹性碰撞系数会额外乘上0.8。
+
+```yaml
+bounce_restitution: 0.0
+```
+
+:::tip
+
+可通过[⏏️ 弹跳方块](behaviors/bouncing_block)强制为玩家实体同步
+
 :::
 
 ### 阻力系数
