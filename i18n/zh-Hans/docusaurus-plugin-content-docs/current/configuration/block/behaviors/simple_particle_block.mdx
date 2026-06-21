@@ -7,7 +7,7 @@ import Highlight from '@site/src/components/Highlight';
 
 <Highlight color="#3B6B60">**方块实体**</Highlight>
 
-**简单粒子方块**按固定间隔生成粒子效果。每个粒子条目定义效果类型、位置偏移、扩散范围、数量与速度。需要特定参数的粒子类型（物品、方块、粉末颜色等）可使用相应子字段。
+**简单粒子方块**按固定间隔生成粒子效果。每个粒子配置可自定义效果类型、位置偏移、扩散范围、数量与速度。需要特定参数的粒子类型可使用相应子选项。
 
 ## 示例
 
@@ -16,17 +16,17 @@ blocks:
   default:amethyst_torch:
     behavior:
       type: simple_particle_block
-      tick_interval: 10            # 粒子生成间隔，单位：刻（默认 10）
-      particles:
-        - particle: smoke           # 粒子类型 ID（必需）
-          x: 0.5                    # 生成位置 x（默认 0）
-          y: 0.7                    # 生成位置 y（默认 0）
-          z: 0.5                    # 生成位置 z（默认 0）
-          count: 1                  # 每次生成数量（默认 1）
-          offset_x: 0               # x 方向随机扩散（默认 0）
-          offset_y: 0               # y 方向随机扩散（默认 0）
-          offset_z: 0               # z 方向随机扩散（默认 0）
-          speed: 0                  # 粒子速度（默认 0）
+      tick_interval: 10 # 粒子生成间隔，单位：刻（默认 10）
+      particles:        # 具体选项见下方粒子参数
+        - particle: smoke
+          x: 0.5
+          y: 0.7
+          z: 0.5
+          count: 1
+          offset_x: 0
+          offset_y: 0
+          offset_z: 0
+          speed: 0
 ```
 
 <div style={{textAlign: 'center'}}>
@@ -36,15 +36,15 @@ blocks:
 ## 粒子参数
 
 ```yaml
-particle: minecraft:end_rod # 必填; 字符串
-x: 0 # 可选; 数字; 默认值: 0
-y: 0 # 可选; 数字; 默认值: 0
-z: 0 # 可选; 数字; 默认值: 0
-count: 5 # 可选; 数字; 默认值: 1
-offset_x: 0.3 # 可选; 数字; 默认值: 0
-offset_y: 0.3 # 可选; 数字; 默认值: 0
-offset_z: 0.3 # 可选; 数字; 默认值: 0
-speed: 0 # 可选; 数字; 默认值: 0
+particle: minecraft:end_rod # 粒子类型; 必填; 字符串
+x: 0 # 生成的 x 相对坐标; 可选; 数字; 默认值: 0
+y: 0 # 生成的 y 相对坐标; 可选; 数字; 默认值: 0
+z: 0 # 生成的 z 相对坐标; 可选; 数字; 默认值: 0
+count: 5 # 每次生成数量; 可选; 数字; 默认值: 1
+offset_x: 0.3 # x 方向随机扩散; 可选; 数字; 默认值: 0
+offset_y: 0.3 # y 方向随机扩散; 可选; 数字; 默认值: 0
+offset_z: 0.3 # z 方向随机扩散; 可选; 数字; 默认值: 0
+speed: 0 # 粒子速度; 可选; 数字; 默认值: 0
 
 # 以下参数仅在粒子为特定类型时才有效。
 

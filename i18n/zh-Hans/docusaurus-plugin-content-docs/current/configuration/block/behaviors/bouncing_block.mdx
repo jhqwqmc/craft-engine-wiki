@@ -3,9 +3,9 @@ title: ⏏️ 弹跳方块
 id: bouncing_block
 ---
 
-**弹跳方块**让落在其上的实体弹回空中。实体落到方块上时，其下落速度会被反转——`bounce_height` 控制保留多少反弹速度。潜行的实体不会弹跳，正常落地。
+**弹跳方块**能将落在其上的实体弹回空中。当实体落到这个方块上时，其下落速度会被反转——`bounce_height` 控制反弹时保留多少速度。处于潜行状态下的实体不会被反弹，而是正常落地。
 
-掉落伤害仍然生效，但会按 `fall_damage_multiplier` 等比缩放。设为 `0` 可完全禁用掉落伤害。
+摔落伤害仍会生效，但会按 `fall_damage_multiplier` 等比缩放。设为 `0` 可完全禁用摔落伤害。
 
 ## 示例
 
@@ -14,15 +14,17 @@ blocks:
   default:sofa:
     behavior:
       type: bouncing_block
-      bounce_height: 0.66              # 反弹速度倍率，0 为不反弹（默认 0.66）
-      fall_damage_multiplier: 0.5      # 掉落伤害倍率，0 为无伤害（默认 0.5）
-      sync_player_position: true       # 弹跳后强制客户端与服务端同步位置（默认 true）
+      bounce_height: 0.66              # 反弹速度系数，0 为不反弹（默认 0.66，仅在 26.1.2 及更低版本生效，26.2+ 通过方块设置 bounce_restitution 定义）
+      fall_damage_multiplier: 0.5      # 摔落伤害系数，0 为无伤害（默认 0.5）
+      sync_player_position: true       # 弹跳后强制同步客户端与服务端的移动向量（默认 true）
 ```
-
-![](/img/bouncing_block.png)
 
 :::info
 
-**sync_player_position：** 设为 `true` 时，服务器会在弹跳 1 刻后向客户端发送位置修正，防止与原版弹跳方块（床、黏液块）产生位置不同步。如果你的自定义方块在客户端侧的行为已与这些原版方块一致，可设为 `false`。
+**sync_player_position：** 当设为 `true` 时，服务器会在弹跳 1 刻后标记需要向客户端修正移动向量。
+这可以缓解与原版可弹跳方块行为不一致的问题，但则并不完美。
+如果自定义方块使用的视觉方块状态的 `bounce_height` 的数值（例如床在 26.1.2 以之前是 0.66）和弹跳方块行为的数值相同，可以将此选项设为 `false`。
 
 :::
+
+![](/img/bouncing_block.png)

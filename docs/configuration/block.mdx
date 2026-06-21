@@ -141,7 +141,7 @@ Tells the plugin which item this block corresponds to. Mainly used so the right 
 ```yaml
 blocks:
   default:my_block:
-    state: { ... }
+    state: ...
     settings:
       item: default:my_block    # the item id this block maps to
 ```
@@ -159,8 +159,8 @@ items:
 
 blocks:
   default:my_block:
-    state: { ... }
-    settings: { ... }
+    state: ...
+    settings: ...
 ```
 
 `block` can also hold the **entire block config inline** instead of an id, when you'd rather keep them in one place:
@@ -171,14 +171,14 @@ items:
     behavior:
       type: block_item
       block:
-        state: { ... }
-        settings: { ... }
-        loot: { ... }
+        state: ...
+        settings: ...
+        loot: ...
 ```
 
 :::tip
 Placement variants
-Plain `block_item` places the block where you aim. For special placement rules, Craft Engine offers variants that all take the same `block` field: [Ceiling Block Item](./item/behaviors/ceiling_block_item.mdx), [Wall Block Item](./item/behaviors/wall_block_item.mdx), [Ground Block Item](./item/behaviors/ground_block_item.mdx), [Double High Block Item](./item/behaviors/double_high_block_item.mdx), [Multi High Block Item](./item/behaviors/multi_high_block_item.mdx), and [Liquid Collision Block Item](./item/behaviors/liquid_collision_block_item.mdx).
+Plain `block_item` places the block where you aim. For special placement rules, CraftEngine offers variants that all take the same `block` field: [Ceiling Block Item](./item/behaviors/ceiling_block_item.mdx), [Wall Block Item](./item/behaviors/wall_block_item.mdx), [Ground Block Item](./item/behaviors/ground_block_item.mdx), [Double High Block Item](./item/behaviors/double_high_block_item.mdx), [Multi High Block Item](./item/behaviors/multi_high_block_item.mdx), and [Liquid Collision Block Item](./item/behaviors/liquid_collision_block_item.mdx).
 :::
 
 :::note

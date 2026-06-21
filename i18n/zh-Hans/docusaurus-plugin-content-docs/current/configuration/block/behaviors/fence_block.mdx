@@ -3,12 +3,12 @@ title: 🚧 栅栏方块
 id: fence_block
 ---
 
-**栅栏方块**在四个水平方向自动与相邻方块连接。`north`/`east`/`south`/`west` 属性会自动更新——当相邻方块为坚固面、同标签栅栏或栅栏门时，对应方向属性开启。
+**栅栏方块**在四个水平方向自动与相邻方块连接。行为与原版栅栏相同。
 
-若 `can_leash` 启用，右键可用拴绳系在栅栏上。
+若启用 `can_leash`，右键可用拴绳系在方块上。
 
-| 属性名称  | 属性类型 | 是否必需 |
-|-------|------|------|
+| 属性名称  | 属性类型    | 是否必需 |
+|-------|---------|------|
 | north | boolean | 是    |
 | east  | boolean | 是    |
 | south | boolean | 是    |
@@ -22,7 +22,7 @@ blocks:
     behavior:
       type: fence_block
       connectable_block_tag: minecraft:wooden_fences   # 连接其他栅栏的标签（默认 minecraft:wooden_fences）
-      can_leash: true                                  # 是否允许拴绳系上
+      can_leash: true                                  # 是否允许拴绳拴上
 ```
 
 ![](/img/fence_block.png)

@@ -18,7 +18,6 @@ blocks:
     settings:
       hardness: 0.5
       resistance: 0.5
-      is_randomly_ticking: true
       push_reaction: NORMAL
       map_color: 36
       burnable: false
@@ -52,6 +51,7 @@ blocks:
       jump_factor: 1.0
       speed_factor: 1.0
       friction: 0.7
+      bounce_restitution: 0.0
 ```
 </details>
 
@@ -295,6 +295,20 @@ support_shape: minecraft:stone
 
 :::caution
 The following block settings would only work for entities except players.
+:::
+
+### bounce_restitution
+
+Determines how high a creature can bounce after landing on a block. (Default: 0.0, Slime Block: 1.0, Bed: 0.75)
+
+```yaml
+bounce_restitution: 0.0
+```
+
+:::tip
+
+You can use the [⏏️ Bouncing Block](behaviors/bouncing_block) to force synchronization of player entities.
+
 :::
 
 ### friction

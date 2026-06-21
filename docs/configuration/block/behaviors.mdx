@@ -5,7 +5,7 @@ id: behaviors
 
 ## Introduction
 
-A block behavior defines the unique mechanics and physics of a block — how it grows, falls, opens, spreads, or reacts to its neighbors. Vanilla Minecraft hardcodes these mechanics into specific blocks; Craft Engine lets you attach the same mechanics to any block through configuration.
+A block behavior defines the unique mechanics and physics of a block — how it grows, falls, opens, spreads, or reacts to its neighbors. Vanilla Minecraft hardcodes these mechanics into specific blocks; CraftEngine lets you attach the same mechanics to any block through configuration.
 
 Some behaviors rely on specific block properties to function. For example:
 
@@ -59,5 +59,4 @@ blocks:
 
 - **Merge required properties.** Each behavior lists the properties it needs; when combining, your block must satisfy all of them, or some behaviors won't work as expected.
 - **Some combinations conflict.** Certain behaviors don't play well together and may behave unexpectedly. If something seems off, reach out to support and we will help resolve it.
-- **No duplicates.** You can't list the same behavior type more than once on a single block — this always causes a conflict.
 :::
