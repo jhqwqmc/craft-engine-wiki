@@ -348,11 +348,6 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
-                  id: "configuration/block/behaviors/bouncing_block",
-                  label: '⏏️ 弹跳方块',
-                },
-                {
-                  type: 'doc',
                   id: "configuration/block/behaviors/lamp_block",
                   label: '💡 灯方块',
                 },
@@ -515,6 +510,11 @@ const sidebars: SidebarsConfig = {
                   type: 'doc',
                   id: "configuration/block/behaviors/slab_block",
                   label: '➖️ 台阶方块',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/block/behaviors/bouncing_block",
+                  label: '⏏️ 弹跳方块',
                 },
                 {
                   type: 'doc',

@@ -20,6 +20,6 @@ blocks:
 
 :::info
 
-`excluded_properties` is useful when the stripped variant has a different property range than the original. For example, if both log and stripped log have `axis` but the stripped log always defaults to `y`, you would exclude `axis` to avoid accidentally copying `x` or `z`.
+The original block's properties are carried over, except for those listed in `excluded_properties` — these stay at the target block's defaults.
 
 :::

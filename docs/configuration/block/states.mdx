@@ -289,6 +289,7 @@ state:
 
 :::tip
 The `transparent` convention
+
 Always give the transparent `auto_state` a fixed `id` — the recommended name is **`transparent`**. Blocks that use the same `id` bind to the **same** cleared vanilla block, so instead of each block consuming its own state, they all share one. Following this convention also makes your transparent renders predictable across packs and compatible with others'. Other developers and users are encouraged to adopt the same `transparent` id.
 :::
 
@@ -296,6 +297,7 @@ Always give the transparent `auto_state` a fixed `id` — the recommended name i
 
 :::important
 `transparent` + `entity_renderer`
+
 Without `transparent: true`, the block keeps its `model` and the entity renders **on top of it** — both are visible. Set `transparent: true` on the same `state`/`appearance` to **strip the block's own model entirely**, so the block is rendered solely by the `entity_renderer`. This frees up vanilla block capacity, since one cleared vanilla block can back many different renders.
 :::
 

@@ -9,7 +9,7 @@ import UrlCard from '@site/src/components/UrlCard';
 
 A custom block is a single entry under `blocks:` in your configuration. Each entry is keyed by its id — `namespace:path`, e.g. `default:palm_log` — and is assembled from a handful of **independent sections**. You configure only the ones you need.
 
-Only one section is mandatory: **state** / **states** — it tells the plugin what the block looks like. Everything else (physics, mechanics, drops, interaction) is optional layering you add when the block needs it.
+Only one section is mandatory: **state** / **states** — it tells the plugin what the block looks like. Everything else is optional layering you add when the block needs it.
 
 ## Anatomy
 
@@ -29,10 +29,6 @@ blocks:
     events:             # optional  → reactions to player interaction (click, break, …)
       ...
 ```
-
-:::note
-`state` (singular) is for blocks with a single internal state. `states` (plural) is for blocks with multiple — orientation, waterlogging, growth stages — and adds `properties` / `appearances` / `variants`. See [Block States](./block/states.mdx).
-:::
 
 ## Sections to Configure
 
@@ -122,7 +118,9 @@ blocks:
         texture: "minecraft:block/custom/my_block"
     settings:
       hardness: 1.5
-      tags: [minecraft:mineable/axe, minecraft:logs]
+      tags:
+        - minecraft:mineable/axe
+        - minecraft:logs
     behavior:
       type: strippable_block
       stripped: default:stripped_my_block
@@ -178,11 +176,8 @@ items:
 
 :::tip
 Placement variants
-Plain `block_item` places the block where you aim. For special placement rules, CraftEngine offers variants that all take the same `block` field: [Ceiling Block Item](./item/behaviors/ceiling_block_item.mdx), [Wall Block Item](./item/behaviors/wall_block_item.mdx), [Ground Block Item](./item/behaviors/ground_block_item.mdx), [Double High Block Item](./item/behaviors/double_high_block_item.mdx), [Multi High Block Item](./item/behaviors/multi_high_block_item.mdx), and [Liquid Collision Block Item](./item/behaviors/liquid_collision_block_item.mdx).
-:::
 
-:::note
-In short: `settings.item` is **block → item** (what item this block shows as). The `block_item` behavior is **item → block** (what block this item places). For a block players can place by hand, you need the `block_item` behavior on the item — `settings.item` alone won't make it placeable.
+Plain `block_item` places the block where you aim. For special placement rules, CraftEngine offers variants that all take the same `block` field: [Ceiling Block Item](./item/behaviors/ceiling_block_item.mdx), [Wall Block Item](./item/behaviors/wall_block_item.mdx), [Ground Block Item](./item/behaviors/ground_block_item.mdx), [Double High Block Item](./item/behaviors/double_high_block_item.mdx), [Multi High Block Item](./item/behaviors/multi_high_block_item.mdx), and [Liquid Collision Block Item](./item/behaviors/liquid_collision_block_item.mdx).
 :::
 
 ## Where to Look When You're Stuck

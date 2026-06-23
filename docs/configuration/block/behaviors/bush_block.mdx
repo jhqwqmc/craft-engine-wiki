@@ -5,7 +5,7 @@ id: bush_block
 
 **Bush Block** can only survive on specific blocks directly beneath it — like flowers or saplings. If the supporting block is destroyed or invalid, the bush breaks.
 
-It can optionally stack: when `stackable` is enabled, multiple bushes of the same type can pile on top of each other up to `max_height`. A stacked bush counts the same-type blocks below it; if there are too many it breaks.
+It can optionally stack: when `stackable` is enabled, multiple bushes of the same type can pile on top of each other up to `max_height`. A stacked bush counts the same-type blocks below it.
 
 Immediately after placement the block checks its support. If `delay` is set to a positive value, the check is postponed by that many ticks instead of running instantly on every neighbor update — useful for bushes that should survive brief block-replacement transitions.
 

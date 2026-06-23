@@ -5,8 +5,6 @@ id: vertical_crop_block
 
 **Vertical Crop Block** grows upward or downward on random ticks, like sugar cane or kelp. It accumulates an internal `age` and places a new block of the same type once it reaches the maximum.
 
-The crop's root keeps growing even after new segments appear above — each segment grows independently, so a tall stalk can produce new segments from multiple positions at once.
-
 Growth only triggers when the space ahead (above for `up`, below for `down`) is air and fewer than `max_height` segments of the same block already exist below the tip.
 
 ## Properties
