@@ -3,6 +3,8 @@ title: 🫑 Block Entity Renderer
 id: entity_renderer
 ---
 
+import ExpandableIframeCard from '@site/src/components/ExpandableIframeCard';
+
 ## How It Works
 
 As we all know, the number of variants for a single block is limited. For example, a tripwire only has 128 variants, meaning that without sacrificing the original tripwire, we can create at most 127 custom block states. However, if we remove the texture of one of these states, make it appear completely transparent, and place a display entity at the center of the block, we can achieve virtually unlimited custom blocks.
@@ -67,8 +69,8 @@ scale: 1,1,1               # Scale (x,y,z). Single number like scale: 1.5 also w
 yaw: 0                     # Around Y axis
 pitch: 0                   # Around X axis
 rotation: 45               # Single number → around Y axis
-rotation: 45,45,0          # Euler angles (x,y,z)
-rotation: 0,0,0.707,0.707  # Quaternion (x,y,z,w)
+rotation: 45,45,0          # Euler angles (x,y,z), See the rotation tool below
+rotation: 0,0,0.707,0.707  # Quaternion (x,y,z,w), See the rotation tool below
 
 # Display
 billboard: fixed           # fixed / vertical / horizontal / center
@@ -84,6 +86,13 @@ shadow_strength: 1         # Shadow strength
 ```
 
 </details>
+
+<ExpandableIframeCard
+    url="https://rotation-master.gtemc.cn"
+    title="Rotation Tool"
+    expandedLabel="Collapse"
+    collapsedLabel="Expand"
+/>
 
 `position`, `yaw`, and `pitch` also apply to `armor_stand`; `item` (dropped item) only supports `position`.
 

@@ -3,6 +3,8 @@ title: 📍 Furniture Variants
 id: variants
 ---
 
+import ExpandableIframeCard from '@site/src/components/ExpandableIframeCard';
+
 ## Introduction
 
 The furniture supports custom variants. By default, the plugin provides three preset variant types: `ground`, `ceiling`, and `wall`. The variant will change based on the item behavior and furniture behavior. Currently, switching variants is only supported via API operations.
@@ -79,8 +81,8 @@ brightness:
 view_range: 1.0
 # rotation support 3 formats
 rotation: 45  # Y axis
-rotation: 45,45,0  # Euler angle
-rotation: 0,0,0.7071,0.7071  # Quaternions  https://quaternions.online/
+rotation: 45,45,0  # Euler angle, See the rotation tool below
+rotation: 0,0,0.7071,0.7071  # Quaternions, See the rotation tool below
 # Select the component that affects the color of this furniture. Generally, you only need to 
 # choose one of the following component types based on the item of the furniture element.
 tint_source: 
@@ -89,6 +91,13 @@ tint_source:
   - firework_explosion
   - potion_contents
 ```
+
+<ExpandableIframeCard
+    url="https://rotation-master.gtemc.cn"
+    title="Rotation Tool"
+    expandedLabel="Collapse"
+    collapsedLabel="Expand"
+/>
 
 :::warning
 Please note the distinction between `position` and `translation`. `position` alters the coordinate location of the corresponding display entity, whereas `translation` is a displacement attribute of the display entity itself.

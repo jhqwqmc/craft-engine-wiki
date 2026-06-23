@@ -3,6 +3,8 @@ title: 🫑 方块实体渲染器
 id: entity_renderer
 ---
 
+import ExpandableIframeCard from '@site/src/components/ExpandableIframeCard';
+
 ## 它是如何工作的？
 
 众所周知，单个方块的变体数量是有限的。以绊线为例，其最多只有 128 种变体。这意味着在不破坏绊线原本功能的前提下，最多只能释放 127 种自定义方块状态。然而，通过移除其中一种状态的纹理使其完全透明，并在方块中心放置展示实体，便能实现近乎无限的自定义方块。
@@ -66,10 +68,9 @@ scale: 1,1,1               # 缩放 (x,y,z)，也支持单个数字如 scale: 1.
 # 旋转（推荐使用 rotation）
 yaw: 0                     # 绕 Y 轴旋转
 pitch: 0                   # 绕 X 轴旋转
-# 译者注：我推荐这个旋转工具 https://iwatake2222.github.io/rotation_master/rotation_master.html 操作起来更方便
 rotation: 45               # 基于 Y 轴旋转
-rotation: 45,45,0          # 欧拉角
-rotation: 0,0,0.707,0.707  # 四元数
+rotation: 45,45,0          # 欧拉角，见下方旋转工具
+rotation: 0,0,0.707,0.707  # 四元数，见下方旋转工具
 
 # 展示
 billboard: fixed           #      fixed      /  vertical   /  horizontal /         center
@@ -86,6 +87,13 @@ shadow_strength: 1         # 阴影的不透明度
 ```
 
 </details>
+
+<ExpandableIframeCard
+    url="https://rotation-master.gtemc.cn/zh-Hans/"
+    title="旋转工具"
+    expandedLabel="收起"
+    collapsedLabel="展开"
+/>
 
 :::tip
 建议使用 `translation` 代替 `position`，使用 `rotation` 代替 `yaw`/`pitch`。这样插件可以在不发送位置同步包的情况下更新渲染，保证最佳视觉效果。

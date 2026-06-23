@@ -3,6 +3,8 @@ title: 📍 家具变体
 id: variants
 ---
 
+import ExpandableIframeCard from '@site/src/components/ExpandableIframeCard';
+
 ## 简介
 
 家具支持自定义变体。默认情况下，插件提供三种预设变体类型：`ground`、`ceiling` 和 `wall`。变体将根据物品行为和家具行为进行切换。目前仅支持通过 API 操作切换变体。
@@ -82,10 +84,9 @@ brightness:
   sky_light: 15
 view_range: 1.0
 # rotation 支持 3 种格式
-# 译者注：我推荐这个旋转工具 https://iwatake2222.github.io/rotation_master/rotation_master.html 操作起来更方便
 rotation: 45  # Y 轴
-rotation: 45,45,0  # 欧拉角
-rotation: 0,0,0.7071,0.7071  # 四元数  https://quaternions.online/
+rotation: 45,45,0  # 欧拉角，见下方旋转工具
+rotation: 0,0,0.7071,0.7071  # 四元数，见下方旋转工具
 # 染色源，选择影响此家具颜色的组件。通常来说你只需要选择根据家具元素的物品选择下列之一的组件类型即可。
 tint_source: 
   - dyed_color
@@ -93,6 +94,13 @@ tint_source:
   - firework_explosion
   - potion_contents
 ```
+
+<ExpandableIframeCard
+    url="https://rotation-master.gtemc.cn/zh-Hans/"
+    title="旋转工具"
+    expandedLabel="收起"
+    collapsedLabel="展开"
+/>
 
 :::warning
 请注意区分 `position` 与 `translation`，`position` 改变对应展示实体的坐标位置，而 `translation` 是展示实体自身的位移属性。
