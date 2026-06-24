@@ -10,16 +10,34 @@ import {
   FaFolder,
   FaFolderOpen,
   FaFile,
-  FaChevronRight,
-  FaChevronDown,
   FaQuestionCircle,
 } from 'react-icons/fa';
 import ReactDOM from 'react-dom';
+import styles from './PluginFileTree.module.css';
 
 /* ==============================
-   节点渲染组件（新增滚动关闭）
+   节点渲染组件
    ============================== */
-function TreeNode({ node, depth, currentTheme, selectedId, onSelect, scrollContainerRef }) {
+function Chevron({ open }) {
+  return (
+      <svg
+          className={`${styles.chevron} ${open ? styles.chevronOpen : ''}`}
+          viewBox="0 0 24 24"
+          width="14"
+          height="14"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+      >
+        <polyline points="9 6 15 12 9 18" />
+      </svg>
+  );
+}
+
+function TreeNode({ node, depth, selectedId, onSelect, scrollContainerRef }) {
   const [showCard, setShowCard] = useState(false);
   const [cardStyle, setCardStyle] = useState({});
   const cardRef = useRef(null);
@@ -29,6 +47,9 @@ function TreeNode({ node, depth, currentTheme, selectedId, onSelect, scrollConta
   const isFolder = !!node.children;
   const isOpen = node.isOpen;
   const isSelected = node.id === selectedId;
+
+  const MAX_INDENT = 200;
+  const indent = Math.min(depth * 20, MAX_INDENT);
 
   const handleClick = useCallback(
       (e) => {
@@ -46,7 +67,7 @@ function TreeNode({ node, depth, currentTheme, selectedId, onSelect, scrollConta
     setShowCard((prev) => !prev);
   }, []);
 
-  // 卡片位置计算（保持不变）
+  // 卡片位置计算
   const updateCardPosition = useCallback(() => {
     if (!questionIconRef.current || !cardRef.current) return;
     const iconRect = questionIconRef.current.getBoundingClientRect();
@@ -115,17 +136,13 @@ function TreeNode({ node, depth, currentTheme, selectedId, onSelect, scrollConta
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // 🆕 滚动时自动关闭提示卡片
+  // 滚动时自动关闭提示卡片
   useEffect(() => {
     if (!showCard) return;
 
-    const handleScroll = () => {
-      setShowCard(false);
-    };
+    const handleScroll = () => setShowCard(false);
 
-    // 监听全局滚动（捕获阶段更全面）
     window.addEventListener('scroll', handleScroll, true);
-    // 监听文件树容器自身的滚动
     const container = scrollContainerRef?.current;
     if (container) {
       container.addEventListener('scroll', handleScroll);
@@ -139,118 +156,43 @@ function TreeNode({ node, depth, currentTheme, selectedId, onSelect, scrollConta
     };
   }, [showCard, scrollContainerRef]);
 
-  // --- 配色优化后的主题颜色映射 ---
-  const getColor = (light, dark) => (currentTheme === 'dark' ? dark : light);
-
-  const textColor = getColor('#333', '#e2e8f0');
-  const arrowColor = getColor('#666', '#94a3b8');
-  const folderColor = getColor('#f59e0b', '#fbbf24');
-  const fileColor = getColor('#6b7280', '#cbd5e1');
-  const questionIconColor = getColor('#a0aec0', '#94a3b8');
-  const selectedBg = getColor('#e0f2fe', '#3c404a');
-  const hoverBg = getColor('#f1f5f9', '#2a2d37');
-  const cardBgColor = getColor('#ffffff', '#2b2d35');
-  const cardBorderColor = getColor('#e2e8f0', '#4b5563');
-  const cardShadow = getColor(
-      '0 4px 12px rgba(0,0,0,0.1)',
-      '0 4px 12px rgba(0,0,0,0.4)'
-  );
-
   const Icon = isFolder ? (isOpen ? FaFolderOpen : FaFolder) : FaFile;
-  const ArrowIcon = isFolder ? (isOpen ? FaChevronDown : FaChevronRight) : null;
-  const MAX_INDENT = 200;
-  const indent = Math.min(depth * 20, MAX_INDENT);
-
-  const cardDynamicStyle = {
-    ...cardStyle,
-    maxWidth: 'min(90vw, 400px)',
-    padding: '12px',
-    backgroundColor: cardBgColor,
-    border: `1px solid ${cardBorderColor}`,
-    borderRadius: '6px',
-    boxShadow: cardShadow,
-    zIndex: 1000,
-    fontSize: '0.9em',
-    color: textColor,
-    lineHeight: '1.5',
-    wordBreak: 'break-word',
-    whiteSpace: 'pre-wrap',
-    overflowWrap: 'break-word',
-  };
 
   return (
       <div>
         <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: `${indent}px`,
-              paddingRight: '8px',
-              height: '32px',
-              cursor: 'default',
-              backgroundColor: isSelected ? selectedBg : 'transparent',
-              transition: 'background-color 0.1s',
-              color: textColor,
-              userSelect: 'none',
-              WebkitTapHighlightColor: 'transparent',
-              whiteSpace: 'nowrap',
-              minWidth: 'fit-content',
-            }}
+            className={`${styles.row} ${isSelected ? styles.rowSelected : ''}`}
+            style={{ '--indent': `${indent}px` }}
             onClick={handleClick}
-            onMouseEnter={(e) => {
-              if (!isSelected) e.currentTarget.style.backgroundColor = hoverBg;
-            }}
-            onMouseLeave={(e) => {
-              if (!isSelected) e.currentTarget.style.backgroundColor = 'transparent';
-            }}
         >
-          <div
-              style={{
-                width: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
-          >
-            {ArrowIcon && <ArrowIcon style={{ fontSize: '0.75em', color: arrowColor }} />}
-          </div>
-          <div
-              style={{
-                marginLeft: '4px',
-                marginRight: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                flexShrink: 0,
-              }}
-          >
-            <Icon color={isFolder ? folderColor : fileColor} />
-          </div>
-          <span style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
-          {node.name}
-        </span>
+          {isFolder ? (
+              <span className={styles.chevronWrap}>
+                <Chevron open={isOpen} />
+              </span>
+          ) : (
+              <span className={styles.chevronSpacer} />
+          )}
+
+          <span className={styles.iconWrap}>
+            <Icon className={isFolder ? styles.folderIcon : styles.fileIcon} />
+          </span>
+
+          <span className={styles.name}>{node.name}</span>
+
           {node.hoverText && (
-              <div
+              <span
                   ref={questionIconRef}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    zIndex: 1,
-                    marginLeft: '8px',
-                    flexShrink: 0,
-                  }}
+                  className={styles.question}
                   onClick={handleQuestionClick}
               >
-                <FaQuestionCircle style={{ fontSize: '0.8em', color: questionIconColor }} />
-              </div>
+                <FaQuestionCircle style={{ fontSize: '0.8em' }} />
+              </span>
           )}
         </div>
 
         {showCard &&
             ReactDOM.createPortal(
-                <div ref={cardRef} style={cardDynamicStyle}>
+                <div ref={cardRef} className={styles.card} style={cardStyle}>
                   {node.hoverText}
                 </div>,
                 document.body
@@ -260,9 +202,9 @@ function TreeNode({ node, depth, currentTheme, selectedId, onSelect, scrollConta
 }
 
 /* ==============================
-   主文件树组件（传递容器 ref）
+   主文件树组件
    ============================== */
-export default function PluginFileTree({ initialTreeData }) {
+export default function PluginFileTree({ initialTreeData, title }) {
   const [treeData, setTreeData] = useState(() => {
     const addState = (nodes) =>
         nodes.map((node) => ({
@@ -274,22 +216,7 @@ export default function PluginFileTree({ initialTreeData }) {
   });
 
   const [selectedId, setSelectedId] = useState(null);
-  const [currentTheme, setCurrentTheme] = useState('light');
-  const [hovered, setHovered] = useState(false);
-  const containerRef = useRef(null); // 文件树容器 ref
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const theme = document.documentElement.dataset.theme || 'light';
-      setCurrentTheme(theme);
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-    setCurrentTheme(document.documentElement.dataset.theme || 'light');
-    return () => observer.disconnect();
-  }, []);
+  const containerRef = useRef(null);
 
   const toggleNode = useCallback((targetId) => {
     const update = (nodes) =>
@@ -314,50 +241,46 @@ export default function PluginFileTree({ initialTreeData }) {
 
   const visibleNodes = flatten(treeData);
 
+  const TOOLBAR_HEIGHT = 38;
   const ROW_HEIGHT = 32;
-  const PADDING_VERTICAL = 16 * 2;
-  const MIN_HEIGHT = 32;
+  const PADDING_VERTICAL = 20; /* 10px top + 10px bottom */
+  const MIN_HEIGHT = TOOLBAR_HEIGHT + 32;
   const MAX_HEIGHT = 500;
   const totalHeight = Math.min(
       MAX_HEIGHT,
-      Math.max(MIN_HEIGHT, visibleNodes.length * ROW_HEIGHT + PADDING_VERTICAL)
+      Math.max(
+          MIN_HEIGHT,
+          visibleNodes.length * ROW_HEIGHT + PADDING_VERTICAL + TOOLBAR_HEIGHT
+      )
   );
 
-  const containerBg = currentTheme === 'dark' ? '#1e1f29' : '#f8fafc';
-  const containerHoverBg = currentTheme === 'dark' ? '#252830' : '#ecedf0';
-  const borderColor = currentTheme === 'dark' ? '#3f3f46' : '#eeeeee';
+  // 工具条标题：优先用 prop，否则取首个根节点名
+  const toolbarTitle =
+      title || (initialTreeData[0] && initialTreeData[0].name) || '';
 
   return (
-      <div
-          ref={containerRef}
-          style={{
-            boxSizing: 'border-box',
-            width: '100%',
-            borderRadius: '8px',
-            padding: '16px',
-            overflowX: 'auto',
-            overflowY: 'auto',
-            transition: 'height 0.3s ease, background-color 0.2s',
-            height: `${totalHeight}px`,
-            border: `2px solid ${borderColor}`,
-            backgroundColor: hovered ? containerHoverBg : containerBg,
-            userSelect: 'none',
-            WebkitOverflowScrolling: 'touch',
-          }}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-      >
-        {visibleNodes.map((node) => (
-            <TreeNode
-                key={node.id}
-                node={{ ...node, toggle: () => toggleNode(node.id) }}
-                depth={node.depth}
-                currentTheme={currentTheme}
-                selectedId={selectedId}
-                onSelect={setSelectedId}
-                scrollContainerRef={containerRef}
-            />
-        ))}
+      <div className={styles.tree} style={{ height: `${totalHeight}px` }}>
+        <div className={styles.toolbar}>
+          <div className={styles.trafficLights}>
+            <span className={`${styles.light} ${styles.lightRed}`} />
+            <span className={`${styles.light} ${styles.lightYellow}`} />
+            <span className={`${styles.light} ${styles.lightGreen}`} />
+          </div>
+          <span className={styles.toolbarTitle}>{toolbarTitle}</span>
+        </div>
+
+        <div ref={containerRef} className={styles.body}>
+          {visibleNodes.map((node) => (
+              <TreeNode
+                  key={node.id}
+                  node={{ ...node, toggle: () => toggleNode(node.id) }}
+                  depth={node.depth}
+                  selectedId={selectedId}
+                  onSelect={setSelectedId}
+                  scrollContainerRef={containerRef}
+              />
+          ))}
+        </div>
       </div>
   );
 }
