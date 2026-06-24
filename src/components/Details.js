@@ -1,138 +1,142 @@
 // src/components/Details.js
-// A modern collapsible card with a GitHub-style "peek then expand" behavior.
-// Collapsed: a truncated preview (capped height) with a bottom fade and a
-// centered "Read more" button overlaid. Expanded: full content.
+// previewHeight: 0 = 完全折叠 | -1 = 自动 | N = 固定高度
 //
-// The transition is driven by the measured full content height (not a fake
-// 9999px), so collapsing/expanding is smooth with no "empty travel" or jank.
-//
-// Usage:
-//   <Details summary="Full Config Overview"> ... </Details>
-//   <Details summary="..." previewHeight={220}> ... </Details>
-//   <Details summary="..." defaultOpen> ... </Details>
+// 自动模式 (-1) 逻辑：
+//   内容较短（≤ AUTO_SHORT_THRESHOLD）→ effectivePreviewHeight = 0，纯开关，不露内容
+//   内容较长                          → clamp(ratio × 高度, MIN, 200)
 
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import styles from './Details.module.css';
+import { translate } from '@docusaurus/Translate';
+
+// ─── 自动模式调节参数 ──────────────────────────────────────────────────────────
+const AUTO_SHORT_THRESHOLD = 120;  // 原始内容高度 ≤ 此值 → 直接折叠，不露预览
+const AUTO_RATIO           = 0.45; // 预览高度 = 内容高度 × 45%
+const AUTO_MIN             =  80;  // 预览最小值（px）
+const AUTO_MAX             = 200;  // 预览最大值（px）
+const AUTO_FALLBACK        = 200;  // 首次测量前的占位高度（px）
+// ─────────────────────────────────────────────────────────────────────────────
 
 function Chevron() {
   return (
-    <svg className={styles.chevron} viewBox="0 0 24 24" width="16" height="16"
-      aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.5"
-      strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9 6 15 12 9 18" />
-    </svg>
+      <svg className={styles.chevron} viewBox="0 0 24 24" width="16" height="16"
+           aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.5"
+           strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="9 6 15 12 9 18" />
+      </svg>
   );
 }
 
 export default function Details({
-  summary,
-  children,
-  defaultOpen = false,
-  previewHeight = 200,
-  moreLabel = 'Read more',
-  lessLabel = 'Show less',
-}) {
+                                  summary,
+                                  children,
+                                  defaultOpen = false,
+                                  previewHeight = -1,
+                                  moreLabel,
+                                  lessLabel,
+                                }) {
+  const resolvedMoreLabel = moreLabel || translate({ id: 'details.readMore', message: 'Read more' });
+  const resolvedLessLabel = lessLabel || translate({ id: 'details.showLess', message: 'Show less' });
   const [open, setOpen] = useState(defaultOpen);
   const [contentHeight, setContentHeight] = useState(null);
   const contentRef = useRef(null);
 
-  // Padding around the content. Long content reserves room for the bottom
-  // "Read more" button; short content uses a tight padding.
-  const PAD_TOP = 16;
-  const PAD_BOTTOM_LONG = 48;
+  const PAD_TOP          = 16;
+  const PAD_BOTTOM_LONG  = 48;
   const PAD_BOTTOM_SHORT = 18;
 
-  // Short content fits entirely within the preview height — no truncation,
-  // no fade, no "Read more" affordance. Behaves like a plain disclosure.
-  const short = contentHeight != null && contentHeight + PAD_TOP + PAD_BOTTOM_LONG <= previewHeight;
+  const isAuto = previewHeight === -1;
+
+  // ── 计算有效的预览高度 ────────────────────────────────────────────────────────
+  // 显式值（≥ 0）：原样透传，行为与修改前完全一致。
+  // 自动值（-1）：
+  //   • 短内容 → 0，退化为普通折叠开关（无预览条）
+  //   • 长内容 → clamp(ratio × 内容高度, MIN, MAX)
+  const effectivePreviewHeight = (() => {
+    if (!isAuto) return previewHeight;
+    if (contentHeight == null) return AUTO_FALLBACK;
+    if (contentHeight <= AUTO_SHORT_THRESHOLD) return 0;
+    return Math.min(AUTO_MAX, Math.max(AUTO_MIN, Math.round(contentHeight * AUTO_RATIO)));
+  })();
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  const short = contentHeight != null && contentHeight + PAD_TOP + PAD_BOTTOM_LONG <= effectivePreviewHeight;
   const padBottom = short ? PAD_BOTTOM_SHORT : PAD_BOTTOM_LONG;
   const fullHeight = contentHeight != null ? contentHeight + PAD_TOP + padBottom : null;
 
-  // Measure the natural height of the inner content (padding-free wrapper) so
-  // the short/long decision is stable and doesn't oscillate as padding changes.
   const measure = () => {
     const el = contentRef.current;
     if (!el) return;
     setContentHeight(el.scrollHeight);
   };
 
-  useLayoutEffect(() => {
-    measure();
-  }, [children]);
+  useLayoutEffect(() => { measure(); }, [children]);
 
-  // Short content defaults to expanded — there's nothing to "peek", so showing
-  // it collapsed would be pointless. Runs before paint, so no flash.
   useLayoutEffect(() => {
     if (short && !open) setOpen(true);
   }, [short]);
 
   useEffect(() => {
-    // Keep the measured height honest when the viewport / content reflows.
     const onResize = () => measure();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Animate to the precise target height. Short content is never clamped.
-  // Before the first measurement, leave the height unconstrained if
-  // defaultOpen (avoids a flash-collapsed frame) or clamped to previewHeight.
   const bodyStyle = {};
   if (fullHeight != null) {
-    if (short) {
-      bodyStyle.maxHeight = open ? `${fullHeight}px` : '0px';
-    } else {
-      bodyStyle.maxHeight = open ? `${fullHeight}px` : `${previewHeight}px`;
-    }
+    bodyStyle.maxHeight = short
+        ? (open ? `${fullHeight}px` : '0px')
+        : (open ? `${fullHeight}px` : `${effectivePreviewHeight}px`);
   } else if (!defaultOpen) {
-    bodyStyle.maxHeight = `${previewHeight}px`;
+    bodyStyle.maxHeight = isAuto ? `${AUTO_FALLBACK}px` : `${previewHeight}px`;
   }
 
   return (
-    <div className={`${styles.details} ${open ? styles.open : ''} ${short ? styles.short : ''}`}>
-      <button
-        type="button"
-        className={styles.trigger}
-        aria-expanded={open}
-        onClick={() => setOpen((o) => !o)}
-      >
-        <span className={styles.summary}>{summary}</span>
-        <span className={styles.toggleChip} aria-hidden="true">
-          <span className={styles.toggleText}>{open ? lessLabel : moreLabel}</span>
+      <div className={`${styles.details} ${open ? styles.open : ''} ${short ? styles.short : ''}`}>
+        <button
+            type="button"
+            className={styles.trigger}
+            aria-expanded={open}
+            onClick={() => setOpen((o) => !o)}
+        >
+          <span className={styles.summary}>{summary}</span>
+          <span className={styles.toggleChip} aria-hidden="true">
+          <span className={styles.toggleText}>{open ? resolvedLessLabel : resolvedMoreLabel}</span>
           <Chevron />
         </span>
-      </button>
+        </button>
 
-      <div className={styles.body} style={bodyStyle}>
-        <div
-          className={styles.bodyInner}
-          style={{ padding: `${PAD_TOP}px 18px ${padBottom}px 18px` }}
-        >
-          <div ref={contentRef}>{children}</div>
-        </div>
-
-        {!open && !short && <div className={styles.fade} aria-hidden="true" />}
-
-        {!short && (
-          <div className={styles.moreWrap}>
-            <button
-              type="button"
-              className={styles.more}
-              aria-expanded={open}
-              onClick={() => setOpen((o) => !o)}
-            >
-              <span>{open ? lessLabel : moreLabel}</span>
-              <svg
-                className={`${styles.moreChevron} ${open ? styles.moreChevronUp : ''}`}
-                viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"
-                fill="none" stroke="currentColor" strokeWidth="2.5"
-                strokeLinecap="round" strokeLinejoin="round"
-              >
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
+        <div className={styles.body} style={bodyStyle}>
+          <div
+              className={styles.bodyInner}
+              style={{ padding: `${PAD_TOP}px 18px ${padBottom}px 18px` }}
+          >
+            <div ref={contentRef}>{children}</div>
           </div>
-        )}
+
+          {!open && !short && <div className={styles.fade} aria-hidden="true" />}
+
+          {!short && (
+              <div className={styles.moreWrap}>
+                <button
+                    type="button"
+                    className={styles.more}
+                    aria-expanded={open}
+                    onClick={() => setOpen((o) => !o)}
+                >
+                  <span>{open ? resolvedLessLabel : resolvedMoreLabel}</span>
+                  <svg
+                      className={`${styles.moreChevron} ${open ? styles.moreChevronUp : ''}`}
+                      viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"
+                      fill="none" stroke="currentColor" strokeWidth="2.5"
+                      strokeLinecap="round" strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+              </div>
+          )}
+        </div>
       </div>
-    </div>
   );
 }

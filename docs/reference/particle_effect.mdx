@@ -1,0 +1,151 @@
+---
+title: ✨ Particle Effects
+id: particle_effect
+---
+
+## Introduction
+
+CraftEngine supports generating particle effects through configuration. Different particle types may require additional special options beyond the common parameters.
+
+## Common Parameters
+
+**Required:**
+
+```yaml
+particle: minecraft:end_rod  # Particle type; string; particle ID
+```
+
+**Optional:**
+
+```yaml
+x: 0                         # Relative X offset; number; default 0
+y: 0                         # Relative Y offset; number; default 0
+z: 0                         # Relative Z offset; number; default 0
+count: 5                     # Number of particles per spawn; integer; default 1
+offset_x: 0.3                # Random spread on X axis; number; default 0
+offset_y: 0.3                # Random spread on Y axis; number; default 0
+offset_z: 0.3                # Random spread on Z axis; number; default 0
+speed: 0                     # Particle speed; number; default 0
+```
+
+## Special Options
+
+### Block Particles
+
+Applicable `particle` types: `minecraft:block`, `minecraft:falling_dust`, `minecraft:dust_pillar`, `minecraft:block_crumble`, `minecraft:block_marker`
+
+```yaml
+particle: minecraft:block
+block_state: default:plam_log[axis=y]  # Required; string
+```
+
+### Item Particles
+
+Applicable `particle` type: `minecraft:item`
+
+```yaml
+particle: minecraft:item
+item: default:chinese_lantern  # Required; string; item ID
+```
+
+### Entity Effect / Tinted Leaves
+
+Applicable `particle` types: `minecraft:entity_effect`, `minecraft:tinted_leaves`
+
+```yaml
+particle: minecraft:entity_effect
+color: 255,100,0  # Required; RGB color; format: R,G,B
+```
+
+### Dust Particles
+
+Applicable `particle` type: `minecraft:dust`
+
+```yaml
+particle: minecraft:dust
+color: 255,255,255  # Required; RGB color
+scale: 1.0          # Optional; number; default 1.0
+```
+
+### Dust Color Transition
+
+Applicable `particle` type: `minecraft:dust_color_transition`
+
+```yaml
+particle: minecraft:dust_color_transition
+from: 255,255,255  # Required; starting color RGB
+to: 0,0,0          # Required; ending color RGB
+scale: 4.0         # Optional; number; default 1.0
+```
+
+### Spell Particles
+
+Applicable `particle` type: `minecraft:spell`
+
+```yaml
+particle: minecraft:spell
+color: 100,100,255  # Required; RGB color
+power: 1.5          # Optional; number; default 1.0
+```
+
+### Trail Particles
+
+Applicable `particle` type: `minecraft:trail`
+
+```yaml
+particle: minecraft:trail
+target_x: 0         # Optional; number; default 0
+target_y: 1         # Optional; number; default 0
+target_z: 0         # Optional; number; default 0
+color: 255,255,255  # Required; RGB color
+duration: 10        # Optional; number; default 10
+```
+
+### Vibration Particles
+
+Applicable `particle` type: `minecraft:vibration`
+
+```yaml
+particle: minecraft:vibration
+target_x: 0         # Optional; number; default 0
+target_y: 1         # Optional; number; default 0
+target_z: 0         # Optional; number; default 0
+arrival_time: 10    # Optional; number; default 10
+```
+
+### Sculk Charge Particles
+
+Applicable `particle` type: `minecraft:sculk_charge`
+
+```yaml
+particle: minecraft:sculk_charge
+charge: 1.5  # Optional; number
+```
+
+### Shriek Particles
+
+Applicable `particle` type: `minecraft:shriek`
+
+```yaml
+particle: minecraft:shriek
+shriek: 1  # Optional; integer
+```
+
+### Geyser Particles
+
+Applicable `particle` types: `minecraft:geyser`, `minecraft:geyser_plume`
+
+```yaml
+particle: minecraft:geyser
+blocks: 10  # Optional; integer
+```
+
+### Geyser Base Particles
+
+Applicable `particle` types: `minecraft:geyser_base`, `minecraft:geyser_poof`
+
+```yaml
+particle: minecraft:geyser_base
+blocks: 10               # Optional; integer
+burst_impulse_base: 0.5  # Optional; number
+```

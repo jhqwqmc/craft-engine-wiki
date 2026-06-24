@@ -3,6 +3,7 @@ title: 🔧 Block Settings
 id: settings
 ---
 
+import ExpandableIframeCard from '@site/src/components/ExpandableIframeCard';
 import Details from '@site/src/components/Details';
 
 ## Overview
@@ -271,7 +272,7 @@ instrument: BASEDRUM
 
 ![](/img/block_settings_5.png)
 
-### fluid_state&#x20;
+### fluid_state
 
 Decides the fluid state of this block state (Default: empty)
 
@@ -290,6 +291,52 @@ support_shape: minecraft:stone
 ```
 
 ![](/img/block_settings_7.png)
+
+### destroy_stages
+
+Determines the **destroy_stages** style displayed when the block is being mined. You can specify a number of custom items to replace the vanilla crack textures, and you can customize their offset, rotation, scaling, and other transformations.
+
+```yaml
+destroy_stages:
+  items:
+    - minecraft:destroy_stage_0
+    - minecraft:destroy_stage_1
+    - minecraft:destroy_stage_2
+    # ... Any number of items
+```
+
+<Details summary="Other optional parameters">
+```yaml
+destroy_stages:
+  translation: 0,0.5,0       # Offset (x,y,z). Recommended over position
+  position: 0.5,0.5,0.5      # Absolute position (x,y,z), default block center
+  scale: 1,1,1               # Scale (x,y,z). Single number like scale: 1.5 also works
+  yaw: 0                     # Around Y axis
+  pitch: 0                   # Around X axis
+  rotation: 45               # Single number → around Y axis
+  rotation: 45,45,0          # Euler angles (x,y,z), See the rotation tool below
+  rotation: 0,0,0.707,0.707  # Quaternion (x,y,z,w), See the rotation tool below
+  display_transform: none    # Item display transform mode:
+                             # none / third_person_left_hand / third_person_right_hand
+                             # first_person_left_hand / first_person_right_hand
+                             # head / gui / ground / fixed
+  billboard: fixed           # fixed / vertical / horizontal / center
+  view_range: 1.0            # View distance coefficient
+  brightness:                # Brightness override
+    block_light: 15
+    sky_light: 15
+```
+
+</Details>
+
+<ExpandableIframeCard
+    url="https://rotation-master.gtemc.cn"
+    title="Rotation Tool"
+    expandedLabel="Collapse"
+    collapsedLabel="Expand"
+/>
+
+![](/img/block_settings_16.png)
 
 ## Unstable Settings
 

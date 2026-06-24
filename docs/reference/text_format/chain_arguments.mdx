@@ -25,19 +25,26 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 | x                | double                 | the x coordinate of the player   |
 | y                | double                 | the y coordinate of the player   |
 | z                | double                 | the z coordinate of the player   |
+| pitch            | double                 | the pitch of the player          |
+| yaw              | double                 | the yaw of the player            |
+| position         | [#position](#position) | the position of the player       |
 | block\_x         | int                    | the x coordinate of the player   |
 | block\_y         | int                    | the y coordinate of the player   |
 | block\_z         | int                    | the z coordinate of the player   |
+| food             | int                    | the food level of the player     |
+| saturation       | float                  | the saturation of the player     |
 | name             | string                 | the name of the player           |
 | uuid             | uuid                   | the uuid of the player           |
-| is\_flying       | boolean                | check the fly state              |
+| world            | [#world](#world)       | the world where the player is in |
 | is\_sneaking     | boolean                | check the sneak state            |
+| is\_swimming     | boolean                | check the swimming state         |
+| is\_climbing     | boolean                | check the climbing state         |
+| is\_gliding      | boolean                | check the gliding state          |
+| is\_flying       | boolean                | check the fly state              |
 | gamemode         | string                 | the gamemode of the player       |
-| game_edition     | string                 | the game edition of the player   |
+| game\_edition    | string                 | the game edition of the player   |
 | main\_hand\_item | [#item](#item)         | the item in main hand            |
 | off\_hand\_item  | [#item](#item)         | the item in off hand             |
-| world            | [#world](#world)       | the world where the player is in |
-| position         | [#position](#position) | the position of the player       |
 
 ### block
 
@@ -50,7 +57,6 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 | block\_y     | int                    | the y coordinate of the block   |
 | block\_z     | int                    | the z coordinate of the block   |
 | world        | [#world](#world)       | the world where the block is in |
-| block\_state | block\_state           | the blockstate of the block     |
 | position     | [#position](#position) | the position of the block       |
 
 ### world
@@ -68,6 +74,8 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 | x                | double                 | the x coordinate of the entity   |
 | y                | double                 | the y coordinate of the entity   |
 | z                | double                 | the z coordinate of the entity   |
+| pitch            | double                 | the pitch of the entity          |
+| yaw              | double                 | the yaw of the entity            |
 | block\_x         | int                    | the x coordinate of the entity   |
 | block\_y         | int                    | the y coordinate of the entity   |
 | block\_z         | int                    | the z coordinate of the entity   |
@@ -81,6 +89,7 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 
 | parameter | type             | description      |
 |-----------|------------------|------------------|
+| world     | [#world](#world) | the world        |
 | x         | double           | the x coordinate |
 | y         | double           | the y coordinate |
 | z         | double           | the z coordinate |
@@ -89,16 +98,16 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 | block\_x  | int              | the x coordinate |
 | block\_y  | int              | the y coordinate |
 | block\_z  | int              | the z coordinate |
-| world     | [#world](#world) | the world        |
 
 ### item
 
-| parameter           | type    | description                       |
-|---------------------|---------|-----------------------------------|
-| id                  | string  | the id of the item                |
-| custom\_model\_data | int     | the custom model data of the item |
-| is\_custom          | boolean | checks if the item is custom      |
-| count               | int     | the count of the item             |
+| parameter           | type    | description                              |
+|---------------------|---------|------------------------------------------|
+| id                  | string  | the id of the item                       |
+| custom\_model\_data | int     | the custom model data of the item        |
+| is\_custom          | boolean | checks if the item is custom             |
+| count               | int     | the count of the item                    |
+| is\_block\_item     | boolean | checks if the item is vanilla block item |
 
 ### furniture
 

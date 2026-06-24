@@ -3,6 +3,8 @@ title: 🔣 方块状态
 id: states
 ---
 
+import Details from '@site/src/components/Details';
+
 ## 简介
 
 在 Minecraft 中，每个方块都可以拥有一个或多个**方块状态**。例如，原木有不同朝向（`axis=x/y/z`），树叶可以检测与树木的“距离”（`distance=1~7`）。这些状态共同决定了方块在游戏中的外观和物理行为。
@@ -131,19 +133,15 @@ state: "note_block:0"
 
 `model` 决定视觉状态在客户端渲染成什么样子。它有几种互相冲突的配置形式：
 
-<details>
-<summary>① 仅 path — 已有现成模型文件</summary>
-
+<Details summary="① 仅 path — 已有现成模型文件">
 ```yaml
 model:
   path: "minecraft:block/custom/my_block"
 ```
 
-</details>
+</Details>
 
-<details>
-<summary>② path + generation — 自动生成模型</summary>
-
+<Details summary="② path + generation — 自动生成模型">
 ```yaml
 model:
   path: "minecraft:block/custom/my_block"
@@ -154,11 +152,9 @@ model:
       side: "minecraft:block/custom/side"
 ```
 
-</details>
+</Details>
 
-<details>
-<summary>③ path + textures — 只关心纹理，插件推断模型结构</summary>
-
+<Details summary="③ path + textures — 只关心纹理，插件推断模型结构">
 ```yaml
 model:
   path: "minecraft:block/custom/my_block"
@@ -168,11 +164,9 @@ model:
     - "minecraft:block/custom/side"
 ```
 
-</details>
+</Details>
 
-<details>
-<summary>④ 仅 texture — 单张纹理，最简形式</summary>
-
+<Details summary="④ 仅 texture — 单张纹理，最简形式">
 ```yaml
 model:
   texture: "minecraft:block/custom/my_block"
@@ -193,11 +187,9 @@ model:
 
 使用单张纹理时 `path` 可省略（自动取纹理的路径），`texture` 和 `textures` 效果相同，列表和字符串也是如此。
 
-</details>
+</Details>
 
-<details>
-<summary>⑤ models 列表 — 多个模型加权随机</summary>
-
+<Details summary="⑤ models 列表 — 多个模型加权随机">
 ```yaml
 models:
   - path: "minecraft:block/custom/flower_1"
@@ -206,18 +198,16 @@ models:
     weight: 5
 ```
 
-</details>
+</Details>
 
-<details>
-<summary>⑥ transparent — 移除原始模型</summary>
-
+<Details summary="⑥ transparent — 移除原始模型">
 用于移除方块的原始模型，通常用于空出状态以供[🫑 方块实体渲染器](states/entity_renderer.mdx)使用。
 
 ```yaml
 transparent: true
 ```
 
-</details>
+</Details>
 
 **`model` 其他的子选项：**
 
@@ -360,9 +350,7 @@ states:
 
 以原木方块为例，展示从最简单到最完整的配置方式。
 
-<details>
-<summary>① 最简单：只定义属性，不定义外观（用默认外观）</summary>
-
+<Details summary="① 最简单：只定义属性，不定义外观（用默认外观）">
 ```yaml
 blocks:
   default:palm_log:
@@ -380,11 +368,9 @@ blocks:
 
 只有一个 `default` 外观时，由于插件在无匹配变体时会回退到第一个定义的外观，所以 `axis=x`、`axis=y`、`axis=z` 三种内部状态会**全部使用这个 `default` 外观**。同时因为属性名是 `axis`（[特殊名称](#特殊属性名)），插件会自动处理放置方向。
 
-</details>
+</Details>
 
-<details>
-<summary>② 为不同方向配置不同模型</summary>
-
+<Details summary="② 为不同方向配置不同模型">
 ```yaml
 blocks:
   default:palm_log:
@@ -435,11 +421,9 @@ blocks:
 
 三个方向分别对应三个外观。通过 `variants` 将 `axis=y` 映射到垂直模型、`axis=x` 和 `axis=z` 映射到水平模型（旋转角度不同）。
 
-</details>
+</Details>
 
-<details>
-<summary>③ 用 textures 简化形式</summary>
-
+<Details summary="③ 用 textures 简化形式">
 ```yaml
 blocks:
   default:palm_log:
@@ -485,11 +469,9 @@ blocks:
 
 注意：`axisX` 和 `axisZ` 需要不同的父模型，`textures` 推断的模型不适用，所以仍需用 `model` + `generation`。
 
-</details>
+</Details>
 
-<details>
-<summary>④ 使用每个外观对应的 `entity_renderer` 进行渲染</summary>
-
+<Details summary="④ 使用每个外观对应的 `entity_renderer` 进行渲染">
 每个外观都可以像 `model` 一样拥有自己的 `entity_renderer`。
 该方块会根据其 `facing` 属性旋转物品展示实体，使其朝向与方块保持一致。
 四个外观共用**同一个被清空模型的原版方块状态**（即通过 `transparent` `id` 共享同个 `sugar_cane` 状态），
@@ -553,7 +535,7 @@ blocks:
 
 缩放、平移及其它元素类型见[🫑 方块实体渲染器](states/entity_renderer.mdx)页面。
 
-</details>
+</Details>
 
 ### 属性配置
 
@@ -661,9 +643,7 @@ variants:
 
 以树叶方块为例，它有 3 个属性：`waterlogged`(2) × `persistent`(2) × `distance`(7) = **28 个内部状态**。
 
-<details>
-<summary>展开完整配置</summary>
-
+<Details summary="展开完整配置">
 ```yaml
 blocks:
   default:palm_leaves:
@@ -703,7 +683,7 @@ blocks:
             fluid_state: water
 ```
 
-</details>
+</Details>
 
 **匹配过程演示** — 以内部状态 `waterlogged=true, distance=7, persistent=true` 为例：
 
@@ -719,9 +699,7 @@ blocks:
 
 `waterlogged=false` 和 `waterlogged=true` 两个条目各自覆盖 14 种内部状态，合计覆盖全部 28 种内部状态——利用通配符语义，仅需 2 个变体即可完成映射。
 
-<details>
-<summary>更多变体配置示例</summary>
-
+<Details summary="更多变体配置示例">
 **示例 A：用单个变体约束多个属性**
 
 ```yaml
@@ -765,7 +743,7 @@ settings:
   luminance: 15
 ```
 
-</details>
+</Details>
 
 ### 内部状态数量速查
 

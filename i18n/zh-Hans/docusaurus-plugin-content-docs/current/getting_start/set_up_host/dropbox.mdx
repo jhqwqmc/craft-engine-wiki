@@ -3,6 +3,8 @@ title: DropBox
 id: dropbox
 ---
 
+import Details from '@site/src/components/Details';
+
 ```yaml
 resource-pack:
   delivery:
@@ -16,12 +18,11 @@ resource-pack:
         use_environment_variables: false # 是否使用环境变量提供机密信息，默认为 false
 ```
 
-<details>
-  <summary>可用环境变量</summary>
+<Details summary="可用环境变量">
   - CE_DROPBOX_APP_KEY
   - CE_DROPBOX_APP_SECRET
   - CE_DROPBOX_REFRESH_TOKEN
-</details>
+</Details>
 
 ## 配置教程
 

@@ -270,7 +270,7 @@ hand: main_hand # optional; enum[main_hand, off_hand]; leave it empty to swing t
 
 ### particle
 
-Spawn a particle
+Spawn a particle, For specific parameters, see [✨ Particle Effects](./particle_effect)
 
 ```yaml
 type: particle
@@ -283,42 +283,6 @@ offset_x: 0.3 # optional; number; default: 0
 offset_y: 0.3 # optional; number; default: 0
 offset_z: 0.3 # optional; number; default: 0
 speed: 0 # optional; number; default: 0
-
-# The following arguments are only effective
-# when the particles are of a certain type.
-
-# item
-item: default:chinese_lantern
-
-# block/falling_dust/dust_pillar/block_crumble/block_marker
-block_state: default:plam_log[axis=y]
-
-# charge
-charge: 1.5
-
-# shriek
-shriek: 1
-
-# dust
-color: 255,255,255
-scale: 1.0
-
-# dust_color_transition
-from: 255,255,255
-to: 0,0,0
-scale: 4.0
-
-# vibration
-target_x: 0
-target_y: 1
-target_z: 0
-arrival_time: 10
-
-# trail
-target_x: 0
-target_y: 1
-target_z: 0
-duration: 10
 ```
 
 ### potion\_effect
@@ -440,7 +404,7 @@ y: <arg:furniture.y> # required; number; default: <arg:furniture.y>
 z: <arg:furniture.z> # required; number; default: <arg:furniture.z>
 pitch: <arg:furniture.pitch> # required; number; default: <arg:furniture.pitch>
 yaw: <arg:furniture.yaw> # required; number; default: <arg:furniture.yaw>
-variant: ground # optional;
+variant: ground # optional; string
 drop_loot: true # default: true
 play_sound: true # default: true
 ```
@@ -467,7 +431,7 @@ y: 100 # required; number
 z: <arg:position.z> + 5 # required; number
 pitch: <arg:player.pitch> # optional; default: 0
 yaw: <arg:player.yaw> # optional; default: 0
-world: world # optional; string;
+world: world # optional; string
 ```
 
 ### toast
@@ -708,6 +672,26 @@ y: "<arg:position.y>" # optional; number; default: <arg:position.y>
 z: "<arg:position.z>" # optional; number; default: <arg:position.z>
 pitch: "<arg:position.pitch>" # optional; number; default: <arg:position.pitch>
 yaw: "<arg:position.yaw>" # optional; number; default: <arg:position.yaw>
+```
+
+### set\_furniture\_variant
+
+Sets the variant of a furniture
+
+```yaml
+type: set_furniture_variant
+variant: a_variant # required; string
+```
+
+### set\_item\_cooldown (1.21.2+)
+
+Sets the cooldown for a specific item for the player
+
+```yaml
+type: set_item_cooldown
+id: "minecraft:ender_pearl" # required; string; only vanilla items are supported
+time: "5s"                  # required; string; supports unit combinations: t(tick), s(second), m(minute), h(hour), d(day), w(week)
+add: false                  # optional; boolean; default: false
 ```
 
 :::info
