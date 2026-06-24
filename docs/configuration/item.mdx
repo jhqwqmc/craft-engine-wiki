@@ -5,6 +5,7 @@ id: item
 
 import UrlCard from '@site/src/components/UrlCard';
 import Highlight from '@site/src/components/Highlight';
+import Details from '@site/src/components/Details';
 
 ## Overview
 
@@ -56,34 +57,33 @@ Unlike data, the contents within settings pertain to special mechanisms processe
 
 - **swap_animation_scale** (1.21.11+) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: 1.0**</Highlight>
 
-<details>
-  <summary>Full Config Overview</summary>
+<Details summary="Full Config Overview">
 
-  ```yaml
-  items:
-    default:palm_log:
-      material: paper
-      custom_model_data: 1000
-      item_model: default:palm_log
-      settings:
-        fuel_time: 300
-        tags:
-          - "default:palm_logs"
-          - "minecraft:logs"
-          - "minecraft:logs_that_burn"
-      data:
-        item_name: "<!i>Palm Log"
-      model:
-        type: "minecraft:model"
-        path: "minecraft:item/custom/palm_log"
-        generation:
-          parent: "minecraft:block/custom/palm_log"
-      oversized_in_gui: true
-      hand_animation_on_swap: true
-      client_bound_model: false
-      behavior:
-        type: block_item
-        block: default:palm_log
+```yaml
+items:
+  default:palm_log:
+    material: paper
+    custom_model_data: 1000
+    item_model: default:palm_log
+    settings:
+      fuel_time: 300
+      tags:
+        - "default:palm_logs"
+        - "minecraft:logs"
+        - "minecraft:logs_that_burn"
+    data:
+      item_name: "<!i>Palm Log"
+    model:
+      type: "minecraft:model"
+      path: "minecraft:item/custom/palm_log"
+      generation:
+        parent: "minecraft:block/custom/palm_log"
+    oversized_in_gui: true
+    hand_animation_on_swap: true
+    client_bound_model: false
+    behavior:
+      type: block_item
+      block: default:palm_log
+```
 
-  ```
-</details>
+</Details>

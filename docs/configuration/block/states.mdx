@@ -3,6 +3,8 @@ title: 🔣 Block States
 id: states
 ---
 
+import Details from '@site/src/components/Details';
+
 ## Introduction
 
 In Minecraft, every block can have one or more **block states**. For example, logs have different orientations (`axis=x/y/z`), and leaves can detect their "distance" from a tree (`distance=1~7`). These states collectively determine the block's appearance and physical behavior.
@@ -124,19 +126,15 @@ A single vanilla block state can only be bound to **one unique** custom model. I
 
 `model` determines what the visual state renders as on the client. It has several mutually exclusive configuration combinations:
 
-<details>
-<summary>① path only — existing model file</summary>
-
+<Details summary="① path only — existing model file">
 ```yaml
 model:
   path: "minecraft:block/custom/my_block"
 ```
 
-</details>
+</Details>
 
-<details>
-<summary>② path + generation — auto-generate model</summary>
-
+<Details summary="② path + generation — auto-generate model">
 ```yaml
 model:
   path: "minecraft:block/custom/my_block"
@@ -147,11 +145,9 @@ model:
       side: "minecraft:block/custom/side"
 ```
 
-</details>
+</Details>
 
-<details>
-<summary>③ path + textures — textures only, plugin infers model structure</summary>
-
+<Details summary="③ path + textures — textures only, plugin infers model structure">
 ```yaml
 model:
   path: "minecraft:block/custom/my_block"
@@ -161,11 +157,9 @@ model:
     - "minecraft:block/custom/side"
 ```
 
-</details>
+</Details>
 
-<details>
-<summary>④ texture only — single texture, simplest form</summary>
-
+<Details summary="④ texture only — single texture, simplest form">
 ```yaml
 model:
   texture: "minecraft:block/custom/my_block"
@@ -186,11 +180,9 @@ model:
 
 With a single texture, `path` can be omitted (defaults to the texture path). `texture` and `textures` are equivalent; list and string forms are also equivalent.
 
-</details>
+</Details>
 
-<details>
-<summary>⑤ models list — multi-model weighted random</summary>
-
+<Details summary="⑤ models list — multi-model weighted random">
 ```yaml
 models:
   - path: "minecraft:block/custom/flower_1"
@@ -199,18 +191,16 @@ models:
     weight: 5
 ```
 
-</details>
+</Details>
 
-<details>
-<summary>⑥ transparent — remove original model</summary>
-
+<Details summary="⑥ transparent — remove original model">
 Used to remove the block's original model, typically to free up a state for [block entity renderer](states/entity_renderer.mdx) use.
 
 ```yaml
 transparent: true
 ```
 
-</details>
+</Details>
 
 **All sub-keys of `model`:**
 
@@ -326,9 +316,7 @@ states:
 
 Using a log block as an example, showing the configuration from simplest to most complete.
 
-<details>
-<summary>① Simplest: define properties only, no explicit appearances (uses default)</summary>
-
+<Details summary="① Simplest: define properties only, no explicit appearances (uses default)">
 ```yaml
 blocks:
   default:palm_log:
@@ -346,11 +334,9 @@ blocks:
 
 Only one `default` appearance. Since the plugin falls back to the first appearance when no variant matches, all three internal states (`axis=x`, `axis=y`, `axis=z`) will **all use this default appearance**. Because the property name is `axis` (a special name), the plugin automatically handles placement direction.
 
-</details>
+</Details>
 
-<details>
-<summary>② Different models for different directions</summary>
-
+<Details summary="② Different models for different directions">
 ```yaml
 blocks:
   default:palm_log:
@@ -401,11 +387,9 @@ blocks:
 
 Three directions mapped to three appearances. `axis=y` gets the vertical model, `axis=x` and `axis=z` get horizontal models (with different rotation angles).
 
-</details>
+</Details>
 
-<details>
-<summary>③ Using textures shorthand</summary>
-
+<Details summary="③ Using textures shorthand">
 ```yaml
 blocks:
   default:palm_log:
@@ -451,11 +435,9 @@ The `axisY` appearance uses `textures` shorthand (2 textures → plugin infers `
 
 Note: `axisX` and `axisZ` need a different parent model that `textures` inference doesn't cover, so they still use `model` + `generation`.
 
-</details>
+</Details>
 
-<details>
-<summary>④ Rendering with an <code>entity_renderer</code> per appearance</summary>
-
+<Details summary={<>④ Rendering with an <code>entity_renderer</code> per appearance</>}>
 Each appearance can carry its own `entity_renderer`, just like `model`. This block rotates a display item to match its `facing` direction. All four appearances share the **same cleared vanilla block** (a `sugar_cane` state, via the `transparent` `id`) and set `transparent: true`, so one cleared block backs every facing — the block is drawn entirely by the entity in each direction.
 
 ```yaml
@@ -516,7 +498,7 @@ blocks:
 
 See [Block Entity Renderer](states/entity_renderer.mdx) for rotation, translation, and the other element types.
 
-</details>
+</Details>
 
 ### Property Details
 
@@ -621,9 +603,7 @@ States that don't match any variant with an `appearance` → use the **first app
 
 A leaves block with 3 properties: `waterlogged`(2) × `persistent`(2) × `distance`(7) = **28 internal states**.
 
-<details>
-<summary>Expand full configuration</summary>
-
+<Details summary="Expand full configuration">
 ```yaml
 blocks:
   default:palm_leaves:
@@ -663,7 +643,7 @@ blocks:
             fluid_state: water
 ```
 
-</details>
+</Details>
 
 **Matching walkthrough** — using internal state `waterlogged=true, distance=7, persistent=true` as an example:
 
@@ -680,9 +660,7 @@ Result:
 
 Just 2 variant entries cover all 28 internal states — using wildcard semantics, `waterlogged=false` and `waterlogged=true` each cover 14.
 
-<details>
-<summary>More variants examples</summary>
-
+<Details summary="More variants examples">
 **Example A: Single variant constraining multiple properties**
 
 ```yaml
@@ -721,7 +699,7 @@ variants:
 If an internal state matches both `waterlogged=true` and `facing=up`, its final settings are:
 `{resistance:50.0, fluid_state:water, luminance:15}` (`resistance` overridden by the second entry).
 
-</details>
+</Details>
 
 ### Variant Count Quick Reference
 

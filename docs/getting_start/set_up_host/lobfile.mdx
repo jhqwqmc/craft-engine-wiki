@@ -4,19 +4,18 @@ id: lobfile
 ---
 
 import Highlight from '@site/src/components/Highlight';
+import Details from '@site/src/components/Details';
 
 <Highlight color="#1877F2">**User Friendly**</Highlight><Highlight color="#10ae28ff">**Free**</Highlight>
 
 Lobfile is actually a pretty solid choice for beginners looking for a resource hosting solution. It works well in most regions - except places with heavy internet restrictions like China, of course.
 
-<details>
-  <summary>Get API Key</summary>
-
+<Details summary="Get API Key">
 1️⃣ Visit **https://lobfile.com/** and create an account \
 2️⃣ Click `Account` -> `Settings` \
 3️⃣ Click <Highlight color="#1877F2">**Copy API Key to Clipboard**</Highlight>
 
-</details>
+</Details>
 
 ```yaml
 resource-pack:
@@ -28,7 +27,6 @@ resource-pack:
         use_environment_variables: false
 ```
 
-<details>
-  <summary>Enviroment Variables</summary>
+<Details summary="Enviroment Variables">
   - CE_LOBFILE_API_KEY
-</details>
+</Details>

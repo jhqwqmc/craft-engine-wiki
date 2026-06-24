@@ -4,6 +4,7 @@ id: equipment
 ---
 
 import Highlight from '@site/src/components/Highlight';
+import Details from '@site/src/components/Details';
 
 ## Introduction
 
@@ -26,9 +27,7 @@ To apply these equipments to your armor items, go to **[equipment settings](item
 
 The creation method for 3D helmets is completely unrelated to **equipment.** Since many users have encountered difficulties when creating 3D helmets, I'm here to explain the correct way to create them and clarify some potential misconceptions you may have.
 
-<details>
-  <summary>3D Helmet</summary>
-
+<Details summary="3D Helmet">
   Armor items inherently come with an `equippable` component, which includes an option called `asset_id`. When this option is specified, Minecraft uses a **armor renderer** to display the designated armor texture. This means that even if you assign a custom 3D item model to a diamond helmet-based item, it will still be rendered using the default **armor renderer** when worn by a player.
 
   ![](/img/3d_helmet_1.png)
@@ -61,7 +60,7 @@ The creation method for 3D helmets is completely unrelated to **equipment.** Sin
 
   ![](/img/3d_helmet_2.png)
 
-</details>
+</Details>
 
 :::
 
@@ -165,14 +164,12 @@ equipments:
     humanoid_leggings: minecraft:entity/equipment/humanoid_leggings/topaz
 ```
 
-<details>
-  <summary>How to fix the "removed" armor</summary>
-
+<Details summary={<>How to fix the "removed" armor</>}>
   <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
 
   You can fix vanilla chainmail armor by running `/ce resource enable legacy_armor`. The solution is surprisingly simple - we apply a special trim pattern to vanilla chainmail armor to preserve its original appearance.
 
-</details>
+</Details>
 
 :::caution
 

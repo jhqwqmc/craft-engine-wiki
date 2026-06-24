@@ -4,6 +4,7 @@ id: entity_renderer
 ---
 
 import ExpandableIframeCard from '@site/src/components/ExpandableIframeCard';
+import Details from '@site/src/components/Details';
 
 ## How It Works
 
@@ -56,9 +57,7 @@ entity_renderer:
 
 The following parameters apply to `item_display` and `text_display` display entity types.
 
-<details>
-<summary>Expand display parameter list</summary>
-
+<Details summary="Expand display parameter list">
 ```yaml
 # Position & transform
 translation: 0,0.5,0       # Offset (x,y,z). Recommended over position
@@ -85,7 +84,7 @@ shadow_radius: 0           # Shadow radius
 shadow_strength: 1         # Shadow strength
 ```
 
-</details>
+</Details>
 
 <ExpandableIframeCard
     url="https://rotation-master.gtemc.cn"
@@ -124,9 +123,7 @@ display_transform: none     # Item display transform mode:
 
 `display_transform` (also writable as `display_context`) controls the item model's transform mode. In most cases, the default `none` is sufficient; use other modes when you need to simulate how items look in hand, on ground, etc.
 
-<details>
-<summary>Full example</summary>
-
+<Details summary="Full example">
 ```yaml
 entity_renderer:
   type: item_display
@@ -149,7 +146,7 @@ entity_renderer:
       - minecraft:dyed_color
 ```
 
-</details>
+</Details>
 
 ### text_display
 
@@ -174,9 +171,7 @@ use_default_background_color: false # Whether to use default background color
 alignment: center                  # Text alignment: center / left / right
 ```
 
-<details>
-<summary>Full example</summary>
-
+<Details summary="Full example">
 ```yaml
 entity_renderer:
   type: text_display
@@ -193,7 +188,7 @@ entity_renderer:
   view_range: 0.8
 ```
 
-</details>
+</Details>
 
 ### item (Dropped Item)
 
@@ -207,9 +202,7 @@ position: 0.5,0.5,0.5              # Optional: position (x,y,z), default block c
 
 `item` only supports `position`; other display parameters do not apply. Dropped items automatically have a spinning animation, suitable for simple item display.
 
-<details>
-<summary>Example with tint source</summary>
-
+<Details summary="Example with tint source">
 ```yaml
 entity_renderer:
   type: item
@@ -221,7 +214,7 @@ entity_renderer:
       - minecraft:dyed_color
 ```
 
-</details>
+</Details>
 
 ### armor_stand
 

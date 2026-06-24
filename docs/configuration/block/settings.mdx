@@ -3,15 +3,15 @@ title: 🔧 Block Settings
 id: settings
 ---
 
+import Details from '@site/src/components/Details';
+
 ## Overview
 
 The `settings` section defines a block's **basic physical properties** — hardness, sound, burnability, light, mining tool, piston reaction, etc. It's the block's "material profile," independent of any [behavior](./behaviors.mdx). Every key is **optional** (omit it to use the default) and can be overridden per-state from a [variant](./states.mdx).
 
 The page splits into two groups: **Stable Settings** (fully supported) and **Unstable Settings** (best-effort, with caveats noted per entry).
 
-<details>
-  <summary>Example</summary>
-
+<Details summary="Example">
 ```yaml
 blocks:
   custom:all_settings_block:
@@ -53,7 +53,7 @@ blocks:
       friction: 0.7
       bounce_restitution: 0.0
 ```
-</details>
+</Details>
 
 ## Stable Settings
 

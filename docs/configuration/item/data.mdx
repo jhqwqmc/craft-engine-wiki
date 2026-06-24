@@ -5,6 +5,7 @@ id: data
 
 import Highlight from '@site/src/components/Highlight';
 import DiffViewer from '@site/src/components/DiffViewer';
+import Details from '@site/src/components/Details';
 
 ## Introduction
 
@@ -587,9 +588,7 @@ items:
 
 The format for custom Components strictly adheres to the [Minecraft Wiki](https://minecraft.wiki/w/Data_component_format) guidelines. Below, I will guide you through a few examples to help you become familiar with how to configure custom components. The examples here are arranged in order of increasing difficulty, from simple to advanced. We recommend studying them one by one to ensure a smooth learning curve.
 
-<details>
-  <summary>max_damage [★]</summary>
-
+<Details summary="max_damage [★]">
     ![](/img/item_data_1.png)
 
     From the image, we can see that max_damage accepts an `I` (which stands for an integer type parameter). Therefore, in our configuration, we simply need to use a numerical value directly.
@@ -600,11 +599,9 @@ The format for custom Components strictly adheres to the [Minecraft Wiki](https:
           components:
             minecraft:max_damage: 128
     ```
-</details>
+</Details>
 
-<details>
-  <summary>food [★★]</summary>
-
+<Details summary="food [★★]">
     ![](/img/item_data_2.png)
 
     From the image, we can see that food requires three parameters: nutrition of type `int`, saturation of type `float`, and can_always_eat of type `boolean`.
@@ -619,11 +616,9 @@ The format for custom Components strictly adheres to the [Minecraft Wiki](https:
               saturation: 2.0
               can_always_eat: false
     ```
-</details>
+</Details>
 
-<details>
-  <summary>block_state [★★]</summary>
-
+<Details summary="block_state [★★]">
     ![](/img/item_data_3.png)
 
     According to the description here, we need to provide **key-value** pairs where the value must be a **string** type.
@@ -638,11 +633,9 @@ The format for custom Components strictly adheres to the [Minecraft Wiki](https:
               persistent: 'false'
               waterlogged: 'false'
     ```
-</details>
+</Details>
 
-<details>
-  <summary>instrument [★★★]</summary>
-
+<Details summary="instrument [★★★]">
     ![](/img/item_data_4.png)
 
     When an option supports multiple data types, you can simply choose the appropriate type based on your specific needs.
@@ -669,11 +662,9 @@ The format for custom Components strictly adheres to the [Minecraft Wiki](https:
               use_duration: 1
               range: 16
     ```
-</details>
+</Details>
 
-<details>
-  <summary>fireworks [★★★★]</summary>
-
+<Details summary="fireworks [★★★★]">
     ![](/img/item_data_5.png)
 
     ```yaml
@@ -691,7 +682,7 @@ The format for custom Components strictly adheres to the [Minecraft Wiki](https:
                   has_trail: true
                   has_twinkle: true
     ```
-</details>
+</Details>
 
 :::tip
 

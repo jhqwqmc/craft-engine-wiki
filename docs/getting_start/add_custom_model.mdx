@@ -8,6 +8,7 @@ import Highlight from '@site/src/components/Highlight';
 import DiffViewer from '@site/src/components/DiffViewer';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import Details from '@site/src/components/Details';
 
 Before diving in, make sure your resource pack host is fully set up. Remember - every model edit requires a resource pack update to take effect. Otherwise, you won't see the changes right away when you do `/ce reload all`.
 
@@ -30,14 +31,13 @@ Let's do a quick test! Which of these five resource locations are actually valid
 4. `craftengine:happy$crafting`
 5. `test:tutorial_book`
 
-<details>
-  <summary>Answers</summary>
+<Details summary="Answers">
   1. ❌️ uppercase letters aren't allowed
   2. ❌️ spaces are not allowed
   3. ✔️
   4. ❌️ `$` is not a valid letter
   5. ✔️
-</details>
+</Details>
 
 :::
 
@@ -215,9 +215,7 @@ This is why Minecraft can only load textures located within the block and item d
 
 ![](/img/out_of_atlas.png)
 
-<details>
-  <summary>Custom Atlas Tutorial</summary>
-
+<Details summary="Custom Atlas Tutorial">
 To create an atlas path, you simply need to add a file to your resource pack at the following path: `resourcepack/assets/minecraft/atlases/blocks.json`. Below is a simple example that adds the custom path to the atlas:
 
 ```json
@@ -228,7 +226,7 @@ To create an atlas path, you simply need to add a file to your resource pack at 
 }
 ```
 
-</details>
+</Details>
 
 :::
 
@@ -249,14 +247,12 @@ Invalid Examples: \
 
 **Never place font/GUI textures (e.g., rank.png, HUD elements) in the same directory as model textures (e.g., block/, item/).** Even if these textures are not directly used in models, Minecraft's texture atlas system will automatically include them when generating combined sprite sheets. This can lead to unintended visual degradation(mipmap-level):
 
-<details>
-  <summary>Mipmap Level 4 VS Mipmap Level 0</summary>
-
+<Details summary="Mipmap Level 4 VS Mipmap Level 0">
     ![Mipmap Level 4](/img/mipmap_4.png)
 
     ![Mipmap Level 0](/img/mipmap_0.png)
 
-</details>
+</Details>
 
 :::
 
@@ -398,9 +394,7 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
 
 :::
 
-<details>
-  <summary>What is CustomModelData?</summary>
-
+<Details summary="What is CustomModelData?">
     CustomModelData is a data component that enables unique model variations for items sharing the same base material. For items with identical base materials, you must assign distinct CustomModelData values to differentiate their models. Example:
 
     ```yaml
@@ -425,14 +419,12 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
         custom_model_data: 1000
     ```
 
-</details>
+</Details>
 
-<details>
-  <summary>What is ItemModel?</summary>
-
+<Details summary="What is ItemModel?">
   ItemModel, introduced in 1.21.2, is a data component with better rendering efficiency than CustomModelData, reducing client-side performance overhead. Normally, you don’t need to manually specify the model path (item_model), as the plugin auto-generates it.
 
-</details>
+</Details>
 
 ### Generate Model with CraftEngine
 
