@@ -753,6 +753,11 @@ const sidebars: SidebarsConfig = {
           id: "reference/commands",
           label: '🐚 命令',
         },
+        {
+          type: 'doc',
+          id: "reference/particle_effect",
+          label: '✨ 粒子效果',
+        },
       ]
     },
     {

@@ -1,0 +1,151 @@
+---
+title: ✨ 粒子效果
+id: particle_effect
+---
+
+## 简介
+
+CraftEngine 支持通过配置生成粒子效果。不同粒子类型除了通用参数外，可能还需要指定额外的特殊选项。
+
+## 通用参数
+
+**必填：**
+
+```yaml
+particle: minecraft:end_rod  # 粒子类型; 字符串; 粒子 ID
+```
+
+**可选：**
+
+```yaml
+x: 0                         # 生成位置相对 X轴偏移; 数字; 默认 0
+y: 0                         # 生成位置相对 Y轴偏移; 数字; 默认 0
+z: 0                         # 生成位置相对 Z 轴偏移; 数字; 默认 0
+count: 5                     # 每次生成的粒子数量; 整数; 默认 1
+offset_x: 0.3                # X 方向随机扩散范围; 数字; 默认 0
+offset_y: 0.3                # Y 方向随机扩散范围; 数字; 默认 0
+offset_z: 0.3                # Z 方向随机扩散范围; 数字; 默认 0
+speed: 0                     # 粒子速度; 数字; 默认 0
+```
+
+## 特殊选项
+
+### 方块粒子
+
+适用的 `particle` 类型：`minecraft:block`、`minecraft:falling_dust`、`minecraft:dust_pillar`、`minecraft:block_crumble`、`minecraft:block_marker`
+
+```yaml
+particle: minecraft:block
+block_state: default:plam_log[axis=y]  # 必需; 字符串
+```
+
+### 物品粒子
+
+适用的 `particle` 类型：`minecraft:item`
+
+```yaml
+particle: minecraft:item
+item: default:chinese_lantern  # 必需; 字符串; 物品 ID
+```
+
+### 实体效果 / 染色树叶
+
+适用的 `particle` 类型：`minecraft:entity_effect`、`minecraft:tinted_leaves`
+
+```yaml
+particle: minecraft:entity_effect
+color: 255,100,0  # 必需; RGB 颜色; 格式: R,G,B
+```
+
+### 粉尘粒子
+
+适用的 `particle` 类型：`minecraft:dust`
+
+```yaml
+particle: minecraft:dust
+color: 255,255,255  # 必需; RGB 颜色
+scale: 1.0          # 可选; 数字; 默认 1.0
+```
+
+### 粉尘颜色过渡
+
+适用的 `particle` 类型：`minecraft:dust_color_transition`
+
+```yaml
+particle: minecraft:dust_color_transition
+from: 255,255,255  # 必需; 起始颜色 RGB
+to: 0,0,0          # 必需; 结束颜色 RGB
+scale: 4.0         # 可选; 数字; 默认 1.0
+```
+
+### 法术粒子
+
+适用的 `particle` 类型：`minecraft:spell`
+
+```yaml
+particle: minecraft:spell
+color: 100,100,255  # 必需; RGB 颜色
+power: 1.5          # 可选; 数字; 默认 1.0
+```
+
+### 拖尾粒子
+
+适用的 `particle` 类型：`minecraft:trail`
+
+```yaml
+particle: minecraft:trail
+target_x: 0         # 可选; 数字; 默认 0
+target_y: 1         # 可选; 数字; 默认 0
+target_z: 0         # 可选; 数字; 默认 0
+color: 255,255,255  # 必需; RGB颜色
+duration: 10        # 可选; 数字; 默认 10
+```
+
+### 振动粒子
+
+适用的 `particle` 类型：`minecraft:vibration`
+
+```yaml
+particle: minecraft:vibration
+target_x: 0         # 可选; 数字; 默认 0
+target_y: 1         # 可选; 数字; 默认 0
+target_z: 0         # 可选; 数字; 默认 0
+arrival_time: 10    # 可选; 数字; 默认 10
+```
+
+### 幽匿充能粒子
+
+适用的 `particle` 类型：`minecraft:sculk_charge`
+
+```yaml
+particle: minecraft:sculk_charge
+charge: 1.5  # 可选; 数字
+```
+
+### 尖啸粒子
+
+适用的 `particle` 类型：`minecraft:shriek`
+
+```yaml
+particle: minecraft:shriek
+shriek: 1  # 可选; 整数
+```
+
+### 喷泉粒子
+
+适用的 `particle` 类型：`minecraft:geyser`、`minecraft:geyser_plume`
+
+```yaml
+particle: minecraft:geyser
+blocks: 10  # 可选; 整数
+```
+
+### 喷泉底部粒子
+
+适用的 `particle` 类型：`minecraft:geyser_base`、`minecraft:geyser_poof`
+
+```yaml
+particle: minecraft:geyser_base
+blocks: 10               # 可选; 整数
+burst_impulse_base: 0.5  # 可选; 数字
+```

@@ -3,6 +3,8 @@ title: OpenList
 id: openlist
 ---
 
+import Details from '@site/src/components/Details';
+
 :::warning
 [OpenList](https://github.com/OpenListTeam/OpenList) 是由社区驱动的 AList 分支。
 2025 年 6 月，AList 项目被曝出已被出售，相关下载链接亦被发现存在投毒行为，引发社区广泛关注与抵制（[来源](https://linux.do/t/topic/715019)）。
@@ -29,9 +31,8 @@ resource-pack:
         # otp_code: "" # 该用户的OTP验证码（不推荐开启因为这样你每隔 30 秒都要改一次）
 ```
 
-<details>
-  <summary>可用环境变量</summary>
+<Details summary="可用环境变量">
   - CE_OPENLIST_USERNAME
   - CE_OPENLIST_PASSWORD
   - CE_OPENLIST_FILE_PASSWORD
-</details>
+</Details>

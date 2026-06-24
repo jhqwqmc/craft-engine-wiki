@@ -3,6 +3,8 @@ title: 🔧 物品设置
 id: settings
 ---
 
+import Details from '@site/src/components/Details';
+
 ## 简介
 
 与 data 不同，settings 中的内容涉及由插件处理的特殊机制。
@@ -179,9 +181,7 @@ sounds:
 
 ![](/img/item_settings_4.png)
 
-<details>
-  <summary>如何建模</summary>
-
+<Details summary="如何建模">
   你的建模方式将直接影响配置文件中的 `rotation` 参数。
 
   无论你使用哪种建模方法，最关键的是将三叉戟的尖端指向在上图所示的位置，以确保最佳的命中点。
@@ -189,7 +189,7 @@ sounds:
 ![](/img/i18n/zh-Hans/item_settings_6.png)
 ![](/img/i18n/zh-Hans/item_settings_7.png)
 
-</details>
+</Details>
 
 ### dyeable（可染色）
 

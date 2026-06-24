@@ -1,133 +1,121 @@
+// src/components/Comment.js
 import React, { useState, useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import styles from './Comment.module.css';
 
 function Comment({ children, text }) {
     const [showComment, setShowComment] = useState(false);
-    const [position, setPosition] = useState({ type: 'center' });
+    const [popupStyle, setPopupStyle] = useState({});
+    const [arrowStyle, setArrowStyle] = useState({});
     const containerRef = useRef(null);
-    const commentRef = useRef(null);
+    const popupRef = useRef(null);
 
     useEffect(() => {
-        if (showComment && containerRef.current && commentRef.current) {
+        if (showComment && containerRef.current) {
             const container = containerRef.current;
-            const comment = commentRef.current;
             const containerRect = container.getBoundingClientRect();
             const viewportWidth = window.innerWidth;
-            const margin = 10; // 屏幕边缘的安全距离
+            const viewportHeight = window.innerHeight;
+            const margin = 10;
+            const gap = 10; // 弹出框与容器的间距
 
-            // 先让注释框显示以获取真实尺寸
-            comment.style.visibility = 'hidden';
-            comment.style.display = 'block';
-            const commentRect = comment.getBoundingClientRect();
-            comment.style.visibility = 'visible';
-            comment.style.display = '';
+            // 先用临时元素测量弹出框尺寸
+            const tempDiv = document.createElement('div');
+            tempDiv.style.position = 'fixed';
+            tempDiv.style.visibility = 'hidden';
+            tempDiv.style.maxWidth = `min(400px, ${viewportWidth - 20}px)`;
+            tempDiv.style.padding = '8px 12px';
+            tempDiv.style.fontSize = '14px';
+            tempDiv.style.whiteSpace = 'pre-line';
+            tempDiv.style.wordWrap = 'break-word';
+            tempDiv.style.borderRadius = '4px';
+            tempDiv.style.backgroundColor = '#333';
+            tempDiv.style.color = 'white';
+            tempDiv.innerText = text;
+            document.body.appendChild(tempDiv);
+            const popupRect = tempDiv.getBoundingClientRect();
+            document.body.removeChild(tempDiv);
 
-            const commentWidth = commentRect.width;
-            const containerCenter = containerRect.left + containerRect.width / 2;
+            const popupWidth = popupRect.width;
+            const popupHeight = popupRect.height;
+            const containerCenterX = containerRect.left + containerRect.width / 2;
 
-            // 计算居中显示时的左右边界
-            const centeredLeft = containerCenter - commentWidth / 2;
-            const centeredRight = containerCenter + commentWidth / 2;
+            // 默认将弹出框放在容器正上方，水平居中
+            let left = containerCenterX - popupWidth / 2;
+            let top = containerRect.top - popupHeight - gap;
 
-            // 检查是否会溢出
-            const wouldOverflowLeft = centeredLeft < margin;
-            const wouldOverflowRight = centeredRight > viewportWidth - margin;
-
-            if (wouldOverflowLeft && !wouldOverflowRight) {
-                // 左侧溢出：计算需要向右偏移多少
-                const shiftRight = margin - centeredLeft;
-                setPosition({ type: 'shift-right', offset: shiftRight, containerCenter });
-            } else if (wouldOverflowRight && !wouldOverflowLeft) {
-                // 右侧溢出：计算需要向左偏移多少
-                const shiftLeft = centeredRight - (viewportWidth - margin);
-                setPosition({ type: 'shift-left', offset: shiftLeft, containerCenter });
-            } else if (wouldOverflowLeft && wouldOverflowRight) {
-                // 两侧都溢出：居中显示在可视区域
-                const availableWidth = viewportWidth - 2 * margin;
-                const centerOffset = (viewportWidth / 2) - containerCenter;
-                setPosition({ type: 'center-viewport', offset: centerOffset, containerCenter });
-            } else {
-                // 不溢出，正常居中显示
-                setPosition({ type: 'center', containerCenter });
+            // 水平边界检测
+            if (left < margin) {
+                left = margin;
+            } else if (left + popupWidth > viewportWidth - margin) {
+                left = viewportWidth - popupWidth - margin;
             }
+
+            // 垂直边界检测：如果上方空间不足，改为放在下方
+            if (top < margin) {
+                top = containerRect.bottom + gap;
+                // 如果下方也放不下，就紧贴边缘
+                if (top + popupHeight > viewportHeight - margin) {
+                    top = viewportHeight - popupHeight - margin;
+                }
+            }
+
+            // 确保不超出上边界
+            if (top < margin) top = margin;
+
+            setPopupStyle({
+                position: 'fixed',
+                left: `${left}px`,
+                top: `${top}px`,
+                maxWidth: `min(400px, ${viewportWidth - 20}px)`,
+            });
+
+            // 计算箭头指向容器中心的位置（相对于弹出框左边）
+            const arrowLeft = containerCenterX - left;
+            setArrowStyle({
+                position: 'absolute',
+                top: top < containerRect.top ? '100%' : 'auto',
+                bottom: top < containerRect.top ? 'auto' : '100%',
+                left: `${arrowLeft}px`,
+                transform: 'translateX(-50%)',
+                borderLeft: '5px solid transparent',
+                borderRight: '5px solid transparent',
+                borderTop: top < containerRect.top ? '5px solid #333' : 'none',
+                borderBottom: top >= containerRect.top ? '5px solid #333' : 'none',
+                width: 0,
+                height: 0,
+            });
         }
     }, [showComment, text]);
 
-    const getCommentStyle = () => {
-        const baseStyle = {};
-
-        if (position.type === 'shift-right') {
-            // 向右偏移，但仍然基于容器中心
-            baseStyle.left = '50%';
-            baseStyle.transform = `translateX(calc(-50% + ${position.offset}px)) translateY(-10px)`;
-        } else if (position.type === 'shift-left') {
-            // 向左偏移，但仍然基于容器中心
-            baseStyle.left = '50%';
-            baseStyle.transform = `translateX(calc(-50% - ${position.offset}px)) translateY(-10px)`;
-        } else if (position.type === 'center-viewport') {
-            // 在视窗中心显示
-            baseStyle.left = '50%';
-            baseStyle.transform = `translateX(calc(-50% + ${position.offset}px)) translateY(-10px)`;
-        }
-        // center 情况下使用默认CSS样式
-
-        return baseStyle;
-    };
-
-    const getArrowStyle = () => {
-        if (!containerRef.current) {
-            return { left: '50%' };
-        }
-
-        if (position.type === 'center') {
-            return { left: '50%' };
-        }
-
-        if (position.type === 'shift-right') {
-            return { left: `calc(50% - ${position.offset}px)` };
-        } else if (position.type === 'shift-left') {
-            return { left: `calc(50% + ${position.offset}px)` };
-        } else if (position.type === 'center-viewport') {
-            return { left: `calc(50% - ${position.offset}px)` };
-        }
-
-        return { left: '50%' };
-    };
+    const handleMouseEnter = () => setShowComment(true);
+    const handleMouseLeave = () => setShowComment(false);
 
     return (
-        <span
-            ref={containerRef}
-            className={styles.commentContainer}
-            onMouseEnter={() => setShowComment(true)}
-            onMouseLeave={() => setShowComment(false)}
-            onTouchStart={() => setShowComment(true)}
-            onTouchEnd={() => setShowComment(false)}
-        >
-            {children}
-            {showComment && (
-                <span
-                    ref={commentRef}
-                    className={styles.commentText}
-                    style={getCommentStyle()}
-                >
-                    {text}
+        <>
+      <span
+          ref={containerRef}
+          className={styles.commentContainer}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleMouseEnter}
+          onTouchEnd={handleMouseLeave}
+      >
+        {children}
+      </span>
+            {showComment &&
+                ReactDOM.createPortal(
                     <span
-                        className={styles.commentArrow}
-                        style={{
-                            position: 'absolute',
-                            top: '100%',
-                            ...getArrowStyle(),
-                            transform: 'translateX(-50%)',
-                            borderLeft: '5px solid transparent',
-                            borderRight: '5px solid transparent',
-                            borderTop: '5px solid #333',
-                            width: 0,
-                            height: 0
-                        }}
-                    />
-                </span>
-            )}
-        </span>
+                        ref={popupRef}
+                        className={styles.commentText}
+                        style={popupStyle}
+                    >
+            {text}
+                        <span style={arrowStyle} />
+          </span>,
+                    document.body
+                )}
+        </>
     );
 }
 

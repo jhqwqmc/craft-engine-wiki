@@ -1,5 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
-import { Tree } from 'react-arborist';
+// src/components/PluginFileTree.js
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+} from 'react';
 import {
   FaFolder,
   FaFolderOpen,
@@ -10,299 +16,348 @@ import {
 } from 'react-icons/fa';
 import ReactDOM from 'react-dom';
 
-// 节点渲染组件
-function Node({ node, style, dragHandle, currentTheme }) {
-  const Icon = node.isLeaf ? FaFile : node.isOpen ? FaFolderOpen : FaFolder;
-  const ArrowIcon = node.isInternal ? (node.isOpen ? FaChevronDown : FaChevronRight) : null;
-
+/* ==============================
+   节点渲染组件（新增滚动关闭）
+   ============================== */
+function TreeNode({ node, depth, currentTheme, selectedId, onSelect, scrollContainerRef }) {
   const [showCard, setShowCard] = useState(false);
+  const [cardStyle, setCardStyle] = useState({});
   const cardRef = useRef(null);
   const questionIconRef = useRef(null);
-  const [cardPosition, setCardPosition] = useState({ top: 0, left: 0 });
+  const measureTimeout = useRef(null);
 
-  const handleQuestionClick = (e) => {
+  const isFolder = !!node.children;
+  const isOpen = node.isOpen;
+  const isSelected = node.id === selectedId;
+
+  const handleClick = useCallback(
+      (e) => {
+        if (questionIconRef.current && questionIconRef.current.contains(e.target)) {
+          return;
+        }
+        if (isFolder) node.toggle();
+        onSelect(node.id);
+      },
+      [isFolder, node, onSelect]
+  );
+
+  const handleQuestionClick = useCallback((e) => {
     e.stopPropagation();
-    setShowCard(prev => !prev);
-  };
+    setShowCard((prev) => !prev);
+  }, []);
 
-  const calculateCardPosition = () => {
-    if (questionIconRef.current && showCard) {
-      const iconRect = questionIconRef.current.getBoundingClientRect();
-      const cardWidth = 300;
-      const cardHeight = cardRef.current ? cardRef.current.offsetHeight : 0;
-      const margin = 8;
+  // 卡片位置计算（保持不变）
+  const updateCardPosition = useCallback(() => {
+    if (!questionIconRef.current || !cardRef.current) return;
+    const iconRect = questionIconRef.current.getBoundingClientRect();
+    const cardEl = cardRef.current;
 
-      let top = iconRect.top;
-      let left = iconRect.right + margin;
+    cardEl.style.visibility = 'hidden';
+    cardEl.style.display = 'block';
+    const cardRect = cardEl.getBoundingClientRect();
+    cardEl.style.display = '';
+    cardEl.style.visibility = '';
 
-      if (top + cardHeight > window.innerHeight) {
-        top = window.innerHeight - cardHeight - margin;
-      }
-      if (top < 0) {
-        top = margin;
-      }
+    const cardWidth = cardRect.width;
+    const cardHeight = cardRect.height;
+    const margin = 8;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
 
-      if (left + cardWidth > window.innerWidth) {
-        left = iconRect.left - cardWidth - margin;
-      }
-
-      if (left < 0) {
-        left = 0;
-      }
-
-      setCardPosition({ top, left });
+    let left = iconRect.right + margin;
+    if (left + cardWidth > vw) {
+      left = iconRect.left - cardWidth - margin;
+      if (left < margin) left = vw - cardWidth - margin;
     }
-  };
 
+    let top = iconRect.top;
+    if (top + cardHeight > vh) top = vh - cardHeight - margin;
+    if (top < margin) top = margin;
+
+    setCardStyle({
+      position: 'fixed',
+      top,
+      left,
+      visibility: 'visible',
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (showCard) {
+      measureTimeout.current = setTimeout(updateCardPosition, 0);
+    } else {
+      setCardStyle({});
+    }
+    return () => clearTimeout(measureTimeout.current);
+  }, [showCard, updateCardPosition]);
+
+  // 监听窗口 resize 重新定位
   useEffect(() => {
     if (showCard) {
-      calculateCardPosition();
-      window.addEventListener('resize', calculateCardPosition);
-    } else {
-      window.removeEventListener('resize', calculateCardPosition);
+      window.addEventListener('resize', updateCardPosition);
+      return () => window.removeEventListener('resize', updateCardPosition);
     }
-    return () => {
-      window.removeEventListener('resize', calculateCardPosition);
-    };
-  }, [showCard]);
+  }, [showCard, updateCardPosition]);
 
-
+  // 点击外部关闭
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (cardRef.current && !cardRef.current.contains(event.target) &&
-          questionIconRef.current && !questionIconRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (
+          cardRef.current &&
+          !cardRef.current.contains(e.target) &&
+          questionIconRef.current &&
+          !questionIconRef.current.contains(e.target)
+      ) {
         setShowCard(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // 使用 CSS 变量或直接根据 document.documentElement.dataset.theme 判断
-  const getThemeColor = (lightColor, darkColor) => {
-    if (currentTheme === 'dark') {
-      return darkColor;
+  // 🆕 滚动时自动关闭提示卡片
+  useEffect(() => {
+    if (!showCard) return;
+
+    const handleScroll = () => {
+      setShowCard(false);
+    };
+
+    // 监听全局滚动（捕获阶段更全面）
+    window.addEventListener('scroll', handleScroll, true);
+    // 监听文件树容器自身的滚动
+    const container = scrollContainerRef?.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
     }
-    return lightColor;
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+      if (container) {
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [showCard, scrollContainerRef]);
+
+  // --- 配色优化后的主题颜色映射 ---
+  const getColor = (light, dark) => (currentTheme === 'dark' ? dark : light);
+
+  const textColor = getColor('#333', '#e2e8f0');
+  const arrowColor = getColor('#666', '#94a3b8');
+  const folderColor = getColor('#f59e0b', '#fbbf24');
+  const fileColor = getColor('#6b7280', '#cbd5e1');
+  const questionIconColor = getColor('#a0aec0', '#94a3b8');
+  const selectedBg = getColor('#e0f2fe', '#3c404a');
+  const hoverBg = getColor('#f1f5f9', '#2a2d37');
+  const cardBgColor = getColor('#ffffff', '#2b2d35');
+  const cardBorderColor = getColor('#e2e8f0', '#4b5563');
+  const cardShadow = getColor(
+      '0 4px 12px rgba(0,0,0,0.1)',
+      '0 4px 12px rgba(0,0,0,0.4)'
+  );
+
+  const Icon = isFolder ? (isOpen ? FaFolderOpen : FaFolder) : FaFile;
+  const ArrowIcon = isFolder ? (isOpen ? FaChevronDown : FaChevronRight) : null;
+  const MAX_INDENT = 200;
+  const indent = Math.min(depth * 20, MAX_INDENT);
+
+  const cardDynamicStyle = {
+    ...cardStyle,
+    maxWidth: 'min(90vw, 400px)',
+    padding: '12px',
+    backgroundColor: cardBgColor,
+    border: `1px solid ${cardBorderColor}`,
+    borderRadius: '6px',
+    boxShadow: cardShadow,
+    zIndex: 1000,
+    fontSize: '0.9em',
+    color: textColor,
+    lineHeight: '1.5',
+    wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
+    overflowWrap: 'break-word',
   };
 
-  const textColor = getThemeColor('#333', '#e2e8f0');
-  const arrowColor = getThemeColor('#666', '#a0aec0');
-  const folderColor = getThemeColor('#f59e0b', '#fcd34d');
-  const fileColor = getThemeColor('#6b7280', '#cbd5e0');
-  const questionIconColor = getThemeColor('#a0aec0', '#a0aec0');
-
-  // 卡片颜色
-  const cardBgColor = getThemeColor('#ffffff', '#36454F');
-  const cardBorderColor = getThemeColor('#e2e8f0', '#4a5568');
-  const cardShadow = getThemeColor('0 4px 12px rgba(0, 0, 0, 0.1)', '0 4px 12px rgba(0, 0, 0, 0.2)');
-
   return (
-    <div
-      ref={dragHandle}
-      style={{
-        ...style,
-        display: 'flex',
-        alignItems: 'center',
-        cursor: node.isInternal ? 'pointer' : 'default',
-        position: 'relative',
-        color: textColor, // 应用文本颜色
-      }}
-      className="node-container"
-      onClick={() => node.isInternal && node.toggle()}
-    >
-      {/* 箭头图标容器 */}
-      <div style={{ width: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        {ArrowIcon && <ArrowIcon style={{ fontSize: '0.75em', color: arrowColor }} />}
-      </div>
-      {/* 文件夹/文件图标 */}
-      <div style={{ marginLeft: '4px', marginRight: '8px', display: 'flex', alignItems: 'center' }}>
-        <Icon color={node.isLeaf ? fileColor : folderColor} /> {/* 应用图标颜色 */}
-      </div>
-      {/* 节点文本 */}
-      <span style={{
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        flexShrink: 1,
-        minWidth: 0
-      }}>
-        {node.data.name}
-      </span>
-
-      {/* 问号图标及其可点击的卡片提示 */}
-      {node.data.hoverText && (
-        <>
-          <div
-            ref={questionIconRef}
+      <div>
+        <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 1,
-              marginLeft: '8px',
-              flexShrink: 0,
+              paddingLeft: `${indent}px`,
+              paddingRight: '8px',
+              height: '32px',
+              cursor: 'default',
+              backgroundColor: isSelected ? selectedBg : 'transparent',
+              transition: 'background-color 0.1s',
+              color: textColor,
+              userSelect: 'none',
+              WebkitTapHighlightColor: 'transparent',
+              whiteSpace: 'nowrap',
+              minWidth: 'fit-content',
             }}
-            onClick={handleQuestionClick}
+            onClick={handleClick}
+            onMouseEnter={(e) => {
+              if (!isSelected) e.currentTarget.style.backgroundColor = hoverBg;
+            }}
+            onMouseLeave={(e) => {
+              if (!isSelected) e.currentTarget.style.backgroundColor = 'transparent';
+            }}
+        >
+          <div
+              style={{
+                width: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
           >
-            <FaQuestionCircle
-              style={{
-                fontSize: '0.8em',
-                color: questionIconColor, // 应用问号图标颜色
-              }}
-            />
+            {ArrowIcon && <ArrowIcon style={{ fontSize: '0.75em', color: arrowColor }} />}
           </div>
-
-          {/* 使用 Portal 渲染小卡片 */}
-          {showCard && ReactDOM.createPortal(
-            <div
-              ref={cardRef}
+          <div
               style={{
-                position: 'fixed',
-                top: cardPosition.top,
-                left: cardPosition.left,
-                width: '300px',
-                padding: '12px',
-                backgroundColor: cardBgColor, // 应用卡片背景色
-                border: `1px solid ${cardBorderColor}`, // 应用卡片边框色
-                borderRadius: '6px',
-                boxShadow: cardShadow, // 应用卡片阴影
-                zIndex: 1000,
-                fontSize: '0.9em',
-                color: textColor, // 应用卡片文本颜色 (与节点文本颜色一致)
-                lineHeight: '1.5',
+                marginLeft: '4px',
+                marginRight: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                flexShrink: 0,
               }}
-            >
-              {node.data.hoverText}
-            </div>,
-            document.body
+          >
+            <Icon color={isFolder ? folderColor : fileColor} />
+          </div>
+          <span style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
+          {node.name}
+        </span>
+          {node.hoverText && (
+              <div
+                  ref={questionIconRef}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    zIndex: 1,
+                    marginLeft: '8px',
+                    flexShrink: 0,
+                  }}
+                  onClick={handleQuestionClick}
+              >
+                <FaQuestionCircle style={{ fontSize: '0.8em', color: questionIconColor }} />
+              </div>
           )}
-        </>
-      )}
-    </div>
+        </div>
+
+        {showCard &&
+            ReactDOM.createPortal(
+                <div ref={cardRef} style={cardDynamicStyle}>
+                  {node.hoverText}
+                </div>,
+                document.body
+            )}
+      </div>
   );
 }
 
-// 接收 initialTreeData 作为 props
+/* ==============================
+   主文件树组件（传递容器 ref）
+   ============================== */
 export default function PluginFileTree({ initialTreeData }) {
-  const treeApiRef = useRef(null);
-  const containerRef = useRef(null);
-  const [containerWidth, setContainerWidth] = useState(720);
-  const PADDING = 16;
+  const [treeData, setTreeData] = useState(() => {
+    const addState = (nodes) =>
+        nodes.map((node) => ({
+          ...node,
+          isOpen: node.isOpen || false,
+          children: node.children ? addState(node.children) : undefined,
+        }));
+    return addState(initialTreeData);
+  });
 
+  const [selectedId, setSelectedId] = useState(null);
   const [currentTheme, setCurrentTheme] = useState('light');
+  const [hovered, setHovered] = useState(false);
+  const containerRef = useRef(null); // 文件树容器 ref
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const theme = document.documentElement.dataset.theme || 'light';
       setCurrentTheme(theme);
     });
-
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
-    const initialTheme = document.documentElement.dataset.theme || 'light';
-    setCurrentTheme(initialTheme);
-
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    setCurrentTheme(document.documentElement.dataset.theme || 'light');
     return () => observer.disconnect();
   }, []);
 
-  const [containerStyle, setContainerStyle] = useState({
-    height: 200,
-    borderWidth: 2,
-    backgroundColor: '#f8fafc',
-  });
-
-  // 直接使用传入的 initialTreeData
-  const data = initialTreeData;
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        const newWidth = Math.min(window.innerWidth * 0.5, 720);
-        setContainerWidth(newWidth);
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+  const toggleNode = useCallback((targetId) => {
+    const update = (nodes) =>
+        nodes.map((node) => {
+          if (node.id === targetId) return { ...node, isOpen: !node.isOpen };
+          if (node.children) return { ...node, children: update(node.children) };
+          return node;
+        });
+    setTreeData((prev) => update(prev));
   }, []);
 
-  const updateLayout = () => {
-    if (!treeApiRef.current) return;
-
-    const ROW_HEIGHT = 32;
-    const PADDING_VERTICAL = PADDING * 2;
-    const MIN_HEIGHT = 32;
-    const MAX_HEIGHT = 500;
-    const EXTRA_HEIGHT_PIXELS = 0;
-
-    const visibleNodesCount = treeApiRef.current.visibleNodes.length;
-    const nodesHeight = visibleNodesCount * ROW_HEIGHT;
-    const newBorderWidth = Math.min(6, 2 + Math.floor(visibleNodesCount / 4));
-    let totalHeight = nodesHeight + PADDING_VERTICAL + newBorderWidth * 2 + EXTRA_HEIGHT_PIXELS;
-    totalHeight = Math.min(Math.max(totalHeight, MIN_HEIGHT), MAX_HEIGHT);
-
-    setContainerStyle((prevStyle) => ({
-      ...prevStyle,
-      height: totalHeight,
-      borderWidth: newBorderWidth,
-    }));
+  const flatten = (nodes, depth = 0) => {
+    let result = [];
+    for (const node of nodes) {
+      result.push({ ...node, depth });
+      if (node.children && node.isOpen) {
+        result = result.concat(flatten(node.children, depth + 1));
+      }
+    }
+    return result;
   };
 
-  useEffect(() => {
-    const timer = setTimeout(updateLayout, 0);
-    return () => clearTimeout(timer);
-  }, [containerWidth, data]);
+  const visibleNodes = flatten(treeData);
 
-  const containerBgColor = currentTheme === 'dark' ? '#2d3748' : '#f8fafc';
-  const containerBorderColor = currentTheme === 'dark' ? '#4a5568' : '#eeeeee';
-  const containerHoverBgColor = currentTheme === 'dark' ? '#36454F' : '#ecedf0ff';
+  const ROW_HEIGHT = 32;
+  const PADDING_VERTICAL = 16 * 2;
+  const MIN_HEIGHT = 32;
+  const MAX_HEIGHT = 500;
+  const totalHeight = Math.min(
+      MAX_HEIGHT,
+      Math.max(MIN_HEIGHT, visibleNodes.length * ROW_HEIGHT + PADDING_VERTICAL)
+  );
 
-
-  const handleMouseEnter = () => {
-    setContainerStyle(prev => ({ ...prev, backgroundColor: containerHoverBgColor }));
-  };
-
-  const handleMouseLeave = () => {
-    setContainerStyle(prev => ({ ...prev, backgroundColor: containerBgColor }));
-  };
+  const containerBg = currentTheme === 'dark' ? '#1e1f29' : '#f8fafc';
+  const containerHoverBg = currentTheme === 'dark' ? '#252830' : '#ecedf0';
+  const borderColor = currentTheme === 'dark' ? '#3f3f46' : '#eeeeee';
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        boxSizing: 'border-box',
-        width: `${containerWidth}px`,
-        borderRadius: '8px',
-        padding: `${PADDING}px`,
-        overflow: 'hidden',
-        transition: 'all 0.3s ease',
-        height: `${containerStyle.height}px`,
-        border: `${containerStyle.borderWidth}px solid ${containerBorderColor}`,
-        backgroundColor: containerBgColor,
-      }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <Tree
-        ref={treeApiRef}
-        initialData={data}
-        indent={28}
-        rowHeight={32}
-        width={containerWidth - PADDING * 2}
-        className="file-tree"
-        onToggle={() => setTimeout(updateLayout, 50)}
-        openByDefault={false}
+      <div
+          ref={containerRef}
+          style={{
+            boxSizing: 'border-box',
+            width: '100%',
+            borderRadius: '8px',
+            padding: '16px',
+            overflowX: 'auto',
+            overflowY: 'auto',
+            transition: 'height 0.3s ease, background-color 0.2s',
+            height: `${totalHeight}px`,
+            border: `2px solid ${borderColor}`,
+            backgroundColor: hovered ? containerHoverBg : containerBg,
+            userSelect: 'none',
+            WebkitOverflowScrolling: 'touch',
+          }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
       >
-        {(nodeProps) => <Node {...nodeProps} currentTheme={currentTheme} />}
-      </Tree>
-    </div>
+        {visibleNodes.map((node) => (
+            <TreeNode
+                key={node.id}
+                node={{ ...node, toggle: () => toggleNode(node.id) }}
+                depth={node.depth}
+                currentTheme={currentTheme}
+                selectedId={selectedId}
+                onSelect={setSelectedId}
+                scrollContainerRef={containerRef}
+            />
+        ))}
+      </div>
   );
 }

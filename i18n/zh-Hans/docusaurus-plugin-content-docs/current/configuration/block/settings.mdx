@@ -3,13 +3,14 @@ title: 🔧 方块设置
 id: settings
 ---
 
+import ExpandableIframeCard from '@site/src/components/ExpandableIframeCard';
+import Details from '@site/src/components/Details';
+
 ## 概览
 
 `settings` 配置部分定义了方块的基础属性，例如硬度、音效、熔岩可燃性、亮度、合适挖掘工具等，其次这与[🕹️ 方块行为](behaviors)不在同一个配置部分。此外所有设置项均为**可选**（省略时使用默认值），并能通过[变体](states#变体匹配规则)按状态覆盖。以下是包含所有可用设置类型的示例：
 
-<details>
-  <summary>示例</summary>
-
+<Details summary="示例">
 ```yaml
 blocks:
   custom:all_settings_block:
@@ -51,7 +52,7 @@ blocks:
       friction: 0.7
       bounce_restitution: 0.0
 ```
-</details>
+</Details>
 
 本页分两部分：[**稳定设置**](#稳定设置)（完全支持）与[**不稳定设置**](#不稳定设置)（尽可能支持，可能出现服务端与客户端不同步的问题）。
 
@@ -292,6 +293,58 @@ support_shape: minecraft:stone
 ```
 
 ![](/img/block_settings_7.png)
+
+### 裂纹
+
+决定了方块被挖掘时显示的**裂纹**。你可以指定若干自定义物品来替换原版的裂纹，并且可以自定义其偏移、旋转和缩放等变换。
+
+```yaml
+destroy_stages:
+  items:
+    - minecraft:destroy_stage_0
+    - minecraft:destroy_stage_1
+    - minecraft:destroy_stage_2
+    # ... 任意数量的物品
+```
+
+<Details summary="其他可选参数">
+```yaml
+destroy_stages:
+  translation: 0,0.5,0       # 偏移量 (x,y,z)，推荐使用此方式调整位置
+  position: 0.5,0.5,0.5      # 相对位置 (x,y,z)，默认方块中心
+  scale: 1,1,1               # 缩放 (x,y,z)，也支持单个数字如 scale: 1.5
+  yaw: 0                     # 绕 Y 轴旋转
+  pitch: 0                   # 绕 X 轴旋转
+  rotation: 45               # 基于 Y 轴旋转
+  rotation: 45,45,0          # 欧拉角，见下方旋转工具
+  rotation: 0,0,0.707,0.707  # 四元数，见下方旋转工具
+  display_transform: none    # 物品展示实体的模式，用于再次变换物品模型：
+                             # none  / third_person_left_hand / third_person_right_hand
+                             # 不变换 /   第三人称视角左手变换  /   第三人称视角右手变换
+                             # first_person_left_hand / first_person_right_hand
+                             #   第一人称视角左手变换   /   第一人称视角右手变换
+                             #         head         /        gui        /     ground
+                             # 放置在头部物品栏的变换 / 在图形界面中的变换 / 平铺在地面的变换
+                             #  fixed  /    on_shelf
+                             # 默认变换 / 在展示架中的变换
+  billboard: fixed           #      fixed      /  vertical   /  horizontal /         center
+                             # 固定垂直和水平轴 /  固定垂直轴  /  固定水平轴  / 按照中心旋转跟随玩家视角
+  view_range: 1.0            # 可视距离系数
+  brightness:                # 渲染亮度值，译者注：若需配置该选项则其子选项 `block_light` 和 `sky_light` 必填否则无效
+    block_light: 15
+    sky_light: 15
+```
+
+</Details>
+
+<ExpandableIframeCard
+    url="https://rotation-master.gtemc.cn/zh-Hans/"
+    title="旋转工具"
+    expandedLabel="收起"
+    collapsedLabel="展开"
+/>
+
+![](/img/block_settings_16.png)
 
 ## 不稳定设置
 

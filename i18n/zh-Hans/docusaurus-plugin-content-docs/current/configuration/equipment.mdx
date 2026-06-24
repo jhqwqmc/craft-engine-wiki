@@ -4,6 +4,7 @@ id: equipment
 ---
 
 import Highlight from '@site/src/components/Highlight';
+import Details from '@site/src/components/Details';
 
 ## 简介
 
@@ -35,9 +36,7 @@ equipments:
 
 3D 头盔的创建方法与**装备**完全无关。由于许多用户在创建 3D 头盔时遇到了困难，我将在此说明正确的创建方法，并澄清一些可能存在的误解。
 
-<details>
-  <summary>3D 头盔原理</summary>
-
+<Details summary="3D 头盔原理">
     盔甲类物品天生带有 `equippable` 组件，其中包含一个名为 `asset_id` 的选项。当指定该选项时，Minecraft 会使用**硬编码渲染器**来渲染指定的盔甲纹理。这意味着即使你为基于钻石头盔的物品分配了自定义 3D 物品模型，玩家穿戴时仍会使用默认的**盔甲渲染器**进行渲染。
 
     ![](/img/3d_helmet_1.png)
@@ -70,7 +69,7 @@ equipments:
 
     ![](/img/3d_helmet_2.png)
 
-</details>
+</Details>
 
 :::
 
@@ -174,14 +173,12 @@ equipments:
     humanoid_leggings: minecraft:entity/equipment/humanoid_leggings/topaz
 ```
 
-<details>
-  <summary>修复被“破坏”的原版盔甲</summary>
-
+<Details summary="修复被“破坏”的原版盔甲">
   <Highlight color="#f2184eff">**付费版专属**</Highlight>
 
   你可以通过执行指令 `/ce resource enable legacy_armor` 来修复原版锁链甲）—— 我们通过应用特殊纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client_bound_data` 特性实现。
 
-</details>
+</Details>
 
 :::caution
 

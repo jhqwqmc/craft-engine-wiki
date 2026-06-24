@@ -6,6 +6,7 @@ id: data
 import Highlight from '@site/src/components/Highlight';
 import Comment from '@site/src/components/Comment';
 import DiffViewer from '@site/src/components/DiffViewer';
+import Details from '@site/src/components/Details';
 
 ## 简介
 
@@ -602,9 +603,7 @@ items:
 
 自定义组件的格式严格遵循 [Minecraft Wiki](https://zh.minecraft.wiki/w/%E6%95%B0%E6%8D%AE%E7%BB%84%E4%BB%B6) 的规范。下面将通过几个示例来帮助你熟悉如何配置自定义组件。示例按难度从简到繁排列，建议你依次学习，以获得丝滑的学习体验。
 
-<details>
-  <summary>max_damage [★]</summary>
-
+<Details summary="max_damage [★]">
     ![](/img/i18n/zh-Hans/item_data_1.png)
 
     从图中可以看出，max_damage 接受一个 `I`（表示整数参数）。因此，在我们的配置中只需直接使用一个整数即可。
@@ -615,11 +614,9 @@ items:
           components:
             minecraft:max_damage: 128
     ```
-</details>
+</Details>
 
-<details>
-  <summary>food [★★]</summary>
-
+<Details summary="food [★★]">
     ![](/img/i18n/zh-Hans/item_data_2.png)
 
     从图中可以看出，food 需要三个参数：类型为 `整数` 的 nutrition，类型为 `单精度浮点数` 的 saturation，以及类型为 `布尔` 的 can_always_eat。
@@ -634,11 +631,9 @@ items:
               saturation: 2.0
               can_always_eat: false
     ```
-</details>
+</Details>
 
-<details>
-  <summary>block_state [★★]</summary>
-
+<Details summary="block_state [★★]">
     ![](/img/i18n/zh-Hans/item_data_3.png)
 
     根据此处的描述，我们需要提供 **键值对**，其中值必须是 **字符串** 类型。
@@ -653,11 +648,9 @@ items:
               persistent: 'false'
               waterlogged: 'false'
     ```
-</details>
+</Details>
 
-<details>
-  <summary>instrument [★★★]</summary>
-
+<Details summary="instrument [★★★]">
     ![](/img/i18n/zh-Hans/item_data_4.png)
 
     当一个选项支持多种数据类型时，您可以根据具体需求选择合适的类型。
@@ -684,11 +677,9 @@ items:
               use_duration: 1
               range: 16
     ```
-</details>
+</Details>
 
-<details>
-  <summary>fireworks [★★★★]</summary>
-
+<Details summary="fireworks [★★★★]">
     ![](/img/i18n/zh-Hans/item_data_5.png)
 
     ```yaml
@@ -706,7 +697,7 @@ items:
                   has_trail: true
                   has_twinkle: true
     ```
-</details>
+</Details>
 
 :::tip
 

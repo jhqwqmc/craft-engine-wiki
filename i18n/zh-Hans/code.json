@@ -356,5 +356,11 @@
   "theme.SearchPage.noResultsText": {
     "message": "没有找到任何文档",
     "description": "空搜索结果的提示段落"
+  },
+  "details.readMore": {
+    "message": "阅读更多"
+  },
+  "details.showLess": {
+    "message": "收起"
   }
 }

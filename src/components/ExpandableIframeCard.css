@@ -21,8 +21,6 @@
     transition:
         background-color 0.2s,
         box-shadow 0.25s ease;
-    position: relative;
-    z-index: 2;
 }
 
 .card-header:hover {
