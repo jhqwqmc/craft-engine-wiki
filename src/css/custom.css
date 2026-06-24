@@ -42,6 +42,64 @@
   display: none;
 }
 
+/* =========================================================================
+   Left sidebar — GitBook-style rounded pills
+   ========================================================================= */
+.menu__list {
+  /* a little breathing room so the rounded corners of each item are visible */
+  padding: 0 0.35rem;
+}
+
+.menu__list .menu__list {
+  padding-left: 0.35rem;
+}
+
+/* Every clickable item becomes a rounded block instead of a full-bleed bar */
+.menu__link,
+.theme-doc-sidebar-item-link .menu__link,
+.theme-doc-sidebar-item-category .menu__link {
+  border-radius: 6px;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+/* Hover: soft neutral fill, rounded */
+.menu__link:hover,
+.menu__caret:hover,
+.menu__list-item-collapsible:hover {
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+/* Active leaf: soft primary fill + primary text, rounded */
+.menu__link--active:not(.menu__link--sublist) {
+  background-color: rgba(var(--ifm-color-primary-rgb, 37, 99, 235), 0.12);
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+.menu__link--active:not(.menu__link--sublist):hover {
+  background-color: rgba(var(--ifm-color-primary-rgb, 37, 99, 235), 0.18);
+}
+
+/* Active category (expanded parent of the current page) stays primary-colored */
+.menu__list-item--active .menu__link--sublist {
+  color: var(--ifm-color-primary);
+}
+
+/* The sublist caret inherits the rounded treatment */
+.menu__link--sublist-caret:after {
+  border-radius: 6px;
+}
+
+/* Dark mode: emphasis-100 is already theme-aware, just soften the primary tint
+   fallback so the active pill reads well on dark surfaces. */
+[data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
+  background-color: rgba(96, 165, 250, 0.16);
+}
+
+[data-theme='dark'] .menu__link--active:not(.menu__link--sublist):hover {
+  background-color: rgba(96, 165, 250, 0.22);
+}
+
 .theme-doc-markdown > header > h1::first-letter {
   font-family: 'Segoe UI Emoji', sans-serif;
 }
