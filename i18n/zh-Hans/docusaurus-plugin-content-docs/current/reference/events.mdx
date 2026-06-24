@@ -405,7 +405,7 @@ y: <arg:furniture.y> # 可选; 数字; 默认值: <arg:furniture.y>
 z: <arg:furniture.z> # 可选; 数字; 默认值: <arg:furniture.z>
 pitch: <arg:furniture.pitch> # 可选; 数字; 默认值: <arg:furniture.pitch>
 yaw: <arg:furniture.yaw> # 可选; 数字; 默认值: <arg:furniture.yaw>
-variant: ground # 可选;
+variant: ground # 可选; 变体名称
 drop_loot: true # 默认值: true
 play_sound: true # 默认值: true
 ```
@@ -674,6 +674,26 @@ y: "<arg:position.y>" # 可选; 数字; 默认值: <arg:position.y>
 z: "<arg:position.z>" # 可选; 数字; 默认值: <arg:position.z>
 pitch: "<arg:position.pitch>" # 可选; 数字; 默认值: <arg:position.pitch>
 yaw: "<arg:position.yaw>" # 可选; 数字; 默认值: <arg:position.yaw>
+```
+
+### 设置家具变体
+
+设置一个家具的变体
+
+```yaml
+type: set_furniture_variant
+variant: a_variant # 必填; 字符串
+```
+
+### 设置物品冷却（1.21.2+）
+
+设置玩家对某个物品的冷却
+
+```yaml
+type: set_item_cooldown
+id: "minecraft:ender_pearl" # 必填; 字符串; 仅支持原版物品
+time: "5s" # 必填; 字符串; 支持 t(刻),s(秒),m(分),h(时),d(天),w(周) 单位组合
+add: false # 可选; 布尔; 默认值: false
 ```
 
 :::info

@@ -404,7 +404,7 @@ y: <arg:furniture.y> # required; number; default: <arg:furniture.y>
 z: <arg:furniture.z> # required; number; default: <arg:furniture.z>
 pitch: <arg:furniture.pitch> # required; number; default: <arg:furniture.pitch>
 yaw: <arg:furniture.yaw> # required; number; default: <arg:furniture.yaw>
-variant: ground # optional;
+variant: ground # optional; string
 drop_loot: true # default: true
 play_sound: true # default: true
 ```
@@ -431,7 +431,7 @@ y: 100 # required; number
 z: <arg:position.z> + 5 # required; number
 pitch: <arg:player.pitch> # optional; default: 0
 yaw: <arg:player.yaw> # optional; default: 0
-world: world # optional; string;
+world: world # optional; string
 ```
 
 ### toast
@@ -672,6 +672,26 @@ y: "<arg:position.y>" # optional; number; default: <arg:position.y>
 z: "<arg:position.z>" # optional; number; default: <arg:position.z>
 pitch: "<arg:position.pitch>" # optional; number; default: <arg:position.pitch>
 yaw: "<arg:position.yaw>" # optional; number; default: <arg:position.yaw>
+```
+
+### set\_furniture\_variant
+
+Sets the variant of a furniture
+
+```yaml
+type: set_furniture_variant
+variant: a_variant # required; string
+```
+
+### set\_item\_cooldown (1.21.2+)
+
+Sets the cooldown for a specific item for the player
+
+```yaml
+type: set_item_cooldown
+id: "minecraft:ender_pearl" # required; string; only vanilla items are supported
+time: "5s"                  # required; string; supports unit combinations: t(tick), s(second), m(minute), h(hour), d(day), w(week)
+add: false                  # optional; boolean; default: false
 ```
 
 :::info
