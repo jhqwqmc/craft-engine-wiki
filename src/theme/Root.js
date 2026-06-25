@@ -62,13 +62,16 @@ export default function Root({children}) {
           ) {
             animateNode(node);
           }
-          // The node might be an ancestor wrapping the content.
-          const inner = node.querySelectorAll
-            ? node.querySelectorAll(
-                '.theme-doc-markdown, .theme-doc-toc-desktop'
-              )
-            : [];
-          inner.forEach(animateNode);
+          // The node might be an ancestor wrapping the content. Only scan its
+          // descendants when it could plausibly contain one — i.e. it has
+          // element children. Leaf nodes (token spans, text wrappers added
+          // during highlighting/etc.) have none, so skip the querySelectorAll
+          // entirely instead of running it on every added element.
+          if (node.childElementCount > 0) {
+            node
+              .querySelectorAll('.theme-doc-markdown, .theme-doc-toc-desktop')
+              .forEach(animateNode);
+          }
         }
       }
     });

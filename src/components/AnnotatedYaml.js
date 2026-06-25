@@ -61,7 +61,13 @@ function childrenToLines(children) {
 }
 
 export default function AnnotatedYaml({ lines, children }) {
-  const resolvedLines = lines || childrenToLines(children);
+  // Memoize so the downstream useMemo hooks (maxCodeWidth, built, rawYaml)
+  // actually hold — otherwise a new array every render invalidates them and
+  // the whole block re-tokenizes on every render (e.g. on Copy click).
+  const resolvedLines = useMemo(
+    () => lines || childrenToLines(children),
+    [lines, children]
+  );
   const { copied, copy } = useCopy();
 
   // Longest code length (without note) → alignment column for `#`.

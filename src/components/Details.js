@@ -77,9 +77,22 @@ export default function Details({
   }, [short]);
 
   useEffect(() => {
-    const onResize = () => measure();
+    // resize can fire well above 60Hz during a window drag; each measure()
+    // reads scrollHeight (forced layout). Coalesce to one read per frame so a
+    // page with many Details doesn't thrash layout on every resize tick.
+    let rafId = 0;
+    const onResize = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        measure();
+      });
+    };
     window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const bodyStyle = {};

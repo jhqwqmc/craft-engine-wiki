@@ -1,6 +1,6 @@
 // src/components/ClickableYamlFragment.js
 import Link from '@docusaurus/Link';
-import React, {useEffect} from 'react';
+import React from 'react';
 import styles from './ClickableYamlFragment.module.css';
 import CodeBlock from '@theme/CodeBlock';
 
@@ -18,19 +18,14 @@ function hexToRgba(hex, transparentValue) {
 function ClickableYamlFragment({ yamlContent, to, title, highlightColor }) {
   const hasLink = !!to;
 
-  let isDarkTheme = false;
-  useEffect(() => {
-    isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark';
-  })
-
   const defaultColor = '#3498db';
   const colorToUse = highlightColor || defaultColor;
 
-  const shadowLightAlpha = isDarkTheme ? 0.04 : 0.08;
-  const shadowMediumAlpha = isDarkTheme ? 0.15 : 0.2;
-  const shadowStrongAlpha = isDarkTheme ? 0.25 : 0.3;
-  const shadowFocusAlpha = isDarkTheme ? 0.4 : 0.5;
-  const hoverBgAlpha = isDarkTheme ? 0.01 : 0.02;
+  const shadowLightAlpha = 0.08;
+  const shadowMediumAlpha = 0.2;
+  const shadowStrongAlpha = 0.3;
+  const shadowFocusAlpha = 0.5;
+  const hoverBgAlpha = 0.02;
 
   const inlineStyles = {
     '--yaml-fragment-outline-color': colorToUse,

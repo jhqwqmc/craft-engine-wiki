@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useCallback,
+  useMemo,
 } from 'react';
 import {
   FaFolder,
@@ -205,6 +206,22 @@ function TreeNode({ node, depth, selectedId, onSelect, scrollContainerRef }) {
 /* ==============================
    主文件树组件
    ============================== */
+
+// Pure helper lifted out of the component so it isn't redefined per render and
+// can feed a useMemo. Recursively spreads every visible node — O(visible),
+// so memoizing on treeData avoids re-allocating the whole list on unrelated
+// state changes (selection, mount).
+function flatten(nodes, depth = 0) {
+  let result = [];
+  for (const node of nodes) {
+    result.push({ ...node, depth });
+    if (node.children && node.isOpen) {
+      result = result.concat(flatten(node.children, depth + 1));
+    }
+  }
+  return result;
+}
+
 export default function PluginFileTree({ initialTreeData, title }) {
   const [treeData, setTreeData] = useState(() => {
     const addState = (nodes) =>
@@ -237,18 +254,7 @@ export default function PluginFileTree({ initialTreeData, title }) {
     setTreeData((prev) => update(prev));
   }, []);
 
-  const flatten = (nodes, depth = 0) => {
-    let result = [];
-    for (const node of nodes) {
-      result.push({ ...node, depth });
-      if (node.children && node.isOpen) {
-        result = result.concat(flatten(node.children, depth + 1));
-      }
-    }
-    return result;
-  };
-
-  const visibleNodes = flatten(treeData);
+  const visibleNodes = useMemo(() => flatten(treeData), [treeData]);
 
   const TOOLBAR_HEIGHT = 38;
   const ROW_HEIGHT = 32;
