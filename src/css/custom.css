@@ -1,14 +1,9 @@
 @font-face {
   font-family: 'Segoe UI Emoji';
-  src: local('Segoe UI Emoji'), url('/static/seguiemj.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Segoe UI Emoji';
-  src: url('/static/seguiemj.woff2') format('woff2');
+  src: local('Segoe UI Emoji'),
+       local('Apple Color Emoji'),
+       local('Noto Color Emoji'),
+       url('/static/seguiemj.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -135,6 +130,32 @@
   /* Docusaurus' Collapsible sets will-change: height during animation but
      never cleans it up. Prevent it from sticking and holding a layer open. */
   will-change: auto !important;
+}
+
+/* ---- Fix: disabled height transition breaks Collapsible cleanup. ----
+   Collapsible only writes its final layout state from onTransitionEnd('height'):
+     • expanded  → height: auto;  overflow: visible
+     • collapsed → display: none; height: 0; overflow: hidden
+   By killing the height transition above, that handler never fires, so the
+   <ul> is stuck mid-animation. Two failure modes:
+     • Expanding a nested category (e.g. S3 inside "Set Up Pack Host") can't
+       grow its parent — content clips/overlaps instead of pushing siblings.
+     • After expand→collapse the <ul> keeps display:block; height:0, so its
+       margins (4px+4px) still reserve space — collapsed groups gain a gap.
+   Replicate BOTH cleanup states from the <li>'s collapsed class, which
+   Docusaurus toggles the instant a category is clicked. */
+.theme-doc-sidebar-container
+  .menu__list-item:not(.menu__list-item--collapsed)
+  > .menu__list {
+  height: auto !important;
+  overflow: visible !important;
+}
+.theme-doc-sidebar-container
+  .menu__list-item.menu__list-item--collapsed
+  > .menu__list {
+  display: none !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
 /* ---- Depth gradient: ONLY the left rail darkens with depth. ---- */
