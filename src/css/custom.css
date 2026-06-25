@@ -374,3 +374,12 @@
 [data-theme='dark'] .language-yaml .token.operator {
   color: #9aa3b8 !important;
 }
+
+/* Search bar: keep it wide enough and hide the "Ctrl+Shift+F" hint that
+   overlaps the input text, making it unreadable. */
+.navbar__search [class*="searchHintContainer"] {
+  display: none;
+}
+.navbar__search-input {
+  width: 10rem;
+}
