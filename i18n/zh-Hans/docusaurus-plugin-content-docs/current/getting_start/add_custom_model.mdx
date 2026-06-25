@@ -5,7 +5,7 @@ id: add_custom_model
 
 import PluginFileTree from '@site/src/components/PluginFileTree';
 import Highlight from '@site/src/components/Highlight';
-import DiffViewer from '@site/src/components/DiffViewer';
+import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Comment from '@site/src/components/Comment';
@@ -431,7 +431,7 @@ items:
 
 现在我们来尝试 CraftEngine 提供的模型生成功能。注意：如果你已经完成了前面的 BlockBench 教程，请删除之前创建的模型 JSON 文件。正如标题所说，“生成”意味着这一节中我们不会使用 BlockBench 创建的模型。
 
-<DiffViewer>
+<AnnotatedYaml>
 {`
 items:
     tutorial:toxic_sword:
@@ -445,7 +445,7 @@ items:
 +       textures:
 +         layer0: tutorial:item/toxic_sword
 `}
-</DiffViewer>
+</AnnotatedYaml>
 
 :::tip
 

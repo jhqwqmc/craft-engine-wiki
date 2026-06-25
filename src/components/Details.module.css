@@ -97,7 +97,6 @@
   position: relative;
   max-height: 200px; /* fallback; overridden inline by measured height */
   overflow: hidden;
-  transition: max-height 0.34s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 /* Inner padding is set inline (varies between short/long). */

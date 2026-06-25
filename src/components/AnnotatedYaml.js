@@ -33,22 +33,52 @@ function buildLine(code, note, maxCodeWidth) {
   return { display: `${code}${' '.repeat(padding)}# ${note}` };
 }
 
-export default function AnnotatedYaml({ lines = [] }) {
+// Detect diff lines: a `+` or `-` at column 0 (no leading whitespace).
+// A `-` WITH leading whitespace is a YAML list marker, not a diff removal.
+// The raw line is kept AS-IS for display; the clean version replaces the
+// diff marker with a space and is used for the Copy button.
+const DIFF_RE = /^[+-]/;
+
+function parseDiffLine(raw) {
+  if (!DIFF_RE.test(raw)) return { code: raw, diff: null };
+  const marker = raw[0];
+  // Replace the diff marker with a space to preserve indentation for copy.
+  const clean = ' ' + raw.slice(1);
+  return {
+    code: raw,           // display: full line including +/-
+    clean,               // copy:   marker replaced with space
+    diff: marker === '+' ? 'add' : 'remove',
+  };
+}
+
+// When `children` (a raw YAML string) is provided, split it into lines.
+function childrenToLines(children) {
+  if (typeof children !== 'string') return [];
+  return children
+    .replace(/^\n|\n\s*$/g, '')
+    .split('\n')
+    .map((raw) => parseDiffLine(raw));
+}
+
+export default function AnnotatedYaml({ lines, children }) {
+  const resolvedLines = lines || childrenToLines(children);
   const { copied, copy } = useCopy();
 
   // Longest code length (without note) → alignment column for `#`.
   const maxCodeWidth = useMemo(
-    () => lines.reduce((m, l) => Math.max(m, l.code.length), 0),
-    [lines]
+    () => resolvedLines.reduce((m, l) => Math.max(m, l.code.length), 0),
+    [resolvedLines]
   );
 
   const built = useMemo(
-    () => lines.map((l) => ({ ...l, ...buildLine(l.code, l.note, maxCodeWidth) })),
-    [lines, maxCodeWidth]
+    () => resolvedLines.map((l) => ({ ...l, ...buildLine(l.code, l.note, maxCodeWidth) })),
+    [resolvedLines, maxCodeWidth]
   );
 
+  // Copy uses the clean version (diff markers replaced with spaces) so the
+  // clipboard gets valid YAML. Falls back to the display version.
   const rawYaml = useMemo(
-    () => built.map((l) => l.display).join('\n'),
+    () => built.map((l) => (l.clean || l.display)).join('\n'),
     [built]
   );
 
@@ -69,7 +99,10 @@ export default function AnnotatedYaml({ lines = [] }) {
         <pre className={`language-yaml ${styles.pre}`}>
           <code>
             {built.map((line, i) => (
-              <span key={i} className={styles.row}>
+              <span
+                key={i}
+                className={`${styles.row} ${line.diff ? styles['diff-' + line.diff] : ''}`}
+              >
                 <span className={`${styles.code} language-yaml`}>
                   {line.display.length ? renderYamlLine(line.display) : ' '}
                 </span>

@@ -3,14 +3,14 @@ title: 🛜 自托管
 id: self
 ---
 
-import DiffViewer from '@site/src/components/DiffViewer';
+import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 import Highlight from '@site/src/components/Highlight';
 
 <Highlight color="#1877F2">**基础方案**</Highlight>
 
 优点？它完全免费 —— 只需要你现有的服务器即可使用。非常适合用于测试和开发环境。但请注意，除非你拥有极高的上行带宽，否则不要在生产环境中使用这种方式。资源包的下载会占用服务器的上行带宽，可能会导致其他玩家卡顿或掉线。
 
-<DiffViewer>
+<AnnotatedYaml>
 {`
 resource-pack:
     delivery:
@@ -34,7 +34,7 @@ resource-pack:
             # 防止单个 IP 在短时间内发送过多资源包下载请求
             qps_per_ip: 5/60 # 每 60 秒 5 次请求
 `}
-</DiffViewer>
+</AnnotatedYaml>
 
 :::info
 

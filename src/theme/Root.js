@@ -7,6 +7,7 @@
 import React from 'react';
 import initSidebarOverlayScrollbar from '../utils/initSidebarOverlayScrollbar';
 import initSidebarActiveFolder from '../utils/initSidebarActiveFolder';
+import initSidebarToolbar from '../utils/initSidebarToolbar';
 
 // Route-change transition: new content drifts in from the right while fading
 // in. opacity + transform are compositor-friendly, so it stays smooth.
@@ -45,6 +46,7 @@ export default function Root({children}) {
   React.useEffect(() => {
     const cleanupActive = initSidebarActiveFolder();
     const cleanupScroll = initSidebarOverlayScrollbar();
+    const cleanupToolbar = initSidebarToolbar();
 
     // Watch the whole doc for new .theme-doc-markdown / .theme-doc-toc-desktop
     // nodes. On a route change Docusaurus unmounts the old node and mounts a
@@ -75,6 +77,7 @@ export default function Root({children}) {
     return () => {
       cleanupActive();
       cleanupScroll();
+      cleanupToolbar();
       observer.disconnect();
     };
   }, []);

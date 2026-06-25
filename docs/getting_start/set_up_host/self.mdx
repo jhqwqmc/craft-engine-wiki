@@ -3,14 +3,14 @@ title: 🛜 Self hosting
 id: self
 ---
 
-import DiffViewer from '@site/src/components/DiffViewer';
+import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 import Highlight from '@site/src/components/Highlight';
 
 <Highlight color="#1877F2">**Basic Solution**</Highlight>
 
 The good part? It's completely free - just needs your existing server. Perfect for testing and development. But unless you've got killer bandwidth, don't use this for production environments. Resource pack downloads will hog your server's connection and might lag out other players.
 
-<DiffViewer>
+<AnnotatedYaml>
 {`
 resource-pack:
     delivery:
@@ -34,7 +34,7 @@ resource-pack:
             # Prevent a single IP from sending too many resource pack download requests in a short time period
             qps_per_ip: 5/60 #  5 requests per 60 seconds
 `}
-</DiffViewer>
+</AnnotatedYaml>
 
 :::info
 

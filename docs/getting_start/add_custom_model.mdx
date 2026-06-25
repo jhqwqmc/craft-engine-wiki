@@ -5,7 +5,7 @@ id: add_custom_model
 
 import PluginFileTree from '@site/src/components/PluginFileTree';
 import Highlight from '@site/src/components/Highlight';
-import DiffViewer from '@site/src/components/DiffViewer';
+import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import Details from '@site/src/components/Details';
@@ -433,7 +433,7 @@ Don't forget to run `/ce reload all` to apply the resource pack changes.
 
 Now let's try CraftEngine's model generation feature. Note: If you've completed the previous BlockBench tutorial, delete the model JSON file created earlier. As the title "Generate" indicates, we won't be using BlockBench-created models for this section.
 
-<DiffViewer>
+<AnnotatedYaml>
 {`
 items:
     tutorial:toxic_sword:
@@ -447,7 +447,7 @@ items:
 +       textures:
 +         layer0: tutorial:item/toxic_sword
 `}
-</DiffViewer>
+</AnnotatedYaml>
 
 :::tip
 

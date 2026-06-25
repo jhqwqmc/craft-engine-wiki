@@ -128,14 +128,10 @@
   padding: 4px 4px 4px 6px;
   border-left: 2px solid var(--ifm-color-emphasis-100);
   border-radius: 0 8px 8px 0;
-  transition: border-left-color 0.18s ease;
-  /* Override Docusaurus' inline height-transition duration. The Collapsible
-     component sets `transition: height 300+ms` inline on the <ul>, which
-     forces layout on every frame for every child (50+ items on large
-     sub-menus = jank). Cap it to a nearly-instant 1ms so expand/collapse
-     snaps but the transitionend event still fires for cleanup. */
-  transition-duration: 0.18s, 0.001s !important;
-  transition-property: border-left-color, height !important;
+  /* Only animate the left-rail color; height changes snap instantly so
+     expand/collapse has no visible animation.  !important overrides the
+     inline `transition: height …` that Docusaurus' Collapsible sets. */
+  transition: border-left-color 0.18s ease !important;
   /* Docusaurus' Collapsible sets will-change: height during animation but
      never cleans it up. Prevent it from sticking and holding a layer open. */
   will-change: auto !important;
@@ -238,7 +234,57 @@
   border-radius: 6px;
 }
 
-/* Fold/unfold caret: smaller and fainter so it recedes behind the labels. */
+/* =========================================================================
+   Sidebar utility toolbar — compact icon row above the menu tree
+   ========================================================================= */
+
+.sb-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  margin: 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.sb-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ifm-color-emphasis-600);
+  cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease;
+  flex-shrink: 0;
+}
+
+.sb-toolbar-btn:hover {
+  background-color: var(--ifm-color-emphasis-100);
+  color: var(--ifm-color-primary);
+}
+
+.sb-toolbar-btn:active {
+  background-color: var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .sb-toolbar-btn:hover {
+  background-color: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-primary-light);
+}
+
+/* Push the last two tools (link, edit) to the right for visual grouping */
+.sb-toolbar-btn[data-action="link"] {
+  margin-left: auto;
+}
+
+/* =========================================================================
+   Fold/unfold caret: smaller and fainter so it recedes behind the labels.
+   ========================================================================= */
 .menu__link--sublist-caret:after,
 .menu__caret:before {
   opacity: 0.5;
