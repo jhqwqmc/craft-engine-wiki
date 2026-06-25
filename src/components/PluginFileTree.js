@@ -39,7 +39,23 @@ function Chevron({ open }) {
   );
 }
 
-function TreeNode({ node, depth, selectedId, onSelect, scrollContainerRef }) {
+// Memoized so a selection change only re-renders the two affected rows (the
+// previously-selected and the newly-selected one), not the whole tree. This
+// relies on every prop being referentially stable across a selection change:
+//   • node / depth / isSelected — come from the memoized visibleNodes list;
+//     only `isSelected` flips for the two rows involved.
+//   • onSelect / onToggle / scrollContainerRef — stable (useCallback / ref).
+// Previously the parent passed `node={{ ...node, toggle: () => ... }}`, a fresh
+// object every render, which defeated memoization and re-rendered every row on
+// each click.
+const TreeNode = React.memo(function TreeNode({
+  node,
+  depth,
+  isSelected,
+  onToggle,
+  onSelect,
+  scrollContainerRef,
+}) {
   const [showCard, setShowCard] = useState(false);
   const [cardStyle, setCardStyle] = useState({});
   const cardRef = useRef(null);
@@ -48,7 +64,6 @@ function TreeNode({ node, depth, selectedId, onSelect, scrollContainerRef }) {
 
   const isFolder = !!node.children;
   const isOpen = node.isOpen;
-  const isSelected = node.id === selectedId;
 
   const MAX_INDENT = 200;
   const indent = Math.min(depth * 20, MAX_INDENT);
@@ -58,10 +73,10 @@ function TreeNode({ node, depth, selectedId, onSelect, scrollContainerRef }) {
         if (questionIconRef.current && questionIconRef.current.contains(e.target)) {
           return;
         }
-        if (isFolder) node.toggle();
+        if (isFolder) onToggle(node.id);
         onSelect(node.id);
       },
-      [isFolder, node, onSelect]
+      [isFolder, node, onToggle, onSelect]
   );
 
   const handleQuestionClick = useCallback((e) => {
@@ -201,7 +216,7 @@ function TreeNode({ node, depth, selectedId, onSelect, scrollContainerRef }) {
             )}
       </div>
   );
-}
+});
 
 /* ==============================
    主文件树组件
@@ -294,9 +309,10 @@ export default function PluginFileTree({ initialTreeData, title }) {
           {visibleNodes.map((node) => (
               <TreeNode
                   key={node.id}
-                  node={{ ...node, toggle: () => toggleNode(node.id) }}
+                  node={node}
                   depth={node.depth}
-                  selectedId={selectedId}
+                  isSelected={node.id === selectedId}
+                  onToggle={toggleNode}
                   onSelect={setSelectedId}
                   scrollContainerRef={containerRef}
               />
