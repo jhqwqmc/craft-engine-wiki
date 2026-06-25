@@ -62,9 +62,10 @@
     clip-path: none;
   }
 
-  /* sticky viewport: add a float gap (top clears the navbar, plus left/bottom/right) */
+  /* sticky viewport: float gap on all sides so the card breathes.
+     top clears the navbar, right separates it from the content area. */
   .theme-doc-sidebar-container > div {
-    padding: calc(var(--ifm-navbar-height) + 14px) 0 14px 14px;
+    padding: calc(var(--ifm-navbar-height) + 14px) 12px 14px 14px;
   }
 
   /* the .sidebar itself becomes the rounded card */
@@ -74,7 +75,7 @@
     background-color: var(--ifm-background-surface-color);
     border: 1px solid var(--ifm-color-emphasis-300);
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), 0 12px 28px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     /* the navbar-height spacer now lives on the viewport padding above */
     padding-top: 0;
@@ -127,9 +128,17 @@
   padding: 4px 4px 4px 6px;
   border-left: 2px solid var(--ifm-color-emphasis-100);
   border-radius: 0 8px 8px 0;
-  /* Only animate the rail color (cheap paint on a 2px strip); skip
-     background-color since it's transparent everywhere. */
   transition: border-left-color 0.18s ease;
+  /* Override Docusaurus' inline height-transition duration. The Collapsible
+     component sets `transition: height 300+ms` inline on the <ul>, which
+     forces layout on every frame for every child (50+ items on large
+     sub-menus = jank). Cap it to a nearly-instant 1ms so expand/collapse
+     snaps but the transitionend event still fires for cleanup. */
+  transition-duration: 0.18s, 0.001s !important;
+  transition-property: border-left-color, height !important;
+  /* Docusaurus' Collapsible sets will-change: height during animation but
+     never cleans it up. Prevent it from sticking and holding a layer open. */
+  will-change: auto !important;
 }
 
 /* ---- Depth gradient: ONLY the left rail darkens with depth. ---- */
@@ -256,7 +265,7 @@
 /* Dark mode: deeper shadow on the floating sidebar card */
 [data-theme='dark'] .theme-doc-sidebar-container > div > div {
   border-color: var(--ifm-color-emphasis-300);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 12px 28px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 /* =========================================================================

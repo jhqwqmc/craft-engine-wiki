@@ -106,23 +106,39 @@ function refresh() {
 export default function initSidebarActiveFolder() {
   refresh();
 
-  // One structure observer per sidebar container. We watch:
-  //   • childList + subtree — catches route-change rebuilds and lazy-mounted
-  //     collapsible <ul>s appearing.
-  //   • attributes filtered to `class` only — catches the active item's class
-  //     flipping on navigation. Filtering to `class` keeps hover-driven
-  //     aria-expanded / style mutations from firing.
-  const observer = new MutationObserver(refresh);
-  const roots = new Set();
+  // Structure changes (route-change rebuilds, lazy-mounted collapsible <ul>s
+  // appearing) need a full re-tag. This observer is childList-only.
+  const structObserver = new MutationObserver(refresh);
+  const structRoots = new Set();
+
+  // Class changes (active item flipping on navigation, collapsed toggling on
+  // expand/collapse) only need to re-mark the active folder — a lightweight
+  // operation that doesn't walk the whole tree. Keep this separate from the
+  // structural observer so expand/collapse animations aren't competing with
+  // expensive tagDepths DOM walks.
+  const lightRefresh = () => {
+    if (lightRaf) return;
+    lightRaf = requestAnimationFrame(() => {
+      lightRaf = 0;
+      document.querySelectorAll(SIDEBAR).forEach((root) => markActive(root));
+    });
+  };
+  const classObserver = new MutationObserver(lightRefresh);
+  const classRoots = new Set();
+  let lightRaf = 0;
 
   const observeRoot = (root) => {
-    if (roots.has(root)) return;
-    roots.add(root);
-    observer.observe(root, {
-      childList: true,
-      subtree: true,
-      attributeFilter: ['class'],
-    });
+    if (!structRoots.has(root)) {
+      structRoots.add(root);
+      structObserver.observe(root, {childList: true, subtree: true});
+    }
+    if (!classRoots.has(root)) {
+      classRoots.add(root);
+      classObserver.observe(root, {
+        subtree: true,
+        attributeFilter: ['class'],
+      });
+    }
   };
 
   document.querySelectorAll(SIDEBAR).forEach(observeRoot);
@@ -140,9 +156,11 @@ export default function initSidebarActiveFolder() {
   const deferred = setTimeout(refresh, 300);
 
   return () => {
-    observer.disconnect();
+    structObserver.disconnect();
+    classObserver.disconnect();
     bodyObserver.disconnect();
     if (rafId) cancelAnimationFrame(rafId);
+    if (lightRaf) cancelAnimationFrame(lightRaf);
     clearTimeout(deferred);
     roots.clear();
   };
