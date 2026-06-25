@@ -450,3 +450,109 @@
 .navbar__search-input {
   width: 10rem;
 }
+
+/* =========================================================================
+   Navbar layout: search box centered, Discord icon on the right.
+   On desktop the search bar is lifted out of the left item group and
+   absolutely centered within .navbar__inner. Mobile keeps the default
+   layout (search lives in the mobile sidebar there), so we gate on width.
+   ========================================================================= */
+@media (min-width: 997px) {
+  .navbar__inner {
+    position: relative;
+  }
+
+  .navbar .navbar__search {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .navbar__search-input {
+    width: 16rem;
+  }
+
+  /* Space out the right-side icon cluster (locale switch, Discord, color
+     mode toggle) so they don't bunch together. */
+  .navbar .navbar__items--right {
+    gap: 0.6rem;
+  }
+
+  .navbar .navbar__items--right > * + * {
+    margin-left: 0.4rem;
+  }
+
+  /* ---- Lively hover for the right-side icon cluster ----
+     Springy scale + color shift on every icon button (locale switch,
+     Discord, color-mode toggle). transform-origin center keeps the pop
+     stable; a cubic-bezier overshoot gives the bounce. */
+  .navbar .navbar__items--right .navbar__link,
+  .navbar .navbar__items--right button[class*="toggle"],
+  .navbar .navbar__items--right .navbar__toggle {
+    transform-origin: center;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+                color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .navbar .navbar__items--right .navbar__link:hover,
+  .navbar .navbar__items--right button[class*="toggle"]:hover,
+  .navbar .navbar__items--right .navbar__toggle:hover {
+    transform: scale(1.18) rotate(-4deg);
+  }
+
+  .navbar .navbar__items--right .navbar__link:active,
+  .navbar .navbar__items--right button[class*="toggle"]:active,
+  .navbar .navbar__items--right .navbar__toggle:active {
+    transform: scale(0.92);
+  }
+}
+
+@media (min-width: 1280px) {
+  .navbar__search-input {
+    width: 20rem;
+  }
+}
+
+/* Discord icon link. The <a> carries a "Discord" text label for screen
+   readers; we hide it visually (font-size: 0) and render the logo via a
+   CSS mask so it inherits currentColor and adapts to light/dark themes. */
+.navbar-discord-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  font-size: 0;
+  color: var(--ifm-color-emphasis-600);
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.6 12.6 0 0 0-.617-1.25.077.077 0 0 0-.079-.037 19.74 19.74 0 0 0-4.885 1.515.07.07 0 0 0-.032.028C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.029.078.078 0 0 0 .084-.027c.462-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.042-.106 12.3 12.3 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.011c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.3 12.3 0 0 1-1.873.891.076.076 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.029.077.077 0 0 0 .031-.055c.501-5.177-.838-9.674-3.548-13.66a.061.061 0 0 0-.031-.029zM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419z'/%3E%3C/svg%3E") no-repeat center / 1.4rem 1.4rem;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20.317 4.369a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.6 12.6 0 0 0-.617-1.25.077.077 0 0 0-.079-.037 19.74 19.74 0 0 0-4.885 1.515.07.07 0 0 0-.032.028C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.029.078.078 0 0 0 .084-.027c.462-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.042-.106 12.3 12.3 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.011c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.3 12.3 0 0 1-1.873.891.076.076 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.029.077.077 0 0 0 .031-.055c.501-5.177-.838-9.674-3.548-13.66a.061.061 0 0 0-.031-.029zM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419z'/%3E%3C/svg%3E") no-repeat center / 1.4rem 1.4rem;
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              color 0.25s ease, background-color 0.25s ease;
+}
+
+.navbar-discord-link:hover {
+  color: #5865f2; /* Discord blurple */
+  background-color: currentColor;
+  transform: scale(1.18) rotate(-6deg);
+  animation: discord-wiggle 0.5s ease;
+}
+
+.navbar-discord-link:active {
+  transform: scale(0.9);
+}
+
+/* One-shot wiggle on hover: a quick back-and-foroth tilt for personality. */
+@keyframes discord-wiggle {
+  0%   { transform: scale(1.18) rotate(-6deg); }
+  30%  { transform: scale(1.22) rotate(5deg); }
+  55%  { transform: scale(1.18) rotate(-3deg); }
+  100% { transform: scale(1.18) rotate(-6deg); }
+}
+
+[data-theme='dark'] .navbar-discord-link {
+  color: var(--ifm-color-emphasis-400);
+}

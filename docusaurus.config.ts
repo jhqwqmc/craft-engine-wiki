@@ -72,6 +72,13 @@ const config: Config = {
           type: 'localeDropdown',
           position: 'right',
         },
+        {
+          href: 'https://discord.gg/xiaomomi',
+          label: 'Discord',
+          position: 'right',
+          className: 'navbar-discord-link',
+          'aria-label': 'Discord',
+        },
       ],
     },
 
