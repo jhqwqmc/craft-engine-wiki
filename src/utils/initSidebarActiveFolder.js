@@ -45,6 +45,13 @@ function tagDepths(root) {
   childLists.forEach((child) => walk(child, 1));
 }
 
+// The <ul> we currently have marked active. Cached so that when nothing has
+// changed we skip ALL class writes — and therefore emit no `class` mutation,
+// which would otherwise re-trigger classObserver → lightRefresh → markActive in
+// a self-sustaining per-frame loop (remove osb-active-folder, re-add it, …).
+// Reset to null whenever the sidebar DOM is rebuilt (old node is detached).
+let lastActiveUl = null;
+
 // Mark the folder that directly owns the active page. Only that level lights up;
 // ancestors stay grey.
 //
@@ -55,40 +62,50 @@ function tagDepths(root) {
 // current page. `querySelector` returns the FIRST (outermost) one, which would
 // wrongly point at a root-level category whose <ul> has no depth class.
 function markActive(root) {
-  // Clear previous active marks.
-  root.querySelectorAll(MENU_LIST).forEach((list) => {
-    list.classList.remove('osb-active-folder');
-  });
+  // If the sidebar was rebuilt, our cached <ul> is detached — drop it so we
+  // don't waste a classList call on a dead node (and so we re-mark from clean).
+  if (lastActiveUl && !root.contains(lastActiveUl)) {
+    lastActiveUl = null;
+  }
 
   const activeLinks = root.querySelectorAll(ACTIVE_LINK);
-  if (activeLinks.length === 0) return;
-
-  // Pick the innermost active link. Docusaurus marks every ancestor category
-  // link active too, so an ancestor <li> contains MULTIPLE active links (its
-  // own + the descendant's). The owning <li> of the current page contains
-  // exactly ONE active link — itself. So pick the active link whose <li> has
-  // only one active link inside it.
-  let chosen = null;
-  activeLinks.forEach((link) => {
-    const li = link.closest('.menu__list-item');
-    if (!li) return;
-    const count = li.querySelectorAll(ACTIVE_LINK).length;
-    if (count > 1) return; // ancestor category — skip
-    if (!chosen) chosen = {link, li};
-  });
-
-  // Fallback: last active link in document order.
-  if (!chosen) {
-    const link = activeLinks[activeLinks.length - 1];
-    const li = link.closest('.menu__list-item');
-    if (li) chosen = {link, li};
+  let owningUl = null;
+  if (activeLinks.length > 0) {
+    // Pick the innermost active link. Docusaurus marks every ancestor category
+    // link active too, so an ancestor <li> contains MULTIPLE active links (its
+    // own + the descendant's). The owning <li> of the current page contains
+    // exactly ONE active link — itself. So pick the active link whose <li> has
+    // only one active link inside it.
+    let chosen = null;
+    for (const link of activeLinks) {
+      const li = link.closest('.menu__list-item');
+      if (!li) continue;
+      if (li.querySelectorAll(ACTIVE_LINK).length > 1) continue; // ancestor
+      chosen = li;
+      break;
+    }
+    // Fallback: last active link in document order.
+    if (!chosen) {
+      const li = activeLinks[activeLinks.length - 1].closest('.menu__list-item');
+      if (li) chosen = li;
+    }
+    if (chosen) {
+      const parent = chosen.parentElement;
+      if (parent && parent.classList.contains('menu__list')) {
+        owningUl = parent;
+      }
+    }
   }
-  if (!chosen) return;
 
-  const owningUl = chosen.li.parentElement;
-  if (owningUl && owningUl.classList.contains('menu__list')) {
-    owningUl.classList.add('osb-active-folder');
-  }
+  // Short-circuit: the active folder hasn't moved. Write NOTHING so no `class`
+  // mutation fires and classObserver stays quiet. This is what breaks the
+  // feedback loop — without it, markActive re-writes osb-active-folder every
+  // frame forever.
+  if (owningUl === lastActiveUl) return;
+
+  if (lastActiveUl) lastActiveUl.classList.remove('osb-active-folder');
+  if (owningUl) owningUl.classList.add('osb-active-folder');
+  lastActiveUl = owningUl;
 }
 
 let rafId = 0;
@@ -162,6 +179,6 @@ export default function initSidebarActiveFolder() {
     if (rafId) cancelAnimationFrame(rafId);
     if (lightRaf) cancelAnimationFrame(lightRaf);
     clearTimeout(deferred);
-    roots.clear();
+    lastActiveUl = null;
   };
 }
