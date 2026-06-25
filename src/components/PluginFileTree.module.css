@@ -75,9 +75,39 @@
 
 /* ---- scrollable tree body ---- */
 .body {
+  position: relative;
   overflow: auto;
   padding: 10px 6px;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox: hide native */
+}
+
+.body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none; /* WebKit: hide native */
+}
+
+/* ---- overlay scrollbar thumb (rendered into document.body, position:fixed) ---- */
+.overlayThumb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  border-radius: 999px;
+  background-color: var(--ifm-color-emphasis-400);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+  transition: opacity 0.28s ease;
+}
+
+.overlayThumbVisible {
+  opacity: 0.55;
+}
+
+[data-theme='dark'] .overlayThumb {
+  background-color: var(--ifm-color-emphasis-300);
 }
 
 /* ---- row ---- */

@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fa';
 import ReactDOM from 'react-dom';
 import styles from './PluginFileTree.module.css';
+import useOverlayScrollbar from './useOverlayScrollbar';
 
 /* ==============================
    节点渲染组件
@@ -217,6 +218,7 @@ export default function PluginFileTree({ initialTreeData, title }) {
 
   const [selectedId, setSelectedId] = useState(null);
   const containerRef = useRef(null);
+  const { scrollRef, thumbRef, visible } = useOverlayScrollbar();
 
   const toggleNode = useCallback((targetId) => {
     const update = (nodes) =>
@@ -269,7 +271,13 @@ export default function PluginFileTree({ initialTreeData, title }) {
           <span className={styles.toolbarTitle}>{toolbarTitle}</span>
         </div>
 
-        <div ref={containerRef} className={styles.body}>
+        <div
+            ref={(node) => {
+              scrollRef.current = node;
+              containerRef.current = node;
+            }}
+            className={styles.body}
+        >
           {visibleNodes.map((node) => (
               <TreeNode
                   key={node.id}
@@ -281,6 +289,15 @@ export default function PluginFileTree({ initialTreeData, title }) {
               />
           ))}
         </div>
+
+        {ReactDOM.createPortal(
+            <div
+                ref={thumbRef}
+                className={`${styles.overlayThumb} ${visible ? styles.overlayThumbVisible : ''}`}
+                aria-hidden="true"
+            />,
+            document.body
+        )}
       </div>
   );
 }

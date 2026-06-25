@@ -24,6 +24,11 @@
   --ifm-color-primary-lightest: #93c5fd;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  /* Wider sidebar + slightly smaller menu text so long labels fit comfortably. */
+  --doc-sidebar-width: 320px;
+  --ifm-menu-link-padding-horizontal: 0.7rem;
+  --ifm-menu-link-padding-vertical: 0.34rem;
 }
 
 [data-theme='dark'] {
@@ -43,8 +48,57 @@
 }
 
 /* =========================================================================
-   Left sidebar — GitBook-style rounded pills
+   Left sidebar — GitBook-style rounded pills + floating panel
    ========================================================================= */
+
+/* The whole doc sidebar becomes an independent, floating rounded card.
+   Structure: aside.theme-doc-sidebar-container > div(sticky viewport) > div(.sidebar)
+*/
+@media (min-width: 997px) {
+  .theme-doc-sidebar-container {
+    border-right: none;
+    background-color: transparent;
+    /* clip-path would crop the card's box-shadow — relax it so the shadow shows */
+    clip-path: none;
+  }
+
+  /* sticky viewport: add a float gap (top clears the navbar, plus left/bottom/right) */
+  .theme-doc-sidebar-container > div {
+    padding: calc(var(--ifm-navbar-height) + 14px) 0 14px 14px;
+  }
+
+  /* the .sidebar itself becomes the rounded card */
+  .theme-doc-sidebar-container > div > div {
+    width: 100%;
+    height: 100%;
+    background-color: var(--ifm-background-surface-color);
+    border: 1px solid var(--ifm-color-emphasis-300);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), 0 12px 28px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    /* the navbar-height spacer now lives on the viewport padding above */
+    padding-top: 0;
+  }
+
+  /* keep the menu scrolling inside the card.
+     NOTE: the scroller is <nav class="menu thin-scrollbar">, NOT the
+     <ul class="theme-doc-sidebar-menu"> list inside it. */
+  .theme-doc-sidebar-container .menu {
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0; /* allow flex child to shrink and scroll */
+    scrollbar-width: none !important; /* Firefox: hide native */
+    font-size: 0.9rem; /* slightly smaller menu text */
+  }
+
+  .theme-doc-sidebar-container .menu::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none; /* WebKit: hide native */
+  }
+}
+
 .menu__list {
   /* a little breathing room so the rounded corners of each item are visible */
   padding: 0 0.35rem;
@@ -52,6 +106,91 @@
 
 .menu__list .menu__list {
   padding-left: 0.35rem;
+}
+
+/* =========================================================================
+   Sub-folder grouping: a category's children live in a nested .menu__list.
+   Each nested level is a "folder panel" with a left rail. Depth encodes into
+   the rail intensity: the DEEPER the folder, the DARKER its rail — so 4 levels
+   produce a visible gradient. Backgrounds stay transparent at every level.
+
+   Depth + active state are applied as PLAIN CLASSES (.osb-depth-N,
+   .osb-active-folder) by initSidebarActiveFolder.js — NOT via :has() or deep
+   descendant selectors. :has() is expensive to re-evaluate on a ~200-item
+   sidebar every route change; plain classes are O(1) to match.
+   ========================================================================= */
+
+/* Base shape shared by every nested level. */
+.theme-doc-sidebar-container .menu__list .menu__list {
+  position: relative;
+  margin: 4px 0 4px 10px;
+  padding: 4px 4px 4px 6px;
+  border-left: 2px solid var(--ifm-color-emphasis-100);
+  border-radius: 0 8px 8px 0;
+  /* Only animate the rail color (cheap paint on a 2px strip); skip
+     background-color since it's transparent everywhere. */
+  transition: border-left-color 0.18s ease;
+}
+
+/* ---- Depth gradient: ONLY the left rail darkens with depth. ---- */
+.theme-doc-sidebar-container .menu__list.osb-depth-1 {
+  margin-left: 10px;
+  border-left-color: var(--ifm-color-emphasis-100);
+}
+.theme-doc-sidebar-container .menu__list.osb-depth-2 {
+  margin-left: 8px;
+  border-left-color: var(--ifm-color-emphasis-200);
+}
+.theme-doc-sidebar-container .menu__list.osb-depth-3 {
+  margin-left: 8px;
+  border-left-color: var(--ifm-color-emphasis-300);
+}
+.theme-doc-sidebar-container .menu__list.osb-depth-4 {
+  margin-left: 8px;
+  border-left-color: var(--ifm-color-emphasis-400);
+}
+
+/* ---- Dark mode: same depth ramp (tokens are already theme-aware). ---- */
+
+/* =========================================================================
+   Active folder highlight.
+   ONLY the list that directly holds the active page's <li> turns blue; every
+   other level (including ancestor folders) stays grey. The owning list gets
+   .osb-active-folder (plus its .osb-depth-N), so we combine the two classes
+   to pick the right blue opacity per depth.
+   ========================================================================= */
+.theme-doc-sidebar-container .menu__list.osb-active-folder.osb-depth-1 {
+  border-left-color: rgba(37, 99, 235, 0.5);
+}
+.theme-doc-sidebar-container .menu__list.osb-active-folder.osb-depth-2 {
+  border-left-color: rgba(37, 99, 235, 0.65);
+}
+.theme-doc-sidebar-container .menu__list.osb-active-folder.osb-depth-3 {
+  border-left-color: rgba(37, 99, 235, 0.8);
+}
+.theme-doc-sidebar-container .menu__list.osb-active-folder.osb-depth-4 {
+  border-left-color: rgba(37, 99, 235, 0.95);
+}
+
+[data-theme='dark']
+  .theme-doc-sidebar-container
+  .menu__list.osb-active-folder.osb-depth-1 {
+  border-left-color: rgba(96, 165, 250, 0.55);
+}
+[data-theme='dark']
+  .theme-doc-sidebar-container
+  .menu__list.osb-active-folder.osb-depth-2 {
+  border-left-color: rgba(96, 165, 250, 0.68);
+}
+[data-theme='dark']
+  .theme-doc-sidebar-container
+  .menu__list.osb-active-folder.osb-depth-3 {
+  border-left-color: rgba(96, 165, 250, 0.82);
+}
+[data-theme='dark']
+  .theme-doc-sidebar-container
+  .menu__list.osb-active-folder.osb-depth-4 {
+  border-left-color: rgba(96, 165, 250, 0.95);
 }
 
 /* Every clickable item becomes a rounded block instead of a full-bleed bar */
@@ -90,6 +229,20 @@
   border-radius: 6px;
 }
 
+/* Fold/unfold caret: smaller and fainter so it recedes behind the labels. */
+.menu__link--sublist-caret:after,
+.menu__caret:before {
+  opacity: 0.5;
+  background-size: 1.5rem 1.5rem;
+}
+
+/* Keep the caret legible on hover and when its category is active. */
+.menu__link--sublist-caret:hover:after,
+.menu__caret:hover:before,
+.menu__list-item--active > .menu__list-item-collapsible .menu__link--sublist-caret:after {
+  opacity: 0.85;
+}
+
 /* Dark mode: emphasis-100 is already theme-aware, just soften the primary tint
    fallback so the active pill reads well on dark surfaces. */
 [data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
@@ -98,6 +251,40 @@
 
 [data-theme='dark'] .menu__link--active:not(.menu__link--sublist):hover {
   background-color: rgba(96, 165, 250, 0.22);
+}
+
+/* Dark mode: deeper shadow on the floating sidebar card */
+[data-theme='dark'] .theme-doc-sidebar-container > div > div {
+  border-color: var(--ifm-color-emphasis-300);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* =========================================================================
+   Overlay scrollbar for the sidebar menu (vanilla, since Docusaurus owns the DOM)
+   Hide native; show a custom thumb that fades in only while scrolling.
+   ========================================================================= */
+.osb-thumb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  border-radius: 999px;
+  background-color: var(--ifm-color-emphasis-400);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+  /* Only transition opacity (compositor-friendly). transform is set every
+     scroll frame and promotes to its own layer automatically; avoid a
+     permanent will-change that would hold a layer open while hidden. */
+  transition: opacity 0.28s ease;
+}
+
+.osb-thumb--visible {
+  opacity: 0.55;
+}
+
+[data-theme='dark'] .osb-thumb {
+  background-color: var(--ifm-color-emphasis-300);
 }
 
 .theme-doc-markdown > header > h1::first-letter {
