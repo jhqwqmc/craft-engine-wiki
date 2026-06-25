@@ -217,8 +217,15 @@ export default function PluginFileTree({ initialTreeData, title }) {
   });
 
   const [selectedId, setSelectedId] = useState(null);
+  const [mounted, setMounted] = useState(false);
   const containerRef = useRef(null);
   const { scrollRef, thumbRef, visible } = useOverlayScrollbar();
+
+  // createPortal targets document.body, which doesn't exist during SSG.
+  // Defer the portal render to the client only.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleNode = useCallback((targetId) => {
     const update = (nodes) =>
@@ -290,14 +297,15 @@ export default function PluginFileTree({ initialTreeData, title }) {
           ))}
         </div>
 
-        {ReactDOM.createPortal(
-            <div
-                ref={thumbRef}
-                className={`${styles.overlayThumb} ${visible ? styles.overlayThumbVisible : ''}`}
-                aria-hidden="true"
-            />,
-            document.body
-        )}
+        {mounted &&
+            ReactDOM.createPortal(
+                <div
+                    ref={thumbRef}
+                    className={`${styles.overlayThumb} ${visible ? styles.overlayThumbVisible : ''}`}
+                    aria-hidden="true"
+                />,
+                document.body
+            )}
       </div>
   );
 }
