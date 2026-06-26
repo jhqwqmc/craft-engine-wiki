@@ -1,9 +1,11 @@
 // src/utils/initSidebarToolbar.js
 //
 // Injects a utility toolbar at the top of the doc sidebar (before the menu
-// tree). Four tools in a compact row, vanilla JS, no React coupling.
+// tree). Vanilla JS, no React coupling.
 //
-// Tools: Expand All | Collapse All | Copy Link | Edit Page
+// Tools: Expand All | Collapse All | Copy Link | Theme Color
+//   (the former "Edit this page" slot now hosts the theme-color picker — same
+//    32px icon footprint, no layout change.)
 //
 // Injected once per sidebar container; survives route changes because the
 // observer catches sidebar rebuilds and re-injects automatically.
@@ -19,13 +21,13 @@ const T = {
     expand: 'Expand all',
     collapse: 'Collapse all',
     link: 'Copy page link',
-    edit: 'Edit this page',
+    color: 'Theme color',
   },
   'zh-Hans': {
     expand: '展开全部',
     collapse: '折叠全部',
     link: '复制页面链接',
-    edit: '编辑此页',
+    color: '主题颜色',
   },
 };
 
@@ -48,11 +50,105 @@ const ICONS = {
     '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 9 7 13 11"/><path d="M5 6h8"/></svg>',
   link:
     '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 10.5a3 3 0 0 0 4.2.4l1.8-1.8a3 3 0 0 0-4.2-4.2L7.9 6.1"/><path d="M10.5 7.5a3 3 0 0 0-4.2-.4l-1.8 1.8a3 3 0 0 0 4.2 4.2l1.4-1.4"/></svg>',
-  edit:
-    '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l3 3-9 9H3v-3l9-9z"/></svg>',
+  color:
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20 2.5 2.5 0 0 0 2.5-2.5c0-.66-.26-1.26-.68-1.7-.4-.43-.65-.99-.65-1.6A2.3 2.3 0 0 1 15.5 13H17a5 5 0 0 0 5-5c0-3.3-3.6-6-10-6z"/><circle cx="7.5" cy="10.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="7.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="16.5" cy="10.5" r="1.3" fill="currentColor" stroke="none"/></svg>',
   check:
     '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l3 3 7-7"/></svg>',
 };
+
+// ---------------------------------------------------------------------------
+// Theme-color picker (mounted inside the toolbar's last slot)
+// ---------------------------------------------------------------------------
+const COLOR_STORAGE_KEY = 'theme-color';
+
+const COLORS = [
+  {id: 'blue', label: 'Blue'},
+  {id: 'cyan', label: 'Cyan'},
+  {id: 'orange', label: 'Orange'},
+  {id: 'purple', label: 'Purple'},
+  {id: 'green', label: 'Green'},
+];
+
+function currentColor() {
+  return document.documentElement.getAttribute('data-theme-color') || 'blue';
+}
+
+function applyColor(id) {
+  document.documentElement.setAttribute('data-theme-color', id);
+  try {
+    localStorage.setItem(COLOR_STORAGE_KEY, id);
+  } catch (e) {
+    /* localStorage may be unavailable (private mode) — attribute still applies */
+  }
+  updateActiveSwatch();
+}
+
+function updateActiveSwatch(toolbar) {
+  const active = currentColor();
+  const scope = toolbar || document;
+  scope.querySelectorAll('[data-color]').forEach((sw) => {
+    const isActive = sw.dataset.color === active;
+    sw.classList.toggle('theme-color-swatch--active', isActive);
+    sw.setAttribute('aria-pressed', String(isActive));
+  });
+}
+
+// Build the color-picker slot: a toolbar button that opens a swatch popover.
+// Marked data-color-slot so the click handlers below can find it.
+function buildColorSlot() {
+  const swatches = COLORS.map(
+    (c, i) =>
+      `<button type="button" class="theme-color-swatch theme-color-swatch--${c.id}" data-color="${c.id}" style="--n:${i}" title="${c.label}" aria-label="${c.label}" aria-pressed="false"><svg class="theme-color-check" width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l3 3 7-7"/></svg></button>`
+  ).join('');
+
+  return `
+    <div class="theme-color-slot" data-color-slot>
+      <button class="sb-toolbar-btn" type="button" data-color-toggle title="${t('color')}" aria-label="${t('color')}" aria-haspopup="true" aria-expanded="false">
+        ${ICONS.color}
+      </button>
+      <div class="theme-color-popover" role="menu" hidden>
+        ${swatches}
+      </div>
+    </div>`;
+}
+
+// Toggle the popover open/closed with an exit animation. Same race-guarded
+// logic the navbar picker used: toggle on the --open class (visual state), not
+// on `hidden` (which only flips after the exit animation finishes).
+function setPopoverOpen(slot, open) {
+  const btn = slot.querySelector('[data-color-toggle]');
+  const pop = slot.querySelector('.theme-color-popover');
+  if (!btn || !pop) return;
+
+  if (pop._closeTimer) {
+    clearTimeout(pop._closeTimer);
+    pop._closeTimer = 0;
+  }
+
+  btn.setAttribute('aria-expanded', String(open));
+
+  if (open) {
+    pop.hidden = false;
+    void pop.offsetWidth; // force reflow so the transition runs
+    pop.classList.add('theme-color-popover--open');
+  } else {
+    pop.classList.remove('theme-color-popover--open');
+    if (pop.hidden) return;
+    const finish = () => {
+      pop._closeTimer = 0;
+      // Aborted: reopened before this close finished — don't hide.
+      if (pop.classList.contains('theme-color-popover--open')) return;
+      pop.hidden = true;
+    };
+    // Only trust the popover's OWN transform ending — swatch transitionends
+    // bubble up here and would fire finish() far too early.
+    const onEnd = (e) => {
+      if (e.target === pop && e.propertyName === 'transform') finish();
+    };
+    pop.addEventListener('transitionend', onEnd, {once: true});
+    pop._closeTimer = setTimeout(finish, 620);
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Tool logic
@@ -84,21 +180,6 @@ function copyLink(btn) {
   });
 }
 
-// Open the "Edit this page" link for the current doc.
-function editPage(btn) {
-  const editLink = document.querySelector('.theme-edit-this-page');
-  if (editLink) {
-    editLink.click();
-  } else {
-    btn.style.display = 'none';
-  }
-}
-
-// Check whether an edit link exists; hide button if not.
-function refreshEditButton(btn) {
-  btn.style.display = document.querySelector('.theme-edit-this-page') ? '' : 'none';
-}
-
 // ---------------------------------------------------------------------------
 // Build & inject
 // ---------------------------------------------------------------------------
@@ -115,20 +196,38 @@ function buildToolbarHTML() {
       <button class="sb-toolbar-btn" data-action="link" title="${t('link')}">
         ${ICONS.link}
       </button>
-      <button class="sb-toolbar-btn" data-action="edit" title="${t('edit')}">
-        ${ICONS.edit}
-      </button>
+      ${buildColorSlot()}
     </div>`;
 }
 
 // Single delegated click handler for the whole toolbar.
 function handleToolbarClick(e, sidebarRoot) {
+  // Color swatch selection (inside the popover).
+  const sw = e.target.closest('[data-color]');
+  if (sw) {
+    applyColor(sw.dataset.color);
+    const slot = sw.closest('[data-color-slot]');
+    if (slot) setPopoverOpen(slot, false);
+    return;
+  }
+
+  // Color picker toggle button.
+  const toggle = e.target.closest('[data-color-toggle]');
+  if (toggle) {
+    e.stopPropagation();
+    const slot = toggle.closest('[data-color-slot]');
+    if (slot) {
+      const pop = slot.querySelector('.theme-color-popover');
+      const isOpen = pop && pop.classList.contains('theme-color-popover--open');
+      setPopoverOpen(slot, !isOpen);
+    }
+    return;
+  }
+
   const btn = e.target.closest('[data-action]');
   if (!btn) return;
 
-  const action = btn.dataset.action;
-
-  switch (action) {
+  switch (btn.dataset.action) {
     case 'expand':
       expandAll(sidebarRoot);
       break;
@@ -137,9 +236,6 @@ function handleToolbarClick(e, sidebarRoot) {
       break;
     case 'link':
       copyLink(btn);
-      break;
-    case 'edit':
-      editPage(btn);
       break;
   }
 }
@@ -158,11 +254,25 @@ function injectInto(sidebarRoot) {
   const toolbar = card.querySelector(`#${TOOLBAR_ID}`);
   if (!toolbar) return;
 
+  // Stop toolbar clicks (esp. the popover toggle) from closing the popover via
+  // the document-level outside-click listener.
+  toolbar.addEventListener('click', (e) => e.stopPropagation());
   toolbar.addEventListener('click', (e) => handleToolbarClick(e, sidebarRoot));
 
-  // Hide edit button if no edit link exists on this page.
-  const editBtn = toolbar.querySelector('[data-action="edit"]');
-  if (editBtn) refreshEditButton(editBtn);
+  // Close the popover on outside click / Escape.
+  document.addEventListener('click', (e) => {
+    const slot = toolbar.querySelector('[data-color-slot]');
+    if (!slot) return;
+    if (!slot.contains(e.target)) setPopoverOpen(slot, false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const slot = toolbar.querySelector('[data-color-slot]');
+      if (slot) setPopoverOpen(slot, false);
+    }
+  });
+
+  updateActiveSwatch(toolbar);
 
   sidebarRoot.dataset.sbToolbarInjected = '1';
 }
@@ -202,12 +312,6 @@ export default function initSidebarToolbar() {
       if (!toolbar && root.dataset.sbToolbarInjected) {
         delete root.dataset.sbToolbarInjected;
         injected.delete(root);
-      }
-      // Refresh edit button visibility on route change.
-      const tb = root.querySelector(`#${TOOLBAR_ID}`);
-      if (tb) {
-        const editBtn = tb.querySelector('[data-action="edit"]');
-        if (editBtn) refreshEditButton(editBtn);
       }
     });
     scan();
