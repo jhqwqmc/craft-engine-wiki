@@ -154,15 +154,26 @@ function setPopoverOpen(slot, open) {
 // Tool logic
 // ---------------------------------------------------------------------------
 
-// Expand all collapsed categories in the sidebar.
+// Expand all collapsed sidebar categories.
+//
+// Scoped to .menu so it can NEVER match the toolbar's own buttons — the
+// theme-color toggle carries aria-expanded="false" too, and clicking it opens
+// the color popover (the "second expand toggles theme color" bug). The toolbar
+// is a sibling of .menu, so .menu [aria-expanded] reaches only the real
+// category controls: the sublist link (no-href categories) and the caret
+// button (categories with an href), both of which toggle on click.
 function expandAll(sidebarRoot) {
-  const collapsed = sidebarRoot.querySelectorAll('[aria-expanded="false"]');
+  const collapsed = sidebarRoot.querySelectorAll(
+    '.menu [aria-expanded="false"]'
+  );
   collapsed.forEach((el) => el.click());
 }
 
-// Collapse all expanded categories in the sidebar.
+// Collapse all expanded sidebar categories. Same scoping as expandAll.
 function collapseAll(sidebarRoot) {
-  const expanded = sidebarRoot.querySelectorAll('[aria-expanded="true"]');
+  const expanded = sidebarRoot.querySelectorAll(
+    '.menu [aria-expanded="true"]'
+  );
   expanded.forEach((el) => el.click());
 }
 
