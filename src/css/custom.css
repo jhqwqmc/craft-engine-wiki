@@ -996,6 +996,12 @@ html[data-eyecare='warm']:not([data-theme='dark']) {
   --ifm-background-surface-color: #faf4e1;
   --ifm-navbar-background-color: rgba(250, 244, 225, 0.95);
   --ifm-code-background: rgba(150, 110, 30, 0.10);
+  /* Prism code blocks read their background from --prism-background-color,
+     which Docusaurus injects as an INLINE style (github theme = #fff). Inline
+     styles beat normal CSS, so we need !important to tint code blocks too.
+     Value is a touch darker than the page so the code card still reads as a
+     raised surface. */
+  --prism-background-color: #efe4c2 !important;
 }
 
 /* ---- Eye-care green (豆绿) ---- */
@@ -1004,6 +1010,7 @@ html[data-eyecare='green']:not([data-theme='dark']) {
   --ifm-background-surface-color: #eef4e4;
   --ifm-navbar-background-color: rgba(238, 244, 228, 0.95);
   --ifm-code-background: rgba(60, 120, 40, 0.10);
+  --prism-background-color: #d8e8c8 !important;
 }
 
 /* ---- Sepia (羊皮纸) ---- */
@@ -1012,6 +1019,7 @@ html[data-eyecare='sepia']:not([data-theme='dark']) {
   --ifm-background-surface-color: #f4ead4;
   --ifm-navbar-background-color: rgba(244, 234, 212, 0.95);
   --ifm-code-background: rgba(120, 90, 30, 0.12);
+  --prism-background-color: #e6d6b2 !important;
 }
 
 /* ---- Mist blue (雾蓝) ---- */
@@ -1020,6 +1028,30 @@ html[data-eyecare='mist']:not([data-theme='dark']) {
   --ifm-background-surface-color: #e8f0f4;
   --ifm-navbar-background-color: rgba(232, 240, 244, 0.95);
   --ifm-code-background: rgba(40, 90, 120, 0.10);
+  --prism-background-color: #d2e0e4 !important;
+}
+
+/* prism-react-renderer applies the github theme's background (#f6f8fa) as an
+   INLINE style directly on <pre> — inline beats normal CSS, so we need
+   !important to tint the code block. We hard-set the color per tint (rather
+   than var(--prism-background-color)) so the <pre> background is guaranteed
+   regardless of how the custom-property cascade resolves from the container's
+   inline --prism-background-color declaration. Scoped to light mode only. */
+html[data-eyecare='warm']:not([data-theme='dark']) .theme-code-block pre,
+html[data-eyecare='warm']:not([data-theme='dark']) pre[class*='language-'] {
+  background-color: #efe4c2 !important;
+}
+html[data-eyecare='green']:not([data-theme='dark']) .theme-code-block pre,
+html[data-eyecare='green']:not([data-theme='dark']) pre[class*='language-'] {
+  background-color: #d8e8c8 !important;
+}
+html[data-eyecare='sepia']:not([data-theme='dark']) .theme-code-block pre,
+html[data-eyecare='sepia']:not([data-theme='dark']) pre[class*='language-'] {
+  background-color: #e6d6b2 !important;
+}
+html[data-eyecare='mist']:not([data-theme='dark']) .theme-code-block pre,
+html[data-eyecare='mist']:not([data-theme='dark']) pre[class*='language-'] {
+  background-color: #d2e0e4 !important;
 }
 
 /* Background-tint swatch fills (the dot users pick from). 'none' shows the
