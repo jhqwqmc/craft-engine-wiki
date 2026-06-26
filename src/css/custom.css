@@ -1,7 +1,6 @@
 @font-face {
   font-family: 'Segoe UI Emoji';
   src: local('Segoe UI Emoji'),
-       local('Apple Color Emoji'),
        local('Noto Color Emoji'),
        url('/static/seguiemj.woff2') format('woff2');
   font-weight: normal;
@@ -533,7 +532,7 @@ html[data-theme-color='green'][data-theme='dark'] {
 }
 
 .theme-doc-markdown > header > h1::first-letter {
-  font-family: 'Segoe UI Emoji', sans-serif;
+  font-family: var(--ifm-font-family-base);
 }
 
 /* =========================================================================
