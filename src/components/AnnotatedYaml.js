@@ -7,6 +7,7 @@
 
 import React, { useState, useRef, useMemo } from 'react';
 import Link from '@docusaurus/Link';
+import { translate } from '@docusaurus/Translate';
 import styles from './AnnotatedYaml.module.css';
 import { renderYamlLine } from './yamlTokens';
 
@@ -96,9 +97,9 @@ export default function AnnotatedYaml({ lines, children }) {
           type="button"
           className={styles.copyBtn}
           onClick={() => copy(rawYaml)}
-          aria-label="Copy code"
+          aria-label={translate({ id: 'annotatedYaml.copyCode', message: 'Copy code' })}
         >
-          {copied ? '✓ Copied' : 'Copy'}
+          {copied ? translate({ id: 'annotatedYaml.copied', message: '✓ Copied' }) : translate({ id: 'annotatedYaml.copy', message: 'Copy' })}
         </button>
       </div>
       <div className={styles.body}>
@@ -113,7 +114,7 @@ export default function AnnotatedYaml({ lines, children }) {
                   {line.display.length ? renderYamlLine(line.display) : ' '}
                 </span>
                 {line.to && (
-                  <Link to={line.to} className={styles.link} title="Open detail page" aria-label="Open detail page">
+                  <Link to={line.to} className={styles.link} title={translate({ id: 'annotatedYaml.openDetailPage', message: 'Open detail page' })} aria-label={translate({ id: 'annotatedYaml.openDetailPage', message: 'Open detail page' })}>
                     ↗
                   </Link>
                 )}

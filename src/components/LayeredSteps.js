@@ -5,6 +5,7 @@
 // step's raw YAML. Colors reuse the shared `.language-yaml .token.*` palette.
 
 import React, { useState, useMemo, useRef } from 'react';
+import { translate } from '@docusaurus/Translate';
 import styles from './LayeredSteps.module.css';
 import { renderYamlLine, yamlLines, splitComment } from './yamlTokens';
 
@@ -83,7 +84,7 @@ export default function LayeredSteps({ steps = [] }) {
             aria-selected={i === active}
             role="tab"
           >
-            {step.title || `Step ${i + 1}`}
+            {step.title || translate({ id: 'layeredSteps.step', message: 'Step {step}', values: { step: i + 1 } })}
           </button>
         ))}
       </div>
@@ -96,9 +97,9 @@ export default function LayeredSteps({ steps = [] }) {
               type="button"
               className={styles.copyBtn}
               onClick={() => copy(current.full)}
-              aria-label="Copy code"
+              aria-label={translate({ id: 'layeredSteps.copyCode', message: 'Copy code' })}
             >
-              {copied ? '✓ Copied' : 'Copy'}
+              {copied ? translate({ id: 'layeredSteps.copied', message: '✓ Copied' }) : translate({ id: 'layeredSteps.copy', message: 'Copy' })}
             </button>
           </div>
           <div className={styles.body}>

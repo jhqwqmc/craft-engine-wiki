@@ -724,9 +724,129 @@ html[data-theme-color='green'][data-theme='dark'] {
 
 [data-theme='dark'] .navbar-discord-link {
   /* Don't use --ifm-color-emphasis-N here: in dark mode those tokens are
-     remapped so low numbers go DARK. A literal light gray keeps the icon
+     remapped so low numbers go DARK. Aiteral light gray keeps the icon
      bright on the dark navbar. */
   color: #e6edf3;
+}
+
+/* =========================================================================
+   QQ link — only visible on zh-Hans locale (alongside Discord).
+   ========================================================================= */
+.navbar-qq-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  font-size: 0;
+  color: var(--ifm-color-emphasis-800);
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath d='M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.6 53.8 11.4 19.3 196.2 12.3 249.5 6.3 53.3 6 238.1 13 249.5-6.3 14.1-23.8-45.3-45.7-71.6-53.8 54.6-46.2 79.8-110.1 79.8-159 0 0 52.1 84.6 70.1 82.4 8.5-1.1 19.5-46.4-14.5-155.8z'/%3E%3C/svg%3E") no-repeat center / 1.4rem 1.4rem;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath d='M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.6 53.8 11.4 19.3 196.2 12.3 249.5 6.3 53.3 6 238.1 13 249.5-6.3 14.1-23.8-45.3-45.7-71.6-53.8 54.6-46.2 79.8-110.1 79.8-159 0 0 52.1 84.6 70.1 82.4 8.5-1.1 19.5-46.4-14.5-155.8z'/%3E%3C/svg%3E") no-repeat center / 1.4rem 1.4rem;
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              color 0.25s ease, background-color 0.25s ease;
+}
+
+.navbar-qq-link:hover {
+  color: #12B7F5; /* QQ blue */
+  background-color: currentColor;
+  transform: scale(1.18) rotate(-6deg);
+  animation: qq-wiggle 0.5s ease;
+}
+
+.navbar-qq-link:active {
+  transform: scale(0.9);
+}
+
+/* One-shot wiggle on hover: a quick back-and-forth tilt for personality. */
+@keyframes qq-wiggle {
+  0%   { transform: scale(1.18) rotate(-6deg); }
+  30%  { transform: scale(1.22) rotate(5deg); }
+  55%  { transform: scale(1.18) rotate(-3deg); }
+  100% { transform: scale(1.18) rotate(-6deg); }
+}
+
+[data-theme='dark'] .navbar-qq-link {
+  color: #e6edf3;
+}
+
+/* Hide QQ on non-Chinese locales; Discord stays visible everywhere. */
+html:not([lang='zh-Hans']) .navbar-qq-link {
+  display: none !important;
+}
+
+/* On mobile, Discord/QQ icons are moved into the sidebar brand area
+   by JavaScript (initSidebarToolbar.js). CSS only handles styling. */
+@media (max-width: 996px) {
+  /* Hide ALL Docusaurus-rendered social links on mobile */
+  .navbar__items--right .navbar-discord-link,
+  .navbar__items--right .navbar-qq-link,
+  .navbar-sidebar .menu__list-item .navbar-discord-link,
+  .navbar-sidebar .menu__list-item .navbar-qq-link {
+    display: none !important;
+  }
+
+  /* Also hide the entire menu list items that contain social links */
+  .navbar-sidebar .menu__list-item:has(.navbar-discord-link),
+  .navbar-sidebar .menu__list-item:has(.navbar-qq-link) {
+    display: none !important;
+  }
+
+  /* Show the cloned social links in sidebar brand area */
+  #mobile-social-links .navbar-discord-link {
+    display: inline-flex !important;
+    width: 1.4rem;
+    height: 1.4rem;
+    vertical-align: middle;
+  }
+
+  #mobile-social-links .navbar-qq-link {
+    display: inline-flex !important;
+    width: 1.4rem;
+    height: 1.4rem;
+    vertical-align: middle;
+  }
+
+  /* Hide QQ for non-Chinese locales — must override the #mobile-social-links
+     rule above (1,1,0) so the language gate actually works on mobile clones. */
+  html:not([lang='zh-Hans']) #mobile-social-links .navbar-qq-link {
+    display: none !important;
+  }
+
+  /* Hide locale dropdown in sidebar (already in top bar) */
+  .navbar-sidebar .navbar__item.dropdown {
+    display: none !important;
+  }
+
+  /* Theme color dropdown in mobile sidebar menu */
+  #mobile-color-dropdown .menu__list {
+    transition: max-height 0.3s ease;
+  }
+  #mobile-color-dropdown.menu__list-item--collapsed .menu__list {
+    max-height: 0px !important;
+    overflow: hidden !important;
+  }
+  .mobile-color-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .mobile-color-dot--blue   { background-color: #2563eb; }
+  .mobile-color-dot--cyan   { background-color: #0891b2; }
+  .mobile-color-dot--orange { background-color: #ea580c; }
+  .mobile-color-dot--purple { background-color: #7c3aed; }
+  .mobile-color-dot--green  { background-color: #16a34a; }
+  [data-theme='dark'] .mobile-color-dot--blue   { background-color: #60a5fa; }
+  [data-theme='dark'] .mobile-color-dot--cyan   { background-color: #22d3ee; }
+  [data-theme='dark'] .mobile-color-dot--orange { background-color: #fb923c; }
+  [data-theme='dark'] .mobile-color-dot--purple { background-color: #a78bfa; }
+  [data-theme='dark'] .mobile-color-dot--green  { background-color: #4ade80; }
+
 }
 
 /* =========================================================================

@@ -91,6 +91,13 @@ const config: Config = {
           className: 'navbar-discord-link',
           'aria-label': 'Discord',
         },
+        {
+          href: 'https://qm.qq.com/q/OrZULZbRKO',
+          label: 'QQ',
+          position: 'right',
+          className: 'navbar-qq-link',
+          'aria-label': 'QQ',
+        },
       ],
     },
 

@@ -10,34 +10,13 @@
 // Injected once per sidebar container; survives route changes because the
 // observer catches sidebar rebuilds and re-injects automatically.
 
+import {translate} from '@docusaurus/Translate';
+
 const TOOLBAR_ID = 'sb-toolbar';
 const COPY_FEEDBACK_MS = 1500;
 
-// ---------------------------------------------------------------------------
-// i18n — detect locale from <html lang="...">, fall back to 'en'
-// ---------------------------------------------------------------------------
-const T = {
-  en: {
-    expand: 'Expand all',
-    collapse: 'Collapse all',
-    link: 'Copy page link',
-    color: 'Theme color',
-  },
-  'zh-Hans': {
-    expand: '展开全部',
-    collapse: '折叠全部',
-    link: '复制页面链接',
-    color: '主题颜色',
-  },
-};
-
-function getLocale() {
-  const lang = document.documentElement.lang || 'en';
-  return T[lang] ? lang : 'en';
-}
-
-function t(key) {
-  return T[getLocale()][key];
+function t(key, defaultMsg) {
+  return translate({id: `theme.sidebarToolbar.${key}`, message: defaultMsg});
 }
 
 // ---------------------------------------------------------------------------
@@ -91,19 +70,26 @@ function updateActiveSwatch(toolbar) {
     sw.classList.toggle('theme-color-swatch--active', isActive);
     sw.setAttribute('aria-pressed', String(isActive));
   });
+  // Also update mobile color dropdown
+  document.querySelectorAll('[data-mobile-color]').forEach((a) => {
+    a.classList.toggle('menu__link--active', a.dataset.mobileColor === active);
+  });
 }
 
 // Build the color-picker slot: a toolbar button that opens a swatch popover.
 // Marked data-color-slot so the click handlers below can find it.
 function buildColorSlot() {
   const swatches = COLORS.map(
-    (c, i) =>
-      `<button type="button" class="theme-color-swatch theme-color-swatch--${c.id}" data-color="${c.id}" style="--n:${i}" title="${c.label}" aria-label="${c.label}" aria-pressed="false"><svg class="theme-color-check" width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l3 3 7-7"/></svg></button>`
+    (c, i) => {
+      const label = t(`color.${c.id}`, c.label);
+      return `<button type="button" class="theme-color-swatch theme-color-swatch--${c.id}" data-color="${c.id}" style="--n:${i}" title="${label}" aria-label="${label}" aria-pressed="false"><svg class="theme-color-check" width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l3 3 7-7"/></svg></button>`;
+    }
   ).join('');
 
+  const colorLabel = t('color', 'Theme color');
   return `
     <div class="theme-color-slot" data-color-slot>
-      <button class="sb-toolbar-btn" type="button" data-color-toggle title="${t('color')}" aria-label="${t('color')}" aria-haspopup="true" aria-expanded="false">
+      <button class="sb-toolbar-btn" type="button" data-color-toggle title="${colorLabel}" aria-label="${colorLabel}" aria-haspopup="true" aria-expanded="false">
         ${ICONS.color}
       </button>
       <div class="theme-color-popover" role="menu" hidden>
@@ -198,13 +184,13 @@ function copyLink(btn) {
 function buildToolbarHTML() {
   return `
     <div id="${TOOLBAR_ID}" class="sb-toolbar">
-      <button class="sb-toolbar-btn" data-action="expand" title="${t('expand')}">
+      <button class="sb-toolbar-btn" data-action="expand" title="${t('expand', 'Expand all')}">
         ${ICONS.expand}
       </button>
-      <button class="sb-toolbar-btn" data-action="collapse" title="${t('collapse')}">
+      <button class="sb-toolbar-btn" data-action="collapse" title="${t('collapse', 'Collapse all')}">
         ${ICONS.collapse}
       </button>
-      <button class="sb-toolbar-btn" data-action="link" title="${t('link')}">
+      <button class="sb-toolbar-btn" data-action="link" title="${t('link', 'Copy page link')}">
         ${ICONS.link}
       </button>
       ${buildColorSlot()}
@@ -289,6 +275,162 @@ function injectInto(sidebarRoot) {
 }
 
 // ---------------------------------------------------------------------------
+// Social links in sidebar brand on mobile
+//
+// Docusaurus renders navbar items in multiple places (top navbar, sidebar menu).
+// Instead of moving DOM nodes around (fragile with React re-renders), we create
+// independent clones in the sidebar brand area and hide all originals via CSS.
+// ---------------------------------------------------------------------------
+
+const MOBILE_SOCIAL_LINKS_ID = 'mobile-social-links';
+
+function ensureMobileSocialLinks() {
+  const brand = document.querySelector('.navbar-sidebar__brand');
+  if (!brand) return;
+
+  // Already injected
+  if (brand.querySelector(`#${MOBILE_SOCIAL_LINKS_ID}`)) return;
+
+  // Find the color mode toggle — insert before it (to its left)
+  const colorToggle = brand.querySelector('[class*="toggle"], [class*="colorMode"], button[aria-label*="mode"], button[aria-label*="主题"], button[aria-label*="切换"]');
+  const ref = colorToggle || brand.querySelector('button:last-of-type');
+
+  // Get URLs from the original links (with fallbacks)
+  const origDiscord = document.querySelector('.navbar-discord-link');
+  const origQQ = document.querySelector('.navbar-qq-link');
+  const discordUrl = origDiscord?.getAttribute('href') || 'https://discord.gg/xiaomomi';
+  const qqUrl = origQQ?.getAttribute('href') || 'https://qm.qq.com/q/OrZULZbRKO';
+
+  const container = document.createElement('div');
+  container.id = MOBILE_SOCIAL_LINKS_ID;
+  container.style.cssText = 'display:inline-flex;align-items:center;gap:0.3rem;';
+
+  const discordA = document.createElement('a');
+  discordA.href = discordUrl;
+  discordA.className = 'navbar-discord-link';
+  discordA.setAttribute('aria-label', 'Discord');
+  discordA.setAttribute('target', '_blank');
+  discordA.setAttribute('rel', 'noopener noreferrer');
+  container.appendChild(discordA);
+
+  const qqA = document.createElement('a');
+  qqA.href = qqUrl;
+  qqA.className = 'navbar-qq-link';
+  qqA.setAttribute('aria-label', 'QQ');
+  qqA.setAttribute('target', '_blank');
+  qqA.setAttribute('rel', 'noopener noreferrer');
+  container.appendChild(qqA);
+
+  brand.insertBefore(container, ref || null);
+}
+
+function removeMobileSocialLinks() {
+  document.querySelectorAll(`#${MOBILE_SOCIAL_LINKS_ID}`).forEach((el) => el.remove());
+}
+
+// ---------------------------------------------------------------------------
+// Theme color dropdown in mobile sidebar menu (next to locale dropdown)
+// ---------------------------------------------------------------------------
+
+const MOBILE_COLOR_DROPDOWN_ID = 'mobile-color-dropdown';
+
+function buildMobileColorDropdown() {
+  const active = currentColor();
+  const colorLabel = t('color', 'Theme color');
+  const items = COLORS.map((c) => {
+    const isActive = c.id === active;
+    const label = t(`color.${c.id}`, c.label);
+    return `<li class="menu__list-item">
+      <a class="menu__link${isActive ? ' menu__link--active' : ''}" data-mobile-color="${c.id}" role="button" href="#" style="cursor:pointer;display:flex;align-items:center;">
+        <span class="mobile-color-dot mobile-color-dot--${c.id}"></span>
+        ${label}
+      </a>
+    </li>`;
+  }).join('');
+
+  return `<li class="menu__list-item" id="${MOBILE_COLOR_DROPDOWN_ID}">
+    <div class="menu__list-item-collapsible">
+      <a class="menu__link menu__link--sublist" role="button" href="#">
+        ${ICONS.color}
+        <span style="margin-left:5px;">${colorLabel}</span>
+      </a>
+      <button class="clean-btn menu__caret" aria-expanded="false"></button>
+    </div>
+    <ul class="menu__list">
+      ${items}
+    </ul>
+  </li>`;
+}
+
+function ensureMobileColorDropdown() {
+  // Only on mobile
+  if (window.innerWidth >= 997) return;
+
+  // Already injected
+  if (document.getElementById(MOBILE_COLOR_DROPDOWN_ID)) return;
+
+  // Find the first menu list in the sidebar (where locale dropdown lives)
+  const firstMenuList = document.querySelector('.navbar-sidebar .menu__list');
+  if (!firstMenuList) return;
+
+  // Insert after the first item (locale dropdown)
+  const firstItem = firstMenuList.querySelector(':scope > .menu__list-item');
+  if (!firstItem) return;
+
+  firstItem.insertAdjacentHTML('afterend', buildMobileColorDropdown());
+
+  // Wire up click handlers
+  const dropdown = document.getElementById(MOBILE_COLOR_DROPDOWN_ID);
+  if (!dropdown) return;
+
+  // Toggle expand/collapse
+  const toggleLink = dropdown.querySelector('.menu__link--sublist');
+  const caretBtn = dropdown.querySelector('.menu__caret');
+  const sublist = dropdown.querySelector('.menu__list');
+
+  const toggleExpand = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const isCollapsed = dropdown.classList.contains('menu__list-item--collapsed');
+    if (isCollapsed) {
+      dropdown.classList.remove('menu__list-item--collapsed');
+      if (sublist) sublist.style.maxHeight = sublist.scrollHeight + 'px';
+      if (caretBtn) caretBtn.setAttribute('aria-expanded', 'true');
+    } else {
+      dropdown.classList.add('menu__list-item--collapsed');
+      if (sublist) sublist.style.maxHeight = '0px';
+      if (caretBtn) caretBtn.setAttribute('aria-expanded', 'false');
+    }
+  };
+
+  if (toggleLink) toggleLink.addEventListener('click', toggleExpand);
+  if (caretBtn) caretBtn.addEventListener('click', toggleExpand);
+
+  // Color selection
+  dropdown.addEventListener('click', (e) => {
+    const colorBtn = e.target.closest('[data-mobile-color]');
+    if (!colorBtn) return;
+    e.preventDefault();
+    applyColor(colorBtn.dataset.mobileColor);
+    // Update active state
+    dropdown.querySelectorAll('[data-mobile-color]').forEach((a) => {
+      a.classList.toggle('menu__link--active', a.dataset.mobileColor === colorBtn.dataset.mobileColor);
+    });
+  });
+
+  // Start collapsed
+  dropdown.classList.add('menu__list-item--collapsed');
+  if (sublist) {
+    sublist.style.maxHeight = '0px';
+    sublist.style.overflow = 'hidden';
+  }
+}
+
+function removeMobileColorDropdown() {
+  document.querySelectorAll(`#${MOBILE_COLOR_DROPDOWN_ID}`).forEach((el) => el.remove());
+}
+
+// ---------------------------------------------------------------------------
 // Public entry point
 // ---------------------------------------------------------------------------
 
@@ -296,18 +438,58 @@ const SIDEBAR = '.theme-doc-sidebar-container';
 
 export default function initSidebarToolbar() {
   const injected = new WeakSet();
+  let lastWidth = window.innerWidth;
 
-  let scanRaf = 0;
   const scan = () => {
-    if (scanRaf) return;
-    scanRaf = requestAnimationFrame(() => {
-      scanRaf = 0;
+    requestAnimationFrame(() => {
+      if (window.innerWidth < 997) {
+        ensureMobileSocialLinks();
+        ensureMobileColorDropdown();
+      } else {
+        removeMobileSocialLinks();
+        removeMobileColorDropdown();
+      }
       document.querySelectorAll(SIDEBAR).forEach((root) => {
         if (!injected.has(root)) {
           injectInto(root);
           injected.add(root);
         }
       });
+    });
+  };
+
+  // Re-inject when crossing the mobile/desktop breakpoint. When the viewport
+  // transitions from mobile (<997px) back to desktop (>=997px), the sidebar
+  // container is rebuilt by Docusaurus — the old toolbar is lost. A resize
+  // listener detects this and triggers a fresh injection.
+  let resizeRaf = 0;
+  const onResize = () => {
+    if (resizeRaf) return;
+    resizeRaf = requestAnimationFrame(() => {
+      resizeRaf = 0;
+      const width = window.innerWidth;
+      const crossedBreakpoint =
+        (lastWidth < 997 && width >= 997) || (lastWidth >= 997 && width < 997);
+      lastWidth = width;
+
+      if (crossedBreakpoint) {
+        // Clear injection state so scan() re-injects into the rebuilt sidebar.
+        document.querySelectorAll(SIDEBAR).forEach((root) => {
+          delete root.dataset.sbToolbarInjected;
+          injected.delete(root);
+        });
+        // Also remove stale toolbar DOM nodes (they may be detached already
+        // but clean up just in case).
+        document.querySelectorAll(`#${TOOLBAR_ID}`).forEach((el) => el.remove());
+
+        // Docusaurus re-renders asynchronously — schedule delayed scans
+        // to catch the new DOM after React finishes.
+        scan();
+        setTimeout(scan, 100);
+        setTimeout(scan, 300);
+        return;
+      }
+      scan();
     });
   };
 
@@ -341,10 +523,14 @@ export default function initSidebarToolbar() {
   });
   bodyObserver.observe(document.body, { childList: true });
 
+  window.addEventListener('resize', onResize, { passive: true });
+
   return () => {
     structObserver.disconnect();
     bodyObserver.disconnect();
+    window.removeEventListener('resize', onResize);
     if (scanRaf) cancelAnimationFrame(scanRaf);
+    if (resizeRaf) cancelAnimationFrame(resizeRaf);
     // Remove all injected toolbars.
     document.querySelectorAll(`#${TOOLBAR_ID}`).forEach((el) => el.remove());
     document.querySelectorAll(SIDEBAR).forEach((root) => {
