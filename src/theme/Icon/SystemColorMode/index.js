@@ -1,17 +1,14 @@
 // src/theme/Icon/SystemColorMode/index.js
-// Overrides Docusaurus' built-in "follow system" color-mode icon (a half-filled
-// circle) with a monitor icon — a clearer "match the system/display" affordance.
-// Resolved before @docusaurus/theme-classic's default via theme aliasing.
+// Elegant monitor icon — Lucide-style, matches sun/moon stroke weight.
 
 import React from 'react';
 
 export default function IconSystemColorMode(props) {
   return (
-    <svg viewBox="0 0 24 24" width={24} height={24} {...props}>
-      <path
-        fill="currentColor"
-        d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h6v2H7v2h10v-2h-2v-2h6c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"
-      />
+    <svg viewBox="0 0 24 24" width={24} height={24} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+      <line x1="8" x2="16" y1="21" y2="21" />
+      <line x1="12" x2="12" y1="17" y2="21" />
     </svg>
   );
 }

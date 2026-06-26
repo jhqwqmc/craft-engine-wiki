@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from '@docusaurus/Link'; // 1. 导入 Docusaurus 的 Link 组件
+import { translate } from '@docusaurus/Translate';
 import styles from './UrlCard.module.css';
 
 export default function UrlCard({ url = '', title = '', subtitle = '' }) {
@@ -15,7 +16,7 @@ export default function UrlCard({ url = '', title = '', subtitle = '' }) {
       displayDomainOrPath = urlObject.hostname.replace('www.', '');
     } catch (error) {
       console.error("Invalid URL provided to UrlCard:", url, error);
-      displayDomainOrPath = '无效链接';
+      displayDomainOrPath = translate({ id: 'urlCard.invalidLink', message: 'Broken link' });
     }
   } else {
     // 假设非 http/https 开头的都是内部相对路径
@@ -23,7 +24,7 @@ export default function UrlCard({ url = '', title = '', subtitle = '' }) {
   }
 
   // 优先显示传入的 title，如果没有则显示域名或路径
-  const displayTitle = title || displayDomainOrPath || '链接';
+  const displayTitle = title || displayDomainOrPath || translate({ id: 'urlCard.link', message: 'Link' });
 
   return (
       <div className={styles.cardWrapper}>
@@ -46,7 +47,7 @@ export default function UrlCard({ url = '', title = '', subtitle = '' }) {
             <div className={styles.cardLink + ' ' + styles.disabledCard}>
               <div className={styles.cardContent}>
                 <span className={styles.cardTitle}>{displayTitle}</span>
-                <span className={styles.cardUrl}>{subtitle || url || '无效链接'}</span>
+                <span className={styles.cardUrl}>{subtitle || url || translate({ id: 'urlCard.invalidLink', message: 'Broken link' })}</span>
               </div>
             </div>
         )}

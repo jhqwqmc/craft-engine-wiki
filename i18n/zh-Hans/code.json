@@ -362,5 +362,81 @@
   },
   "details.showLess": {
     "message": "收起"
+  },
+  "urlCard.invalidLink": {
+    "message": "无效链接",
+    "description": "URL 卡片中链接无效时的显示文本"
+  },
+  "urlCard.link": {
+    "message": "链接",
+    "description": "URL 卡片中没有标题时的默认显示文本"
+  },
+  "layeredSteps.step": {
+    "message": "步骤 {step}",
+    "description": "分层步骤组件中步骤的默认标签，{step} 为步骤编号"
+  },
+  "layeredSteps.copyCode": {
+    "message": "复制代码",
+    "description": "分层步骤组件中复制按钮的无障碍标签"
+  },
+  "layeredSteps.copied": {
+    "message": "✓ 已复制",
+    "description": "分层步骤组件中代码已复制后的按钮文本"
+  },
+  "layeredSteps.copy": {
+    "message": "复制",
+    "description": "分层步骤组件中复制按钮的文本"
+  },
+  "annotatedYaml.copyCode": {
+    "message": "复制代码",
+    "description": "带注释 YAML 组件中复制按钮的无障碍标签"
+  },
+  "annotatedYaml.copied": {
+    "message": "✓ 已复制",
+    "description": "带注释 YAML 组件中代码已复制后的按钮文本"
+  },
+  "annotatedYaml.copy": {
+    "message": "复制",
+    "description": "带注释 YAML 组件中复制按钮的文本"
+  },
+  "annotatedYaml.openDetailPage": {
+    "message": "打开详情页",
+    "description": "带注释 YAML 组件中链接到详情页的无障碍标签"
+  },
+  "theme.sidebarToolbar.expand": {
+    "message": "展开全部",
+    "description": "侧边栏工具栏中展开全部按钮的标签"
+  },
+  "theme.sidebarToolbar.collapse": {
+    "message": "折叠全部",
+    "description": "侧边栏工具栏中折叠全部按钮的标签"
+  },
+  "theme.sidebarToolbar.link": {
+    "message": "复制页面链接",
+    "description": "侧边栏工具栏中复制页面链接按钮的标签"
+  },
+  "theme.sidebarToolbar.color": {
+    "message": "主题颜色",
+    "description": "侧边栏工具栏中主题颜色选择器的标签"
+  },
+  "theme.sidebarToolbar.color.blue": {
+    "message": "蓝色",
+    "description": "主题颜色选择器中蓝色选项的标签"
+  },
+  "theme.sidebarToolbar.color.cyan": {
+    "message": "青色",
+    "description": "主题颜色选择器中青色选项的标签"
+  },
+  "theme.sidebarToolbar.color.orange": {
+    "message": "橙色",
+    "description": "主题颜色选择器中橙色选项的标签"
+  },
+  "theme.sidebarToolbar.color.purple": {
+    "message": "紫色",
+    "description": "主题颜色选择器中紫色选项的标签"
+  },
+  "theme.sidebarToolbar.color.green": {
+    "message": "绿色",
+    "description": "主题颜色选择器中绿色选项的标签"
   }
 }
