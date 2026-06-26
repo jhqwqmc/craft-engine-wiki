@@ -33,15 +33,15 @@ const config: Config = {
     }
   },
 
-  // Reapply the saved theme color BEFORE first paint so the navbar/active
-  // states don't flash the default blue on reload. The picker
-  // (initThemeColorPicker) owns the attribute thereafter; this only sets it
+  // Reapply saved theme preferences BEFORE first paint so the navbar/active
+  // states don't flash defaults on reload. The pickers (initThemeColorPicker,
+  // initSidebarToolbar) own these attributes thereafter; this only sets them
   // early. Runs in <head>, before React mounts.
   headTags: [
     {
       tagName: 'script',
       attributes: {},
-      innerHTML: `try{var c=localStorage.getItem('theme-color');if(c)document.documentElement.setAttribute('data-theme-color',c);}catch(e){}`,
+      innerHTML: `try{var c=localStorage.getItem('theme-color');if(c)document.documentElement.setAttribute('data-theme-color',c);}catch(e){}try{var ec=localStorage.getItem('eyecare');if(ec)document.documentElement.setAttribute('data-eyecare',ec);}catch(e){}`,
     },
   ],
 

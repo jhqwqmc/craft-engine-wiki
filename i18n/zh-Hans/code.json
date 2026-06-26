@@ -411,9 +411,29 @@
     "message": "折叠全部",
     "description": "侧边栏工具栏中折叠全部按钮的标签"
   },
-  "theme.sidebarToolbar.link": {
-    "message": "复制页面链接",
-    "description": "侧边栏工具栏中复制页面链接按钮的标签"
+  "theme.sidebarToolbar.eyecare": {
+    "message": "背景色",
+    "description": "侧边栏调色盘弹层中背景色分组的标签"
+  },
+  "theme.sidebarToolbar.eyecare.none": {
+    "message": "默认",
+    "description": "侧边栏调色盘弹层中默认(无护眼)背景色"
+  },
+  "theme.sidebarToolbar.eyecare.warm": {
+    "message": "暖黄",
+    "description": "侧边栏工具栏中护眼模式暖黄配色"
+  },
+  "theme.sidebarToolbar.eyecare.green": {
+    "message": "豆绿",
+    "description": "侧边栏工具栏中护眼模式豆绿配色"
+  },
+  "theme.sidebarToolbar.eyecare.sepia": {
+    "message": "羊皮纸",
+    "description": "侧边栏工具栏中护眼模式羊皮纸配色"
+  },
+  "theme.sidebarToolbar.eyecare.mist": {
+    "message": "雾蓝",
+    "description": "侧边栏调色盘弹层中护眼模式雾蓝配色"
   },
   "theme.sidebarToolbar.color": {
     "message": "主题颜色",

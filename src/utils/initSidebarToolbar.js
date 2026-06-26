@@ -3,9 +3,8 @@
 // Injects a utility toolbar at the top of the doc sidebar (before the menu
 // tree). Vanilla JS, no React coupling.
 //
-// Tools: Expand All | Collapse All | Copy Link | Theme Color
-//   (the former "Edit this page" slot now hosts the theme-color picker — same
-//    32px icon footprint, no layout change.)
+// Tools: Expand All | Collapse All | Theme Color (popover also picks a page
+//   background tint).
 //
 // Injected once per sidebar container; survives route changes because the
 // observer catches sidebar rebuilds and re-injects automatically.
@@ -13,7 +12,6 @@
 import {translate} from '@docusaurus/Translate';
 
 const TOOLBAR_ID = 'sb-toolbar';
-const COPY_FEEDBACK_MS = 1500;
 
 function t(key, defaultMsg) {
   return translate({id: `theme.sidebarToolbar.${key}`, message: defaultMsg});
@@ -27,18 +25,19 @@ const ICONS = {
     '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7 9 11 13 7"/><path d="M5 12h8"/></svg>',
   collapse:
     '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 9 7 13 11"/><path d="M5 6h8"/></svg>',
-  link:
-    '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 10.5a3 3 0 0 0 4.2.4l1.8-1.8a3 3 0 0 0-4.2-4.2L7.9 6.1"/><path d="M10.5 7.5a3 3 0 0 0-4.2-.4l-1.8 1.8a3 3 0 0 0 4.2 4.2l1.4-1.4"/></svg>',
   color:
     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20 2.5 2.5 0 0 0 2.5-2.5c0-.66-.26-1.26-.68-1.7-.4-.43-.65-.99-.65-1.6A2.3 2.3 0 0 1 15.5 13H17a5 5 0 0 0 5-5c0-3.3-3.6-6-10-6z"/><circle cx="7.5" cy="10.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="7.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="16.5" cy="10.5" r="1.3" fill="currentColor" stroke="none"/></svg>',
-  check:
-    '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l3 3 7-7"/></svg>',
 };
 
 // ---------------------------------------------------------------------------
-// Theme-color picker (mounted inside the toolbar's last slot)
+// Theme-color + background picker (mounted inside the toolbar's last slot).
+// One popover, two rows: theme colors (primary accent) on top, page
+// background tints below. Background tints are light-mode only — the row is
+// hidden in dark mode, and the CSS overrides carry a :not([data-theme='dark'])
+// guard so a saved tint never bleeds into dark mode.
 // ---------------------------------------------------------------------------
 const COLOR_STORAGE_KEY = 'theme-color';
+const EYECARE_STORAGE_KEY = 'eyecare';
 
 const COLORS = [
   {id: 'blue', label: 'Blue'},
@@ -46,6 +45,16 @@ const COLORS = [
   {id: 'orange', label: 'Orange'},
   {id: 'purple', label: 'Purple'},
   {id: 'green', label: 'Green'},
+];
+
+// Page background tints. id 'none' = default (no data-eyecare attribute), the
+// cancel position. The rest set <html data-eyecare="<id>">.
+const BACKGROUNDS = [
+  {id: 'none', label: 'Default'},
+  {id: 'warm', label: 'Warm yellow'},
+  {id: 'green', label: 'Eye-care green'},
+  {id: 'sepia', label: 'Sepia'},
+  {id: 'mist', label: 'Mist blue'},
 ];
 
 function currentColor() {
@@ -62,47 +71,83 @@ function applyColor(id) {
   updateActiveSwatch();
 }
 
+function currentBackground() {
+  return document.documentElement.getAttribute('data-eyecare') || 'none';
+}
+
+function applyBackground(id) {
+  if (id === 'none') {
+    document.documentElement.removeAttribute('data-eyecare');
+    try {
+      localStorage.removeItem(EYECARE_STORAGE_KEY);
+    } catch (e) {
+      /* localStorage may be unavailable — attribute already gone */
+    }
+  } else {
+    document.documentElement.setAttribute('data-eyecare', id);
+    try {
+      localStorage.setItem(EYECARE_STORAGE_KEY, id);
+    } catch (e) {
+      /* localStorage may be unavailable — attribute still applies */
+    }
+  }
+  updateActiveSwatch();
+}
+
 function updateActiveSwatch(toolbar) {
-  const active = currentColor();
+  const color = currentColor();
+  const bg = currentBackground();
   const scope = toolbar || document;
   scope.querySelectorAll('[data-color]').forEach((sw) => {
-    const isActive = sw.dataset.color === active;
+    const isActive = sw.dataset.color === color;
+    sw.classList.toggle('theme-color-swatch--active', isActive);
+    sw.setAttribute('aria-pressed', String(isActive));
+  });
+  scope.querySelectorAll('[data-bg]').forEach((sw) => {
+    const isActive = sw.dataset.bg === bg;
     sw.classList.toggle('theme-color-swatch--active', isActive);
     sw.setAttribute('aria-pressed', String(isActive));
   });
   // Also update mobile color dropdown
   document.querySelectorAll('[data-mobile-color]').forEach((a) => {
-    a.classList.toggle('menu__link--active', a.dataset.mobileColor === active);
+    a.classList.toggle('menu__link--active', a.dataset.mobileColor === color);
   });
 }
 
-// Build the color-picker slot: a toolbar button that opens a swatch popover.
-// Marked data-color-slot so the click handlers below can find it.
+const SWATCH_CHECK =
+  '<svg class="theme-color-check" width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l3 3 7-7"/></svg>';
+
+// Build the picker slot: a toolbar button that opens a two-row popover.
 function buildColorSlot() {
-  const swatches = COLORS.map(
-    (c, i) => {
-      const label = t(`color.${c.id}`, c.label);
-      return `<button type="button" class="theme-color-swatch theme-color-swatch--${c.id}" data-color="${c.id}" style="--n:${i}" title="${label}" aria-label="${label}" aria-pressed="false"><svg class="theme-color-check" width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9l3 3 7-7"/></svg></button>`;
-    }
-  ).join('');
+  const colorRow = COLORS.map((c, i) => {
+    const label = t(`color.${c.id}`, c.label);
+    return `<button type="button" class="theme-color-swatch theme-color-swatch--${c.id}" data-color="${c.id}" style="--n:${i}" title="${label}" aria-label="${label}" aria-pressed="false">${SWATCH_CHECK}</button>`;
+  }).join('');
+
+  const bgRow = BACKGROUNDS.map((b, i) => {
+    const label = t(`eyecare.${b.id}`, b.label);
+    return `<button type="button" class="theme-color-swatch bg-swatch bg-swatch--${b.id}" data-bg="${b.id}" style="--n:${i}" title="${label}" aria-label="${label}" aria-pressed="false">${SWATCH_CHECK}</button>`;
+  }).join('');
 
   const colorLabel = t('color', 'Theme color');
   return `
     <div class="theme-color-slot" data-color-slot>
-      <button class="sb-toolbar-btn" type="button" data-color-toggle title="${colorLabel}" aria-label="${colorLabel}" aria-haspopup="true" aria-expanded="false">
+      <button class="sb-toolbar-btn" type="button" data-color-toggle data-popover-toggle title="${colorLabel}" aria-label="${colorLabel}" aria-haspopup="true" aria-expanded="false">
         ${ICONS.color}
       </button>
       <div class="theme-color-popover" role="menu" hidden>
-        ${swatches}
+        <div class="theme-color-row" role="group" aria-label="${colorLabel}">${colorRow}</div>
+        <div class="theme-color-row theme-color-row--bg" role="group" aria-label="${t('eyecare', 'Background')}">${bgRow}</div>
       </div>
     </div>`;
 }
 
-// Toggle the popover open/closed with an exit animation. Same race-guarded
-// logic the navbar picker used: toggle on the --open class (visual state), not
-// on `hidden` (which only flips after the exit animation finishes).
+// Toggle a slot's popover open/closed with an exit animation. Generic over any
+// slot whose toggle carries data-popover-toggle. Same race-guarded logic the
+// navbar picker used: toggle on the --open class (visual state), not on
+// `hidden` (which only flips after the exit animation finishes).
 function setPopoverOpen(slot, open) {
-  const btn = slot.querySelector('[data-color-toggle]');
+  const btn = slot.querySelector('[data-popover-toggle]');
   const pop = slot.querySelector('.theme-color-popover');
   if (!btn || !pop) return;
 
@@ -163,20 +208,6 @@ function collapseAll(sidebarRoot) {
   expanded.forEach((el) => el.click());
 }
 
-// Copy current page URL to clipboard with visual feedback (icon → ✓ for 1.5s).
-function copyLink(btn) {
-  navigator.clipboard.writeText(location.href).then(() => {
-    const svg = btn.querySelector('svg');
-    if (!svg) return;
-    const original = svg.outerHTML;
-    svg.outerHTML = ICONS.check;
-    setTimeout(() => {
-      const s = btn.querySelector('svg');
-      if (s) s.outerHTML = original;
-    }, COPY_FEEDBACK_MS);
-  });
-}
-
 // ---------------------------------------------------------------------------
 // Build & inject
 // ---------------------------------------------------------------------------
@@ -190,16 +221,22 @@ function buildToolbarHTML() {
       <button class="sb-toolbar-btn" data-action="collapse" title="${t('collapse', 'Collapse all')}">
         ${ICONS.collapse}
       </button>
-      <button class="sb-toolbar-btn" data-action="link" title="${t('link', 'Copy page link')}">
-        ${ICONS.link}
-      </button>
       ${buildColorSlot()}
     </div>`;
 }
 
 // Single delegated click handler for the whole toolbar.
 function handleToolbarClick(e, sidebarRoot) {
-  // Color swatch selection (inside the popover).
+  // Background tint swatch selection (popover's second row).
+  const bgSw = e.target.closest('[data-bg]');
+  if (bgSw) {
+    applyBackground(bgSw.dataset.bg);
+    const slot = bgSw.closest('[data-color-slot]');
+    if (slot) setPopoverOpen(slot, false);
+    return;
+  }
+
+  // Theme color swatch selection (popover's first row).
   const sw = e.target.closest('[data-color]');
   if (sw) {
     applyColor(sw.dataset.color);
@@ -208,11 +245,11 @@ function handleToolbarClick(e, sidebarRoot) {
     return;
   }
 
-  // Color picker toggle button.
-  const toggle = e.target.closest('[data-color-toggle]');
+  // Popover toggle button.
+  const toggle = e.target.closest('[data-popover-toggle]');
   if (toggle) {
     e.stopPropagation();
-    const slot = toggle.closest('[data-color-slot]');
+    const slot = toggle.closest('.theme-color-slot');
     if (slot) {
       const pop = slot.querySelector('.theme-color-popover');
       const isOpen = pop && pop.classList.contains('theme-color-popover--open');
@@ -230,9 +267,6 @@ function handleToolbarClick(e, sidebarRoot) {
       break;
     case 'collapse':
       collapseAll(sidebarRoot);
-      break;
-    case 'link':
-      copyLink(btn);
       break;
   }
 }
@@ -256,16 +290,17 @@ function injectInto(sidebarRoot) {
   toolbar.addEventListener('click', (e) => e.stopPropagation());
   toolbar.addEventListener('click', (e) => handleToolbarClick(e, sidebarRoot));
 
-  // Close the popover on outside click / Escape.
+  // Close any open popover on outside click / Escape.
   document.addEventListener('click', (e) => {
-    const slot = toolbar.querySelector('[data-color-slot]');
-    if (!slot) return;
-    if (!slot.contains(e.target)) setPopoverOpen(slot, false);
+    toolbar.querySelectorAll('.theme-color-slot').forEach((slot) => {
+      if (!slot.contains(e.target)) setPopoverOpen(slot, false);
+    });
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      const slot = toolbar.querySelector('[data-color-slot]');
-      if (slot) setPopoverOpen(slot, false);
+      toolbar.querySelectorAll('.theme-color-slot').forEach((slot) =>
+        setPopoverOpen(slot, false)
+      );
     }
   });
 

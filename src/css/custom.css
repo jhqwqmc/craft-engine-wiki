@@ -448,12 +448,9 @@ html[data-theme-color='green'][data-theme='dark'] {
   color: var(--ifm-color-primary-light);
 }
 
-/* Push the link tool to the right edge so the toolbar reads as two groups:
-   [expand][collapse] ……… [link][color]. The color slot follows the link with
-   the normal toolbar gap (no auto margin of its own). */
-.sb-toolbar-btn[data-action="link"] {
-  margin-left: auto;
-}
+/* Push the color picker to the right edge so the toolbar reads as two groups:
+   [expand][collapse] ……… [color]. */
+
 
 /* =========================================================================
    Fold/unfold caret: smaller and fainter so it recedes behind the labels.
@@ -857,6 +854,7 @@ html:not([lang='zh-Hans']) .navbar-qq-link {
 .theme-color-slot {
   position: relative;
   display: inline-flex;
+  margin-left: auto;
 }
 
 .theme-color-popover {
@@ -865,6 +863,7 @@ html:not([lang='zh-Hans']) .navbar-qq-link {
   right: 0;
   z-index: 100;
   display: flex;
+  flex-direction: column;
   gap: 8px;
   padding: 10px;
   background-color: var(--ifm-background-surface-color);
@@ -879,6 +878,19 @@ html:not([lang='zh-Hans']) .navbar-qq-link {
   transform-origin: top right;
   pointer-events: none;
   transition: opacity 0.28s ease, transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Each row of swatches is itself a horizontal flex line. */
+.theme-color-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* The background-tint row is a light-mode-only feature: hide it in dark mode
+   (the tints carry a :not([data-theme='dark']) guard, so they wouldn't show
+   there anyway). */
+[data-theme='dark'] .theme-color-row--bg {
+  display: none;
 }
 
 .theme-color-popover--open {
@@ -965,3 +977,64 @@ html:not([lang='zh-Hans']) .navbar-qq-link {
 [data-theme='dark'] .theme-color-swatch--orange { background-color: #fb923c; }
 [data-theme='dark'] .theme-color-swatch--purple { background-color: #a78bfa; }
 [data-theme='dark'] .theme-color-swatch--green  { background-color: #4ade80; }
+
+/* =========================================================================
+   Eye-care mode — a warm page tint, light mode only.
+   Enabled via <html data-eyecare="warm|green|sepia|mist"> (picked from the
+   sidebar toolbar). The :not([data-theme='dark']) guard keeps it from bleeding
+   into dark mode even if the attribute persists across a mode switch.
+
+   Specificity: html[data-eyecare='…']:not([data-theme='dark']) is (0,2,1),
+   which beats the palette blocks html[data-theme-color='…'] (0,1,1) — so the
+   tint applies on top of whichever theme color is selected, and the chosen
+   primary color still flows through the rest of the UI.
+   ========================================================================= */
+
+/* ---- Warm yellow (暖黄) ---- */
+html[data-eyecare='warm']:not([data-theme='dark']) {
+  --ifm-background-color: #f4ecd0;
+  --ifm-background-surface-color: #faf4e1;
+  --ifm-navbar-background-color: rgba(250, 244, 225, 0.95);
+  --ifm-code-background: rgba(150, 110, 30, 0.10);
+}
+
+/* ---- Eye-care green (豆绿) ---- */
+html[data-eyecare='green']:not([data-theme='dark']) {
+  --ifm-background-color: #e3edd6;
+  --ifm-background-surface-color: #eef4e4;
+  --ifm-navbar-background-color: rgba(238, 244, 228, 0.95);
+  --ifm-code-background: rgba(60, 120, 40, 0.10);
+}
+
+/* ---- Sepia (羊皮纸) ---- */
+html[data-eyecare='sepia']:not([data-theme='dark']) {
+  --ifm-background-color: #ece0c8;
+  --ifm-background-surface-color: #f4ead4;
+  --ifm-navbar-background-color: rgba(244, 234, 212, 0.95);
+  --ifm-code-background: rgba(120, 90, 30, 0.12);
+}
+
+/* ---- Mist blue (雾蓝) ---- */
+html[data-eyecare='mist']:not([data-theme='dark']) {
+  --ifm-background-color: #dde9ee;
+  --ifm-background-surface-color: #e8f0f4;
+  --ifm-navbar-background-color: rgba(232, 240, 244, 0.95);
+  --ifm-code-background: rgba(40, 90, 120, 0.10);
+}
+
+/* Background-tint swatch fills (the dot users pick from). 'none' shows the
+   default page background so the cancel position reads as "no tint". Reuse the
+   theme-color-swatch base styling (circle / check / stagger) — only the fill
+   differs, so the two rows read as one consistent UI. */
+.bg-swatch--none  { background-color: var(--ifm-background-color); border-color: var(--ifm-color-emphasis-300); }
+.bg-swatch--warm  { background-color: #d9c878; }
+.bg-swatch--green { background-color: #a8c886; }
+.bg-swatch--sepia { background-color: #c4a96a; }
+.bg-swatch--mist  { background-color: #8fb3bd; }
+
+/* The check mark defaults to white (`.theme-color-check { color: #fff }`),
+   which is invisible on the near-white 'none' swatch — flip it dark there so
+   the selected state reads on the default/cancel position. */
+.bg-swatch--none .theme-color-check {
+  color: var(--ifm-color-emphasis-700);
+}
