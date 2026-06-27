@@ -5,101 +5,198 @@ id: furniture
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## Sections to Configure
+## Overview
 
-A complete furniture configuration contains the following sections:
+Furniture is CraftEngine's **entity-based decoration system**. Unlike vanilla blocks that lock to a grid, furniture uses Minecraft display entities — giving you full control over position, rotation, scale, and alignment down to the pixel. Crucially, CraftEngine manages these entities entirely on its own without adding them to the server's ticker list, so furniture performs significantly better than vanilla display entities.
 
-* behavior
+## Anatomy
 
-<UrlCard
-    url="furniture/behaviors"
-    title="🕹️ Furniture Behaviors"
-    subtitle=" "
-/>
-
-* settings
-
-<UrlCard
-    url="furniture/settings"
-    title="⚙️ Furniture Settings"
-    subtitle=" "
-/>
-
-* variants
-
-<UrlCard
-    url="furniture/variants"
-    title="📍 Furniture Variants"
-    subtitle=" "
-/>
-
-* loot
-
-<UrlCard
-    url="../reference/loot_table"
-    title="🎲 Loot Table"
-    subtitle=" "
-/>
-
-* events
-
-<UrlCard
-    url="../reference/events"
-    title="🪇 Events"
-    subtitle=" "
-/>
-
-## How to Bind Items
-
-<UrlCard
-    url="item/behaviors/furniture_item"
-    title="🪑 Furniture Item"
-    subtitle=" "
-/>
-
-<UrlCard
-    url="item/behaviors/liquid_collision_furniture_item"
-    title="🌊 Liquid Collision Furniture Item"
-    subtitle=" "
-/>
-
-## Full Config Overview
+Every piece of furniture follows the same skeleton. Each top-level key answers one question:
 
 ```yaml
 furniture:
-  default:bench:
+  default:my_furniture:   # the furniture id — referenced everywhere as default:my_furniture
+    variants:             # REQUIRED  → visual & physical presence (elements, hitboxes, seats)
+      ...
+    settings:             # optional  → basic properties (sounds, hit times, tools)
+      ...
+    behaviors:            # optional  → added functionality (storage, display, lighting)
+      ...
+    loot:                 # optional  → what it drops when broken
+      ...
+    events:               # optional  → reactions to player interaction
+      ...
+```
+
+Only one section is mandatory: **variants** — it tells the plugin what the furniture looks like and how it occupies space. Everything else is optional layering.
+
+## Sections to Configure
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard
+  url="furniture/variants"
+  title="📍 Furniture Variants"
+  subtitle="Visual display elements, collision hitboxes, seats — what it looks like & how it occupies space"
+/>
+
+<UrlCard
+  url="furniture/settings"
+  title="⚙️ Furniture Settings"
+  subtitle="Sounds, hit times, required tools — basic properties"
+/>
+
+<UrlCard
+  url="furniture/behaviors"
+  title="🕹️ Furniture Behaviors"
+  subtitle="Added functionality — storage, item display, lighting"
+/>
+
+<UrlCard
+  url="../reference/loot_table"
+  title="🎲 Loot Table"
+  subtitle="What the furniture drops when broken"
+/>
+
+<UrlCard
+  url="../reference/events"
+  title="🪇 Events"
+  subtitle="React to clicks & breaks with functions, gated by conditions"
+/>
+
+</div>
+
+## Quick Start
+
+### 1. The smallest possible furniture
+
+One variant, one element, one hitbox — already a fully working piece of furniture:
+
+```yaml
+furniture:
+  default:my_chair:
+    variants:
+      ground:
+        elements:
+          - item: default:my_chair_model   # the item model to display
+        hitboxes:
+          - position: 0,0,0                # collision box at origin
+```
+
+### 2. Tune its physics
+
+Add a `settings` section so it feels right — sounds when placed and broken, the right number of hits to destroy:
+
+```yaml
+furniture:
+  default:my_chair:
     settings:
-      item: default:bench
+      item: default:my_chair               # the item id this furniture maps to (for creative middle-click)
+      hit_times: 3                         # hits needed to break (default 0 = instant)
       sounds:
         break: minecraft:block.bamboo_wood.break
         place: minecraft:block.bamboo_wood.place
+        hit: minecraft:block.bamboo_wood.hit
     variants:
       ground:
-        loot_spawn_offset: 0.5,0.5,0
-        entity_culling: true
         elements:
-          - item: default:bench
-            display_transform: none
-            billboard: fixed
-            position: 0.5,0,0
-            translation: 0,0.5,0
-            shadow_radius: 1
-            shadow_strength: 0.2
-            apply_dyed_color: true
-            glow_color: 255,255,255
+          - item: default:my_chair_model
         hitboxes:
           - position: 0,0,0
-            type: shulker
-            direction: east
+```
+
+### 3. Add a seat and loot
+
+Give it a seat position so players can sit, and a loot table so it drops the right item when broken:
+
+```yaml
+furniture:
+  default:my_chair:
+    settings:
+      item: default:my_chair
+      hit_times: 3
+      sounds:
+        break: minecraft:block.bamboo_wood.break
+        place: minecraft:block.bamboo_wood.place
+        hit: minecraft:block.bamboo_wood.hit
+    variants:
+      ground:
+        elements:
+          - item: default:my_chair_model
+            translation: 0,0.5,0             # lift it up half a block
+        hitboxes:
+          - position: 0,0,0
+            type: shulker                    # shulker = hard collision with peek animation
             peek: 100
             blocks_building: true
             interactive: true
             interaction_entity: true
             seats:
-              - 0,0,-0.1 0
-              - 1,0,-0.1 0
+              - 0.5,0.3,0                   # seat position
     loot:
       template: default:loot_table/furniture
       arguments:
-        item: default:bench
+        item: default:my_chair
 ```
+
+:::tip
+
+The `default:loot_table/furniture` template uses `furniture_item` as its entry type — this drops the exact item the player used to place the furniture, preserving all its custom data (name, durability, NBT). The `item` argument is only a fallback for when no source item exists (e.g. furniture placed via API). Always use `furniture_item` for furniture loot.
+
+:::
+
+## Binding Items to Furniture
+
+A furniture definition and the item players hold to place it are **two separate things** in CraftEngine. You connect them from the item side — the item carries a `furniture_item` behavior that points at the furniture id:
+
+```yaml
+items:
+  default:my_chair:
+    behavior:
+      type: furniture_item
+      rules:
+        ground:
+          rotation: four                    # snap to 90° increments
+          alignment: center                 # snap to block center
+      furniture: default:my_chair           # → the furniture id this item places
+```
+
+The `furniture` field can also hold the **entire furniture config inline** instead of an id, when you'd rather keep them in one file:
+
+```yaml
+items:
+  default:my_chair:
+    behavior:
+      type: furniture_item
+      rules:
+        ground:
+          rotation: four
+          alignment: center
+      furniture:
+        settings: ...
+        variants: ...
+        loot: ...
+```
+
+:::tip
+Placement variants
+
+Plain `furniture_item` places furniture on the clicked surface. For placement on water or lava, use [Liquid Collision Furniture Item](../configuration/item/behaviors/liquid_collision_furniture_item.mdx) with the same `furniture` field.
+:::
+
+## Where to Look When You're Stuck
+
+Match what you're trying to do to the right page:
+
+| You want to… | Go to |
+|---|---|
+| Give it a 3D model, text display, or adjust position/rotation/scale | [Furniture Variants](./furniture/variants.mdx) |
+| Make it sit-able (add seats) | [Furniture Variants → Hitboxes](./furniture/variants.mdx#hitboxes) |
+| Add sounds, hit durability, required tools | [Furniture Settings](./furniture/settings.mdx) |
+| Make it emit light | [Glowing Furniture](./furniture/behaviors/glowing_furniture.mdx) |
+| Control what it drops | [Loot Table](../reference/loot_table.mdx) |
+| React to clicks or breaks | [Events](../reference/events.mdx) · [Conditions](../reference/conditions.mdx) |
+| Bind it to an item so players can place it | [Binding Items](#binding-items-to-furniture) · [Furniture Item](../configuration/item/behaviors/furniture_item.mdx) |
+| Use the item for creative middle-click (1.21.4+) | [Furniture Settings → item](./furniture/settings.mdx#item) |
+| Use a BetterModel or ModelEngine model | [Furniture Variants → BetterModel](./furniture/variants.mdx#bettermodel) · [ModelEngine](./furniture/variants.mdx#modelengine) · [External Models](./furniture/variants.mdx#external-models) |
+| Make a variant that changes on interaction (lit/unlit, open/closed) | [Events → set_furniture_variant](../reference/events.mdx#set_furniture_variant) |

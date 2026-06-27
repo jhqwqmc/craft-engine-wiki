@@ -55,7 +55,13 @@ item: "minecraft:apple"
 
 ### furniture\_item
 
-Sets the item to the original furniture item when placed, otherwise uses the fallback item.
+Drops the exact item the player used to place the furniture, preserving all its data (custom name, durability, NBT, etc.). If the furniture was placed via API without a source item, the `item` fallback is used instead.
+
+:::tip
+
+Always use `furniture_item` as your entry type for furniture loot. This ensures the player gets back their original placement item rather than a fresh copy.
+
+:::
 
 ```yaml
 type: furniture_item

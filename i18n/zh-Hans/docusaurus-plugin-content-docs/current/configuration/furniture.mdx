@@ -5,101 +5,198 @@ id: furniture
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## 配置部分
+## 概述
 
-完整家具配置包含以下部分：
+家具是 CraftEngine 的**基于实体的装饰系统**。与原版方块锁定在网格上不同，家具使用 Minecraft 的 Display 实体——让你可以像像素级别一样精确控制位置、旋转、缩放与对齐。更重要的是，CraftEngine 自行管理这些实体，不会将它们加入服务端的 Ticker 列表，因此性能远优于原版 Display 实体。
 
-* behavior
+## 结构解析
 
-<UrlCard
-    url="furniture/behaviors"
-    title="🕹️ 家具行为"
-    subtitle=" "
-/>
-
-* settings
-
-<UrlCard
-    url="furniture/settings"
-    title="⚙️ 家具设置"
-    subtitle=" "
-/>
-
-* variants
-
-<UrlCard
-    url="furniture/variants"
-    title="📍 家具变体"
-    subtitle=" "
-/>
-
-* loot
-
-<UrlCard
-    url="../reference/loot_table"
-    title="🎲 战利品表"
-    subtitle=" "
-/>
-
-* events
-
-<UrlCard
-    url="../reference/events"
-    title="🪇 事件"
-    subtitle=" "
-/>
-
-## 如何绑定物品
-
-<UrlCard
-    url="item/behaviors/furniture_item"
-    title="🪑 家具物品"
-    subtitle=" "
-/>
-
-<UrlCard
-    url="item/behaviors/liquid_collision_furniture_item"
-    title="🌊 液体碰撞家具物品"
-    subtitle=" "
-/>
-
-## 完整配置概览
+每件家具都遵循相同的骨架结构。每个顶层键回答一个问题：
 
 ```yaml
 furniture:
-  default:bench:
+  default:my_furniture:   # 家具 ID——引用时使用 default:my_furniture
+    variants:             # 必填  → 视觉与物理形态（元素、碰撞箱、座位）
+      ...
+    settings:             # 可选  → 基础属性（音效、破坏次数、工具要求）
+      ...
+    behaviors:            # 可选  → 扩展功能（存储、物品展示、发光）
+      ...
+    loot:                 # 可选  → 破坏时掉落的物品
+      ...
+    events:               # 可选  → 对玩家交互的响应
+      ...
+```
+
+只有一个部分是必填的：**variants**——它告诉插件家具长什么样、占据多少空间。其余都是可选的叠加层。
+
+## 配置分区
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard
+  url="furniture/variants"
+  title="📍 家具变体"
+  subtitle="视觉展示元素、碰撞箱、座位——外观与空间占位"
+/>
+
+<UrlCard
+  url="furniture/settings"
+  title="⚙️ 家具设置"
+  subtitle="音效、破坏次数、工具要求——基础属性"
+/>
+
+<UrlCard
+  url="furniture/behaviors"
+  title="🕹️ 家具行为"
+  subtitle="扩展功能——存储、物品展示、发光"
+/>
+
+<UrlCard
+  url="../reference/loot_table"
+  title="🎲 战利品表"
+  subtitle="家具破坏时掉落什么"
+/>
+
+<UrlCard
+  url="../reference/events"
+  title="🪇 事件"
+  subtitle="用函数响应点击与破坏，由条件控制触发"
+/>
+
+</div>
+
+## 快速上手
+
+### 1. 最简家具
+
+一个变体、一个元素、一个碰撞箱——已经是一件完整可用的家具：
+
+```yaml
+furniture:
+  default:my_chair:
+    variants:
+      ground:
+        elements:
+          - item: default:my_chair_model   # 要显示的物品模型
+        hitboxes:
+          - position: 0,0,0                # 位于原点的碰撞箱
+```
+
+### 2. 调整基础属性
+
+加上 `settings` 部分，让它手感合适——放置和破坏时有音效，需要正确的击打次数才能破坏：
+
+```yaml
+furniture:
+  default:my_chair:
     settings:
-      item: default:bench
+      item: default:my_chair               # 家具对应的物品 ID（用于创造模式中键拾取）
+      hit_times: 3                         # 破坏所需击打次数（默认 0 = 瞬间破坏）
       sounds:
         break: minecraft:block.bamboo_wood.break
         place: minecraft:block.bamboo_wood.place
+        hit: minecraft:block.bamboo_wood.hit
     variants:
       ground:
-        loot_spawn_offset: 0.5,0.5,0
-        entity_culling: true
         elements:
-          - item: default:bench
-            display_transform: none
-            billboard: fixed
-            position: 0.5,0,0
-            translation: 0,0.5,0
-            shadow_radius: 1
-            shadow_strength: 0.2
-            apply_dyed_color: true
-            glow_color: 255,255,255
+          - item: default:my_chair_model
         hitboxes:
           - position: 0,0,0
-            type: shulker
-            direction: east
+```
+
+### 3. 加上座位和战利品
+
+给它一个座位位置让玩家坐下，再配置战利品表让它破坏时掉落正确的物品：
+
+```yaml
+furniture:
+  default:my_chair:
+    settings:
+      item: default:my_chair
+      hit_times: 3
+      sounds:
+        break: minecraft:block.bamboo_wood.break
+        place: minecraft:block.bamboo_wood.place
+        hit: minecraft:block.bamboo_wood.hit
+    variants:
+      ground:
+        elements:
+          - item: default:my_chair_model
+            translation: 0,0.5,0             # 向上抬半格
+        hitboxes:
+          - position: 0,0,0
+            type: shulker                    # shulker = 硬碰撞 + 开合动画
             peek: 100
             blocks_building: true
             interactive: true
             interaction_entity: true
             seats:
-              - 0,0,-0.1 0
-              - 1,0,-0.1 0
+              - 0.5,0.3,0                   # 座位位置
     loot:
       template: default:loot_table/furniture
       arguments:
-        item: default:bench
+        item: default:my_chair
 ```
+
+:::tip
+
+`default:loot_table/furniture` 模板使用 `furniture_item` 作为条目类型——这会掉落玩家放置家具时使用的**原物品**，保留所有自定义数据（名称、耐久、NBT）。`item` 参数仅在无源物品时作为回退（例如通过 API 放置的家具）。家具的战利品务必使用 `furniture_item`。
+
+:::
+
+## 将物品绑定到家具
+
+在 CraftEngine 中，家具定义和玩家手持的放置物品是**两个独立的东西**。你从物品侧进行连接——物品携带一个 `furniture_item` 行为，指向家具 ID：
+
+```yaml
+items:
+  default:my_chair:
+    behavior:
+      type: furniture_item
+      rules:
+        ground:
+          rotation: four                    # 锁定到 90° 的倍数
+          alignment: center                 # 对齐到方块中心
+      furniture: default:my_chair           # → 此物品放置的家具 ID
+```
+
+`furniture` 字段也可以直接内联**完整的家具配置**，而不是引用一个 ID，当你希望把配置放在同一个文件时很方便：
+
+```yaml
+items:
+  default:my_chair:
+    behavior:
+      type: furniture_item
+      rules:
+        ground:
+          rotation: four
+          alignment: center
+      furniture:
+        settings: ...
+        variants: ...
+        loot: ...
+```
+
+:::tip
+放置变体
+
+普通的 `furniture_item` 将家具放置在点击的面上。要在水面或岩浆上放置，使用[液体碰撞家具物品](../configuration/item/behaviors/liquid_collision_furniture_item.mdx)，`furniture` 字段用法相同。
+:::
+
+## 遇到困难时看哪里
+
+将你想要做的事情对应到正确的页面：
+
+| 你想要…… | 去看 |
+|---|---|
+| 设置 3D 模型、文字展示或调整位置/旋转/缩放 | [家具变体](./furniture/variants.mdx) |
+| 让它能坐（添加座位） | [家具变体 → 碰撞箱](./furniture/variants.mdx#hitboxes) |
+| 添加音效、破坏耐久、工具要求 | [家具设置](./furniture/settings.mdx) |
+| 让它发光 | [发光家具](./furniture/behaviors/glowing_furniture.mdx) |
+| 控制破坏掉落什么 | [战利品表](../reference/loot_table.mdx) |
+| 响应点击或破坏 | [事件](../reference/events.mdx) · [条件](../reference/conditions.mdx) |
+| 绑定到物品让玩家能放置 | [绑定物品](#将物品绑定到家具) · [家具物品](../configuration/item/behaviors/furniture_item.mdx) |
+| 用于创造模式中键拾取（1.21.4+） | [家具设置 → item](./furniture/settings.mdx#item) |
+| 使用 BetterModel 或 ModelEngine 模型 | [家具变体 → BetterModel](./furniture/variants.mdx#bettermodel) · [ModelEngine](./furniture/variants.mdx#modelengine) · [外部模型](./furniture/variants.mdx#external-models) |
+| 做一个交互时切换的变体（点亮/熄灭、打开/关闭） | [事件 → set_furniture_variant](../reference/events.mdx#set_furniture_variant) |

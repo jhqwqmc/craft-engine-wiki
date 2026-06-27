@@ -3,15 +3,19 @@ title: 📦 Simple Storage Furniture
 id: simple_storage_furniture
 ---
 
+**Simple Storage Furniture** adds a chest-like inventory to a piece of furniture. Right-click to open a GUI where players can place and take items.
+
+## Example
+
 ```yaml
 furniture:
   default:storage_core:
     behavior:
       type: simple_storage_furniture
-      data_key: craftengine:simple_storage_contents
-      title: Storage Core
-      rows: 3 # 1~6
+      title: "<dark_gray>Storage Core"      # GUI title, supports MiniMessage formatting (default "<lang:container.chest>")
+      rows: 3                              # number of rows, 1~6 (default 1)
+      data_key: "craftengine:simple_storage_contents"  # NBT key for persistent data (value shown is the default)
       sounds:
-        open: minecraft:block.iron_trapdoor.open
-        close: minecraft:block.iron_trapdoor.close
+        open: minecraft:block.iron_trapdoor.open    # sound played when GUI opens (optional)
+        close: minecraft:block.iron_trapdoor.close   # sound played when GUI closes (optional)
 ```

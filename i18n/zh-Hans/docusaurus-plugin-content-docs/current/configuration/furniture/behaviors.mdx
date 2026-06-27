@@ -2,3 +2,55 @@
 title: 🕹️ 家具行为
 id: behaviors
 ---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+## 简介
+
+行为赋予家具**实际功能**——打开储物界面、展示物品、发光。没有行为时，家具只具备基础的放置、坐下和破坏。
+
+行为是模块化的。可以只挂一个，也可以在同一件家具上组合多个。它们自动跟随家具的生命周期——无需额外配置。
+
+## 挂载一个行为
+
+在家具的 `behavior` 或 `behaviors` 字段下挂载行为：
+
+```yaml
+furniture:
+  default:my_furniture:
+    behavior:
+      type: simple_storage_furniture
+      title: "My Chest"                   # GUI 标题，支持 MiniMessage（默认 "<lang:container.chest>"）
+      rows: 3                             # 行数，1~6（默认 1）
+      sounds:
+        open: minecraft:block.iron_trapdoor.open
+        close: minecraft:block.iron_trapdoor.close
+```
+
+## 组合行为
+
+要给一件家具多个行为，用 `behaviors` 列表。下面这个例子将存储和发光组合在一件家具上：
+
+```yaml
+furniture:
+  default:lit_cabinet:
+    behaviors:
+      - type: simple_storage_furniture
+        title: "Cabinet"
+        rows: 2
+        sounds:
+          open: minecraft:block.barrel.open
+          close: minecraft:block.barrel.close
+      - type: glowing_furniture
+        lights:
+          - 0,0.5,0 15                      # 简写: "x,y,z level"
+```
+
+:::warning
+
+**组合行为——注意事项：**
+
+- 如果家具在变体之间切换，每个行为独立应用自己的逐变体配置。
+- 并非所有行为组合都经过测试。如果遇到不符合预期的情况，请寻求支持。
+
+:::

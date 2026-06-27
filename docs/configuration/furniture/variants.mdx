@@ -4,45 +4,49 @@ id: variants
 ---
 
 import ExpandableIframeCard from '@site/src/components/ExpandableIframeCard';
+import Details from '@site/src/components/Details';
+import Highlight from '@site/src/components/Highlight';
 
 ## Introduction
 
-The furniture supports custom variants. By default, the plugin provides three preset variant types: `ground`, `ceiling`, and `wall`. The variant will change based on the item behavior and furniture behavior. Currently, switching variants is only supported via API operations.
+A furniture definition must have at least one **variant**. Each variant describes what the furniture looks like and how it occupies space.
 
-Below, I will use the ground variant as an example to explain how to configure a basic variant.
+:::info
+
+Variant names are arbitrary and not limited by the furniture system. The three names you see most often — `ground`, `ceiling`, `wall` — come from the default `furniture_item` behavior: it reads the clicked face (top → `ground`, bottom → `ceiling`, side → `wall`) and places the matching variant. This is just a convention, not a rule.
+
+You can define completely different variants. A battery furniture could use `charged`, `half_charged`, and `empty` variants — switched via API as the charge level changes. A light sensor could pick `day` or `night` based on the time when placed.
+
+:::
+
+:::warning
+
+The default `furniture_item` behavior only knows `ground`, `ceiling`, and `wall`. To place furniture with custom variant names, you need to register your own item behavior through the API, or use [`set_furniture_variant`](../reference/events.mdx#set_furniture_variant) to switch after placement.
+
+:::
+
+Here is a complete variant for a 2-block-tall standing lamp:
 
 ```yaml
 furniture:
-  default:bench:
+  default:standing_lamp:
     variants:
       ground:
-        # create offsets for the drops so they won't spawn in blocks
-        loot_spawn_offset: 0,0,0
+        # offset for drops so they don't spawn inside blocks (default: 0,0,0)
+        loot_spawn_offset: 0,0.5,0
 
-        # Display Elements
+        # Display Elements — what the furniture looks like
         elements:
-          - item: default:bench
-            display_transform: NONE
-            billboard: FIXED
-            position: 0.5,0,0
-            translation: 0,0.5,0
-            apply_dyed_color: true # default: true
-            # glow_color: 255,255,255 # glow color: r,g,b
+          - type: item_display
+            item: default:standing_lamp
 
-        # Furniture Hitboxes
+        # Furniture Hitboxes — how the furniture occupies space & how players interact with it
         hitboxes:
-          - type: interaction # non-collision hitbox
-            can_use_item_on: false # default: false
-            can_be_hit_by_projectile: false # default: false
-            blocks_building: false # default: true
-            position: 0,0,0
+          - type: interaction
             width: 1
             height: 2
-            # 'width'/'height' can be simplified to 'scale'
-            # scale: 1,2
-            interactive: true # whether the interaction entity is interactive
-            seats:
-              - 0,0,-0.1 0
+            blocks_building: true
+            interactive: true
 ```
 
 ## Elements
@@ -74,7 +78,9 @@ translation: 0,0.5,0
 pitch: 0.0
 yaw: 0.0
 scale: 1 # scale: 1,2,1
-glow_color: 255,255,255
+glow_color: 255,255,255        # RGB
+shadow_radius: 0
+shadow_strength: 1
 brightness:
   block_light: 15
   sky_light: 15
@@ -83,13 +89,9 @@ view_range: 1.0
 rotation: 45  # Y axis
 rotation: 45,45,0  # Euler angle, See the rotation tool below
 rotation: 0,0,0.7071,0.7071  # Quaternions, See the rotation tool below
-# Select the component that affects the color of this furniture. Generally, you only need to 
-# choose one of the following component types based on the item of the furniture element.
+# Applies a color tint from the source item. Pick one type based on the displayed item.
 tint_source: 
-  - dyed_color
-  - map_color
-  - firework_explosion
-  - potion_contents
+  type: dyed_color             # dyed_color / map_color / firework_explosion / potion_contents
 ```
 
 <ExpandableIframeCard
@@ -100,14 +102,20 @@ tint_source:
 />
 
 :::warning
-Please note the distinction between `position` and `translation`. `position` alters the coordinate location of the corresponding display entity, whereas `translation` is a displacement attribute of the display entity itself.
-:::
+`position` moves the display entity to a new coordinate location. `translation` shifts the entity relative to its current position without changing its coordinate.
 
-:::danger
-For `wall` or `ceiling` variants of furniture, slight offsets must be applied using the `position` parameter; otherwise, the furniture may appear black.
+For `wall` or `ceiling` variants, the display entity can appear black if its `position` stays at `0,0,0`. Add a small `position` offset, then cancel it back with an opposite `translation`:
 
-The blackening of entities is position-dependent. Thus, after adjusting `position`, you can restore the entity to its correct placement by applying an opposite `translation`.
+```yaml
+wall:
+  elements:
+    - type: item_display
+      item: default:my_furniture
+      position: 0,0,0.5        # move it out half a block from the wall
+      translation: 0,0,-0.5    # pull it back so it still renders in the right place
+```
 
+![](/img/dark_furniture.png)
 :::
 
 ### Text Display
@@ -131,6 +139,8 @@ pitch: 0.0
 yaw: 0.0
 scale: 1 # scale: 1,2,1
 glow_color: 255,255,255
+shadow_radius: 0
+shadow_strength: 1
 brightness:
   block_light: 15
   sky_light: 15
@@ -166,6 +176,10 @@ tint_source:
   - firework_explosion
   - potion_contents
 ```
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/globe.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+</div>
 
 ### Armor stand
 
@@ -233,114 +247,109 @@ pitch: 0
 A furniture hitbox defines the interactive volume where players can interact with the object. CraftEngine offers several hitbox types, each with distinct properties. You can add and configure the appropriate hitbox by setting its parameters to suit your needs.
 
 <div style={{textAlign: 'center'}}>
-    <img src={require('/img/furniture_variants_1.png').default} alt="" />
+    <img src={require('/img/furniture_variants_1.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
 </div>
+
+<Details summary="Preview your hitboxes in-game">
+
+Run `/ce debug furniture` to toggle a debug overlay that reveals all furniture hitboxes. Invisible hitboxes become visible line-boxes so you can verify position and size. Misplaced or clipping hitboxes are highlighted for quick spotting.
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/commands_19.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>hitboxes made visible in debug mode</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/commands_20.png').default} alt="" />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>incorrect placement highlighted</p>
+</div>
+
+</Details>
 
 ### Interaction
 
-Non-collision hitbox
+Entities and players can walk through it. Use this for click detection, seats, and blocking placement without physical collision.
 
 ```yaml
 type: interaction
-can_use_item_on: false
-can_be_hit_by_projectile: false
-blocks_building: false
 position: 0,0,0
-width: 1
+width: 1                         # or use scale: 1,2 as shorthand for width × height
 height: 2
-# whether the interaction entity is interactive
-interactive: true 
-# decides if the interaction entity can be seen through F3+B
-invisible: false
+interactive: true                # whether players can click on it (default: true)
+blocks_building: true            # whether it prevents block placement (default: true)
+can_use_item_on: true            # whether placed items can interact with it (default: true)
+can_be_hit_by_projectile: true   # (default: true)
+invisible: false                 # whether visible via F3+B (default: false)
 seats:
   - 0,0,-0.1 0
 ```
 
-:::tip
-`width` and `height` can be simplified to one `scale` option
-```yaml
-type: interaction
-scale: 1,2
-```
-:::
-
 ### Shulker
 
-Hard-collision hitbox
+Entities and players cannot walk through it.
 
 ```yaml
 type: shulker
-can_use_item_on: true
-can_be_hit_by_projectile: true
-blocks_building: true
 position: 1,0,0
-scale: 1
-peek: 0 # 0~100
-# Relative direction. north = facing the player
-direction: UP # up/down/north/west/east/south
-# whether to summon another interaction entity for better interaction experience
-interaction_entity: true
-# whether the interaction entity is interactive
-interactive: true 
-# decides if the interaction entity can be seen through F3+B
-invisible: false
+scale: 1                          # size multiplier (default: 1)
+peek: 0                           # how "open" the shulker is, 0~100 (default: 0)
+direction: UP                     # up / down / north / west / east / south
+interaction_entity: true          # spawns an extra interaction entity for better click accuracy
+interactive: true                 # (default: true)
+blocks_building: true             # (default: true)
+can_use_item_on: true             # (default: true)
+can_be_hit_by_projectile: true    # (default: true)
+invisible: false                  # (default: false)
 seats:
   - 1,0,-0.1 0
 ```
 
 <div style={{textAlign: 'center'}}>
-    <img src={require('/img/peek.png').default} alt="" />
+    <img src={require('/img/peek.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
     <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>peek: 0   peek: 50   peek: 100</p>
 </div>
 
 ### Happy Ghast
 
-Semi-hard-collision hitbox
+A large hitbox (4×4 blocks at scale=1). When `hard_collision` is true, entities cannot walk through it.
 
 ```yaml
 type: happy_ghast
-can_use_item_on: true
-can_be_hit_by_projectile: true
-blocks_building: true
-hard_collision: true
 position: 1,0,0
-scale: 0.25 # default: 1
+scale: 0.25                       # size multiplier (default: 1)
+hard_collision: true              # whether it blocks entity movement
+blocks_building: true             # (default: true)
+can_use_item_on: true             # (default: true)
+can_be_hit_by_projectile: true    # (default: true)
 seats:
   - 1,0,-0.1 0
 ```
 
 ### Custom
 
-Soft-collision hitbox
+Uses any vanilla entity type for collision detection. Defaults to `slime`.
 
 ```yaml
 type: custom
 position: 1,0,0
-scale: 5
-# You can use any entity type here
-# default: slime
-entity_type: slime
+scale: 5                          # multiplies the entity's natural size
+entity_type: slime                # any vanilla entity id, e.g. minecraft:creeper
+blocks_building: true             # (default: true)
+can_use_item_on: true             # (default: true)
+can_be_hit_by_projectile: true    # (default: true)
 seats:
   - 1,0,-0.1 0
 ```
 
-:::tip
-A single `hitbox` can be configured with multiple seats. If the seats of multiple `hitboxes` are positioned at the same location, it is equivalent to having only one seat.
-:::
-
 :::info
-The position of a `seat` is determined by a location and a rotation, separated by a space in the configuration.
+A seat position is written as `x,y,z` with an optional yaw rotation separated by a space. When yaw is given, the player's body rotation is limited and cannot turn a full 360°. Without it, the body can rotate freely.
+
+A single hitbox can hold multiple seats. If seats from different hitboxes overlap at the same position, only one will work.
 
 ```
-0,0,0 0
+0,0,0 0    # body rotation limited
+0,0,0      # body can rotate freely
 ```
-
-You may also choose not to configure a rotation angle, allowing players to rotate freely to any angle while seated.
-
-```
-0,0,0
-```
-:::
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/furniture_variants_2.gif').default} alt="" />
@@ -351,36 +360,48 @@ You may also choose not to configure a rotation angle, allowing players to rotat
     <img src={require('/img/furniture_variants_3.gif').default} alt="" />
     <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>0,0,0</p>
 </div>
+:::
 
 ## Entity Culling
 
-You can individually control whether entity culling is enabled for each furniture variant
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+
+Entity culling hides furniture from players who can't see it, improving performance. It is enabled by default.
+
+Disable it entirely for a variant:
 
 ```yaml
 ground:
-  entity_culling: false # Disabled
+  entity_culling: false
 ```
 
-Once entity culling is enabled, you can configure the culling parameters
+Or fine-tune its behavior:
 
 ```yaml
 ground:
   entity_culling:
-    aabb: -0.5,0,-0.5,0.5,2,0.5 # x1,y1,z1,x2,y2,z2. Manual configuration of AABB is not recommended as the plugin will calculate it automatically.
-    view_distance: 64 # View distance culling. -1 means unlimited distance.
-                      # However, setting this to -1 is not recommended when ray tracing is enabled,
-                      # as it results in excessive algorithm path length and performance impact.
-    ray_tracing: false # Whether to enable ray tracing culling.
+    aabb: -0.5,0,-0.5,0.5,2,0.5   # bounding box override (x1,y1,z1,x2,y2,z2) — leave out, the plugin calculates it
+    aabb_expansion: 0.25           # extra padding around the bounding box (default: 0.25)
+    view_distance: 64              # max distance in blocks before culling (-1 = unlimited)
+    ray_tracing: true              # whether to check line-of-sight (default: true)
 ```
 
 ## External Models
 
-You can also use models from ModelEngine/BetterModel or custom model source registered through api
+A variant can reference a model from an external plugin (BetterModel, ModelEngine, or a custom source registered through the API).
 
 ```yaml
 furniture:
   default:bench:
     variants:
       ground:
-        blueprint: blueprint_id
+        blueprint: blueprint_id    # the model id from the external plugin
 ```
+
+<Details summary="External model vs. element — how they differ">
+
+When used as an **element** (under `elements`), the model renders through a fake entity — it spawns and despawns per-player via direct packets, with no server-side entity involved. Because there is no real server entity, you can list as many as you want.
+
+When used as an **external model** (`blueprint` at variant level), the model binds to the furniture's real base entity — a server-tracked entity that exists in the world. Because it relies on the base entity, the field is a single value: you can only have one external model per variant.
+
+</Details>

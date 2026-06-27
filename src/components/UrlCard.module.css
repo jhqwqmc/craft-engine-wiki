@@ -6,30 +6,28 @@
   --border-size: 2px; /* 环绕边框的粗细 */
   --animation-speed: 2s; /* 动画循环一次的速度 */
 
-  /* 定义卡片在浅色主题下的颜色变量 */
-  --url-card-background-color: #fff;
-  --url-card-border-color: #e0e0e0;
-  --url-card-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  --url-card-hover-background-color: #f9f9f9;
-  --url-card-hover-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  --url-card-title-color: #333;
-  --url-card-url-color: #666;
-  --url-card-hover-title-color: #007bff; /* 悬停时的标题颜色 */
-  --url-card-hover-url-color: #333; /* 悬停时的URL颜色 */
+  /* 定义卡片在浅色主题下的颜色变量。
+     全部接 Docusaurus 的 --ifm-* 体系，这样主题色/护眼色覆盖这些变量时，
+     卡片自动跟随，不再需要单独为护眼色写规则。
+
+     注意 hover 背景：不用固定的 --ifm-color-emphasis-100（它是预设灰阶
+     #eee，在护眼黄底上会显脏），而用 color-mix 在当前 surface 上叠加极
+     少量黑/白（仅 4%）——浅色域（含护眼色）叠黑 → 白底近乎不变、黄底微
+     深；暗色域叠白 → 卡片微提亮。light-dark() 依据 Infima 设的 color-scheme
+     自动切换。比例刻意压低以还原原本“hover 几乎不变色”的克制观感。 */
+  --url-card-background-color: var(--ifm-background-surface-color);
+  --url-card-border-color: var(--ifm-color-emphasis-300);
+  --url-card-box-shadow: var(--ifm-global-shadow-lw);
+  --url-card-hover-background-color: color-mix(in srgb, var(--ifm-background-surface-color) 96%, light-dark(#000, #fff));
+  --url-card-hover-box-shadow: var(--ifm-global-shadow-md);
+  --url-card-title-color: var(--ifm-font-color-base);
+  --url-card-url-color: var(--ifm-color-emphasis-600);
+  --url-card-hover-title-color: var(--ifm-color-primary); /* 悬停时的标题颜色 */
+  --url-card-hover-url-color: var(--ifm-font-color-base); /* 悬停时的URL颜色 */
 }
 
-/* 深色主题下的颜色变量覆盖 */
-html[data-theme='dark'] {
-  --url-card-background-color: #2b2b2b; /* 更深的背景色 */
-  --url-card-border-color: #444; /* 更深的边框色 */
-  --url-card-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  --url-card-hover-background-color: #3a3a3a;
-  --url-card-hover-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  --url-card-title-color: #f0f0f0; /* 浅色文字 */
-  --url-card-url-color: #b0b0b0; /* 浅色URL文字 */
-  --url-card-hover-title-color: #61dafb; /* Docusaurus 默认蓝色 */
-  --url-card-hover-url-color: #f0f0f0;
-}
+/* 深色主题：浅色块已全部接 --ifm-* 体系，Infima 在暗色下会自动给出对应
+   暗色值，无需再单独覆盖。主题色、护眼色同理跟随。 */
 
 
 .cardWrapper {

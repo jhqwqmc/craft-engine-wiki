@@ -1,23 +1,66 @@
 ---
-title: 📷 物品展示家具
+title: 📷 展示物品家具
 id: display_item_furniture
 ---
 
-`display_item_furniture` 允许您将物品放置在家具中进行展示。您可以单独配置展示物品的碰撞框，以优化交互逻辑，这对同时拥有多个展示槽位的家具尤为有用。
+**展示物品家具**允许玩家右键将物品放入或取出展示在家具上。每个变体可以定义自己的展示位置，多个行为可以组合实现多槽位展示。
+
+## 示例
 
 ```yaml
 furniture:
   default:showcase:
     behavior:
       type: display_item_furniture
-      data_key: craftengine:display_item
+      data_key: "craftengine:display_item"   # 持久化数据的 NBT 键（左侧为默认值）
       sounds:
-        put: minecraft:block.decorated_pot.insert
-        take: minecraft:block.decorated_pot.insert_fail
+        put: minecraft:block.decorated_pot.insert       # 放入物品时的音效（可选）
+        take: minecraft:block.decorated_pot.insert_fail # 取出物品时的音效（可选）
       variants:
         ground:
-          item_position: 0,0.07,0
-          hitboxes: [] # 见[📍 家具变体]的[判定箱]部分
+          item_position: 0,0.07,0                       # 展示物品出现的位置
 ```
 
-![](/img/display_item_furniture.png)
+## 多展示槽位
+
+要在一件家具上创建多个独立的展示槽位，添加多个 `display_item_furniture` 行为，每个使用自己的 `data_key`：
+
+```yaml
+furniture:
+  default:double_showcase:
+    behaviors:
+      - type: display_item_furniture
+        data_key: "craftengine:display_item_left"   # 每个槽位独立的数据键
+        sounds:
+          put: minecraft:block.decorated_pot.insert
+          take: minecraft:block.decorated_pot.insert_fail
+        variants:
+          ground:
+            item_position: 0.4,0.6,0                # 左侧槽位展示位置
+            hitboxes:
+              - type: interaction
+                position: 0.4,0.6,0
+                width: 0.5
+                height: 0.5
+                can_use_item_on: true
+                interactive: true
+      - type: display_item_furniture
+        data_key: "craftengine:display_item_right"  # 不同的键 = 独立存储
+        sounds:
+          put: minecraft:block.decorated_pot.insert
+          take: minecraft:block.decorated_pot.insert_fail
+        variants:
+          ground:
+            item_position: -0.4,0.6,0               # 右侧槽位展示位置
+            hitboxes:
+              - type: interaction
+                position: -0.4,0.6,0
+                width: 0.5
+                height: 0.5
+                can_use_item_on: true
+                interactive: true
+```
+
+每个槽位是一个独立的行为实例——`data_key` 保证存储互不干扰，每个都有独立的展示位置和交互碰撞箱。
+
+![展示物品家具](/img/display_item_furniture.png)

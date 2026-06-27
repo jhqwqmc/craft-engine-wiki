@@ -1,37 +1,62 @@
 ---
-title: 🕯️ 发光家具
+title: 💡 发光家具
 id: glowing_furniture
 ---
 
-你可以像这样为所有变体统一配置光源位置和亮度等级
+**发光家具**让家具在指定位置放置光源方块，从而发出光亮。
+
+:::danger
+
+此行为**需要**在 `config.yml` 中启用 `furniture.light-system.enable: true`。
+
+```yaml title="config.yml"
+furniture:
+  light-system:
+    enable: true
+```
+
+:::
+
+## 统一光照（所有变体）
+
+当所有变体都需要在相同位置发光时，使用 `lights` 键：
 
 ```yaml
 furniture:
   default:candelabrum:
-    behaviors:
+    behavior:
       type: glowing_furniture
       lights:
         - position: 0,0,0
-          level: 15
+          level: 15                         # 光照等级: 1~15（默认 15）
+      # 也支持简写:
+      # lights:
+      #   - "0,0,0 15"                     # "x,y,z 光照等级"
+      #   - "0,0,0"                         # 光照等级默认 15
 ```
 
-或者为每个变体单独配置光源位置
+## 逐变体光照
+
+当每个变体需要不同的光源位置或等级时，使用 `variants` 映射。键名必须匹配**家具变体名**：
 
 ```yaml
 furniture:
   default:candelabrum:
-    behaviors:
+    behavior:
       type: glowing_furniture
       variants:
         ground_lit:
-          - position: 0,0,0
-            level: 15
+          - "0,0,0 15"                      # "ground_lit" 变体的光源
         wall_lit:
-          - position: 0,0,0.3
-            level: 15
+          - "0,0,0.3 15"                    # "wall_lit" 变体的光源
         ceiling_lit:
-          - position: 0,-1,0
-            level: 15
+          - "0,-1,0 15"                     # "ceiling_lit" 变体的光源
 ```
 
-![](/img/glowing_furniture.png)
+:::tip[结合事件使用]
+
+常见用法是用 `set_furniture_variant` 切换点亮/熄灭状态——右键用打火石点燃，左键空手熄灭。参考默认的 `candelabrum` 配置可以看完整示例。
+
+:::
+
+![发光家具](/img/glowing_furniture.png)

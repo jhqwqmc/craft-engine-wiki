@@ -2,3 +2,55 @@
 title: 🕹️ Furniture Behaviors
 id: behaviors
 ---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+## Introduction
+
+A behavior gives furniture something to **do** — open a storage GUI, display an item, emit light. Without one, furniture is purely visual: you can place it, sit on it, and break it.
+
+Behaviors are modular. Attach one, or combine several on the same piece. They follow the furniture's lifecycle automatically — no extra wiring needed.
+
+## Assigning a behavior
+
+You attach a behavior to a piece of furniture under its `behavior` or `behaviors` field:
+
+```yaml
+furniture:
+  default:my_furniture:
+    behavior:
+      type: simple_storage_furniture
+      title: "My Chest"                   # GUI title, supports MiniMessage (default "<lang:container.chest>")
+      rows: 3                             # number of rows, 1~6 (default 1)
+      sounds:
+        open: minecraft:block.iron_trapdoor.open
+        close: minecraft:block.iron_trapdoor.close
+```
+
+## Composite behaviors
+
+To give one piece of furniture more than one behavior, list them under `behaviors`. The example below combines storage and lighting on a single piece:
+
+```yaml
+furniture:
+  default:lit_cabinet:
+    behaviors:
+      - type: simple_storage_furniture
+        title: "Cabinet"
+        rows: 2
+        sounds:
+          open: minecraft:block.barrel.open
+          close: minecraft:block.barrel.close
+      - type: glowing_furniture
+        lights:
+          - 0,0.5,0 15                      # shorthand: "x,y,z level"
+```
+
+:::warning
+
+**Combining behaviors — keep in mind:**
+
+- If your furniture switches between variants, each behavior applies its own per-variant config independently.
+- Not all behavior combinations are tested. If something doesn't work as expected, reach out to support.
+
+:::
