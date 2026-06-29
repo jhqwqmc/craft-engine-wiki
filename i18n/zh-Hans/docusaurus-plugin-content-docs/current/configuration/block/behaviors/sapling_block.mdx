@@ -4,7 +4,7 @@ id: sapling_block
 ---
 
 **树苗方块**会随时间生长。每次随机刻，若光照条件满足，则以 `grow_speed` 的概率使 `stage` 增加 1。当 `stage` 达到最大值时，会调用配置的 `feature` 生成完整的树木。
-仅当方块上方位置的亮度位于 `light_requirement`（下限，默认 9）与 `max_light_requirement`（上限，默认 15）之间时才会生长。
+仅当方块上方位置的亮度位于 `light_requirement`（下限，默认为 9）与 `max_light_requirement`（上限，默认为 15）之间时才会生长。
 
 骨粉可以无视光照和生长概率，立即将 `stage` 增加 1，若已达最大值则直接尝试生成树木。`bone_meal_success_chance` 仅决定骨粉使用时是否播放绿色粒子效果——无论粒子是否出现，`stage` 的增加始终生效。
 
@@ -20,10 +20,10 @@ blocks:
     behavior:
       type: sapling_block
       feature: default:palm_tree                # 完全成熟时生成的已配置的地物（必需）
-      light_requirement: 9                      # 生长所需最低光照（默认 9）
-      max_light_requirement: 15                 # 生长所需最高光照（默认 15）
+      light_requirement: 9                      # 生长所需最低光照（默认为 9）
+      max_light_requirement: 15                 # 生长所需最高光照（默认为 15）
       grow_speed: 0.7                           # 每随机刻增加 stage 的概率（默认约 0.143）
-      bone_meal_success_chance: 0.45            # 骨粉产生成功粒子的概率（默认 0.45）
+      bone_meal_success_chance: 0.45            # 骨粉产生成功粒子的概率（默认为 0.45）
 ```
 
 :::tip

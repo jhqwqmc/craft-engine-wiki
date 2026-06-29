@@ -14,9 +14,9 @@ blocks:
   default:sofa:
     behavior:
       type: bouncing_block
-      bounce_height: 0.66              # 反弹速度系数，0 为不反弹（默认 0.66，仅在 26.1.2 及更低版本生效，26.2+ 通过方块设置 bounce_restitution 定义）
-      fall_damage_multiplier: 0.5      # 摔落伤害系数，0 为无伤害（默认 0.5）
-      sync_player_position: true       # 弹跳后强制同步客户端与服务端的移动向量（默认 true）
+      bounce_height: 0.66              # 反弹速度系数，0 为不反弹（默认为 0.66，仅在 26.1.2 及更低版本生效，26.2+ 通过方块设置 bounce_restitution 定义）
+      fall_damage_multiplier: 0.5      # 摔落伤害系数，0 为无伤害（默认为 0.5）
+      sync_player_position: true       # 弹跳后强制同步客户端与服务端的移动向量（默认为 true）
 ```
 
 :::info

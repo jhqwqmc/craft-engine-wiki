@@ -22,10 +22,10 @@ blocks:
   default:display_item_block:
     behavior:
       type: display_item_block
-      position: "0.5,0.5,0.5"              # 展示的物品的位置偏移（默认 0.5,0.5,0.5）
-      has_signal: true                     # 允许比较器检测信号：有物品时 15，否则 0（默认 true）
-      data_key: "craftengine:display_item" # 持久化数据的 NBT 键（默认 "craftengine:display_item"）
-      tint_source: true                    # 存储物品是否为方块实体提供颜色（默认 false）
+      position: "0.5,0.5,0.5"              # 展示的物品的位置偏移（默认为 0.5,0.5,0.5）
+      has_signal: true                     # 允许比较器检测信号：有物品时 15，否则 0（默认为 true）
+      data_key: "craftengine:display_item" # 持久化数据的 NBT 键（默认为 "craftengine:display_item"）
+      tint_source: true                    # 存储物品是否为方块实体提供颜色（默认为 false）
       sounds:
         put: minecraft:block.decorated_pot.insert        # 放入时播放的音效（可选）
         take: minecraft:block.decorated_pot.insert_fail  # 取出时播放的音效（可选）

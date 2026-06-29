@@ -41,7 +41,20 @@ const config: Config = {
     {
       tagName: 'script',
       attributes: {},
-      innerHTML: `try{var c=localStorage.getItem('theme-color');if(c)document.documentElement.setAttribute('data-theme-color',c);}catch(e){}try{var ec=localStorage.getItem('eyecare');if(ec)document.documentElement.setAttribute('data-eyecare',ec);}catch(e){}`,
+      innerHTML: `
+      try {
+        const themeColor = localStorage.getItem('theme-color');
+        if (themeColor) {
+          document.documentElement.setAttribute('data-theme-color', themeColor);
+        }
+      } catch (_) {}
+      try {
+        const eyeCare = localStorage.getItem('eyecare');
+        if (eyeCare) {
+          document.documentElement.setAttribute('data-eyecare', eyeCare);
+        }
+      } catch (_) {}
+      `,
     },
   ],
 

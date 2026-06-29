@@ -20,12 +20,12 @@ blocks:
   default:ender_pearl_flower:
     behavior:
       type: crop_block
-      grow_speed: 0.25                # 每随机刻增加的 age 值（默认 0.125）
+      grow_speed: 0.25                # 每随机刻增加的 age 值（默认为 0.125）
       light_requirement: 9            # 生长所需最低光照
-      max_light_requirement: 15       # 生长所需最高光照（默认 15）
+      max_light_requirement: 15       # 生长所需最高光照（默认为 15）
       spawn_light_requirement: 9      # 区块生成时的最低光照（默认等于 light_requirement）
       max_spawn_light_requirement: 15 # 区块生成时的最高光照（默认等于 max_light_requirement）
-      is_bone_meal_target: true       # 骨粉是否对此农作物生效（默认 true）
+      is_bone_meal_target: true       # 骨粉是否对此农作物生效（默认为 true）
       bone_meal_age_bonus:            # 骨粉增加的 age 值，支持范围
         type: uniform
         min: 1

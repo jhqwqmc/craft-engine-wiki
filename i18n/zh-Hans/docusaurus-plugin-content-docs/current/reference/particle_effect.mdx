@@ -18,14 +18,14 @@ particle: minecraft:end_rod  # 粒子类型; 字符串; 粒子 ID
 **可选：**
 
 ```yaml
-x: 0                         # 生成位置相对 X轴偏移; 数字; 默认 0
-y: 0                         # 生成位置相对 Y轴偏移; 数字; 默认 0
-z: 0                         # 生成位置相对 Z 轴偏移; 数字; 默认 0
-count: 5                     # 每次生成的粒子数量; 整数; 默认 1
-offset_x: 0.3                # X 方向随机扩散范围; 数字; 默认 0
-offset_y: 0.3                # Y 方向随机扩散范围; 数字; 默认 0
-offset_z: 0.3                # Z 方向随机扩散范围; 数字; 默认 0
-speed: 0                     # 粒子速度; 数字; 默认 0
+x: 0                         # 生成位置相对 X轴偏移; 数字; 默认为 0
+y: 0                         # 生成位置相对 Y轴偏移; 数字; 默认为 0
+z: 0                         # 生成位置相对 Z 轴偏移; 数字; 默认为 0
+count: 5                     # 每次生成的粒子数量; 整数; 默认为 1
+offset_x: 0.3                # X 方向随机扩散范围; 数字; 默认为 0
+offset_y: 0.3                # Y 方向随机扩散范围; 数字; 默认为 0
+offset_z: 0.3                # Z 方向随机扩散范围; 数字; 默认为 0
+speed: 0                     # 粒子速度; 数字; 默认为 0
 ```
 
 ## 特殊选项
@@ -64,7 +64,7 @@ color: 255,100,0  # 必需; RGB 颜色; 格式: R,G,B
 ```yaml
 particle: minecraft:dust
 color: 255,255,255  # 必需; RGB 颜色
-scale: 1.0          # 可选; 数字; 默认 1.0
+scale: 1.0          # 可选; 数字; 默认为 1.0
 ```
 
 ### 粉尘颜色过渡
@@ -75,7 +75,7 @@ scale: 1.0          # 可选; 数字; 默认 1.0
 particle: minecraft:dust_color_transition
 from: 255,255,255  # 必需; 起始颜色 RGB
 to: 0,0,0          # 必需; 结束颜色 RGB
-scale: 4.0         # 可选; 数字; 默认 1.0
+scale: 4.0         # 可选; 数字; 默认为 1.0
 ```
 
 ### 法术粒子
@@ -85,7 +85,7 @@ scale: 4.0         # 可选; 数字; 默认 1.0
 ```yaml
 particle: minecraft:spell
 color: 100,100,255  # 必需; RGB 颜色
-power: 1.5          # 可选; 数字; 默认 1.0
+power: 1.5          # 可选; 数字; 默认为 1.0
 ```
 
 ### 拖尾粒子
@@ -94,11 +94,11 @@ power: 1.5          # 可选; 数字; 默认 1.0
 
 ```yaml
 particle: minecraft:trail
-target_x: 0         # 可选; 数字; 默认 0
-target_y: 1         # 可选; 数字; 默认 0
-target_z: 0         # 可选; 数字; 默认 0
+target_x: 0         # 可选; 数字; 默认为 0
+target_y: 1         # 可选; 数字; 默认为 0
+target_z: 0         # 可选; 数字; 默认为 0
 color: 255,255,255  # 必需; RGB颜色
-duration: 10        # 可选; 数字; 默认 10
+duration: 10        # 可选; 数字; 默认为 10
 ```
 
 ### 振动粒子
@@ -107,10 +107,10 @@ duration: 10        # 可选; 数字; 默认 10
 
 ```yaml
 particle: minecraft:vibration
-target_x: 0         # 可选; 数字; 默认 0
-target_y: 1         # 可选; 数字; 默认 0
-target_z: 0         # 可选; 数字; 默认 0
-arrival_time: 10    # 可选; 数字; 默认 10
+target_x: 0         # 可选; 数字; 默认为 0
+target_y: 1         # 可选; 数字; 默认为 0
+target_z: 0         # 可选; 数字; 默认为 0
+arrival_time: 10    # 可选; 数字; 默认为 10
 ```
 
 ### 幽匿充能粒子

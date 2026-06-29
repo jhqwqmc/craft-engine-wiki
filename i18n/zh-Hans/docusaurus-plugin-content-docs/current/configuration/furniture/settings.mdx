@@ -5,32 +5,32 @@ id: settings
 
 ## 物品
 
-确定此家具对应的物品。通常用于创造模式中键拾取（1.21.4+）。（默认：自动设为家具 ID）
+决定此家具对应的物品是什么。通常用于使用鼠标中键点击来选取物品（1.21.4+）。
 
 ```yaml
-item: default:test_furniture
+item: default:test_furniture # 默认为家具ID
 ```
 
 ## 击打次数
 
-确定玩家需要击打多少次才能破坏此家具。（默认：0，即第一次击打即刻破坏）
+决定玩家需要击打多少次才能破坏此家具。
 
-如果玩家停止击打超过 2 秒，或切换到击打另一件家具，击打计数会重置。
+如果玩家停止击打超过 2 秒，或去击打其他家具，则击打计数会重置。
 
 ```yaml
-hit_times: 3
+hit_times: 3 # 默认为 0，即第一次击打即刻破坏
 ```
 
 ## 音效
 
-确定家具在各种情况下的音效（默认：无）
+决定家具在各种情况下的音效
 
 * break    当玩家破坏此家具时
 * place    当玩家放置此家具时
 * hit      当玩家击打此家具时
 
 ```yaml
-sounds:
+sounds: # 默认为 null
   break: minecraft:block.bamboo_wood.break
   place: minecraft:block.bamboo_wood.place
   hit: minecraft:block.bamboo_wood.hit
@@ -51,15 +51,15 @@ sounds:
 
 ## 冒险模式破坏
 
-是否允许冒险模式的玩家破坏家具。（默认：false）
+是否允许冒险模式的玩家破坏家具
 
 ```yaml
-adventure_mode_breaking: true
+adventure_mode_breaking: true # 默认为 false
 ```
 
 ## 合适挖掘工具
 
-确定高效破坏此家具所需的工具。（默认：无——任何工具或空手均可）
+从[代码](https://github.com/Xiao-MoMi/craft-engine/blob/23d2242ad1264cae5bea9c4033421236c6c11617/core/src/main/java/net/momirealms/craftengine/core/entity/furniture/setting/FurnitureSettings.java)来看未被使用（也就是无任何作用）
 
 以 `#` 开头的值是物品**标签**（如 `#minecraft:axes` 匹配任何斧头）。不带 `#` 的值是具体的**物品 ID**（如 `minecraft:diamond_pickaxe`）。
 
