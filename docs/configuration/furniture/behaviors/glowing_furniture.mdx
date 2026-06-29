@@ -3,6 +3,15 @@ title: 💡 Glowing Furniture
 id: glowing_furniture
 ---
 
+:::danger
+
+Unless you know exactly what you're doing, we do not recommend using this feature, as it is highly likely to leave light blocks lingering in the world.
+This can cause issues such as water flow being blocked, the light blocks being washed away by water, or the emitted light failing to prevent monster spawning because it might not be treated as a real server-side light-emitting.
+If you need glowing furniture, please consider [🫑 Block Entity Renderer](../../block/states/entity_renderer) instead of this feature.
+Additionally, if you are certain you do not need this feature, please disable `furniture.light-system.enable` in the plugin’s `config.yml` to conserve server resources.
+
+:::
+
 **Glowing Furniture** makes furniture emit light by placing `minecraft:light` blocks at configured positions relative to the furniture origin. The light blocks appear on placement, move with the furniture, and vanish on break.
 
 :::danger
