@@ -311,13 +311,12 @@ seats:
 
 ### Happy Ghast
 
-A large hitbox (4×4 blocks at scale=1). When `hard_collision` is true, entities cannot walk through it.
+A large hitbox (4×4 blocks at scale=1). Entities and players cannot walk through it.
 
 ```yaml
 type: happy_ghast
 position: 1,0,0
 scale: 0.25                       # size multiplier (default: 1)
-hard_collision: true              # whether it blocks entity movement
 blocks_building: true             # (default: true)
 can_use_item_on: true             # (default: true)
 can_be_hit_by_projectile: true    # (default: true)

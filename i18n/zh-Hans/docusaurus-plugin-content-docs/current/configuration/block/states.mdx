@@ -217,8 +217,8 @@ transparent: true
 | `textures`、`texture` | 列表或字符串 | 简化纹理配置，根据数量自动推断模型结构（与 `generation` 冲突）。两个键名效果相同，单张纹理可用字符串简写      |
 | `generation`         | 配置部分   | 自动生成模型，需指定 `parent` 和 `textures`（与 `textures` 列表冲突）              |
 | `x`、`y`、`z`          | 整数     | 绕轴旋转角度，必须为 90 的倍数（`z` 需要 1.21.11+）                               |
-| `uvlock`             | 布尔     | 是否锁定纹理方向，默认 `false`                                              |
-| `weight`             | 整数     | 仅在 `models` 列表中使用，被选用的权重，默认 `1`                                  |
+| `uvlock`             | 布尔     | 是否锁定纹理方向，默认为 `false`                                             |
+| `weight`             | 整数     | 仅在 `models` 列表中使用，被选用的权重，默认为 `1`                                 |
 
 **`textures` 的自动推断规则：**
 

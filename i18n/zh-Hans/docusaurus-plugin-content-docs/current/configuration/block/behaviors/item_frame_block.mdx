@@ -24,11 +24,11 @@ blocks:
   default:item_frame_block:
     behavior:
       type: item_frame_block
-      position: 0,0,0                    # 展示物品的位置偏移（默认 0,0,0）
+      position: 0,0,0                    # 展示物品的位置偏移（默认为 0,0,0）
       glow: false                        # 是否发光
       invisible: false                   # 是否隐藏展示框边框
-      render_map_item: true              # 是否启用静态地图渲染（默认 true，有少量性能开销）
-      data_key: "craftengine:item_frame" # 持久化数据的 NBT 键（默认 "craftengine:item_frame"）
+      render_map_item: true              # 是否启用静态地图渲染（默认为 true，有少量性能开销）
+      data_key: "craftengine:item_frame" # 持久化数据的 NBT 键（默认为 "craftengine:item_frame"）
       sounds:
         put: entity.item_frame.add_item        # 放入时播放的音效（可选）
         take: entity.item_frame.remove_item    # 取出时播放的音效（可选）

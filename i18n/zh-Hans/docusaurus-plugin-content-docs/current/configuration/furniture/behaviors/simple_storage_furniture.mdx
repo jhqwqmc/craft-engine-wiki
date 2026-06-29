@@ -3,7 +3,7 @@ title: 📦 简单存储家具
 id: simple_storage_furniture
 ---
 
-**简单存储家具**为家具添加一个类箱子的物品栏。右键打开 GUI，玩家可以在其中放入和取出物品。
+**简单存储家具**为家具添加一个类似箱子的功能。右键打开容器，玩家可以放入或者取出物品。
 
 ## 示例
 
@@ -12,10 +12,10 @@ furniture:
   default:storage_core:
     behavior:
       type: simple_storage_furniture
-      title: "<dark_gray>Storage Core"      # GUI 标题，支持 MiniMessage 格式（默认 "<lang:container.chest>"）
-      rows: 3                              # 行数，1~6（默认 1）
-      data_key: "craftengine:simple_storage_contents"  # 持久化数据的 NBT 键（左侧为默认值）
+      title: "<dark_gray>Storage Core"                 # 容器标题，支持 MiniMessage 格式（默认为 "<lang:container.chest>"）
+      rows: 3                                          # 行数，1~6（默认为 1）
+      data_key: "craftengine:simple_storage_contents"  # 持久化数据的 NBT 键（默认为 "craftengine:simple_storage_contents"）
       sounds:
-        open: minecraft:block.iron_trapdoor.open    # 打开 GUI 时播放的音效（可选）
-        close: minecraft:block.iron_trapdoor.close   # 关闭 GUI 时播放的音效（可选）
+        open: minecraft:block.iron_trapdoor.open       # 容器打开时播放的音效（可选）
+        close: minecraft:block.iron_trapdoor.close     # 容器关闭时播放的音效（可选）
 ```

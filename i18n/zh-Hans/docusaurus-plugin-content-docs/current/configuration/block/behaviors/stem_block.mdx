@@ -7,7 +7,7 @@ id: stem_block
 
 骨粉可使茎额外生长多个 `age` 阶段，若达到最大值，则会立即尝试生成果实。
 
-仅当当前位置光照等级位于 `light_requirement`（下限，默认 0）与 `max_light_requirement`（上限，默认 15）之间时才会生长。
+仅当当前位置光照等级位于 `light_requirement`（下限，默认为 0）与 `max_light_requirement`（上限，默认为 15）之间时才会生长。
 
 | 属性名称 | 属性类型 | 是否必需 |
 |------|------|------|
@@ -22,8 +22,8 @@ blocks:
       type: stem_block
       fruit: default:hami_melon                              # 茎生成的果实方块（必需）
       attached_stem: default:attached_hami_melon_stem        # 变为的附着茎方块（必需）
-      light_requirement: 0                                   # 生长所需最低光照等级（默认 0）
-      max_light_requirement: 15                              # 生长所需最高光照等级（默认 15）
+      light_requirement: 0                                   # 生长所需最低光照等级（默认为 0）
+      max_light_requirement: 15                              # 生长所需最高光照等级（默认为 15）
       fruit_bottom_blocks:                                   # 果实可坐落的方块（白名单）
         - minecraft:farmland
         - minecraft:dirt

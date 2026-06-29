@@ -3,54 +3,52 @@ title: 🕹️ 家具行为
 id: behaviors
 ---
 
-import UrlCard from '@site/src/components/UrlCard';
-
 ## 简介
 
-行为赋予家具**实际功能**——打开储物界面、展示物品、发光。没有行为时，家具只具备基础的放置、坐下和破坏。
+行为让家具拥有**真正的用途**——可以打开存储界面、展示物品、发光。如果没有任何行为，家具只具备放置、破坏和乘坐等基础功能。
 
-行为是模块化的。可以只挂一个，也可以在同一件家具上组合多个。它们自动跟随家具的生命周期——无需额外配置。
+每个行为之间是独立的。可以单独使用一个，也可以将多个行为组合在同一家具上。它们会在家具存在期间自动运行，不需要任何额外的手动配置。
 
-## 挂载一个行为
+## 指定行为
 
-在家具的 `behavior` 或 `behaviors` 字段下挂载行为：
+通过家具的 `behavior` 或 `behaviors` 选项来指定行为：
 
 ```yaml
 furniture:
   default:my_furniture:
     behavior:
       type: simple_storage_furniture
-      title: "My Chest"                   # GUI 标题，支持 MiniMessage（默认 "<lang:container.chest>"）
-      rows: 3                             # 行数，1~6（默认 1）
+      title: "我的箱子"                   # 容器标题，支持 MiniMessage（默认为 "<lang:container.chest>"）
+      rows: 3                            # 行数，1~6（默认为 1）
       sounds:
         open: minecraft:block.iron_trapdoor.open
         close: minecraft:block.iron_trapdoor.close
 ```
 
-## 组合行为
+## 复合行为
 
-要给一件家具多个行为，用 `behaviors` 列表。下面这个例子将存储和发光组合在一件家具上：
+在 `behavior` 或 `behaviors` 下列出多个行为，即可将它们组合成一个复合家具行为。下面的例子中将[存储](./behaviors/simple_storage_furniture)和[发光](./behaviors/glowing_furniture)组合在一个家具上：
 
 ```yaml
 furniture:
   default:lit_cabinet:
     behaviors:
       - type: simple_storage_furniture
-        title: "Cabinet"
+        title: "灯柜"
         rows: 2
         sounds:
           open: minecraft:block.barrel.open
           close: minecraft:block.barrel.close
       - type: glowing_furniture
         lights:
-          - 0,0.5,0 15                      # 简写: "x,y,z level"
+          - 0,0.5,0 15                      # 简写: "x,y,z 光照等级"
 ```
 
 :::warning
 
-**组合行为——注意事项：**
+**组合多个行为时，请注意：**
 
-- 如果家具在变体之间切换，每个行为独立应用自己的逐变体配置。
-- 并非所有行为组合都经过测试。如果遇到不符合预期的情况，请寻求支持。
+- 当家具在不同变体之间切换时，某些行为可以独立处理不同的变体的不同配置。
+- 某些行为组合后可能出现非预期表现。如果遇到异常情况，请联系技术支持，我们会协助排查并尽可能解决问题。
 
 :::

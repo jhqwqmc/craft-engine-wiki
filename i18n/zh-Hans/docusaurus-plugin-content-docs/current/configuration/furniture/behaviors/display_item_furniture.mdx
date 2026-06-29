@@ -1,9 +1,9 @@
 ---
-title: 📷 展示物品家具
+title: 📷 物品展示家具
 id: display_item_furniture
 ---
 
-**展示物品家具**允许玩家右键将物品放入或取出展示在家具上。每个变体可以定义自己的展示位置，多个行为可以组合实现多槽位展示。
+**物品展示家具**允许玩家右键家具将物品放入展示或取回手上。每个变体可以定义自己的展示位置，多个行为可以组合实现多槽位展示。
 
 ## 示例
 
@@ -12,16 +12,16 @@ furniture:
   default:showcase:
     behavior:
       type: display_item_furniture
-      data_key: "craftengine:display_item"   # 持久化数据的 NBT 键（左侧为默认值）
+      data_key: "craftengine:display_item"              # 持久化数据的 NBT 键（默认为 "craftengine:display_item"）
       sounds:
         put: minecraft:block.decorated_pot.insert       # 放入物品时的音效（可选）
         take: minecraft:block.decorated_pot.insert_fail # 取出物品时的音效（可选）
       variants:
         ground:
-          item_position: 0,0.07,0                       # 展示物品出现的位置
+          item_position: 0,0.07,0                       # 物品展示实体出现的位置
 ```
 
-## 多展示槽位
+## 多槽位展示
 
 要在一件家具上创建多个独立的展示槽位，添加多个 `display_item_furniture` 行为，每个使用自己的 `data_key`：
 
@@ -61,6 +61,6 @@ furniture:
                 interactive: true
 ```
 
-每个槽位是一个独立的行为实例——`data_key` 保证存储互不干扰，每个都有独立的展示位置和交互碰撞箱。
+每个槽位是一个独立的家具行为，通过配置 `data_key` 确保存储互不干扰，每个槽位都有独立的展示位置和判定箱。
 
-![展示物品家具](/img/display_item_furniture.png)
+![物品展示家具](/img/display_item_furniture.png)

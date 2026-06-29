@@ -29,16 +29,16 @@ blocks:
   default:drawer_block:
     behavior:
       type: drawer_block
-      max_stacks: 20                    # 抽屉最多可容纳的物品组数（默认 32）
-      has_signal: true                  # 是否允许比较器根据容器填充比例输出对应信号（默认 true）
-      allow_input: true                 # 是否允许漏斗放入物品（默认 true）
-      allow_output: true                # 是否允许漏斗取出物品（默认 true）
-      item_position: 0,0,-0.52          # 展示物品的位置偏移（默认 0.5,0.5,0.5）
-      text_position: 0,-0.4,-0.52       # 数量文本的位置偏移（默认 0.5,0.5,0.5）
-      item_scale: 0.6,0.6,0.6           # 展示物品的缩放（默认 0.5,0.5,0.5）
-      text_scale: 0.5,0.5,0.5           # 数量文本的缩放（默认 0.5,0.5,0.5）
-      data_key: "craftengine:drawer"    # 持久化抽屉数据的 NBT 键（默认 "craftengine:drawer"）
-      compatible_mode: false            # 与其他存储插件的兼容模式（默认 false）
+      max_stacks: 20                    # 抽屉最多可容纳的物品组数（默认为 32）
+      has_signal: true                  # 是否允许比较器根据容器填充比例输出对应信号（默认为 true）
+      allow_input: true                 # 是否允许漏斗放入物品（默认为 true）
+      allow_output: true                # 是否允许漏斗取出物品（默认为 true）
+      item_position: 0,0,-0.52          # 展示物品的位置偏移（默认为 0.5,0.5,0.5）
+      text_position: 0,-0.4,-0.52       # 数量文本的位置偏移（默认为 0.5,0.5,0.5）
+      item_scale: 0.6,0.6,0.6           # 展示物品的缩放（默认为 0.5,0.5,0.5）
+      text_scale: 0.5,0.5,0.5           # 数量文本的缩放（默认为 0.5,0.5,0.5）
+      data_key: "craftengine:drawer"    # 持久化抽屉数据的 NBT 键（默认为 "craftengine:drawer"）
+      compatible_mode: false            # 与其他存储插件的兼容模式（默认为 false）
       sounds:
         put: minecraft:block.decorated_pot.insert       # 放入物品的音效（可选）
         take: minecraft:block.decorated_pot.insert_fail  # 取出物品的音效（可选）
