@@ -5,91 +5,92 @@ id: image
 
 import PluginFileTree from '@site/src/components/PluginFileTree';
 
-## Introduction
+## Quick Start
 
-At its core, the **image display** is a character substitution system. The game renders textures by mapping Unicode characters to image files via its font system. Minecraft itself uses multiple font sets, where the same character can have different visual styles across different fonts. This is the foundation for our custom image designs.
+The image system turns PNG files into characters you can use anywhere in text. Here's the shortest possible path from zero to seeing an image in-game:
 
-The file tree structure below shows the location of custom font files. You don’t need to create these manually—this demonstration is solely to help you understand how vanilla fonts work.
+**Step 1** — Create an image config in any pack under `configuration/`:
 
-<PluginFileTree
-  title="assets"
-  initialTreeData={[
-    {
-      id: "assets",
-      name: "assets",
-      children: [
-        {
-          id: "namespace",
-          name: "namespace",
-          children: [
-            {
-              id: "font",
-              name: "font",
-              children: [
-                  {
-                    id: "font_name.json",
-                    name: "font_name.json"
-                  },
-              ]
-            },
-          ]
-        },
-      ]
-    },
-  ]}
-/>
-
-```
-assets/[namespace]/font/[font_name].json
+```yaml
+images:
+  my_pack:star:
+    height: 10
+    ascent: 9
+    font: my_pack:ui
+    file: my_pack:font/ui/star.png
 ```
 
-:::tip
+**Step 2** — Use it in an item name:
 
-Rich text component parsers like MiniMessage and Minedown all support the use of custom fonts.
+```yaml
+items:
+  my_pack:star_sword:
+    material: diamond_sword
+    data:
+      item_name: "<!i><white><image:my_pack:star> Star Sword"
+```
 
-MiniMessage: `<font:namespace:font_name>Text</font>`\
-MineDown: `[Text](font=namespace:font_name)`
-:::
+That's it. The `<image:namespace:id>` tag inserts the image character bound to your font.
 
-:::info
-**Q:** Will the characters in my country be affected? 
-Can my players illegally use these images through chat, anvils, or other means?
+---
 
-**A:** Certainly not, unless you use Minecraft's default font(`minecraft:default`). Please avoid using that font unless you have to.
-:::
+The rest of this page explains each piece in depth: how to configure images, how to use them in different contexts, and how to combine them into complex UIs.
 
-## Single Character Bitmap
+## Image Configuration
+
+### Basic Fields
+
+An image entry lives under `images:` in any pack config. Each image has a unique ID in `namespace:id` form.
 
 ```yaml
 images:
   internal:item_browser:
-    height: 140
-    ascent: 18
+    height: 140        # Height of each glyph in pixels. Aliases: scale, scale_ratio
+    ascent: 18         # Vertical offset from the text baseline. Alias: y_position
     font: minecraft:internal
     file: minecraft:font/gui/custom/item_browser.png
-    char: '\ub000' # This is optional. If not set, the plugin will automatically assign one for you.
+    char: '\ub000'     # Optional. Aliases: chars, unicode
 ```
 
+| Field | Required | Description |
+|-------|----------|-------------|
+| `file` | **Yes** | Path to the PNG. `.png` extension is auto-appended if missing. |
+| `height` | Auto-detected | Glyph height in pixels. If omitted, the plugin reads the PNG height. |
+| `ascent` | Defaults to `height - 1` | Baseline offset. Increasing this moves the image upward on screen. |
+| `font` | Defaults to `namespace:default` | Which font this image belongs to. |
+| `char` | Auto-assigned | The codepoint mapped to this image. |
+
 :::caution
-The `height` value must always be greater than or equal to the `ascent` value. This is a strict requirement enforced by Minecraft.
+- `height` must be **≥** `ascent`. This is enforced by Minecraft.
+- A single glyph must not exceed **256×256** pixels. This applies to each cell, not the whole PNG.
 :::
 
-:::tip
-For the char option, you can also directly assign a character, for example:
+### Character Assignment
+
+If you omit `char`, the plugin picks a free codepoint for you. This is the **recommended** approach — no risk of conflicts.
+
+If you need a specific character:
 
 ```yaml
+# Fixed codepoint
+char: '\ub000'
+
+# Numeric value
+char: 1000
+
+# Direct character
 char: '我'
 ```
 
-Alternatively, you can assign a numeric ID for easier index management, for example:
+### Vertical Positioning
 
-```yaml
-char: 1000
-```
+The `ascent` field controls where the glyph sits relative to the text baseline. A higher `ascent` moves the image upward.
 
-:::
+If you need the image to sit higher than `height` allows (remember `ascent ≤ height`), add transparent pixels to the **bottom** of the PNG — this increases `height` and gives you room for a larger `ascent`.
 
-## Multiple Characters Bitmap
+## Sprite Sheets
+
+When a single PNG contains multiple icons in a grid, use `chars` to define each row:
 
 ```yaml
 images:
@@ -99,13 +100,15 @@ images:
     font: minecraft:icons
     file: minecraft:font/image/icons.png
     chars:
-     - '\ub000\ub001\ub002'
-     - '\ub003\ub004\ub005'
+     - '\ub000\ub001\ub002'   # Row 0
+     - '\ub003\ub004\ub005'   # Row 1
 ```
 
-:::tip
+Each string is one row; characters within a row map left-to-right. All rows must have the same length.
 
-You can also use the `grid_size` option to let the plugin automatically arrange the corresponding number of characters for you, without needing to manually specify `chars`.
+### Auto-Arrangement with grid_size
+
+Let the plugin handle character allocation for you:
 
 ```yaml
 images:
@@ -114,57 +117,164 @@ images:
     ascent: 9
     font: minecraft:icons
     file: minecraft:font/image/icons.png
-    grid_size: 2,3 # row,column
+    grid_size: 2,3   # 2 rows × 3 columns → 6 cells
 ```
 
-:::
+## Referencing Individual Cells
 
-## Reference
-
-"Referencing" allows you to assign an alias to a specific image within a multi-character sprite sheet.
+Give a meaningful name to a specific cell from a sprite sheet:
 
 ```yaml
 images:
+  # Short form
   default:angry:
     ref: default:emojis:0:1
+
+  # Long form
+  default:sad:
+    ref: default:emojis
+    row: 0
+    column: 2
+```
+
+A reference has no `file`, `height`, or `font` of its own — it points to an existing bitmap cell.
+
+## Using Images
+
+### MiniMessage Tag
+
+Available in item names, lore, messages, GUIs — anywhere MiniMessage is parsed:
+
+```
+<image:namespace:id>
+<image:namespace:id:row>
+<image:namespace:id:row:column>
+<image:namespace:id:row:column:format>
 ```
 
 ```yaml
-images:
-  default:angry:
-    ref: default:emojis
-    row: 0
-    column: 1
+# First cell
+item_name: "<!i><white><image:default:icons> Topaz Rod"
+
+# Specific cell
+item_name: "<!i><white><image:default:icons:0:1> Topaz Rod"
+
+# Apply formatting to the glyph itself
+item_name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> Topaz Rod"
 ```
 
-## Preview the Image In Game
+The optional `format` argument prepends MiniMessage styling to the image character — useful for removing shadows or adjusting color.
 
-You can use a very simple command `/ce debug image [id]` to preview the effect of the image.
+### Previewing
 
-## Compatibility with Other Plugins
+```
+/ce debug image <namespace:id> [row] [column]
+```
 
-There are two ways to use images in other plugins:
+The command outputs clickable copy buttons:
+- **MiniMessage**: `<font:namespace:font_name>char</font>`
+- **MineDown**: `[char](font=namespace:font_name)`
+- **RAW JSON**: `{"text":"char","font":"namespace:font_name"}`
 
-1. Use a plugin that supports both **MiniMessage/MineDown** and **PlaceholderAPI**. In this case, you just need to use the corresponding placeholder. Please refer to [**this page**](../compatibility/placeholderapi.mdx) to see how to use placeholders.
-2. Use a tag in the format of `<image:namespace:id>` `<image:namespace:id:row:column>` `<shift:-20>` just like what we do in [✏️ Text Format](../reference/text_format.mdx). CraftEngine will replace these tags with characters of the corresponding font at the **packet level**.
+### Packet-Level Tags
 
-:::info
-You can find the following configuration in config.yml, which controls the scope in which these tags are effective.
+For plugins that don't support MiniMessage, CraftEngine can intercept and replace `<image:namespace:id>` tags at the network level. See the [Compatibility](#compatibility) section below and enable the relevant interceptors in `config.yml` → `network.intercept-packets`.
+
+## Building UIs with Image & Shift
+
+`<shift>` and `<image>` are the building blocks for custom in-game interfaces. `<shift:N>` inserts a character whose glyph width displaces subsequent text by `N` pixels (negative = left, positive = right).
+
+Chain them together to compose layouts:
+
+```yaml
+title: "<white><shift:-11><image:internal:cooking_recipe><shift:-136><image:internal:blasting>"
+```
+
+1. `<shift:-11>` — center the layout
+2. `<image:internal:cooking_recipe>` — first icon
+3. `<shift:-136>` — move back to position the second icon
+4. `<image:internal:blasting>` — second icon beside the first
+
+Under the hood, each shift value is a pre-configured image with carefully tuned `height`/`ascent` to produce the exact pixel displacement:
+
+```yaml
+# config.yml
+image:
+  offset-characters:
+    enable: true
+    font: minecraft:default
+    -1: ''
+    1: ''
+    # ... ranging from -256 to +256
+```
+
+:::warning
+Do not modify `offset-characters` unless you understand Minecraft's glyph metrics. Wrong values corrupt text layout.
+:::
+
+## Configuration Reference
+
+The `image` section in `config.yml`:
 
 ```yaml
 image:
-  # By intercepting packets, you are allowed to use <image:...> <shift:...> in other plugins
-  intercept-packets:
-    system-chat: true
-    tab-list: true
-    actionbar: true
-    ... more options
+  # Block players from typing raw codepoint characters directly
+  illegal-characters-filter:
+    anvil: true
+    book: true
+    chat: true
+    command: true
+    sign: true
+
+  # Starting codepoint for auto-assignment, per font
+  codepoint-starting-value:
+    default: 19968
+    overrides:
+      minecraft:default: 57344
 ```
+
+:::info
+
+**Which font should I use?** Custom fonts (anything other than `minecraft:default`) are inherently safe — players can only type characters in `minecraft:default`, so they cannot directly input glyphs from your custom fonts.
+
+Only use `minecraft:default` when required (e.g., vanilla language files). In that case, keep `illegal-characters-filter` enabled.
 :::
 
-## Using in Language Files
+## Compatibility
 
-Sometimes we create images to replace parts of the titles of vanilla containers, but the vanilla language file does not support custom fonts. In such cases, you need to set the font of the image to `minecraft:default`, otherwise it will not work.
+### PlaceholderAPI
+
+```
+%image_mm_namespace:id[:row:column]%   # MiniMessage
+%image_md_namespace:id[:row:column]%   # MineDown
+%image_raw_namespace:id[:row:column]%  # Raw character
+```
+
+See the [PlaceholderAPI page](../compatibility/placeholderapi.mdx) for the full list.
+
+### Packet Interception
+
+For plugins without MiniMessage support, CraftEngine can intercept and replace tags at the network level. Enable the channels you need:
+
+```yaml
+network:
+  intercept-packets:
+    system-chat: true
+    actionbar: true
+    title: true
+    bossbar: true
+    container: true
+    item: true
+    # ... and more
+```
+
+:::tip
+Each interceptor adds work to the Netty thread. Disable any you don't need to optimize Netty performance.
+:::
+
+## Vanilla Language Files
+
+Vanilla language files (`assets/minecraft/lang/*.json`) always render with `minecraft:default`, so images used in them must use that font:
 
 ```yaml
 images:
@@ -173,4 +283,10 @@ images:
     ascent: 18
     font: minecraft:default
     file: minecraft:font/gui/custom/gui.png
+```
+
+```yaml
+langs:
+  en_us:
+    container.custom_furnace: "<image:test:custom_ui>"
 ```
