@@ -1,0 +1,121 @@
+---
+title: 🌍 Translations
+id: translations
+---
+
+CraftEngine has three translation systems for different use cases. They fall into two groups based on where the translation happens:
+
+| System | Tag | Where | Locale | Best for |
+|--------|-----|-------|--------|----------|
+| **i18n** | `<i18n:key>` | Server | Server config | Console logs |
+| **l10n** | `<l10n:key>` | Server | Per-player client setting | Messages, items, GUIs — anything players see |
+| **lang** | `<lang:key>` | Client (resource pack) | Player's Minecraft language | Messages, items, GUIs — anything players see |
+
+---
+
+## i18n & l10n — Server-Side Translations
+
+i18n and l10n share the **same data source** — the `translations` config section. The only difference is which language they use to look up the translation:
+
+- **i18n** uses the **server's** language (set via `forced-locale` in `config.yml`, or the JVM default)
+- **l10n** uses each **player's** client language setting
+
+### Configuration
+
+Translations are configured under the `translations` section:
+
+```yaml
+translations:
+  en:
+    item.chinese_lantern: "Chinese Lantern"
+    item.fairy_flower: "Fairy Flower"
+    item.bench: "Bench"
+  zh_cn:
+    item.chinese_lantern: "灯笼"
+    item.fairy_flower: "仙灵花"
+    item.bench: "长椅"
+```
+
+The locale key follows standard format: `en`, `zh_cn`, `ko_kr`, `fr_fr`, etc. Country/region is optional — if no exact match exists, the plugin falls back to the language-only variant (`zh_cn` → `zh`), then to `en`.
+
+### Usage
+
+```yaml
+# i18n — everyone sees the same language (server's locale)
+item_name: "<i18n:item.chinese_lantern>"
+
+# l10n — each player sees their own language
+item_name: "<l10n:item.chinese_lantern>"
+```
+
+**Key difference in behavior:** `<i18n>` resolves immediately on the server — the translated text is baked into the item. `<l10n>` keeps the raw tag in the item and resolves it when the packet is sent to each player, so different players see different languages.
+
+:::tip
+
+You can use `<l10n>` in messages and items from other plugins at the packet level. CraftEngine intercepts `<l10n:key>` tags and replaces them per-player.
+
+:::
+
+---
+
+## lang — Client-Side Resource Pack Translations
+
+The `lang` system writes translations directly into the resource pack (`assets/minecraft/lang/*.json`). Minecraft's client renders them natively — no server involvement at display time.
+
+### Configuration
+
+```yaml
+lang:
+  en_us:
+    item.custom.palm_leaves: Palm Leaves
+    item.custom.palm_log: Palm Log
+  zh_cn:
+    item.custom.palm_leaves: 棕榈树叶
+    item.custom.palm_log: 棕榈原木
+```
+
+The locale format here is stricter than `translations` — it must match Minecraft's resource pack convention (`en_us`, `zh_cn`, `ko_kr`, not `en`, `zh`).
+
+### Usage
+
+```yaml
+items:
+  custom:translate:
+    material: paper
+    data:
+      item_name: "<lang:item.custom.palm_log>"
+```
+
+The `<lang:key>` tag produces a `TranslatableComponent` — the client picks the translation based on the player's Minecraft language setting.
+
+### Block Names
+
+Use the `block_name:` prefix to automatically generate correct translation keys for custom blocks:
+
+```yaml
+lang:
+  en_us:
+    block_name:default:chinese_lantern: Chinese Lantern
+    block_name:default:netherite_anvil: Netherite Anvil
+  zh_cn:
+    block_name:default:chinese_lantern: 灯笼
+    block_name:default:netherite_anvil: 下界合金砧
+```
+
+The plugin converts `block_name:default:chinese_lantern` to the real block translation key (e.g., `block.craftengine.custom_13`), ensuring compatibility with CraftEngine Mod and server-side block translation plugins.
+
+### Overwriting All Languages
+
+Use `all` to apply a translation to every language:
+
+```yaml
+lang:
+  all:
+    container.inventory: ""
+```
+
+### Important Notes
+
+- `en_us` is Minecraft's fallback language. Always configure it when creating new keys.
+- Any content change requires a resource pack reload to take effect.
+- If you don't need the translation embedded in the resource pack, use `l10n` instead — it's more flexible and doesn't require a resource pack reload.

@@ -648,13 +648,8 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: "configuration/i18n",
-          label: '🌍 国际化/本地化',
-        },
-        {
-          type: 'doc',
-          id: "configuration/lang",
-          label: '🌍 语言',
+          id: "configuration/translations",
+          label: '🌍 翻译',
         },
         {
           type: 'doc',

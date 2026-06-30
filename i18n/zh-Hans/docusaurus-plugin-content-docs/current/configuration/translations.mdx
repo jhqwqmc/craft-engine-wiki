@@ -1,0 +1,121 @@
+---
+title: 🌍 翻译
+id: translations
+---
+
+CraftEngine 有三套翻译系统，适用于不同场景。根据翻译发生的位置，它们分为两类：
+
+| 系统 | 标签 | 翻译位置 | 语言来源 | 最佳场景 |
+|--------|-----|-------|--------|----------|
+| **i18n** | `<i18n:key>` | 服务端 | 服务器配置 | 后台日志 |
+| **l10n** | `<l10n:key>` | 服务端 | 各玩家客户端语言 | 消息、物品、GUI — 一切玩家看到的东西 |
+| **lang** | `<lang:key>` | 客户端（资源包） | 玩家的 Minecraft 语言设置 | 消息、物品、GUI — 一切玩家看到的东西 |
+
+---
+
+## i18n 与 l10n — 服务端翻译
+
+i18n 和 l10n 共享**同一套数据源** — `translations` 配置节点。唯一的区别在于查翻译时用哪个语言：
+
+- **i18n** 使用**服务器**的语言（由 `config.yml` 中的 `forced-locale` 决定，或跟随 JVM 默认语言）
+- **l10n** 使用每个**玩家**的客户端语言设置
+
+### 配置
+
+翻译写在 `translations` 节点下：
+
+```yaml
+translations:
+  en:
+    item.chinese_lantern: "Chinese Lantern"
+    item.fairy_flower: "Fairy Flower"
+    item.bench: "Bench"
+  zh_cn:
+    item.chinese_lantern: "灯笼"
+    item.fairy_flower: "仙灵花"
+    item.bench: "长椅"
+```
+
+语言键遵循标准格式：`en`、`zh_cn`、`ko_kr`、`fr_fr` 等。国家/地区是可选的——如果找不到精确匹配，插件会回退到仅语言变体（`zh_cn` → `zh`），最后回退到 `en`。
+
+### 使用
+
+```yaml
+# i18n — 所有玩家看到同一种语言（服务器的语言）
+item_name: "<i18n:item.chinese_lantern>"
+
+# l10n — 每个玩家看到自己的语言
+item_name: "<l10n:item.chinese_lantern>"
+```
+
+**行为上的关键区别：** `<i18n>` 在服务端立即解析——翻译后的文本直接写入物品。`<l10n>` 保留原始标签，在向每个玩家发包时才解析，因此不同玩家能同时看到不同语言。
+
+:::tip
+
+你可以在其他插件的消息和物品中使用 `<l10n>` 标签，CraftEngine 会在包层面拦截并逐玩家替换。
+
+:::
+
+---
+
+## lang — 客户端资源包翻译
+
+`lang` 系统将翻译直接写入资源包（`assets/minecraft/lang/*.json`），由 Minecraft 客户端原生渲染——显示时无需服务端参与。
+
+### 配置
+
+```yaml
+lang:
+  en_us:
+    item.custom.palm_leaves: Palm Leaves
+    item.custom.palm_log: Palm Log
+  zh_cn:
+    item.custom.palm_leaves: 棕榈树叶
+    item.custom.palm_log: 棕榈原木
+```
+
+这里的语言格式比 `translations` 更严格——必须匹配 Minecraft 资源包规范（`en_us`、`zh_cn`、`ko_kr`，不能写 `en`、`zh`）。
+
+### 使用
+
+```yaml
+items:
+  custom:translate:
+    material: paper
+    data:
+      item_name: "<lang:item.custom.palm_log>"
+```
+
+`<lang:key>` 标签生成 `TranslatableComponent`——客户端根据玩家的 Minecraft 语言设置选择翻译。
+
+### 方块名称
+
+使用 `block_name:` 前缀自动为自定义方块生成正确的翻译键：
+
+```yaml
+lang:
+  en_us:
+    block_name:default:chinese_lantern: Chinese Lantern
+    block_name:default:netherite_anvil: Netherite Anvil
+  zh_cn:
+    block_name:default:chinese_lantern: 灯笼
+    block_name:default:netherite_anvil: 下界合金砧
+```
+
+插件会将 `block_name:default:chinese_lantern` 转换为真实的方块翻译键（如 `block.craftengine.custom_13`），确保与 CraftEngine Mod 和服务端方块翻译插件兼容。
+
+### 覆盖所有语言
+
+使用 `all` 将翻译应用到每一种语言：
+
+```yaml
+lang:
+  all:
+    container.inventory: ""
+```
+
+### 注意事项
+
+- `en_us` 是 Minecraft 的默认回退语言。创建新的翻译键时务必配置它。
+- 任何内容修改都需要**重新加载资源包**才能生效。
+- 如果不需要把翻译嵌入资源包，用 `l10n` 更灵活，且无需重载资源包。
