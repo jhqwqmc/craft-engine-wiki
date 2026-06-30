@@ -5,153 +5,182 @@ id: emoji
 
 :::caution
 
-Emoji creation requires existing image configurations. Please consult the [🖼️ Image](./image.mdx) page if you're unfamiliar with this process.
-
+Emoji depends on image configurations. Make sure you understand [🖼️ Image](./image.mdx) first.
 :::
 
-Creating emojis is incredibly simple—you just need to fill in a few easy-to-understand parameters. However, unlike other plugins, CraftEngine grants you greater customization freedom, especially when it comes to the feedback content of emojis. You can use custom text styles, variables, mathematical operations, and more.
+## Quick Start
 
-Here's a basic emoji configuration example:
+An emoji is a keyword that gets replaced with an image + text when a player types it. Here's the minimum setup:
+
+**Step 1** — Create the underlying image (a sprite sheet works best):
+
+```yaml
+images:
+  default:emojis:
+    height: 11
+    ascent: 9
+    font: minecraft:default
+    file: minecraft:font/image/emojis.png
+    grid_size: 4,4
+```
+
+**Step 2** — Define an emoji that points to a cell in that sprite sheet:
+
+```yaml
+emoji:
+  default:smiley:
+    image: default:emojis:0:0
+    content: "<!shadow><white><arg:emoji></white></!shadow>"
+    keywords:
+      - ':smiley:'
+      - ':)'
+```
+
+Now when a player types `:)` in chat, it gets replaced with the emoji image followed by the content.
+
+---
+
+The rest of this page covers content customization, context-specific overrides, templates, and compatibility.
+
+## Emoji Configuration
+
+An emoji entry lives under `emoji:` in any pack config. Each emoji has a unique ID in `namespace:id` form.
 
 ```yaml
 emoji:
   default:time:
-    permission: emoji.time
+    image: default:icons:0:0
     content: "<white><arg:emoji></white>"
-    image: "default:icons:0:0"
     keywords:
-      - ":time:"
+      - ':time:'
+    permission: emoji.vip           # Optional. Permission required to use
+    chat_completion: true           # Optional. Show in tab-completion (default: true)
 ```
 
-:::tip
+| Field | Required | Description |
+|-------|----------|-------------|
+| `keywords` | **Yes** | One or more trigger strings. When a player types one, it gets replaced. |
+| `content` | **Yes** | The MiniMessage text that replaces the keyword. |
+| `image` | No | A reference to an image cell in `namespace:id:row:column` format. If your image has a single cell, `namespace:id` is enough. |
+| `permission` | No | Permission node required to use this emoji. |
+| `chat_completion` | No | Whether the keywords appear in client-side tab completion. Defaults to `true`. |
 
-`<arg:emoji>` is a context-specific parameter used to return the image representation of the corresponding emoji. \
-`<arg:keyword>` will return the first available keyword
+## Content Formatting
 
-:::
+### The arg:emoji and arg:keyword Parameters
 
-In the following example, players can retrieve their current coordinates by typing `:pos:`. While CraftEngine offers extreme customization for emoji content (especially with MiniMessage), this flexibility also makes it more complex to learn—particularly for users unfamiliar with advanced text formatting.
+Two special parameters are available inside emoji content:
 
-```yaml
-emoji:
-  default:emoji_location:
-    permission: emoji.location
-    content: "<hover:show_text:'Use <yellow>\"<arg:keyword>\"</yellow> to send the \"<arg:emoji>\" emoji'><!shadow><white><arg:emoji></white></!shadow><bold>Current coordinates: <papi:player_x>,<papi:player_y>,<papi:player_z></bold></hover>"
-    image: "default:icons:0:0"
-    keywords:
-      - ":pos:"
-```
-
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/emoji_1.png').default} alt="" />
-</div>
-
-You can control the content of an emoji in specific usage contexts using the `content_overrides` option. The available contexts include: `[chat, book, anvil, sign, command]`.
+- `<arg:emoji>` — the image glyph itself (resolved from your `image` field)
+- `<arg:keyword>` — the first keyword that triggered this emoji
 
 ```yaml
 emoji:
   default:time:
-    permission: emoji.time
-    image: "default:icons:0:0"
+    image: default:icons:0:0
+    content: "<hover:show_text:'Type <yellow><arg:keyword></yellow> to use this emoji'><white><arg:emoji></white></hover>"
     keywords:
-      - ":time:"
-    content: <!shadow><white><arg:emoji></white></!shadow>
-    content_overrides:
-      chat: <hover:show_text:'<l10n:emoji.tip:"<arg:keyword>":"<arg:emoji>">'><!shadow><white><arg:emoji></white></!shadow></hover>
-      book: <hover:show_text:'<arg:keyword>'><!shadow><white><arg:emoji></white></!shadow></hover>
-      anvil: <!i><!shadow><white><arg:emoji></white></!shadow></!i>
+      - ':time:'
 ```
 
-:::tip
+### MiniMessage in Content
 
-To improve readability when dealing with complex configurations, I've added multi-line support for formatting. CraftEngine will automatically merge these lines into a single string during processing, making it easier to write and maintain intricate setups without sacrificing functionality.
+Content is fully MiniMessage-compatible — you can use colors, hover text, click events, PAPI placeholders, math expressions, and nested `<image>` tags:
+
+```yaml
+emoji:
+  default:location:
+    permission: emoji.location
+    image: default:icons:0:0
+    content: "<hover:show_text:'Use <yellow>\"<arg:keyword>\"</yellow> to share your location'><!shadow><white><arg:emoji></white></!shadow><bold> <papi:player_x>, <papi:player_y>, <papi:player_z></bold></hover>"
+    keywords:
+      - ':pos:'
+```
+
+For complex content, split into multiple lines — the plugin auto-joins them:
 
 ```yaml
 content:
-- <hover:show_text:'Use <yellow>"<arg:keyword>"</yellow> to send the "<arg:emoji>" emoji'>
-- <!shadow><white><arg:emoji></white></!shadow>
-- "<bold>Current coordinates: <papi:player_x>,<papi:player_y>,<papi:player_z></bold>"
-- </hover>
+  - <hover:show_text:'Use <yellow>"<arg:keyword>"</yellow>'>
+  - <!shadow><white><arg:emoji></white></!shadow>
+  - "<bold>Location: <papi:player_x>, <papi:player_y></bold>"
+  - </hover>
 ```
-:::
 
-:::info
+### Context-Specific Overrides
 
-CraftEngine implements emojis using Paper's modern chat component API. Any chat plugin still relying on Bukkit's legacy chat events will almost certainly be incompatible with emoji rendering.
+Different chat contexts (chat, book, anvil, sign, command) may need different formatting. Use `content_overrides`:
 
-Known compatible chat plugins: [**TrChat**](https://github.com/TrPlugins/TrChat)
+```yaml
+emoji:
+  default:time:
+    image: default:icons:0:0
+    content: "<!shadow><white><arg:emoji></white></!shadow>"
+    keywords:
+      - ':time:'
+    content_overrides:
+      chat: "<hover:show_text:'<l10n:emoji.tip:\"<arg:keyword>\":\"<arg:emoji>\">'><!shadow><white><arg:emoji></white></!shadow></hover>"
+      book: "<hover:show_text:'<arg:keyword>'><!shadow><white><arg:emoji></white></!shadow></hover>"
+      anvil: "<!i><!shadow><white><arg:emoji></white></!shadow></!i>"
+```
 
-<Details summary="Developer Guide">
-  ```java
-import io.papermc.paper.event.player.AsyncChatEvent;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.Context;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.ParsingException;
-import net.kyori.adventure.text.minimessage.tag.Tag;
-import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import Details from '@site/src/components/Details';
+When a context has no override, the default `content` is used.
 
-public class ChatListener implements Listener {
-    public static final String CHAT_FORMAT = "<gray><player>: <chat>";
+## Templates
 
-    @EventHandler(ignoreCancelled = true)
-    public void onAsyncChat(AsyncChatEvent event) {
-        Component chatMessage = event.message();
-        Component formattedChatMessage = MiniMessage.miniMessage().deserialize(CHAT_FORMAT, new PlayerTagResolver(event.getPlayer()), new ChatMessageTagResolver(chatMessage));
-        // do further process
-    }
+When you have many emojis sharing the same content structure, use a template to avoid repetition:
 
-    public static class PlayerTagResolver implements TagResolver {
-        private final Player sender;
+```yaml
+# Define the template once
+templates:
+  default:emoji/basic:
+    content: "<!shadow><white><arg:emoji></white></!shadow>"
+    content_overrides:
+      chat: "<hover:show_text:'<l10n:emoji.tip:\"<arg:keyword>\":\"<arg:emoji>\">'><!shadow><white><arg:emoji></white></!shadow></hover>"
+      book: "<hover:show_text:'<arg:keyword>'><!shadow><white><arg:emoji></white></!shadow></hover>"
+      anvil: "<!i><!shadow><white><arg:emoji></white></!shadow></!i>"
 
-        public PlayerTagResolver(Player sender) {
-            this.sender = sender;
-        }
+# Apply the template — only specify what differs
+emoji:
+  default:smiley:
+    template: default:emoji/basic
+    overrides:
+      image: default:emojis:0:0
+      permission: emoji.smile
+      keywords:
+        - ':smiley:'
+        - ':)'
 
-        @Override
-        public boolean has(@NotNull String name) {
-            return name.equals("player");
-        }
+  default:angry:
+    template: default:emoji/basic
+    overrides:
+      image: default:emojis:0:1
+      permission: emoji.angry
+      keywords:
+        - ':angry:'
+```
 
-        @Override
-        public @Nullable Tag resolve(@NotNull String name, @NotNull ArgumentQueue arguments, @NotNull Context ctx) throws ParsingException {
-            if (!has(name)) {
-                return null;
-            }
-            return Tag.inserting(Component.text(sender.getName()));
-        }
-    }
+The template provides defaults; `overrides` replaces only the fields you specify. This scales cleanly to dozens of emojis.
 
-    public static class ChatMessageTagResolver implements TagResolver {
-        private final @NotNull Component chatMessage;
+## Configuration Reference
 
-        public ChatMessageTagResolver(@NotNull Component chatMessage) {
-            this.chatMessage = chatMessage;
-        }
+The `emoji` section in `config.yml`:
 
-        @Override
-        public boolean has(@NotNull String name) {
-            return name.equals("chat");
-        }
+```yaml
+emoji:
+  # Where emoji replacement runs
+  contexts:
+    chat: true
+    book: true
+    anvil: true
+    sign: true
 
-        @Override
-        public @Nullable Tag resolve(@NotNull String name, @NotNull ArgumentQueue arguments, @NotNull Context ctx) throws ParsingException {
-            if (!has(name)) {
-                return null;
-            }
-            return Tag.selfClosingInserting(this.chatMessage);
-        }
-    }
-}
-  ```
+  # Caps the number of emoji replacements per message to prevent lag
+  max-emojis-per-parse: 16
+```
 
-</Details>
+## Compatibility
 
-:::
+Emojis are rendered using Paper's modern chat component API. Plugins relying on Bukkit's legacy chat events will not display emoji content correctly.
+
+The plugin also needs the correct font in chat. If your chat plugin supports custom fonts (like TrChat), set your emoji image's `font` to a custom font instead of `minecraft:default` for better security.

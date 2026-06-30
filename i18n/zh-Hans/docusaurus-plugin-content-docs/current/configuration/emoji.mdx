@@ -5,153 +5,182 @@ id: emoji
 
 :::caution
 
-创建表情需要现有图像配置。若您不熟悉此流程，请参考[🖼️ 图像](image.mdx)页面。
-
+表情依赖于图像配置，请先阅读 [🖼️ 图像](./image.mdx) 页面。
 :::
 
-创建表情非常简单——只需填写几个简单易懂的参数。但与其他插件不同，CraftEngine 为您提供了更高的自定义自由度，特别是在表情反馈内容方面。您可以使用自定义文本样式、变量、数学运算等功能。
+## 快速入门
 
-基础表情配置示例：
+表情就是一个关键词，玩家输入后会被替换成"图片 + 文本"。最简配置只需两步：
+
+**第一步** — 创建底层图像（精灵图最合适）：
+
+```yaml
+images:
+  default:emojis:
+    height: 11
+    ascent: 9
+    font: minecraft:default
+    file: minecraft:font/image/emojis.png
+    grid_size: 4,4
+```
+
+**第二步** — 定义一个指向精灵图某个格子的表情：
+
+```yaml
+emoji:
+  default:smiley:
+    image: default:emojis:0:0
+    content: "<!shadow><white><arg:emoji></white></!shadow>"
+    keywords:
+      - ':smiley:'
+      - ':)'
+```
+
+现在玩家在聊天中输入 `:)`，它就会被替换成表情图片加上你定义的内容。
+
+---
+
+接下来的内容逐一展开：怎么自定义内容、怎么按场景切换显示、怎么用模板批量管理、以及兼容性注意事项。
+
+## 表情配置
+
+表情配置写在任意包的 `emoji:` 节点下，每个表情以 `命名空间:id` 作为唯一标识。
 
 ```yaml
 emoji:
   default:time:
-    permission: emoji.time
+    image: default:icons:0:0
     content: "<white><arg:emoji></white>"
-    image: "default:icons:0:0"
     keywords:
-      - ":time:"
+      - ':time:'
+    permission: emoji.vip           # 可选。使用该表情需要的权限
+    chat_completion: true           # 可选。是否出现在客户端补全提示中（默认开启）
 ```
 
-:::tip
+| 字段 | 是否必填 | 说明 |
+|-------|----------|------|
+| `keywords` | **是** | 一个或多个触发词。玩家输入任意一个即被替换。 |
+| `content` | **是** | 替换关键词的 MiniMessage 文本。 |
+| `image` | 否 | 指向图像某个格子的引用，格式为 `命名空间:id:行:列`。单格图像直接写 `命名空间:id` 即可。 |
+| `permission` | 否 | 使用该表情所需的权限节点。 |
+| `chat_completion` | 否 | 关键词是否出现在客户端 Tab 补全提示中。默认 `true`。 |
 
-`<arg:emoji>` 是上下文相关参数，用于返回对应表情的图像表示。\
-`<arg:keyword>` 将返回首个可用的关键词
+## 内容格式
 
-:::
+### arg:emoji 与 arg:keyword 参数
 
-在以下示例中，玩家可通过输入 `:pos:` 获取当前坐标。虽然 CraftEngine 为表情内容提供了高度客制化能力（特别是 MiniMessage 支持），但这种灵活性也使其学习起来更加复杂——尤其是对于不熟悉高级文本格式的用户而言。
+表情内容中有两个特殊参数可用：
 
-```yaml
-emoji:
-  default:emoji_location:
-    permission: emoji.location
-    content: "<hover:show_text:'使用<yellow>\"<arg:keyword>\"</yellow>来发送表情\"<arg:emoji>\"'><!shadow><white><arg:emoji></white></!shadow><bold>当前坐标：<papi:player_x>,<papi:player_y>,<papi:player_z></bold></hover>"
-    image: "default:icons:0:0"
-    keywords:
-      - ":pos:"
-```
-
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/emoji_1.png').default} alt="" />
-</div>
-
-你可以通过 `content_overrides` 选项控制一个表情在具体使用场景下的内容。可用的场景包含: `[chat, book, anvil, sign, command]`
+- `<arg:emoji>` — 表情的图片字形（由 `image` 字段解析而来）
+- `<arg:keyword>` — 触发该表情的第一个关键词
 
 ```yaml
 emoji:
   default:time:
-    permission: emoji.time
-    image: "default:icons:0:0"
+    image: default:icons:0:0
+    content: "<hover:show_text:'输入 <yellow><arg:keyword></yellow> 使用此表情'><white><arg:emoji></white></hover>"
     keywords:
-      - ":time:"
-    content: <!shadow><white><arg:emoji></white></!shadow>
-    content_overrides:
-      chat: <hover:show_text:'<l10n:emoji.tip:"<arg:keyword>":"<arg:emoji>">'><!shadow><white><arg:emoji></white></!shadow></hover>
-      book: <hover:show_text:'<arg:keyword>'><!shadow><white><arg:emoji></white></!shadow></hover>
-      anvil: <!i><!shadow><white><arg:emoji></white></!shadow></!i>
+      - ':time:'
 ```
 
-:::tip
+### 在内容中使用 MiniMessage
 
-为提升复杂配置的可读性，我们新增了多行格式支持。CraftEngine在处理时会自动合并为单行字符串，使复杂配置的编写和维护更简便，同时保持完整功能。
+内容完全兼容 MiniMessage——你可以使用颜色、悬浮文字、点击事件、PAPI 占位符、数学表达式，甚至嵌套 `<image>` 标签：
+
+```yaml
+emoji:
+  default:location:
+    permission: emoji.location
+    image: default:icons:0:0
+    content: "<hover:show_text:'使用 <yellow>\"<arg:keyword>\"</yellow> 分享你的坐标'><!shadow><white><arg:emoji></white></!shadow><bold> <papi:player_x>, <papi:player_y>, <papi:player_z></bold></hover>"
+    keywords:
+      - ':pos:'
+```
+
+复杂内容可以拆成多行——插件会自动拼接：
 
 ```yaml
 content:
-- <hover:show_text:'使用<yellow>"<arg:keyword>"</yellow>来发送表情"<arg:emoji>"'>
-- <!shadow><white><arg:emoji></white></!shadow>
-- "<bold>当前坐标：<papi:player_x>,<papi:player_y>,<papi:player_z></bold>"
-- </hover>
+  - <hover:show_text:'使用 <yellow>"<arg:keyword>"</yellow>'>
+  - <!shadow><white><arg:emoji></white></!shadow>
+  - "<bold>坐标：<papi:player_x>, <papi:player_y></bold>"
+  - </hover>
 ```
-:::
 
-:::info
+### 按场景切换内容
 
-CraftEngine 使用 Paper 的现代聊天组件 API 实现表情功能。任何仍依赖 Bukkit 旧版聊天事件的聊天插件几乎都无法兼容表情渲染。
+不同场景（聊天、书、铁砧、告示牌、指令）可能需要不同的显示效果，用 `content_overrides` 分别指定：
 
-已知兼容的聊天插件：[**TrChat**](https://github.com/TrPlugins/TrChat)
+```yaml
+emoji:
+  default:time:
+    image: default:icons:0:0
+    content: "<!shadow><white><arg:emoji></white></!shadow>"
+    keywords:
+      - ':time:'
+    content_overrides:
+      chat: "<hover:show_text:'<l10n:emoji.tip:\"<arg:keyword>\":\"<arg:emoji>\">'><!shadow><white><arg:emoji></white></!shadow></hover>"
+      book: "<hover:show_text:'<arg:keyword>'><!shadow><white><arg:emoji></white></!shadow></hover>"
+      anvil: "<!i><!shadow><white><arg:emoji></white></!shadow></!i>"
+```
 
-<Details summary="开发者指南">
-  ```java
-import io.papermc.paper.event.player.AsyncChatEvent;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.Context;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.ParsingException;
-import net.kyori.adventure.text.minimessage.tag.Tag;
-import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import Details from '@site/src/components/Details';
+某个场景没有 override 时，会使用默认的 `content`。
 
-public class ChatListener implements Listener {
-    public static final String CHAT_FORMAT = "<gray><player>: <chat>";
+## 模板
 
-    @EventHandler(ignoreCancelled = true)
-    public void onAsyncChat(AsyncChatEvent event) {
-        Component chatMessage = event.message();
-        Component formattedChatMessage = MiniMessage.miniMessage().deserialize(CHAT_FORMAT, new PlayerTagResolver(event.getPlayer()), new ChatMessageTagResolver(chatMessage));
-        // do further process
-    }
+当大量表情共享相同的结构时，用模板避免重复：
 
-    public static class PlayerTagResolver implements TagResolver {
-        private final Player sender;
+```yaml
+# 定义模板（只写一次）
+templates:
+  default:emoji/basic:
+    content: "<!shadow><white><arg:emoji></white></!shadow>"
+    content_overrides:
+      chat: "<hover:show_text:'<l10n:emoji.tip:\"<arg:keyword>\":\"<arg:emoji>\">'><!shadow><white><arg:emoji></white></!shadow></hover>"
+      book: "<hover:show_text:'<arg:keyword>'><!shadow><white><arg:emoji></white></!shadow></hover>"
+      anvil: "<!i><!shadow><white><arg:emoji></white></!shadow></!i>"
 
-        public PlayerTagResolver(Player sender) {
-            this.sender = sender;
-        }
+# 应用模板 — 只写不同的部分
+emoji:
+  default:smiley:
+    template: default:emoji/basic
+    overrides:
+      image: default:emojis:0:0
+      permission: emoji.smile
+      keywords:
+        - ':smiley:'
+        - ':)'
 
-        @Override
-        public boolean has(@NotNull String name) {
-            return name.equals("player");
-        }
+  default:angry:
+    template: default:emoji/basic
+    overrides:
+      image: default:emojis:0:1
+      permission: emoji.angry
+      keywords:
+        - ':angry:'
+```
 
-        @Override
-        public @Nullable Tag resolve(@NotNull String name, @NotNull ArgumentQueue arguments, @NotNull Context ctx) throws ParsingException {
-            if (!has(name)) {
-                return null;
-            }
-            return Tag.inserting(Component.text(sender.getName()));
-        }
-    }
+模板提供默认值，`overrides` 只替换你指定的字段。几十个表情也能干净管理。
 
-    public static class ChatMessageTagResolver implements TagResolver {
-        private final @NotNull Component chatMessage;
+## 配置参考
 
-        public ChatMessageTagResolver(@NotNull Component chatMessage) {
-            this.chatMessage = chatMessage;
-        }
+`config.yml` 中的 `emoji` 部分：
 
-        @Override
-        public boolean has(@NotNull String name) {
-            return name.equals("chat");
-        }
+```yaml
+emoji:
+  # 表情替换在哪些场景生效
+  contexts:
+    chat: true
+    book: true
+    anvil: true
+    sign: true
 
-        @Override
-        public @Nullable Tag resolve(@NotNull String name, @NotNull ArgumentQueue arguments, @NotNull Context ctx) throws ParsingException {
-            if (!has(name)) {
-                return null;
-            }
-            return Tag.selfClosingInserting(this.chatMessage);
-        }
-    }
-}
-  ```
+  # 每条消息最多替换多少个表情，防止刷屏卡顿
+  max-emojis-per-parse: 16
+```
 
-</Details>
+## 兼容性
 
-:::
+表情使用 Paper 的现代聊天组件 API 渲染。依赖 Bukkit 旧版聊天事件的插件无法正确显示表情内容。
+
+如果你的聊天插件支持自定义字体（如 TrChat），建议将表情图像的 `font` 设为自定义字体而非 `minecraft:default`，这样更安全。
