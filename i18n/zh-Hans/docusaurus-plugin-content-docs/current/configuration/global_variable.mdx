@@ -3,35 +3,84 @@ title: 🔢 全局变量
 id: global_variable
 ---
 
-## 简介
+## 快速入门
 
-全局变量是一种可在任意上下文中访问的变量类型，广泛应用于表达式、物品数据等多种场景。
+全局变量就是一段可复用的文本片段，定义一次就能在任意地方引用——物品名称、描述、消息、GUI、全息图都行。改一处，所有引用同步更新。
 
-以下是一个基础示例，其中 `<arg:0>` 格式的标签是可选参数，可由调用方动态提供：
-
-```yaml
-global_variables:
-  test: "<!i><#FF8C00><arg:0>的<arg:1>"
-```
-
-```yaml
-items#topaz_gears:
-  default:topaz_rod:
-    client_bound_data:
-      item_name: "<global:test:'<arg:player.name>':'<i18n:item.topaz_rod>'>"
-```
-
-:::tip
-CraftEngine 的全局变量支持在其他插件中调用，但需要注意的是，它们是通过数据包级别的文本替换来实现的。**这种做法不会干预其他插件的功能逻辑或内部实现**。
+**第一步** — 在 `global_variables` 下定义变量：
 
 ```yaml
 global_variables:
-  coin_without_shadow: "<!shadow><image:default:icons>"
+  rare_tag: "<!i><bold><#FF8C00>[RARE]</#FF8C00></bold>"
 ```
+
+**第二步** — 用 `<global:id>` 标签引用：
+
+```yaml
+items:
+  default:topaz_sword:
+    material: diamond_sword
+    data:
+      item_name: "<global:rare_tag> 黄玉剑"
+```
+
+就这么简单。`<global:rare_tag>` 标签会被替换成变量的内容。
+
+---
+
+## 配置
+
+全局变量写在 `global_variables` 节点下，每项都是键值对：
+
+```yaml
+global_variables:
+  rare_tag: "<!i><bold><#FF8C00>[RARE]</#FF8C00></bold>"
+  vip_prefix: "<!i><gradient:#FFD700:#FFA500>[VIP]</gradient>"
+  coin_icon: "<!shadow><image:default:coins>"
+```
+
+| 字段 | 说明 |
+|-------|------|
+| Key | 变量的 ID，用于 `<global:key>`。 |
+| Value | 要替换的 MiniMessage 内容。完全支持标签、颜色、图片和其他变量。 |
+
+## 使用变量
+
+### 基本用法
+
+```
+<global:id>
+```
+
+```yaml
+item_name: "<global:rare_tag> 黄玉剑"
+```
+
+### 带参数
+
+变量支持索引参数——`<arg:0>`、`<arg:1>` 等——在调用处填入：
+
+```yaml
+global_variables:
+  owner_item: "<!i><#FF8C00><arg:0>的<arg:1>"
+```
+
+```yaml
+# 在 ID 后面传参，用冒号分隔
+item_name: "<global:owner_item:'<arg:player.name>':'<lang:item.default.topaz_rod>'>"
+```
+
+这里 `<arg:0>` 会变成玩家名，`<arg:1>` 会变成翻译后的物品名。参数本身也会被当作 MiniMessage 解析，所以可以嵌套标签。
+
+### 在其他插件中使用
+
+全局变量工作在数据包层面，因此任何通过 CraftEngine 拦截的数据包发送文本的插件都能用：
 
 ```yaml
 # 其他插件的全息图配置
-line: "<global:coin_without_shadow> 我的金币: %vault_eco_balance%"
+line: "<global:coin_icon> 我的金币：%vault_eco_balance%"
 ```
 
+:::tip
+数据包层面的替换需要在 `config.yml` → `network.intercept-packets` 中启用对应的拦截器。
 :::

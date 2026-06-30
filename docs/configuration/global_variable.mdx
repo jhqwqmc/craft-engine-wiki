@@ -3,32 +3,84 @@ title: 🔢 Global Variables
 id: global_variable
 ---
 
-## Introduction
+## Quick Start
 
-A global variable is a type of variable that can be accessed in any context and is widely applicable in various scenarios such as expressions and item data.
+A global variable is a reusable text snippet you define once and reference anywhere — item names, lore, messages, GUIs, holograms. Change it in one place, and every reference updates.
 
-Here is a basic example, where tags in the format `<arg:0>` are optional parameters that can be dynamically provided by the caller:
+**Step 1** — Define a variable under `global_variables`:
 
 ```yaml
 global_variables:
-  test: "<!i><#FF8C00><arg:0>'s <arg:1>"
+  rare_tag: "<!i><bold><#FF8C00>[RARE]</#FF8C00></bold>"
+```
+
+**Step 2** — Reference it with the `<global:id>` tag:
+
+```yaml
 items:
-  default:topaz_rod:
-    client_bound_data:
-      item_name: "<global:test:'<arg:player.name>':'<i18n:item.topaz_rod>'>"
+  default:topaz_sword:
+    material: diamond_sword
+    data:
+      item_name: "<global:rare_tag> Topaz Sword"
+```
+
+That's it. The `<global:rare_tag>` tag gets replaced with the variable's content.
+
+---
+
+## Configuration
+
+Global variables live under the `global_variables` section. Each entry is a key-value pair:
+
+```yaml
+global_variables:
+  rare_tag: "<!i><bold><#FF8C00>[RARE]</#FF8C00></bold>"
+  vip_prefix: "<!i><gradient:#FFD700:#FFA500>[VIP]</gradient>"
+  coin_icon: "<!shadow><image:default:coins>"
+```
+
+| Field | Description |
+|-------|-------------|
+| Key | The variable's ID, used in `<global:key>`. |
+| Value | The MiniMessage content to substitute. Fully supports tags, colors, images, and other variables. |
+
+## Using Variables
+
+### Basic Usage
+
+```
+<global:id>
+```
+
+```yaml
+item_name: "<global:rare_tag> Topaz Sword"
+```
+
+### With Arguments
+
+Variables support indexed arguments — `<arg:0>`, `<arg:1>`, etc. — that you fill in at the call site:
+
+```yaml
+global_variables:
+  owner_item: "<!i><#FF8C00><arg:0>'s <arg:1>"
+```
+
+```yaml
+# Pass arguments after the ID, separated by colons
+item_name: "<global:owner_item:'<arg:player.name>':'<lang:item.default.topaz_rod>'>"
+```
+
+Here `<arg:0>` becomes the player's name and `<arg:1>` becomes the translated item name. Arguments are themselves parsed as MiniMessage, so you can nest tags inside them.
+
+### In Other Plugins
+
+Global variables work at the packet level, so they're available in any plugin that sends text through the packets CraftEngine intercepts:
+
+```yaml
+# A hologram config in another plugin
+line: "<global:coin_icon> My coins: %vault_eco_balance%"
 ```
 
 :::tip
-CraftEngine's global variables are also accessible to other plugins, though it should be noted that their implementation operates through text replacement at the packet level. **This approach does not interfere with the functional logic or internal operations of the recipient plugins**.
-
-```yaml
-global_variables:
-  coin_without_shadow: "<!shadow><image:default:icons>"
-```
-
-```yaml
-# Hologram configuration in another plugin
-line: "<global:coin_without_shadow> My coins: %vault_eco_balance%"
-```
-
+Packet-level replacement requires the relevant interceptor to be enabled in `config.yml` → `network.intercept-packets`.
 :::
