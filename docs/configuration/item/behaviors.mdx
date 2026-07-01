@@ -2,3 +2,35 @@
 title: 🕹️ Item Behaviors
 id: behaviors
 ---
+
+An item behavior defines what happens when a player interacts with the item — placing a block, placing furniture, mining an area, or composting. Without a behavior, a custom item only has the interaction logic of its vanilla material.
+
+## Assigning a Behavior
+
+Attach a behavior under the `behavior` or `behaviors` field in the item config:
+
+```yaml
+items:
+  default:palm_sapling:
+    behavior:
+      type: block_item
+      block: default:palm_sapling
+```
+
+## Composite Behaviors
+
+List multiple entries under `behaviors` to combine them. For example, an item that places a block and also mines in an area:
+
+```yaml
+items:
+  default:topaz_pickaxe:
+    material: golden_pickaxe
+    behaviors:
+      - type: range_mining_item
+        conditions: []
+        range:
+          - 0,1,0
+          - 0,-1,0
+      - type: block_item
+        block: default:topaz_ore
+```

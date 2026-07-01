@@ -3,26 +3,24 @@ title: 🌊 Liquid Collision Furniture Item
 id: liquid_collision_furniture_item
 ---
 
-## Introduction
-
-**Liquid Collision Furniture Item** checks for collisions with fluids. It is suitable for creating furniture that can be placed on the surface of water or lava.
+Like [furniture_item](furniture_item.mdx), but allows placement on **liquid surfaces**.
 
 ```yaml
 items:
-  default:bench:
+  default:water_lily:
     behavior:
       type: liquid_collision_furniture_item
-      rules: # For details, see the rules for [🪑 Furniture Item].
-        ground: # variant
-          # any / four / eight / sixteen / north / east / west / south
+      rules:
+        ground:
           rotation: four
-          # any / center / half /  quarter  / corner
           alignment: center
-      furniture: default:bench
-      ignore_placer: false      # Whether to ignore the placer's collision box during placement
-      ignore_entities: false     # Whether to ignore entity collision boxes during placement
-      source_only: true      # Only check the liquid source
+      furniture: default:water_lily
+      ignore_placer: false       # Ignore placer's collision during placement
+      ignore_entities: false     # Ignore entity collisions during placement
+      source_only: true          # Only place on liquid source blocks
       liquid_type:
         - water
         # - lava
 ```
+
+See [furniture_item](furniture_item.mdx) for `rules`, `furniture`, and other shared fields.

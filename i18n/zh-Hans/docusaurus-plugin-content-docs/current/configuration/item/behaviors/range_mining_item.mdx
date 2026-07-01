@@ -1,19 +1,19 @@
 ---
-title: ⛏️ 范围挖掘工具
+title: ⛏️ 范围挖掘物品
 id: range_mining_item
 ---
 
-范围挖掘工具允许您在一片广阔区域内挖掘方块，其范围可以完全自定义。该范围会根据您面对的朝向智能地进行调整。
+在破坏方块时同时挖掘可配置区域内的多个方块。范围会根据朝向自动旋转。
 
 ```yaml
 items:
   default:topaz_pickaxe:
     material: golden_pickaxe
-    conditions: []
-    behavior:
+    behaviors:
       - type: range_mining_item
+        conditions: []                    # 行为激活条件
         range:
-          - 0,1,0   # 宽度,高度,深度
+          - 0,1,0   # 宽,高,深 — 相对于被挖掘方块的偏移
           - 0,-1,0
           - 1,0,0
           - -1,0,0
@@ -21,23 +21,19 @@ items:
 
 ![](/img/range_mining_1.png)
 
+`range` 中每条是 `宽,高,深` 偏移。围绕方块周围 `3x3` 的平面区域：
+
 ```yaml
-items:
-  default:topaz_pickaxe:
-    material: golden_pickaxe
-    conditions: []
-    behavior:
-      - type: range_mining_item
-        range:
-          - 0,1,0
-          - 1,1,0
-          - -1,1,0
-          - 0,0,0
-          - 1,0,0
-          - -1,0,0
-          - 0,-1,0
-          - 1,-1,0
-          - -1,-1,0
+range:
+  - 0,1,0
+  - 1,1,0
+  - -1,1,0
+  - 0,0,0
+  - 1,0,0
+  - -1,0,0
+  - 0,-1,0
+  - 1,-1,0
+  - -1,-1,0
 ```
 
 ![](/img/range_mining_2.png)

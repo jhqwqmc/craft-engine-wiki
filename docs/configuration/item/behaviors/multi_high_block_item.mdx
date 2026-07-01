@@ -3,14 +3,12 @@ title: 🔢 Multi High Block Item
 id: multi_high_block_item
 ---
 
-## Introduction
-
-**Multi High Block Item** is a specialized placement method designed for multiple-block-tall blocks, fixing placement bugs that occur when using only the standard Block Item.
+Like [block_item](block_item.mdx), but designed for blocks **three or more blocks tall**. Fixes placement offsets that occur with standard `block_item`.
 
 ```yaml
 items:
-  default:palm_door:
+  default:tall_plant:
     behavior:
       type: multi_high_block_item
-      block: default:palm_door
+      block: default:tall_plant
 ```

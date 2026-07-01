@@ -3,67 +3,71 @@ title: 🪑 Furniture Item
 id: furniture_item
 ---
 
-## Introduction
-
-**Furniture Item** is an item that is bound to a piece of furniture. You can configure its corresponding furniture ID here, or even the entire furniture configuration. When you bind this behavior to an item, you can place it by right-clicking.
+Places a furniture when right-clicking on any valid surface.
 
 ```yaml
 items:
   default:bench:
     behavior:
       type: furniture_item
-      rules: # Please refer to the rules below for details.
-        ground: # variant
-          # any / four / eight / sixteen / north / east / west / south
-          rotation: four
-          # any / center / half /  quarter  / corner
-          alignment: center
-      furniture: default:bench
-      ignore_placer: false      # Whether to ignore the placer's collision box during placement
-      ignore_entities: false     # Whether to ignore entity collision boxes during placement
-furniture:
-  default:bench:
-    settings: ...
-    variants: ...
-    loot: ...
-    events: ...
+      furniture: default:bench          # Reference an existing furniture by ID
+      rules:
+        ground:
+          rotation: four                # any / four / eight / sixteen / north / east / west / south
+          alignment: center             # any / center / half / quarter / corner / center_quarter
+      ignore_placer: false              # Ignore placer's collision during placement
+      ignore_entities: false            # Ignore entity collisions during placement
 ```
 
-or
+The `furniture` field also accepts an inline definition — the furniture is registered under the item's own ID:
 
 ```yaml
 items:
   default:bench:
     behavior:
       type: furniture_item
-      rules: # Please refer to the rules below for details.
-        ground: # variant
-          # any / four / eight / sixteen / north / east / west / south
+      rules:
+        ground:
           rotation: four
-          # any / center / half /  quarter  / corner
           alignment: center
-      ignore_placer: false      # Whether to ignore the placer's collision box during placement
-      ignore_entities: false     # Whether to ignore entity collision boxes during placement
-      furniture:
-        settings: ...
-        variants: ...
-        loot: ...
-        events: ...
+      furniture:                        # Inline: defines a new furniture
+        events:
+          - template: default:rotatable_furniture_4
+        settings:
+          item: default:bench
+          hit_times: 3
+          sounds:
+            break: minecraft:block.bamboo_wood.break
+            place: minecraft:block.bamboo_wood.place
+        variants:
+          ground:
+            loot_spawn_offset: 0.5,0.5,0
+            elements:
+              - item: default:bench
+                display_transform: none
+                billboard: fixed
+                position: 0.5,0,0
+                translation: 0,0.5,0
+            hitboxes:
+              - position: 0,0,0
+                type: shulker
+                seats:
+                  - 0,0,-0.1 0
+                  - 1,0,-0.1 0
+        loot:
+          template: default:loot_table/furniture
+          arguments:
+            item: default:bench
 ```
 
-![](/img/furniture_item_1.png)
+### Rules
 
-## Rules
+`rules` maps each furniture variant to placement constraints:
 
-### rotation
-
-Furniture supports multiple rotation options. These options vary by either the number of allowed angles or the specific direction in which an item can face.
-
-:::danger
-Rotation has no effect on wall variant.
-:::
-
-### alignment
+| Field | Values | Description |
+|-------|--------|-------------|
+| rotation | any, four, eight, sixteen, north, east, west, south | How many directions the furniture can face. Has no effect on wall variants. |
+| alignment | any, center, half, quarter, corner, center_quarter | How the furniture aligns to the block grid. |
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/furniture_item_2.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
@@ -83,4 +87,9 @@ Rotation has no effect on wall variant.
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/furniture_item_5.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
     <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>corner</p>
+</div>
+
+<div style={{textAlign: 'center'}}>
+    <img src={require('/img/furniture_item_6.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>center_quarter</p>
 </div>

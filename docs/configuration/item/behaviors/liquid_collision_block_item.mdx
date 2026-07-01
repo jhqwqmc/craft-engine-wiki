@@ -3,9 +3,7 @@ title: 🌊 Liquid Collision Block Item
 id: liquid_collision_block_item
 ---
 
-## Introduction
-
-**Liquid Collision Block Item** checks for collisions with fluids. It is suitable for creating blocks that can be placed on the surface of water or lava. All other configuration options are identical to those of Block Item.
+Like [block_item](block_item.mdx), but allows placement on **liquid surfaces** (water or lava). Use `offset_y` to adjust the placement height relative to the liquid.
 
 ```yaml
 items:
@@ -13,6 +11,6 @@ items:
     material: paper
     behavior:
       type: liquid_collision_block_item
-      offset_y: 1 # the position to place block on
+      offset_y: 1               # Height offset from the liquid surface
       block: default:reed
 ```

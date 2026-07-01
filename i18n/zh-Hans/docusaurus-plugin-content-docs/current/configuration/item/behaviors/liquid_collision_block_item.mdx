@@ -3,9 +3,7 @@ title: 🌊 液体碰撞方块物品
 id: liquid_collision_block_item
 ---
 
-## 简介
-
-**液体碰撞方块物品**会检查交互是否与液体、冰、霜冰或含水方块碰撞。它适用于创建可以放置在水源或熔岩表面的方块。所有其他配置选项与方块物品的配置相同。
+与 [block_item](block_item.mdx) 类似，但允许放置在**液体表面**（水或熔岩）。使用 `offset_y` 调整相对于液面的放置高度。
 
 ```yaml
 items:
@@ -13,6 +11,6 @@ items:
     material: paper
     behavior:
       type: liquid_collision_block_item
-      offset_y: 1 # 放置方块的位置
+      offset_y: 1               # 相对于液面的高度偏移
       block: default:reed
 ```
