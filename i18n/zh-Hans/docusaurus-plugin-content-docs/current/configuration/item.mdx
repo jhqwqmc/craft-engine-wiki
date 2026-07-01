@@ -4,83 +4,163 @@ id: item
 ---
 
 import UrlCard from '@site/src/components/UrlCard';
-import Highlight from '@site/src/components/Highlight';
-import Details from '@site/src/components/Details';
 
-## 概览
+## 概述
 
-**完整的物品配置包含以下部分：**
+一个物品就是 `items:` 下的一个条目，用 `namespace:path` 作为唯一标识（比如 `default:topaz_sword`），由若干个**彼此独立的配置段**拼成。`material` 不写就用 config.yml 里的默认值，原版物品 ID 写了也无效——其他段按需添加即可。
 
-- **material** <Highlight color="#d64f1aff">**必填**</Highlight>
+## 结构
 
-`material` 作为物品的基础模板，例如 `paper` 或 `wooden_sword`。
+每个物品都遵循同一套骨架。每个顶层键回答一个问题：
 
-- **client_bound_material** <Highlight color="#2E8B57">**可选**</Highlight> <Highlight color="#f2184eff">**付费版专属**</Highlight>
+```yaml
+items:
+  default:my_item:            # 物品 ID，其他地方都用 default:my_item 引用
+    material: paper           # 可选  → 基于哪个原版物品（默认值见 config.yml）
+    data:                     # 可选  → 携带什么数据组件（名称、描述、附魔……）
+      ...
+    model:                    # 可选  → 长什么样
+      ...
+    behavior:                 # 可选  → 交互后能干什么（放方块、放家具……）
+      ...
+    settings:                 # 可选  → 插件驱动的特性（燃料、标签、可修复、可附魔……）
+      ...
+    events:                   # 可选  → 对事件的响应
+      ...
+```
 
-`client_bound_material` 表示客户端用于渲染该物品的基础材质。你可以使用此功能为服务端侧和客户端侧的物品分配完全不同的基础材质，从而影响它们在服务器或客户端环境中的特定行为。
+除了以上配置段，物品上还有几个**根级字段**：`custom_model_data`、`item_model`、`hand_animation_on_swap`、`oversized_in_gui`、`swap_animation_scale`。详见[物品模型 → 根字段](./item/models.mdx#根字段)。
 
-- **custom_model_data** <Highlight color="#2E8B57">**可选**</Highlight>
+## 配置段
 
-`custom_model_data` 是一个正整数，具有相同材质的自定义物品应使用不同的 custom_model_data 值。该值决定了物品显示的模型，对下面的模型部分至关重要。
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
 
-- **item_model** (1.21.2+) <Highlight color="#2E8B57">**可选**</Highlight>
+<UrlCard
+  url="item/data"
+  title="🔢 物品数据"
+  subtitle="名称、描述、附魔、属性、食物、耐久——物品携带的数据组件"
+/>
 
-定义此物品模型的命名空间ID。例如 `default:custom_book`
+<UrlCard
+  url="item/models"
+  title="🟰 物品模型"
+  subtitle="模型类型树、简化纹理、着色、旧版覆盖——物品长什么样"
+/>
 
-- **client_bound_model** <Highlight color="#2E8B57">**可选**</Highlight> <Highlight color="#272ad8ff">**默认值: config.yml**</Highlight> <Highlight color="#f2184eff">**付费版专属**</Highlight>
+<UrlCard
+  url="item/behaviors"
+  title="🕹️ 物品行为"
+  subtitle="物品能干什么——放方块、放家具、范围挖掘、堆肥……"
+/>
 
-默认情况下，使 custom_model_data 和 item_model 在客户端生效。这带来了一些好处。例如，您可以动态更新模型值，而不会导致玩家现有物品出现不一致。主要缺点是依赖 custom_model_data 进行物品识别的插件将无法正常工作，因为该数据不存在于服务端的物品实例中。
+<UrlCard
+  url="item/settings"
+  title="🔧 物品设置"
+  subtitle="燃料时间、标签、可修复、可附魔、可染色——插件驱动的物品属性"
+/>
 
-- [**data**](item/data.mdx) <Highlight color="#2E8B57">**可选**</Highlight>
+<UrlCard
+  url="../reference/events"
+  title="🪇 事件"
+  subtitle="响应点击、消耗、攻击等操作，配合条件触发函数"
+/>
 
-物品数据指的是旧版本中物品的 NBT（命名二进制标签），或 1.20.5 及以上版本中的物品组件。通过这些数据，我们可以自定义物品的各个方面，例如其名称、描述、属性以及原版 Minecraft 提供的其他功能。
+<UrlCard
+  url="item/updater"
+  title="🔄 物品更新器"
+  subtitle="版本化物品迁移——配置变更时自动更新已有物品"
+/>
 
-- [**client_bound_data**](./item/data.mdx#客户端侧数据) <Highlight color="#2E8B57">**可选**</Highlight> <Highlight color="#f2184eff">**付费版专属**</Highlight>
+</div>
 
-client_bound_data 仅存在于客户端，不涉及任何服务端组件。使用客户端物品组件，您可以轻松地实时更新物品描述——包括 item_model 和 custom_model_data 等属性。此外，与其他插件不同，CraftEngine 物品在创造模式下会永久保持不变！
+## 快速上手
 
-- [**behavior(s)**](item/behaviors.mdx) <Highlight color="#2E8B57">**可选**</Highlight>
+### 1. 最简物品
 
-- [**settings**](item/settings.mdx) <Highlight color="#2E8B57">**可选**</Highlight>
+一个纹理就够了——`material` 没写就用 config.yml 的默认值：
 
-- [**model / legacy_model**](item/models.mdx) <Highlight color="#2E8B57">**可选**</Highlight>
+```yaml
+items:
+  default:ruby:
+    material: paper
+    texture: minecraft:item/custom/ruby
+```
 
-- [**events**](../reference/events.mdx) <Highlight color="#2E8B57">**可选**</Highlight>
+### 2. 加上名字和手持模型
 
-- [**category**](category.mdx) <Highlight color="#2E8B57">**可选**</Highlight>
+补上 `data` 写展示名，换个工具底子就是 3D 手持效果：
 
-- **oversized_in_gui** (1.21.6+) <Highlight color="#2E8B57">**可选**</Highlight> <Highlight color="#272ad8ff">**默认值: true**</Highlight>
+```yaml
+items:
+  default:ruby_sword:
+    material: golden_sword
+    texture: minecraft:item/custom/ruby_sword
+    data:
+      item_name: "<!i><#FF8C00>Ruby Sword"
+      lore:
+        - "Forged in the depths"
+```
 
-- **hand_animation_on_swap** <Highlight color="#2E8B57">**可选**</Highlight> <Highlight color="#272ad8ff">**默认值: true**</Highlight>
+### 3. 让它能放置方块
 
-- **swap_animation_scale** (1.21.11+) <Highlight color="#2E8B57">**可选**</Highlight> <Highlight color="#272ad8ff">**默认值: 1.0**</Highlight>
+加个 `behavior`，右键就能把自定义方块放下去：
 
-<Details summary="完整配置预览">
-  ```yaml
-  items:
-    default:palm_log:
-      material: paper
-      custom_model_data: 1000
-      item_model: default:palm_log
-      settings:
-        fuel_time: 300
-        tags:
-          - "default:palm_logs"
-          - "minecraft:logs"
-          - "minecraft:logs_that_burn"
-      data:
-        item_name: "<!i>棕榈原木"
-      model:
-        type: "minecraft:model"
-        path: "minecraft:item/custom/palm_log"
-        generation:
-          parent: "minecraft:block/custom/palm_log"
-      oversized_in_gui: true
-      hand_animation_on_swap: true
-      client_bound_model: false
-      behavior:
-        type: block_item
-        block: default:palm_log
+```yaml
+items:
+  default:ruby_sword:
+    material: golden_sword
+    texture: minecraft:item/custom/ruby_sword
+    data:
+      item_name: "<!i><#FF8C00>Ruby Sword"
+    behavior:
+      type: block_item
+      block: default:ruby_block
+```
 
-  ```
-</Details>
+### 4. 完全掌控：显式模型、属性、设置
+
+扔掉简化的 `texture`，上完整模型定义。再加上战斗属性和工具标签：
+
+```yaml
+items:
+  default:ruby_sword:
+    material: golden_sword
+    custom_model_data: 10001
+    data:
+      item_name: "<!i><#FF8C00>Ruby Sword"
+      attribute_modifiers:
+        - type: attack_damage
+          amount: 7
+          operation: add_value
+          slot: mainhand
+    model:
+      type: minecraft:model
+      path: minecraft:item/custom/ruby_sword
+      generation:
+        parent: minecraft:item/handheld
+        textures:
+          layer0: minecraft:item/custom/ruby_sword
+    settings:
+      tags:
+        - minecraft:swords
+    behavior:
+      type: block_item
+      block: default:ruby_block
+```
+
+## 遇到不知道怎么配置时该看哪里
+
+| 你想…… | 去看 |
+|---|---|
+| 设置物品名称、描述、附魔 | [物品数据](./item/data.mdx) |
+| 做成食物 | [物品数据 → food](./item/data.mdx#food食物--1205) |
+| 搞个简单的 2D 或手持模型 | [物品模型 → 简化模型](./item/models.mdx#简化模型) |
+| 做弓、弩、钓鱼竿模型 | [物品模型 → 简化模型](./item/models.mdx#简化模型) |
+| 构建复杂的模型映射 | [物品模型 → 模型类型](./item/models.mdx#模型类型) |
+| 添加着色（染色盔甲、草色、药水……） | [模型 → Tints](./item/models/model.mdx#tints) |
+| 让物品放置方块 | [方块物品](./item/behaviors/block_item.mdx) |
+| 让物品放置家具 | [家具物品](./item/behaviors/furniture_item.mdx) |
+| 设置耐久度 | [物品数据 → max_damage](./item/data.mdx#max_damage最大耐久--1205) |
+| 响应事件（食用、攻击、点击） | [事件](../reference/events.mdx) |
+| 配置更新后迁移已有物品 | [物品更新器](./item/updater.mdx) |
+| 把展示数据放客户端（付费版） | [物品数据 → 客户端绑定数据](./item/data.mdx#-客户端绑定数据) |

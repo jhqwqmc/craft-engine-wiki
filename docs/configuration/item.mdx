@@ -4,86 +4,164 @@ id: item
 ---
 
 import UrlCard from '@site/src/components/UrlCard';
-import Highlight from '@site/src/components/Highlight';
-import Details from '@site/src/components/Details';
 
 ## Overview
 
-**A complete item configuration contains the following sections:**
+An item is a single entry under `items:` in your configuration. Each one is keyed by its id — `namespace:path`, e.g. `default:topaz_sword` — and assembled from a handful of **independent sections**. `material` defaults to `nether_brick` (configurable in config.yml) and is ignored for vanilla item IDs — everything else is added when needed.
 
-- **material** <Highlight color="#d64f1aff">**Required**</Highlight>
 
-The `material` serves as the foundational template of the item, such as `paper` or `wooden_sword`.
+## Anatomy
 
-- **client_bound_material** <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
-
-The `client_bound_material` used for this item. You can use this feature to assign completely different base material for items on the server/client side, thereby affecting their specific behaviors in server/client contexts.
-
-- **custom_model_data** <Highlight color="#2E8B57">**Optional**</Highlight>
-
-The `custom_model_data` is a positive integer, and custom items of the same material should possess distinct custom_model_data values. The custom_model_data determines the model displayed for the item and is crucial for the model section below.
-
-- **item_model** (1.21.2+) <Highlight color="#2E8B57">**Optional**</Highlight>
-
-Defines the item model resource location of this item. For instance `default:custom_book`
-
-- **client_bound_model** <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: by config.yml**</Highlight> <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
-
-Makes custom_model_data and item_model client-side by default. This provides several benefits. For example, you can update model values dynamically without causing inconsistencies for players' existing items. The main drawback is that plugins relying on `custom_model_data` for item identification will not work correctly, as this data is not present in the server-side item stack.
-
-- [**data**](./item/data.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
-
-Item Data refers to the NBT (Named Binary Tag) of an item in older versions, or the item Components in version 1.20.5 and above. Through this data, we can customize various aspects of an item such as its name, description, attributes, and other functionalities provided by vanilla Minecraft.
-
-- [**client_bound_data**](./item/data.mdx#client-bound-data) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
-
-The client_bound_data exists exclusively on the client side, with no server-side components involved. Using the client-side item component, you can effortlessly update item descriptions in real time—including properties like item_model and custom_model_data. Additionally, unlike other plugins, CraftEngine items remain permanently unaltered in creative mode!
-
-- [**behavior(s)**](./item/behaviors.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
-
-- [**settings**](./item/settings.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
-
-Unlike data, the contents within settings pertain to special mechanisms processed by the plugin.
-
-- [**model / legacy_model**](./item/models.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
-
-- [**events**](../reference/events.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
-
-- [**category**](./category.mdx) <Highlight color="#2E8B57">**Optional**</Highlight>
-
-- **oversized_in_gui** (1.21.6+) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: true**</Highlight>
-
-- **hand_animation_on_swap** <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: true**</Highlight>
-
-- **swap_animation_scale** (1.21.11+) <Highlight color="#2E8B57">**Optional**</Highlight> <Highlight color="#272ad8ff">**Default: 1.0**</Highlight>
-
-<Details summary="Full Config Overview">
+Every item follows the same skeleton. Each top-level key answers one question about the item:
 
 ```yaml
 items:
-  default:palm_log:
-    material: paper
-    custom_model_data: 1000
-    item_model: default:palm_log
-    settings:
-      fuel_time: 300
-      tags:
-        - "default:palm_logs"
-        - "minecraft:logs"
-        - "minecraft:logs_that_burn"
-    data:
-      item_name: "<!i>Palm Log"
-    model:
-      type: "minecraft:model"
-      path: "minecraft:item/custom/palm_log"
-      generation:
-        parent: "minecraft:block/custom/palm_log"
-    oversized_in_gui: true
-    hand_animation_on_swap: true
-    client_bound_model: false
-    behavior:
-      type: block_item
-      block: default:palm_log
+  default:my_item:            # the item id — referenced everywhere as default:my_item
+    material: paper           # optional  → the vanilla item it's built on (default: config.yml)
+    data:                     # optional  → what data components it has (name, lore, enchants…)
+      ...
+    model:                    # optional  → what it looks like         
+      ...
+    behavior:                 # optional  → what it can do on interaction (place a block, place furniture…)
+      ...
+    settings:                 # optional  → plugin-driven features (fuel, tags, repairable, enchantable…)
+      ...
+    events:                   # optional  → reactions to events
+      ...
 ```
 
-</Details>
+In addition to the sections above, a handful of **root-level fields** live directly on the item: `custom_model_data`, `item_model`, `hand_animation_on_swap`, `oversized_in_gui`, and `swap_animation_scale`. See [Item Models → Root Fields](./item/models.mdx#root-fields) for details.
+
+## Sections to Configure
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard
+  url="item/data"
+  title="🔢 Item Data"
+  subtitle="Name, lore, enchantments, attributes, food, durability — what data components the item has"
+/>
+
+<UrlCard
+  url="item/models"
+  title="🟰 Item Models"
+  subtitle="Model type tree, simplified textures, tints, legacy overrides — what the item looks like"
+/>
+
+<UrlCard
+  url="item/behaviors"
+  title="🕹️ Item Behaviors"
+  subtitle="What the item does — place a block, place furniture, mine in range, compost…"
+/>
+
+<UrlCard
+  url="item/settings"
+  title="🔧 Item Settings"
+  subtitle="Fuel time, tags, repairable, enchantable, dyeable — plugin-driven item properties"
+/>
+
+<UrlCard
+  url="../reference/events"
+  title="🪇 Events"
+  subtitle="React to clicks, consumption, attacks & more with functions, gated by conditions"
+/>
+
+<UrlCard
+  url="item/updater"
+  title="🔄 Item Updater"
+  subtitle="Versioned item migration — update existing items when config changes"
+/>
+
+</div>
+
+## Quick Start
+
+### 1. The smallest possible item
+
+A texture alone is enough — `material` falls back to config.yml's default:
+
+```yaml
+items:
+  default:ruby:
+    material: paper
+    texture: minecraft:item/custom/ruby
+```
+
+### 2. Give it a name and a handheld model
+
+Add `data` for the display name and switch to a tool base so it renders in 3D:
+
+```yaml
+items:
+  default:ruby_sword:
+    material: golden_sword
+    texture: minecraft:item/custom/ruby_sword
+    data:
+      item_name: "<!i><#FF8C00>Ruby Sword"
+      lore:
+        - "Forged in the depths"
+```
+
+### 3. Make it place a block
+
+Add a `behavior` so right-clicking the item places a custom block:
+
+```yaml
+items:
+  default:ruby_sword:
+    material: golden_sword
+    texture: minecraft:item/custom/ruby_sword
+    data:
+      item_name: "<!i><#FF8C00>Ruby Sword"
+    behavior:
+      type: block_item
+      block: default:ruby_block
+```
+
+### 4. Full control: explicit model, attributes, settings
+
+Drop the simplified `texture` and use the full model definition. Add combat attributes and a tool tag:
+
+```yaml
+items:
+  default:ruby_sword:
+    material: golden_sword
+    custom_model_data: 10001
+    data:
+      item_name: "<!i><#FF8C00>Ruby Sword"
+      attribute_modifiers:
+        - type: attack_damage
+          amount: 7
+          operation: add_value
+          slot: mainhand
+    model:
+      type: minecraft:model
+      path: minecraft:item/custom/ruby_sword
+      generation:
+        parent: minecraft:item/handheld
+        textures:
+          layer0: minecraft:item/custom/ruby_sword
+    settings:
+      tags:
+        - minecraft:swords
+    behavior:
+      type: block_item
+      block: default:ruby_block
+```
+
+## Where to Look
+
+| You want to… | Go to |
+|---|---|
+| Set the item's name, lore, or enchantments | [Item Data](./item/data.mdx) |
+| Make it a food item | [Item Data → food](./item/data.mdx#food-1205) |
+| Give it a simple 2D or handheld model | [Item Models → Simplified Models](./item/models.mdx#simplified-models) |
+| Make a bow, crossbow, or fishing rod model | [Item Models → Simplified Models](./item/models.mdx#simplified-models) |
+| Build a complex model definition | [Item Models → Model Types](./item/models.mdx#model-types) |
+| Add tints (dyed armor, grass color, potion…) | [Model → Tints](./item/models/model.mdx#tints) |
+| Make it place a block | [Block Item](./item/behaviors/block_item.mdx) |
+| Make it place furniture | [Furniture Item](./item/behaviors/furniture_item.mdx) |
+| Give it durability (max_damage) | [Item Data → max_damage](./item/data.mdx#max_damage-1205) |
+| React to eating, attacking, or clicking | [Events](../reference/events.mdx) |
+| Update existing items after config changes | [Item Updater](./item/updater.mdx) |
+| Keep display data client-side (premium) | [Item Data → Client Bound Data](./item/data.mdx#-client-bound-data) |
