@@ -3,81 +3,107 @@ title: 🔄 物品更新器
 id: updater
 ---
 
-## 简介
+物品更新器用于在配置变更后修补玩家背包中已存在的物品。与 `client_bound_data` 只改外观不同，更新器直接修改物品在服务端的实际数据。
 
-在配置物品时，我们可能会忽略某些细节，需要调整玩家现有的物品数据。这时物品更新器就派上了用场——它能更新服务器上存量物品的数据。
+## 工作原理
 
-由于更新器的工作方式（在触发特定事件时更新物品），会带来一些性能开销。你可以在 **config.yml** 中配置哪些事件应该触发物品更新器。默认情况下，所有触发器都是禁用的，你可以根据需要启用它们。
+每个物品携带一个内部版本标记（`craftengine:version`，默认 `0`）。当触发器事件发生时，插件读取物品的当前版本，重放 `updater` 配置中所有高于当前版本的步骤，然后将物品标记为最新版本。
 
-```yaml
-item:
-  update-triggers:
-    click-in-inventory: false # 此选项对于创造模式物品栏无效
-    drop: false
-    pick-up: false
-    ...更多内容
+```
+旧物品（版本 0）被拾取
+  → 执行版本 1、2 的更新步骤
+  → 物品版本升至 2
+  → 不再需要更新
 ```
 
-:::tip
-如果你只需要更新物品的视觉元素，例如自定义模型数据（custom_model_data）、物品模型（item_model）、物品提示框中的描述信息（lore）或物品名称（name），建议使用 `client_bound_data` 而不是物品更新器。
-:::
+**新物品完全跳过更新器。** 它们直接由 `data` 节点构建，并预先打上最新版本标记。这意味着：每次添加 updater 步骤时，必须同步更新 `data` 以匹配最终期望的状态。
 
-要配置物品更新器，只需按照以下格式添加一个新的 `updater` 部分。默认情况下，物品的版本号为 0，插件会尝试将它们更新到最新版本。
+## 配置更新器
 
-在以下示例中：
-- 若物品版本为 0，将同时执行更新逻辑 1 和 2
-- 若物品版本为 1，则仅应用逻辑 2
+黄金法则：**`data` 构建新物品，`updater` 修补旧物品，两者必须一致。**
 
 ```yaml
 items:
   default:my_sword:
-    material: wooden_sword
+    material: stone_sword              # ← 新物品从这里开始
+    data:
+      item_name: 石剑
+      lore:
+        - "最终描述"
     updater:
       1:
         type: apply_data
         data:
-          item_name: 首次更新
-      # 你可以通过列表格式同时应用多个更新器。
+          item_name: 石剑               # 旧物品：改名
       2:
         - type: apply_data
           data:
-            lore: 
-              - "再次更新"
+            lore:
+              - "最终描述"               # 旧物品：加描述
         - type: transmute
-          material: wooden_sword
+          material: stone_sword          # 旧物品：换材质
 ```
+
+`updater` 下的每个键是版本号——物品当前版本低于该值时执行对应步骤。一个版本可以包含单个更新器或一个列表。旧物品重放所有高于当前版本的步骤；新物品直接拿 `data`，跳过更新器。
+
+:::danger
+如果添加了 updater 却忘记更新 `data`，旧物品会被正确修补，但**新物品会保留旧的值**。
+:::
 
 ## 更新器类型
 
-### apply_data（应用数据）
+### apply_data
 
-应用任何 CraftEngine 支持的[物品数据](./data.mdx)
+应用 CraftEngine 支持的任何物品数据，格式与 [🔢 物品数据](./data.mdx) 相同：
 
 ```yaml
 type: apply_data
 data:
-  item_name: 首次更新
+  item_name: 更新后的名称
+  lore:
+    - "新的描述"
 ```
 
-### transmute（材质置换）
+### transmute
 
-将物品的基础材质替换为另一种物品的材质，同时保留其所有组件或 NBT 数据。
+替换基础材质，保留所有组件和 NBT：
 
 ```yaml
 type: transmute
-material: wooden_sword
+material: stone_sword
 ```
 
-### reset（重置）
+### reset
 
-立即将物品更新至最新状态，同时保留指定的组件或 NBT 标签
+用最新配置从零重建物品，只保留指定的数据：
 
 ```yaml
 type: reset
-# 1.20.5+
+# 1.20.5+：保留的组件
 keep_components:
   - minecraft:enchantments
-# 旧版本
+  - minecraft:custom_name
+# 旧版本（< 1.20.5）：保留的 NBT 路径
 keep_tags:
   - Enchantments
+  - display.Name
 ```
+
+:::caution
+未列入 `keep_components` 或 `keep_tags` 的内容会被**丢弃**。务必显式声明所有要保留的字段。
+:::
+
+## 启用触发器
+
+更新器仅在特定事件中激活，**默认全部关闭**。在 `config.yml` 中按需开启：
+
+```yaml
+item:
+  update-triggers:
+    click-in-inventory: false   # 点击物品栏（创造模式无效）
+    drop: false                 # 丢弃物品
+    pick-up: false              # 拾取物品
+    attack: false               # 攻击
+```
+
+每个触发器都会带来性能开销——插件需要在每次事件中检查所有受影响的物品。只开启必要的。

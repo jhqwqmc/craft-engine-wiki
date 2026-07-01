@@ -1,83 +1,109 @@
 ---
 title: 🔄 Item Updater
-id: updater
+id: updater_item
 ---
 
-## Introduction
+The item updater patches existing items in players' inventories when you change a config. Unlike `client_bound_data` which only updates visuals, the updater modifies the item's actual data on the server.
 
-Sometimes when configuring items, we may overlook certain aspects and need to adjust players' existing items. This is where an item updater comes into play—it updates the data of the actual items on the server.
+## How It Works
 
-Due to how the updater works (by replacing items during specific events), it incurs some performance overhead. You can configure in **config.yml** which events should trigger the item updater. By default, all these triggers are disabled—you can enable them as needed.
+Each item carries an internal version tag (`craftengine:version`, default `0`). When an update trigger fires, the plugin compares the item's version against the `updater` config and replays any steps defined above the current version.
 
-```yaml
-item:
-  update-triggers:
-    click-in-inventory: false # this option won't work for players in creative mode
-    drop: false
-    pick-up: false
-    ...more
+```
+Old item (version 0) picked up
+  → Apply updater steps for version 1, 2
+  → Item now at version 2
+  → No further updates needed
 ```
 
-:::tip
-If you only need to update visual elements of an item—such as custom_model_data, item_model, lore, or name—it is recommended to use `client_bound_data` instead of an item updater.
-:::
+**New items skip the updater entirely.** They are built from the item's `data` section and tagged with the latest version upfront. This means: whenever you add updater steps, you must also update the base `data` to match the final desired state.
 
-To configure an item updater, simply add a new `updater` section following the format below. By default, items have a version number of 0, and the plugin will attempt to update them to the latest version.
+## Configuring an Updater
 
-In the example below:
-- If an item's version is 0, both update logic 1 and 2 will be executed.
-- If an item's version is 1, only logic 2 will be applied.
+The golden rule: **`data` builds new items, `updater` patches old ones. They must agree.**
 
 ```yaml
 items:
   default:my_sword:
-    material: wooden_sword
+    material: stone_sword              # ← new items start here
+    data:
+      item_name: Stone Sword
+      lore:
+        - "Final lore"
     updater:
       1:
         type: apply_data
         data:
-          item_name: First Update
-      # You can apply multiple updaters simultaneously using a list format.
+          item_name: Stone Sword       # old items: rename
       2:
         - type: apply_data
           data:
-            lore: 
-              - "Second Update"
+            lore:
+              - "Final lore"           # old items: add lore
         - type: transmute
-          material: wooden_sword
+          material: stone_sword        # old items: change material
 ```
 
-## Updaters
+Each key under `updater` is a version number — steps run when the item's version is below it. A version holds a single updater or a list. Old items replay all steps above their current version; new items get `data` directly and skip the updater.
+
+:::danger
+If you add an updater but forget to update `data`, old items get patched correctly while **new items are stuck with the old values**.
+:::
+
+## Updater Types
 
 ### apply_data
 
-Apply any valid [item data](./data.mdx) supported by CraftEngine
+Apply any item data using the same format as [🔢 Item Data](./data.mdx):
 
 ```yaml
 type: apply_data
 data:
-  item_name: First Update
+  item_name: Updated Name
+  lore:
+    - "New lore line"
 ```
 
 ### transmute
 
-Replace an item's base material with another item's while preserving all its components/NBT data.
+Replace the base material while preserving all components and NBT:
 
 ```yaml
 type: transmute
-material: wooden_sword
+material: stone_sword
 ```
 
 ### reset
 
-Update the item to its latest state immediately while preserving specified components/NBT tags
+Rebuild the item from scratch using the latest config, keeping only specified data:
 
 ```yaml
 type: reset
-# 1.20.5+
+# 1.20.5+: components to keep
 keep_components:
   - minecraft:enchantments
-# legacy versions
+  - minecraft:custom_name
+# Legacy (< 1.20.5): NBT paths to keep
 keep_tags:
   - Enchantments
+  - display.Name
 ```
+
+:::caution
+Anything not listed in `keep_components` or `keep_tags` is **discarded**. Be explicit.
+:::
+
+## Enabling Triggers
+
+The updater only activates during specific events, all **disabled by default**. Enable only what you need in `config.yml`:
+
+```yaml
+item:
+  update-triggers:
+    click-in-inventory: false   # Click inside inventory (not in creative mode)
+    drop: false                 # Drop an item
+    pick-up: false              # Pick up an item
+    attack: false               # Attack with an item
+```
+
+Each trigger adds overhead — the plugin checks every affected item on every event. Enable sparingly.
