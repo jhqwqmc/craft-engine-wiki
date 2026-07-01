@@ -3,133 +3,201 @@ title: 🐚 命令
 id: commands
 ---
 
+CraftEngine 的大部分命令以 `/craftengine`（缩写 `/ce`）开头，少数为独立的玩家命令（如 `/search-recipe`、`/search-usage`）。每条命令的启用状态、权限节点与命令路径都记录在 `plugins/CraftEngine/commands.yml` 中，可在其中自由修改（修改后需重启生效）。多数命令支持 `--silent`（简写 `-s`）标志以静默执行、不回显消息。
+
+下文中 `[ ]` 表示必填参数，`( )` 表示可选参数。
+
 ## 基础命令
 
 ### reload
 
 `/ce reload [all/recipe/config/pack]`
 
-此命令允许你重载插件资源。如果你不输入任何参数，它将默认为 `/ce reload config`。
+重载插件资源。不带参数时默认为 `config`。`config`/`recipe` 重载配置与配方，`pack` 重新生成资源包，`all` 同时执行两者。
 
 ### upload
 
 `/ce upload`
 
-此命令强制手动启动资源包上传过程。
+手动将资源包上传至已配置的托管主机。
 
-### item
+### clean-cache
 
-`/ce item browser`
+`/ce clean-cache [类型]`
 
-此命令会打开插件的物品浏览器。你也可以直接输入 `/ce` 作为快捷方式。
+清理自动分配的缓存数据。可用类型：`custom_model_data`、`custom_block_states`、`visual_block_states`、`font`、`all`（默认）。插件重载时不可执行。
+
+## 物品命令
+
+### item browser
+
+`/ce item browser [玩家]`
+
+为指定玩家打开物品浏览器（管理端）。
+
+`/ce`
+
+玩家可直接输入 `/ce` 为自己打开物品浏览器（快捷方式）。
 
 ![](/img/commands_15.png)
 
+### item get
+
 `/ce item get [物品标识符] (数量)`
 
-获取指定数量的物品
+获取指定数量的物品（1–9999，默认 1）。
+
+### item give
 
 `/ce item give [玩家] [物品标识符] (数量)`
 
-给予玩家指定数量的物品
+给予玩家指定数量的物品。
+
+### item clear
 
 `/ce item clear [玩家] [物品标识符] (最大数量)`
 
-移除指定数量的物品
+移除玩家物品栏中匹配的 CraftEngine 物品。`最大数量` 为 `0` 时仅统计不删除。可用 `--match-tag` 标志按物品标签匹配。
 
-`/ce item search-recipe/search-usage [玩家] [物品标识符]`
+### item search-recipe / search-usage
 
-指定玩家查询物品的配方或用途
+`/ce item search-recipe [玩家] [物品标识符]`
+
+`/ce item search-usage [玩家] [物品标识符]`
+
+为指定玩家打开物品的配方/用途查询界面。
 
 `/search-recipe [物品标识符]`
 
-查询物品的配方
-
 `/search-usage [物品标识符]`
 
-查询物品的用途
+玩家查询自身物品的配方/用途。
 
 ![](/img/commands_16.png)
 
+### item custom-model-data
+
+`/ce item custom-model-data [值]`
+
+设置主手物品的自定义模型数据值（仅玩家）。
+
+### item item-model
+
+`/ce item item-model [值]`
+
+设置主手物品的物品模型（命名空间 ID，仅玩家，1.21.2+）。
+
+### item remove-component
+
+`/ce item remove-component [组件]`
+
+移除主手物品上指定的数据组件（仅玩家，1.20.5+ 组件版本）。
+
 ## 功能命令
 
-### send-pack
+### feature send-pack
 
 `/ce feature send-pack [玩家]`
 
-此命令将向指定玩家发送一个资源包。
+向指定玩家发送资源包。
 
-### totem-animation
+### feature totem-animation
 
-`/ce feature totem-animation [玩家] [物品标识符] (音效) (音量) (音高) (最小音量) (最小音高) [--no-sound]`
+`/ce feature totem-animation [玩家] [物品标识符] (音效) (音量) (音高) (最小音量) (最小音高)`
 
-此命令为玩家播放不死图腾动画。
+为玩家播放不死图腾动画。可用 `--no-sound` 标志静音。
 
 ![](/img/commands_14.png)
 
-### locale
+### feature locale
 
 `/ce feature locale set [玩家] [区域设置]`
 
-此命令用于设置玩家的区域设置。
+设置玩家的语言区域。
 
 `/ce feature locale unset [玩家]`
 
-此命令用于取消设置玩家的区域设置。
+取消玩家的语言区域设置。
 
-### toggle-entity-culling
+### feature toggle-entity-culling
 
 `/ce feature toggle-entity-culling [玩家] (状态)`
 
-此命令用于切换玩家是否启用实体剔除。
+开启/关闭玩家的实体剔除。`状态` 为 `true`/`false`，省略则切换。
 
-### entity-culling-distance-scale
-
-`/ce feature entity-culling-distance-scale set [玩家] [缩放比率]`
-
-此命令用于设置玩家的实体剔除距离缩放比率。
-
-### display-entity-view-distance-scale
+### feature entity-culling-distance-scale
 
 `/ce feature entity-culling-distance-scale set [玩家] [缩放比率]`
 
-此命令用于设置玩家的展示实体最大可视范围缩放比率。
+设置玩家的实体剔除距离缩放比率（0.125–8）。
+
+### feature display-entity-view-distance-scale
+
+`/ce feature display-entity-view-distance-scale set [玩家] [缩放比率]`
+
+设置玩家的展示实体可视距离缩放比率（0.125–8）。
+
+### feature place-feature
+
+`/ce feature place-feature [特性标识符] (位置)`
+
+在指定位置放置原版已配置特性（configured feature，仅玩家）。省略位置时使用玩家当前坐标。
+
+### feature migrate-world-storage
+
+`/ce feature migrate-world-storage [世界] [类型]`
+
+迁移世界区块存储格式。`类型` 为 `mca` 或 `pdc`，将从该类型迁移至配置文件中当前启用的存储类型；请先在配置中切换目标存储类型，再从旧类型迁移。
+
+### feature world-settings
+
+`/ce feature world-settings [世界] [设置项] (值)`
+
+查询或设置世界选项。`值` 为 `true`/`false`/`default`，省略则查询当前值。
 
 ## 资源命令
 
-### list
+### resource list
 
 `/ce resource list`
 
-此命令用于列出所有 resources 文件夹下的包。
+列出 `resources` 文件夹下所有包（含启用/禁用状态）。
 
 ![](/img/i18n/zh-Hans/commands_17.png)
 
-### enable
+### resource enable
 
 `/ce resource enable [包名]`
 
-此命令用于启用指定包。
+启用指定资源包（写入其 `pack.yml`）。
 
-### disable
+### resource disable
 
 `/ce resource disable [包名]`
 
-此命令用于禁用指定包。
+禁用指定资源包。
 
-### create
+### resource create
 
 `/ce resource create [包名] (命名空间) (作者) (描述)`
 
-此命令用于创建一个新资源，若未指定命名空间则使用包名为命名空间。
+创建新的资源包骨架。未指定命名空间时使用包名作为命名空间。
+
+### resource save-default
+
+`/ce resource save-default [路径]`
+
+重新生成内置默认资源。可用路径：`/default_assets`、`/default_feature_populator`、`/default_templates`、`/internal`、`/legacy_armor`、`/remove_shulker_head`。
 
 ## 调试命令
 
-### appearance-state-usage
+### debug visual-state-usage
 
-`/ce debug appearance-state-usage [方块类型]`
+`/ce debug visual-state-usage [方块类型]`
 
-该命令用于获取指定块类型的外观使用状态。红色部分表示手动分配状态，黄色部分代表自动分配状态，绿色部分则标示可用或未使用状态。将鼠标悬停在这些区域上，即可查看具体状态信息并识别哪些自定义状态正在使用它们。
+别名：`/ce debug appearance-state-usage`、`/ce debug clientside-state-usage`
+
+获取指定方块类型的客户端外观方块状态使用情况。红色表示手动分配状态，黄色表示自动分配状态，绿色表示可用状态。将鼠标悬停在对应区域可查看具体状态。
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_1.png').default} alt="" />
@@ -150,11 +218,19 @@ id: commands
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>未被占用的方块状态</p>
 </div>
 
-### real-state-usage
+### debug auto-state-usage
+
+`/ce debug auto-state-usage [状态组]`
+
+获取指定自动状态组（auto state group）的分配使用情况。颜色含义与 `visual-state-usage` 相同。
+
+### debug real-state-usage
 
 `/ce debug real-state-usage`
 
-此命令与前面提到的命令相似，但主要区别在于它用于检查可用的真实方块状态。
+别名：`/ce debug serverside-state-usage`
+
+检查服务端真实方块状态的使用情况。不带参数。
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_4.png').default} alt="" />
@@ -171,115 +247,122 @@ id: commands
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>未被占用的方块状态</p>
 </div>
 
-### item-data
+### debug item-data
 
 `/ce debug item-data`
 
-此命令允许你检查当前手持物品的物品数据（例如 NBT 或组件）。
+别名：`/ce item debug`
+
+检查主手物品的物品数据（如 NBT 或组件）。可用 `--client-side` 标志查看经过客户端转换（含解密）后的数据。
 
 ![](/img/i18n/zh-Hans/commands_8.png)
 
+### debug get-block-internal-id {#get-block-internal-id}
 
-### get-block-internal-id
+`/ce debug get-block-internal-id [方块状态]`
 
-`/ce debug get-block-internal-id [自定义方块状态]`
-
-此命令用于查找自定义方块对应的服务端侧真实方块命名空间ID，常用于 WorldEdit 和数据包等工具中。
+获取自定义方块状态对应的服务端真实方块命名空间 ID，常用于 WorldEdit 和数据包等工具。
 
 ![](/img/commands_9.png)
 ![](/img/commands_10.png)
 
-
 :::tip
 
-**问：** 为什么Minecraft原生数据包中必须使用真实方块命名空间ID，例如 `craftengine:custom_666` ，而不是像 `default:palm_log` 这样的名称？
+**问：** 为什么 Minecraft 原生数据包中必须使用真实方块命名空间 ID，例如 `craftengine:custom_666`，而不是像 `default:palm_log` 这样的名称？
 
-**答：** 因为配置文件在服务器启动后才加载，而数据包在服务器初始化阶段就已加载。此时服务器无法识别未注册的方块命名空间ID。为确保预注册的自定义方块能适配最新用户配置，CraftEngine 采用了容器式动态绑定方案。
+**答：** 因为配置文件在服务器启动后才加载，而数据包在服务器初始化阶段就已加载。此时服务器无法识别未注册的方块命名空间 ID。为确保预注册的自定义方块能适配最新用户配置，CraftEngine 采用了容器式动态绑定方案。
 
 :::
 
-### get-block-state-registry-id
+### debug get-block-state-registry-id
 
-`/ce debug get-block-state-registry-id [真实方块状态]`
+`/ce debug get-block-state-registry-id [方块状态]`
 
-此命令用于获取对应方块状态的注册标识符（不常用）。
+获取对应方块状态的注册 ID（不常用）。
 
 ![](/img/commands_11.png)
 
-### target-block
+### debug target-block
 
 `/ce debug target-block [--this]`
 
-'target-block' 命令用于检查鼠标指向的方块数据（或使用 '--this' 标志获取当前位置）。它包括真实方块命名空间ID和 CraftEngine 方块状态。如果方块拥有自定义标签，那么也会显示这些标签。
+检查鼠标指向的方块数据（或使用 `--this` 标志获取玩家当前位置）。包括真实方块状态、外观状态、名称、行为、方块实体信息以及自定义标签等。
 
 ![](/img/commands_12.png)
 
-### is-section-injected
+### debug is-section-injected
 
 `/ce debug is-section-injected`
 
-此命令用于检查当前区块是否已被注入。返回值为 false 表示存在异常情况，需要进行调查。
+检查玩家所在区块的各区块段是否已被注入。返回值为 `false` 表示存在异常情况，需要进行调查。
 
 ![](/img/commands_13.png)
 
-### setblock
+### debug setblock
 
-`/ce debug setblock [位置] [方块标识符]`
+`/ce debug setblock [位置] [方块状态]`
 
-此命令用于放置 CraftEngine 方块到指定位置。
+在指定位置放置 CraftEngine 方块状态。
 
-### spawn-furniture
+### debug spawn-furniture
 
-`/ce debug spawn-furniture [位置] [家具标识符] [锚点类型]`
+`/ce debug spawn-furniture [位置] [家具标识符] (变体)`
 
-此命令用于放置家具到指定位置。
+在指定位置放置家具，可选指定变体。
 
-### clear-cooldown
+### debug clear-cooldown
 
 `/ce debug clear-cooldown [玩家]`
 
-此命令用于清除玩家冷却。
+清除玩家的物品冷却。
 
-### is-chunk-persistent-loaded
+### debug is-chunk-persistent-loaded
 
 `/ce debug is-chunk-persistent-loaded`
 
-此命令用于检查区块是否被强加载。
+检查玩家所在区块是否被强加载（Folia 不可用）。
 
-### entity-id
+### debug entity-id
 
 `/ce debug entity-id [世界] [实体ID]`
 
-此命令用于获取通过实体id获取的实体数据。
+通过实体 ID 获取实体数据。
 
-### save-default-resources
-
-`/ce debug save-default-resources`
-
-此命令用于重新保存默认配置。
-
-### clean-cache
-
-`/ce debug clean-cache [缓存类型]`
-
-此命令用于清理自动分配的缓存数据。
-
-### custom-model-data
+### debug custom-model-data
 
 `/ce debug custom-model-data (物品标识符)`
 
-此命令用于获取物品的自定义模型数据值。
+获取物品的自定义模型数据值。省略标识符时使用主手物品。
 
-### image
+### debug item-model
+
+`/ce debug item-model (物品标识符)`
+
+获取物品的物品模型值（1.21.2+）。省略标识符时使用主手物品。
+
+### debug image
 
 `/ce debug image [图片标识符] (行) (列)`
 
-此命令用于获取指定图片的帮助消息。
+获取指定图片在字体中的引用方式（含 MiniMessage、MineDown、RAW 三种格式）。
 
 ![](/img/commands_18.png)
 
-### optimize-furniture-structure
+### debug furniture
+
+`/ce debug furniture`
+
+切换玩家的家具调试模式，用于可视化家具的边界与组成（仅玩家）。
+
+### debug migrate-templates
+
+`/ce debug migrate-templates`
+
+将各资源包配置文件中的 `{xxx}` 占位符迁移为 `${xxx}` 语法。
+
+### debug optimize-furniture-structure
 
 `/ce debug optimize-furniture-structure [世界] [文件] (y轴偏移量)`
 
-此命令用于优化结构存储文件中的家具。
+优化结构存储文件中的家具：移除其中的碰撞实体，并按偏移量调整家具的 Y 坐标。
+

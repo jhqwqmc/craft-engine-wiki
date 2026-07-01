@@ -3,133 +3,201 @@ title: 🐚 Commands
 id: commands
 ---
 
+Most CraftEngine commands start with `/craftengine` (alias `/ce`); a few are standalone player commands (e.g., `/search-recipe`, `/search-usage`). The enabled state, permission node, and command path of every command are recorded in `plugins/CraftEngine/commands.yml` and can be freely customized there (changes require a restart). Most commands support a `--silent` (shorthand `-s`) flag to execute silently without feedback messages.
+
+Below, `[ ]` denotes a required argument and `( )` an optional one.
+
 ## Basic Commands
 
 ### reload
 
 `/ce reload [all/recipe/config/pack]`
 
-This command lets you reload plugin resources. If you don't type any argument, it defaults to `/ce reload config`.
+Reloads plugin resources. Defaults to `config` when no argument is given. `config`/`recipe` reload configuration and recipes, `pack` regenerates the resource pack, and `all` does both.
 
 ### upload
 
 `/ce upload`
 
-This command forces the resource pack upload process to start manually.
+Manually uploads the resource pack to the configured host.
 
-### item
+### clean-cache
 
-`/ce item browser`
+`/ce clean-cache [type]`
 
-This command opens the plugin's item browser. You can just type `/ce` as a shortcut.
+Clears automatically allocated cache data. Available types: `custom_model_data`, `custom_block_states`, `visual_block_states`, `font`, `all` (default). Cannot be used while the plugin is reloading.
+
+## Item Commands
+
+### item browser
+
+`/ce item browser [player]`
+
+Opens the item browser for the specified player(s) (admin).
+
+`/ce`
+
+A player can simply type `/ce` to open the item browser for themselves (shortcut).
 
 ![](/img/commands_15.png)
 
-`/ce item get [item-id] (count)`
+### item get
 
-Get specific quantity of an item
+`/ce item get [item-id] (amount)`
 
-`/ce item give [player] [item-id] (count)`
+Get a specific quantity of an item (1–9999, default 1).
 
-Give specific quantity of an item
+### item give
+
+`/ce item give [player] [item-id] (amount)`
+
+Give a specific quantity of an item to player(s).
+
+### item clear
 
 `/ce item clear [player] [item-id] (max-count)`
 
-Clear the specific CraftEngine item
+Clear matching CraftEngine items from a player's inventory. A `max-count` of `0` only counts without removing. Use the `--match-tag` flag to match by item tag.
 
-`/ce item search-recipe/search-usage [player] [item-id]`
+### item search-recipe / search-usage
 
-Query the recipe or use of an item
+`/ce item search-recipe [player] [item-id]`
+
+`/ce item search-usage [player] [item-id]`
+
+Open the recipe/usage lookup interface for the specified player.
 
 `/search-recipe [item-id]`
 
-Query the item recipe
-
 `/search-usage [item-id]`
 
-Query the item usage
+A player queries the recipe/usage of their own item.
 
 ![](/img/commands_16.png)
 
+### item custom-model-data
+
+`/ce item custom-model-data [value]`
+
+Set the custom model data value of the held item (player only).
+
+### item item-model
+
+`/ce item item-model [value]`
+
+Set the item model of the held item (namespaced key, player only, 1.21.2+).
+
+### item remove-component
+
+`/ce item remove-component [component]`
+
+Remove the specified data component from the held item (player only, 1.20.5+ component release).
+
 ## Feature Commands
 
-### send-pack
+### feature send-pack
 
 `/ce feature send-pack [player]`
 
-This command will send a resource pack to the specified player(s).
+Send the resource pack to the specified player(s).
 
-### totem-animation
+### feature totem-animation
 
-`/ce feature totem-animation [player] [item-id] (sound) (volume) (pitch) (min-volume) (min-pitch) [--no-sound]`
+`/ce feature totem-animation [player] [item-id] (sound) (volume) (pitch) (min-volume) (min-pitch)`
 
-This command plays the Totem of Undying animation for the player.
+Play the Totem of Undying animation for player(s). Use the `--no-sound` flag to mute.
 
 ![](/img/commands_14.png)
 
-### locale
+### feature locale
 
 `/ce feature locale set [player] [locale]`
 
-This command is used to set the player's locale.
+Set the player's locale.
 
 `/ce feature locale unset [player]`
 
-This command is used to unset the player's locale.
+Unset the player's locale.
 
-### toggle-entity_culling
+### feature toggle-entity-culling
 
-`/ce feature toggle-entity_culling [player] (state)`
+`/ce feature toggle-entity-culling [player] (state)`
 
-This command is used to toggle whether entity culling is enabled for a player.
+Toggle entity culling for a player. `state` is `true`/`false`; omit to toggle.
 
-### entity_culling-distance-scale
+### feature entity-culling-distance-scale
 
-`/ce feature entity_culling-distance-scale set [player] [scale]`
+`/ce feature entity-culling-distance-scale set [player] [scale]`
 
-This command is used to set the entity culling distance scale for a player.
+Set the entity culling distance scale for a player (0.125–8).
 
-### display-entity-view-distance-scale
+### feature display-entity-view-distance-scale
 
-`/ce feature entity_culling-distance-scale set [player] [scale]`
+`/ce feature display-entity-view-distance-scale set [player] [scale]`
 
-This command is used to set the maximum view distance scale for the player's display entities.
+Set the display entity view distance scale for a player (0.125–8).
+
+### feature place-feature
+
+`/ce feature place-feature [feature] (location)`
+
+Place a vanilla configured feature at the given location (player only). Defaults to the player's position when omitted.
+
+### feature migrate-world-storage
+
+`/ce feature migrate-world-storage [world] [type]`
+
+Migrate a world's chunk storage format. `type` is `mca` or `pdc`, migrating from that type to the storage type currently enabled in the config; switch the target storage type in the config first, then migrate from the old type.
+
+### feature world-settings
+
+`/ce feature world-settings [world] [setting] (value)`
+
+Get or set a world option. `value` is `true`/`false`/`default`; omit to query the current value.
 
 ## Resource Commands
 
-### list
+### resource list
 
 `/ce resource list`
 
-This command is used to list all packages within the resources folder.
+List all packs under the `resources` folder (with enabled/disabled state).
 
 ![](/img/commands_17.png)
 
-### enable
+### resource enable
 
 `/ce resource enable [pack]`
 
-This command enable a specified package.
+Enable the specified resource pack (writes to its `pack.yml`).
 
-### disable
+### resource disable
 
 `/ce resource disable [pack]`
 
-This command disable a specified package.
+Disable the specified resource pack.
 
-### create
+### resource create
 
 `/ce resource create [pack] (namespace) (author) (description)`
 
-This command is used to create a new resource. If no namespace is specified, the pack will be used as the namespace.
+Create a new resource pack skeleton. Uses the pack name as the namespace if none is specified.
+
+### resource save-default
+
+`/ce resource save-default [path]`
+
+Regenerate built-in default resources. Available paths: `/default_assets`, `/default_feature_populator`, `/default_templates`, `/internal`, `/legacy_armor`, `/remove_shulker_head`.
 
 ## Debug Commands
 
-### appearance-state-usage
+### debug visual-state-usage
 
-`/ce debug appearance-state-usage [block_type]`
+`/ce debug visual-state-usage [block-type]`
 
-The command retrieves the usage status of appearances for a specified block type. The red sections indicate manually assigned states, the yellow sections represent automatically assigned states, and the green sections denote available or unused states. Hovering your mouse over these sections allows you to view the specific states and identify which custom states are utilizing them.
+Aliases: `/ce debug appearance-state-usage`, `/ce debug clientside-state-usage`
+
+Retrieves the client-side (visual) block state usage for a given block type. Red sections indicate manually assigned states, yellow sections represent automatically assigned states, and green sections denote available states. Hover over a section to inspect the specific state.
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_1.png').default} alt="" />
@@ -150,11 +218,19 @@ The command retrieves the usage status of appearances for a specified block type
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>free state</p>
 </div>
 
-### real-state-usage
+### debug auto-state-usage
+
+`/ce debug auto-state-usage [state-group]`
+
+Retrieves the allocation usage of a given auto state group. Colors mean the same as in `visual-state-usage`.
+
+### debug real-state-usage
 
 `/ce debug real-state-usage`
 
-This command is similar to the one mentioned above, but the key difference lies in its function to inspect the available real states.
+Alias: `/ce debug serverside-state-usage`
+
+Inspects the usage of server-side real block states. Takes no arguments.
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/commands_4.png').default} alt="" />
@@ -171,20 +247,21 @@ This command is similar to the one mentioned above, but the key difference lies 
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>free state</p>
 </div>
 
-### item-data
+### debug item-data
 
 `/ce debug item-data`
 
-This command allows you to inspect the item data (such as NBT or components) of the item you are currently holding.
+Alias: `/ce item debug`
+
+Inspect the item data (such as NBT or components) of the held item. Use the `--client-side` flag to view the data after client-side conversion (including decryption).
 
 ![](/img/commands_8.png)
 
+### debug get-block-internal-id {#get-block-internal-id}
 
-### get-block-internal-id
+`/ce debug get-block-internal-id [block-state]`
 
-`/ce debug get-block-internal-id [custom_block_state]`
-
-This command is used to retrieve the server-side real block name corresponding to a custom block, and is commonly utilized in tools like WorldEdit and data packs.
+Retrieves the server-side real block namespace ID corresponding to a custom block state, commonly used in tools like WorldEdit and data packs.
 
 ![](/img/commands_9.png)
 ![](/img/commands_10.png)
@@ -197,88 +274,95 @@ This command is used to retrieve the server-side real block name corresponding t
 
 :::
 
-### get-block_state-registry-id
+### debug get-block-state-registry-id
 
-`/ce debug get-block_state-registry-id [real_block_state]`
+`/ce debug get-block-state-registry-id [block-state]`
 
-This command is used to obtain the registry ID of the corresponding block state (not commonly used).
+Obtains the registry ID of the corresponding block state (not commonly used).
 
 ![](/img/commands_11.png)
 
-### target-block
+### debug target-block
 
 `/ce debug target-block [--this]`
 
-The 'target-block' is used to inspect the data of the block that the mouse is pointing at (or use the '--this' flag to obtain the current position). It includes the actual block ID and the CraftEngine block state. If the block has custom tags, they will also be displayed.
+Inspect the data of the block the cursor points at (or use the `--this` flag to use the player's current position). Includes the real block state, visual state, name, behaviors, block entity info, and any custom tags.
 
 ![](/img/commands_12.png)
 
-### is-section-injected
+### debug is-section-injected
 
 `/ce debug is-section-injected`
 
-This method checks whether the current chunk has been injected. A return value of false indicates an abnormal condition that requires investigation.
+Checks whether each section of the player's current chunk has been injected. A return value of `false` indicates an abnormal condition that requires investigation.
 
 ![](/img/commands_13.png)
 
-### setblock
+### debug setblock
 
-`/ce debug setblock [location] [id]`
+`/ce debug setblock [location] [block-state]`
 
-This command is used to place CraftEngine blocks at a specified location.
+Place a CraftEngine block state at the specified location.
 
-### spawn-furniture
+### debug spawn-furniture
 
-`/ce debug spawn-furniture [location] [id] [anchor-type]`
+`/ce debug spawn-furniture [location] [furniture-id] (variant)`
 
-This command is used to place furniture in a specified location.
+Place furniture at the specified location, optionally with a variant.
 
-### clear-cooldown
+### debug clear-cooldown
 
 `/ce debug clear-cooldown [player]`
 
-This command is used to clear the player's cooldown.
+Clear the player's item cooldowns.
 
-### is-chunk-persistent-loaded
+### debug is-chunk-persistent-loaded
 
 `/ce debug is-chunk-persistent-loaded`
 
-This command is used to check whether a chunk has been persistent-loaded.
+Check whether the player's current chunk is force-loaded (not available on Folia).
 
-### entity-id
+### debug entity-id
 
 `/ce debug entity-id [world] [entityId]`
 
-This command is used to retrieve entity data by entity ID.
+Retrieve entity data by entity ID.
 
-### save-default-resources
+### debug custom-model-data
 
-`/ce debug save-default-resources`
+`/ce debug custom-model-data (item-id)`
 
-This command is used to restore the default configuration.
+Retrieve the custom model data value of an item. Uses the held item when the id is omitted.
 
-### clean-cache
+### debug item-model
 
-`/ce debug clean-cache [type]`
+`/ce debug item-model (item-id)`
 
-This command is used to clear automatically allocated cache data.
+Retrieve the item model value of an item (1.21.2+). Uses the held item when the id is omitted.
 
-### custom_model_data
+### debug image
 
-`/ce debug custom_model_data (id)`
+`/ce debug image [image-id] (row) (column)`
 
-This command is used to retrieve the custom model data values for an item.
-
-### image
-
-`/ce debug image [id] (row) (column)`
-
-This command is used to retrieve help information for the specified image.
+Retrieve how the specified image is referenced in a font (MiniMessage, MineDown, and RAW formats).
 
 ![](/img/commands_18.png)
 
-### optimize-furniture-structure
+### debug furniture
+
+`/ce debug furniture`
+
+Toggle the player's furniture debug mode, used to visualize furniture bounds and composition (player only).
+
+### debug migrate-templates
+
+`/ce debug migrate-templates`
+
+Migrate `{xxx}` placeholders to `${xxx}` syntax across each pack's configuration files.
+
+### debug optimize-furniture-structure
 
 `/ce debug optimize-furniture-structure [world] [file] (y-offset)`
 
-This command is used to optimize furniture within the structure file.
+Optimize furniture within a structure file: removes collision entities and adjusts furniture Y coordinates by the given offset.
+
