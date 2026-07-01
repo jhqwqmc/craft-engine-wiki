@@ -4,257 +4,139 @@ id: data
 ---
 
 import Highlight from '@site/src/components/Highlight';
-import Comment from '@site/src/components/Comment';
-import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 import Details from '@site/src/components/Details';
+import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 
-## 简介
+## 概述
 
-物品数据指的是旧版本中的物品 <Highlight color="#3c5cb3ff">**NBT**</Highlight>（命名二进制标签），或 1.20.5 及以上版本中的物品 <Highlight color="#3c5cb3ff">**组件**</Highlight>。通过这些数据，我们可以自定义物品的各个方面，例如名称、提示框中的描述信息、属性以及 **原版 Minecraft** 提供的其他功能。
-
-## 与其他插件的兼容性
-
-如果您希望 CraftEngine 物品保留外部插件物品的数据，请按照以下配置进行配置：
-
-```yaml
-items:
-  default:example_item:
-    data:
-      external:
-        plugin: neigeitems
-        id: example_item
-```
-
-:::info
-
-支持的插件可以在[**此页面**](../../compatibility/external_item_sources.mdx)上找到。
-
-对于使用命名空间ID的插件物品，只需使用 `<命名空间>:<路径>` 作为 ID。例如：
-
-译者注：原则上不允许使用中文作为命名空间ID，请参考[**此页面**](../../getting_start/add_custom_model.mdx#什么是命名空间id)，还有请先查看[<Highlight color="#FF0000">**注意事项**</Highlight>](../../reference/text_format.mdx#注意事项)
-
-```yaml
-id: test_namespace:test/my_path
-```
-
-对于像 MMOItems 这样包含类型的插件，您需要使用冒号 `:` 将类型与标识符分隔开。例如：
-
-```yaml
-id: MATERIAL:IRON_INGOT
-```
-
-:::
-
-## 硬编码数据
+`data` 设置物品堆叠上的**数据组件**——名称、lore、属性、附魔、食物属性等模型和行为之外的一切。`data` 下的大多数键直接映射到[原版数据组件](https://zh.minecraft.wiki/w/数据组件格式)，CraftEngine 自动处理跨版本转换。
 
 :::tip
-在此语境中，硬编码数据意味着配置格式由插件提供和维护，这确保了跨不同版本的兼容性。这些格式由插件定义，因此它们可能与游戏本身使用的标准 NBT（命名二进制标签）或组件格式不同。这种方法的优点是插件处理所有维护工作，包括版本兼容性，因此你无需担心游戏版本之间的更改或更新。
+
+在数据键后追加 `#<id>` 即可多次应用同一个处理器。`#id` 部分在解析时被去除，仅用于让键名唯一：
+
+```yaml
+data:
+  insert_lore#1:
+    position: TAIL
+    lore:
+      - "第一次插入"
+  insert_lore#2:
+    position: HEAD
+    lore:
+      - "第二次插入"
+```
+
+适用于任何数据键：`attribute_modifiers#main`、`attribute_modifiers#bonus`、`lore#static`、`lore#conditional` 等。
+
 :::
+
+## 🎨 外观
 
 ### item_name（物品名称）
 
-控制物品的默认名称。该名称无法通过铁砧修改，不能在物品展示框中显示名称，带有该组件的旗帜在充当地图标记时也不会显示名称。此组件对物品名称的控制等级永远最低，会被其他所有影响物品名称的组件覆盖。
+物品的默认名称，默认存在于所有物品上。与 `custom_name` 不同，此名称不可被铁砧抹除，不带斜体，也不会显示在旗帜标记、物品展示框等特定标签中。别名：`display_name`。
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:sword:
     data:
-      item_name: "<!i><#FF8C00>黄玉钓竿" # 在这里我们使用 <!i> 是因为 1.20.4 及以下版本没有 item_name 组件。
+      item_name: "<!i><#FF8C00>Topaz Sword"
 ```
 
 ### custom_name（自定义名称）
 
-控制物品的自定义名称，类似于在铁砧中设置的名称。
+玩家为物品指定的名称，通常通过铁砧设置。显示优先级最高，默认带斜体。
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:sword:
     data:
-      custom_name: "<!i><#FF8C00>黄玉钓竿"
+      custom_name: "<!i><#FF8C00>Topaz Sword"
 ```
 
-### lore（物品提示框中的描述信息）
+### lore（描述）
 
-控制物品提示框中所显示的描述信息。
+物品的描述文本。
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:sword:
     data:
-      lore: 
-        - "我去这鱼竿直接把我24K狗眼闪瞎了"
+      lore:
+        - "好闪亮的剑！"
 ```
 
-:::info
+<Details summary="高级 lore 格式" defaultOpen={false}>
 
-出于性能考虑，当我们需要动态将一行描述信息分割为多行或使用条件时，需要更复杂的配置。以下是高级描述信息配置格式，该格式更为精细，同时提供了更强的灵活性。"priority"（优先级）决定了文本段的最终显示位置——优先级数值越低，文本段将越靠近顶部。
+支持条件行、分行文本或基于优先级的排序：
 
 ```yaml
 lore:
-  - content: 
-      - "hello"
-      - 123456
   - content: "优先级 2"
     priority: 2
+    operation: APPEND        # APPEND（默认）| PREPEND
   - content: "优先级 1"
     priority: 1
-  - content: "此行继承上一行的优先级"
-  - content: "分割\n此行文本"
+  - content: "拆分\n此行"
     split_lines: true
     conditions:
       - type: permission
         permission: craftengine.admin
 ```
 
-:::
+`priority` 越低越靠前。`operation` 默认为 `APPEND`。
 
-### overwritable_lore（可覆写的物品提示框中的描述信息）
+</Details>
 
-这是一种专为 `client_bound_data` 设计的特殊数据类型。`overwritable_lore` 仅在物品提示框中的描述信息为空时才会生效。该名称的可覆写体现了它的特性——它会优先显示其他插件设置的物品提示框中的描述信息。例如，当商店插件支持从 CraftEngine 获取物品时，在 `client_bound_data` 使用 `overwritable_lore` 不会像 `lore` 那样覆盖商店在展示售卖的物品时显示的描述信息。
+### insert_lore（插入描述）
 
-```yaml
-items:
-  default:topaz_rod:
-    client_bound_data:
-      overwritable_lore:
-        - "我去这鱼竿直接把我24K狗眼闪瞎了"
-```
-
-### insert_lore（插入物品提示框中的描述信息）
-
-用于在物品提示框中现有的描述信息里动态插入新行。它比普通的物品提示框中的描述信息更加强大，因为它支持基于正则表达式的定位插入以及失败后的回退机制。
+在现有 lore 的指定位置插入行。
 
 ```yaml
 items:
-  default:example_item:
+  demo:sword:
     data:
       insert_lore:
-        # 插入的位置: HEAD, TAIL, BEFORE, AFTER
-        position: AFTER
-        # 匹配现有描述信息中某一行的正则表达式 (仅用于 BEFORE 和 AFTER)
-        pattern: "匹配此行"
-        # 待插入的内容，支持高级描述信息配置格式
+        position: AFTER          # HEAD | TAIL | BEFORE | AFTER
+        pattern: "匹配此行"       # BEFORE/AFTER 时使用的正则
         lore:
           - content: "<green>插入的行"
-            priority: 1
-        # 如果 pattern 没有匹配到任何行，执行的回退操作 (可选)
-        fallback:
+        fallback:                # 可选——未匹配时的回落操作
           position: TAIL
           lore:
-            - content: "<red>回退到尾部"
+            - content: "<red>回落行"
 ```
 
-:::info
+### remove_lore（移除描述）
 
-当 `position` 为 `HEAD` 或 `TAIL` 时，不需要配置 `pattern`
-
-:::
-
-### remove_lore（移除物品提示框中的描述信息）
-
-用于根据正则表达式从物品提示框中现有的描述信息里移除匹配的行。
+按正则移除匹配的行。
 
 ```yaml
 items:
-  default:example_item:
+  demo:sword:
     data:
-      # 移除正则匹配到的行
-      remove_lore: "删除此行"
+      remove_lore: "移除此行"
 ```
 
-### overwritable_item_name（可覆写的物品名称）
+### tooltip_style（工具提示样式 / 1.21.2+）
 
-类似于 `overwritable_lore`，但专为 `item_name` 设计
+工具提示背景纹理。
 
 ```yaml
 items:
-  default:topaz_rod:
-    client_bound_data:
-      overwritable_item_name: "<#FF8C00>黄玉钓竿"
-```
-
-### unbreakable（无法破坏）
-
-控制物品是否无法被破坏。
-
-```yaml
-items:
-  default:topaz_rod:
+  demo:sword:
     data:
-      unbreakable: true
+      tooltip_style: minecraft:topaz
 ```
 
-### enchantment（魔咒）
+### hide_tooltip（隐藏工具提示）
 
-控制物品存储的魔咒信息。
+隐藏特定组件的工具提示。封装了原版 `minecraft:tooltip_display`，支持跨版本（原 `HideFlags`）。
 
 ```yaml
 items:
-  default:topaz_rod:
-    data:
-      enchantment:
-        minecraft:sharpness: 1
-        custom:enchant: 3
-```
-
-:::tip
-当物品类型为附魔书时，任何魔咒都将自动转换为“无活性”的魔咒。
-
-你可以添加 merge 选项来决定是否和物品已有的魔咒合并，这对配方的结果后处理器很有用。
-```yaml
-items:
-  default:topaz_rod:
-    data:
-      enchantment:
-        merge: true
-        enchantments:
-          minecraft:sharpness: 1
-          custom:enchant: 3
-```
-:::
-
-### dyed_color（所染颜色）
-
-控制物品存储的颜色。
-
-```yaml
-items:
-  default:sofa:
-    data:
-      dyed_color: 255,255,255
-```
-
-### custom_model_data（自定义模型数据）
-
-```yaml
-items:
-  default:sofa:
-    data:
-      custom_model_data: 100
-```
-
-:::tip
-与在物品中直接配置 `custom_model_data` 不同，在 `data` 中设置的 `custom_model_data` 仅表示使用该组件本身。
-如果需要生成对应的资源包文件，请使用如下写法：
-
-```yaml
-items:
-  default:sofa:
-    custom_model_data: 100
-```
-:::
-
-:::caution
-为了确保向后兼容性，此处上下文中的 custom_model_data 仅支持整数值。如果您想使用较新版本的功能，应使用 `components` 代替。
-:::
-
-### hide_tooltip（隐藏物品提示框）
-
-隐藏此物品上由指定 **components** 提供的任何工具提示。这适用于所有版本，因为插件处理了跨版本兼容性。原名 `HideFlags`。
-
-```yaml
-items:
-  default:sofa:
+  demo:sword:
     data:
       hide_tooltip:
         - dyed_color
@@ -262,16 +144,237 @@ items:
         - attribute_modifiers
 ```
 
-### block_state（方块状态）
+### dyed_color（染色）
 
-控制方块物品被放置时将应用于方块的方块状态。未指定的属性依旧使用默认值，如果方块属性对于被放置的方块不存在或对应的方块属性值无效，则这项设置不起任何作用。
+可染色物品的颜色（皮革盔甲等）。
 
 ```yaml
 items:
-  default:sofa:
+  demo:armor:
+    data:
+      dyed_color: 255,128,64
+```
+
+### trim（纹饰）
+
+盔甲纹饰图案和材料。
+
+```yaml
+items:
+  demo:chestplate:
+    data:
+      trim:
+        pattern: eye
+        material: iron
+```
+
+### custom_model_data（自定义模型数据）
+
+:::caution
+`data` 内的 `custom_model_data` 仅设置纯整数，**不会绑定模型**。要关联模型定义，请在[物品根级](models#root-fields)配置。
+:::
+
+```yaml
+# 在 data 内——设置组件，不绑定模型
+items:
+  demo:sword:
+    data:
+      custom_model_data: 10001
+
+# 在物品根级——设置组件并绑定模型定义
+items:
+  demo:sword:
+    custom_model_data: 10001
+```
+
+### item_model（物品模型 / 1.21.2+）
+
+:::caution
+`data` 内的 `item_model` 仅设置组件值，**不会生成模型**。要关联模型定义并触发生成，请在[物品根级](models#root-fields)配置。
+:::
+
+```yaml
+# 在 data 内——设置组件，不生成模型
+items:
+  demo:sword:
+    data:
+      item_model: default:sword
+
+# 在物品根级——设置组件并触发生成
+items:
+  demo:sword:
+    item_model: default:sword
+```
+
+### profile（玩家档案）
+
+设置玩家头颅皮肤。支持字符串（自动检测为名称、URL 或 base64）或 map 形式。
+
+```yaml
+# 按玩家名称
+profile: XiaoMoMi
+
+# 按纹理 URL
+profile: http://textures.minecraft.net/texture/ed83db5c...
+
+# 按 Base64
+profile: eyJ0ZXh0dXJlcyI6...
+
+# Map 形式（1.20.5+）
+profile:
+  name: XiaoMoMi       # 玩家名称
+  # texture: minecraft:entity/player/slim/alex  # 资源包纹理路径
+  # url: https://...    # 纹理 URL
+  # base64: eyJ0ZXh...  # Base64 编码纹理
+```
+
+## ⚡ 行为
+
+### food（食物 / 1.20.5+）
+
+设置物品被消耗时应用的食物属性。物品还需要 `consumable` 组件才可食用（CraftEngine 会为食物类物品自动添加）。
+
+```yaml
+items:
+  demo:apple:
+    material: apple
+    data:
+      food:
+        nutrition: 5
+        saturation: 3.5
+        can_always_eat: false
+```
+
+### equippable（可装备 / 1.21.2+）
+
+使物品可穿戴在装备槽位中。
+
+```yaml
+items:
+  demo:helmet:
+    data:
+      equippable:
+        slot: head
+        asset_id: minecraft:topaz
+        swappable: true
+        damage_on_hurt: true
+        dispensable: false
+```
+
+| 字段 | 类型 | 说明 |
+|-------|------|-------------|
+| `slot` | string | `head` / `chest` / `legs` / `feet` / `body` / `mainhand` / `offhand` / `saddle` |
+| `asset_id` | 资源路径 | 装备模型，位于 `assets/<ns>/equipment/<id>.json` |
+| `camera_overlay` | 资源路径 | 叠加纹理，位于 `assets/<ns>/textures/<id>` |
+| `swappable` | bool | 可通过右键装备 |
+| `damage_on_hurt` | bool | 穿戴者受伤时消耗耐久 |
+| `dispensable` | bool | 可通过发射器装备 |
+| `equip_on_interact` | bool | （1.21.5+）可通过对生物使用来装备 |
+
+### use_remainder（使用剩余物 / 1.21.2+）
+
+物品堆叠数量在使用后减少时，将其替换为指定的剩余物。
+
+```yaml
+items:
+  demo:cooked_chicken:
+    data:
+      use_remainder:
+        id: default:chicken_bone
+        count: 1               # 可选，默认 1
+```
+
+### unbreakable（不可损坏）
+
+```yaml
+items:
+  demo:sword:
+    data:
+      unbreakable: true
+```
+
+### max_damage（最大耐久 / 1.20.5+）
+
+物品的最大耐久度。
+
+```yaml
+items:
+  demo:sword:
+    material: wooden_sword
+    data:
+      max_damage: 100
+```
+
+### attribute_modifiers（属性修饰符）
+
+为物品应用[属性修饰符](https://zh.minecraft.wiki/w/属性#修饰符)。别名：`attributes`。
+
+```yaml
+items:
+  demo:sword:
+    data:
+      attribute_modifiers:
+        - type: attack_speed
+          amount: 1.0
+          operation: add_value
+          id: namespace:custom_attribute   # 可选
+          slot: mainhand
+```
+
+### enchantment（附魔）
+
+```yaml
+items:
+  demo:sword:
+    data:
+      enchantment:
+        minecraft:sharpness: 3
+```
+
+<Details summary="与已有附魔合并" defaultOpen={false}>
+
+```yaml
+enchantment:
+  merge: true
+  enchantments:
+    minecraft:sharpness: 3
+```
+
+</Details>
+
+### painting_variant（画作变体）
+
+```yaml
+items:
+  demo:painting:
+    data:
+      painting_variant: default:painting_custom
+```
+
+### jukebox_playable（唱片机曲目 / 1.21+）
+
+此物品放入唱片机时播放的唱片机曲目。
+
+```yaml
+items:
+  demo:music_stick:
+    material: stick
+    data:
+      jukebox_playable: default:credits_music
+```
+
+### block_state（方块状态）
+
+放置此物品为方块时应用的方块状态属性。同时能改善高延迟玩家的放置体验。别名：`blockstate`。
+
+<Details summary="block_state 示例" defaultOpen={false}>
+
+```yaml
+# 使用详细的原版方块属性
+items:
+  demo:sofa:
     material: note_block
     data:
-      # 使用精细的原版方块属性
       block_state:
         note: "1"
         powered: "false"
@@ -279,22 +382,18 @@ items:
 ```
 
 ```yaml
+# 简写——从已定义的自定义方块复制方块状态
 items:
-  default:palm_sapling:
+  demo:sapling:
     material: oak_sapling
     data:
-      # 自动应用自定义方块状态定义的视觉属性
       block_state: default:palm_sapling[stage=0]
 ```
 
 :::tip
-这对高延迟玩家尤其有益，能显著提升方块放置体验。**尤其是对于 PVP 来说**。
+材质必须在视觉上与方块状态匹配。方块类物品应使用 `note_block` 或 `mushroom_stem` 等，而非 `paper`。
 
-请注意：材质必须与视觉方块状态相匹配。 这意味着不能再使用 `paper` 或 `nether_brick` 等物品，而需使用 `note_block`、`string` 或 `oak_leaves` 等符合目标方块外观的材质。
-
-⚠️ **当然，这种方式存在局限：不适用于拥有多重视觉状态的自定义方块。例如，若对方向性方块强制应用方块状态组件，会出现短暂的视觉闪烁。** 
-
-若您持有付费版本，可考虑使用如下配置格式，在保持原服务端物品机制的同时，优化客户端体验。
+如果你有 premium 版本，可以使用 `client_bound_material` + `client_bound_data.block_state` 来改善客户端体验，同时保留原有的服务端材质：
 
 <AnnotatedYaml>
 {`
@@ -311,11 +410,7 @@ items:
         tags:
           - minecraft:planks
           - minecraft:wooden_tool_materials
-      model:
-        type: minecraft:model
-        path: minecraft:item/custom/palm_planks
-        generation:
-          parent: minecraft:block/custom/palm_planks
+      model: minecraft:block/custom/palm_planks
       behavior:
         type: block_item
         block:
@@ -326,382 +421,141 @@ items:
           state:
 -         auto_state: solid
 +         auto_state: mushroom_stem
-            model:
-              template: default:model/simplified_cube_all
-              arguments:
-                path: minecraft:block/custom/palm_planks
+            texture: minecraft:block/custom/palm_planks
 `}
 </AnnotatedYaml>
-:::
-
-### attribute_modifiers（属性修饰符）
-
-将[属性修饰符](https://zh.minecraft.wiki/w/%E6%95%B0%E6%8D%AE%E7%BB%84%E4%BB%B6#attribute_modifiers)应用于物品。
-
-```yaml
-items:
-  default:sofa:
-    data:
-      attribute_modifiers:
-        - type: attack_speed
-          amount: 1.0
-          operation: add_value # add_value, add_multiplied_base, add_multiplied_total
-          id: namespace:custom_attribute # 可选
-          slot: any # any, hand, armor, mainhand, offhand, head, chest, legs, feet, body 或 saddle
-          display: # 1.21.5
-            type: override
-            value: <yellow>攻击速度 +1
-```
-
-:::tip
-
-您可以在旧版本上安全使用最新的属性名称，因为插件会帮助您进行转换。
-最新的属性名称可以在 https://zh.minecraft.wiki/w/属性#已知属性项 上找到。
 
 :::
 
-### food（食物）(1.20.5+)
-
-```yaml
-items:
-  default:magic_apple:
-    material: apple
-    data:
-      food: 
-        nutrition: 5
-        saturation: 3.5
-        can_always_eat: false
-```
-
-:::tip
-
-对于在旧版 Minecraft 中设置食物相关属性，请参考 [food](settings.mdx#food可食用)。
-
-:::
-
-### max_damage（最大耐久度）(1.20.5+)
-
-存储物品的最大耐久度，和 `damage` 组件一起控制物品能否被损坏。此组件不存在时若物品被损坏则游戏将最大耐久度视为 0。
-
-```yaml
-items:
-  default:sword:
-    material: wooden_sword
-    data:
-      max_damage: 100
-```
-
-### jukebox_playable（插入唱片机所播放的音乐）(1.21+)
-
-控制物品存储的音乐信息，以及是否能插进唱片机中播放。
-
-```yaml
-items:
-  default:music_stick:
-    material: stick
-    data:
-      jukebox_playable: default:credits_music
-```
-
-### item_model（物品模型）(1.21.2+)
-
-控制物品的物品模型映射。
-
-```yaml
-items:
-  default:music_stick:
-    data:
-      item_model: default:music_stick
-```
-
-:::tip
-与在物品中直接配置 `item_model` 不同，在 `data` 中设置的 `item_model` 仅表示使用该组件本身。
-如果需要生成对应的资源包文件，请使用如下写法：
-
-```yaml
-items:
-  default:music_stick:
-    item_model: default:music_stick
-```
-:::
-
-### tooltip_style（物品提示框背景和边框样式）(1.21.2+)
-
-控制物品的提示框的外观。
-
-```yaml
-items:
-  default:topaz_rod:
-    data:
-      tooltip_style: minecraft:topaz #namespace:tooltip_style_id
-```
-
-:::tip
-要创建物品提示框背景和边框样式，您必须将纹理放置在以下目录中：https://zh.minecraft.wiki/w/数据组件#tooltip_style
-:::
-
-### use_remainder（使用后返还物品）(1.21.2+)
-
-```yaml
-items:
-  default:cooked_chicken:
-    use_remainder: default:chicken_bone
-```
-
-### trim（盔甲纹饰）
-
-控制物品存储的盔甲纹饰数据。提示框中会显示盔甲纹饰的名称。
-
-```yaml
-items:
-  default:my_chestplate:
-    data:
-      trim:
-        pattern: eye # 参考下方的盔甲纹饰图案
-        material: iron # 参考下方的盔甲纹饰材料
-```
-:::tip
-你可以从 [<Comment text="你将访问 GitHub 请准备合适的网络环境">**盔甲纹饰图案**</Comment>](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/data/minecraft/trim_pattern)
-和
-[<Comment text="你将访问 GitHub 请准备合适的网络环境">**盔甲纹饰材料**</Comment>](https://github.com/InventivetalentDev/minecraft-assets/tree/1.21.8/data/minecraft/trim_material)
-获取到的文件名作为参数，不要带上 `.json` 后缀，并且请忽略以 `_` 开头的文件。
-:::
-
-### equippable（可穿戴性）(1.21.2+)
-
-控制物品是否可被生物装备穿戴。
-
-```yaml
-items:
-  default:my_helmet:
-    data:
-      equippable:
-        # 物品可被穿戴的装备槽位
-        slot: head # head / chest / legs / feet / body / mainhand / offhand / saddle
-                   # 头盔 / 胸甲  / 护腿  / 靴子 / 身体  / 主手      / 副手     / 鞍
-
-        # 可选参数
-        # 物品被穿戴时的装备模型的命名空间ID。
-        # 此值不存在时，若装备在头部则根据物品模型渲染物品，否则什么也不会渲染。
-        # 此处的目录指的是 assets/<命名空间>/equipment/<路径>.json
-        asset_id: minecraft:topaz
-        # 当此项存在且物品被玩家穿戴时，玩家第一人称视角将渲染指定的纹理遮罩。
-        # 此遮罩可以使用多个设置此标签的物品互相叠加，每个物品指定的遮罩都会被渲染，
-        # 且渲染顺序按照主手、副手、头盔、胸甲、护腿、靴子、身体、鞍的顺序依次叠加渲染。
-        # 当遮罩纹理渲染时，遮罩纹理被视为独立纹理，即无法作为动态纹理或GUI纹理渲染，但可以指定纹理过滤方式。
-        # 此处的目录指的是 assets/<命名空间>/textures/<路径>
-        # 译者注：这里不允许使用中文作为命名空间ID
-        camera_overlay: 命名空间:路径
-        # 是否可以使用发射器使生物穿戴此物品。如果物品本身有特殊的发射器行为则此项无效。
-        dispensable: true
-        # 生物在受到会影响损害盔甲的伤害时此物品是否会受损而减少耐久。
-        damage_on_hurt: true
-        # 物品是否可以直接使用穿戴。
-        swappable: true
-        # >= 1.21.5
-        # 对生物使用此物品时，是否可以让被交互的生物在允许的空槽位上穿戴此物品。
-        equip_on_interact: true
-```
-
-### pdc（持久化数据容器）
-
-[持久化数据容器](https://docs.papermc.io/paper/dev/pdc/)是一种可在多种对象上存储自定义数据的方法，这里仅作用于定义物品的数据。它通常用于存储插件的自定义数据，你可以通过此物品数据定义以便其他插件识别。
-
-```yaml
-pdc:
-  key1: string_value # 字符串
-  key2: 114514 # 数字
-  example_list: # 列表
-    - 1
-    - 2
-    - 3
-  map_example: # 映射
-    key: "value"
-```
-
-### profile（玩家游戏档案信息）
-
-此组件用于显示玩家的头像
-
-通过玩家名显示：
-
-```yaml
-profile: XiaoMoMi
-profile: <arg:player.name>
-```
-
-通过纹理URL显示：
-
-```yaml
-profile: http://textures.minecraft.net/texture/ed83db5c2294f03bf069f4a2ac5428df93a13c7c7487d6b1f2ed3ce30b5acec8
-```
-
-通过Base64字符串显示：
-
-```yaml
-profile: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWQ4M2RiNWMyMjk0ZjAzYmYwNjlmNGEyYWM1NDI4ZGY5M2ExM2M3Yzc0ODdkNmIxZjJlZDNjZTMwYjVhY2VjOCJ9fX0=
-```
-
-### conditional（条件数据）
-
-<Highlight color="#f2184eff">**付费版专属**</Highlight>
-
-条件数据允许你定义应用此物品数据的条件
-
-```yaml
-items:
-  default:mythic_sword:
-    client_bound_data:
-      conditional#1:
-        conditions:
-          - type: permission
-            permission: item.unlock
-        data:
-          item_name: "神话剑"
-          lore:
-            - "由星辰打造而来"
-      conditional#2:
-        conditions:
-          - type: "!permission"
-            permission: item.unlock
-        data:
-          item_name: "????剑"
-          lore:
-            - "????????"
-```
-
-### painting_variant（画变种）
-
-```yaml
-items:
-  default:custom_painting:
-    data:
-      painting_variant: default:painting_custom
-```
-
-## 自定义数据
-
-:::caution
-自定义数据不由插件维护，其格式可能随着 Minecraft 的更新而改变，特别是最近组件的频繁更改。
-:::
-
-### NBT (1.20-1.20.4)
-
-:::warning
-由于 NBT（命名二进制标签）已过时，此处不详细讨论。https://zh.minecraft.wiki/w/物品格式
-:::
-
-```yaml
-items:
-  default:topaz_rod:
-    data:
-      nbt:
-        CustomModelData: 1000
-```
-
-### 组件 (1.20.5+)
-
-自定义组件的格式严格遵循 [Minecraft Wiki](https://zh.minecraft.wiki/w/%E6%95%B0%E6%8D%AE%E7%BB%84%E4%BB%B6) 的规范。下面将通过几个示例来帮助你熟悉如何配置自定义组件。示例按难度从简到繁排列，建议你依次学习，以获得丝滑的学习体验。
-
-<Details summary="max_damage [★]">
-    ![](/img/i18n/zh-Hans/item_data_1.png)
-
-    从图中可以看出，max_damage 接受一个 `I`（表示整数参数）。因此，在我们的配置中只需直接使用一个整数即可。
-    ```yaml
-    items:
-      guide:test:
-        data:
-          components:
-            minecraft:max_damage: 128
-    ```
 </Details>
 
-<Details summary="food [★★]">
-    ![](/img/i18n/zh-Hans/item_data_2.png)
+## 💾 存储数据
 
-    从图中可以看出，food 需要三个参数：类型为 `整数` 的 nutrition，类型为 `单精度浮点数` 的 saturation，以及类型为 `布尔` 的 can_always_eat。
+### pdc（持久数据容器）
 
-    ```yaml
-    items:
-      guide:test:
-        data:
-          components:
-            minecraft:food:
-              nutrition: 4
-              saturation: 2.0
-              can_always_eat: false
-    ```
-</Details>
+存储自定义键值数据供其他插件读取。
 
-<Details summary="block_state [★★]">
-    ![](/img/i18n/zh-Hans/item_data_3.png)
+```yaml
+items:
+  demo:sword:
+    data:
+      pdc:
+        key: "value"
+        number: 42
+        list:
+          - 1
+          - 2
+```
 
-    根据此处的描述，我们需要提供 **键值对**，其中值必须是 **字符串** 类型。
+### tags / nbt（标签 / NBT）
 
-    ```yaml
-    items:
-      default:palm_leaves:
-        data:
-          components:
-            minecraft:block_state:
-              distance: '1'
-              persistent: 'false'
-              waterlogged: 'false'
-    ```
-</Details>
+底层 NBT 访问。在物品上设置任意 NBT 标签。对键名使用 `@` 前缀可展平嵌套结构。
 
-<Details summary="instrument [★★★]">
-    ![](/img/i18n/zh-Hans/item_data_4.png)
+```yaml
+items:
+  demo:sword:
+    data:
+      tags:
+        CustomTag: "value"
+        "@nested.path": 42
+```
 
-    当一个选项支持多种数据类型时，您可以根据具体需求选择合适的类型。
+## 📦 外部数据
 
-    ```yaml
-    items:
-      guide:horn:
-        material: goat_horn
-        data:
-          components:
-            minecraft:instrument: "seek_goat_horn"
-    ```
-    ```yaml
-    items:
-      guide:horn:
-        material: goat_horn
-        data:
-          components:
-            minecraft:instrument:
-              description:
-                text: "自定义乐器"
-                color: "red"
-              sound_event: minecraft:block.note_block.bell
-              use_duration: 1
-              range: 16
-    ```
-</Details>
+继承其他插件物品的数据。
 
-<Details summary="fireworks [★★★★]">
-    ![](/img/i18n/zh-Hans/item_data_5.png)
+```yaml
+items:
+  default:example_item:
+    data:
+      external:
+        plugin: neigeitems       # 或 "source"
+        id: example_item
+```
 
-    ```yaml
-    items:
-      guide:firework:
-        material: firework_rocket
-        data:
-          components:
-            minecraft:fireworks:
-              flight_duration: 3
-              explosions:
-                - shape: small_ball
-                  colors: [11223344]
-                  fade_colors: [0]
-                  has_trail: true
-                  has_twinkle: true
-    ```
+支持的插件见[外部物品来源](../../compatibility/external_item_sources.mdx)。
+
+## 🧩 自定义组件（1.20.5+）
+
+你自己的组件——不由 CraftEngine 维护或进行版本检查。格式可能随 Minecraft 更新而变动。完整组件参考见 Minecraft Wiki 上的[数据组件格式](https://zh.minecraft.wiki/w/数据组件格式)。
+
+### 组件
+
+<Details summary="按难度排序的示例" defaultOpen={false}>
+
+**★ max_damage**
+
+![](/img/item_data_1.png)
+
+```yaml
+components:
+  minecraft:max_damage: 128
+```
+
+**★★ food**
+
+![](/img/item_data_2.png)
+
+```yaml
+components:
+  minecraft:food:
+    nutrition: 4
+    saturation: 2.0
+    can_always_eat: false
+```
+
+**★★ block_state**
+
+![](/img/item_data_3.png)
+
+```yaml
+components:
+  minecraft:block_state:
+    distance: '1'
+    persistent: 'false'
+```
+
+**★★★ instrument**
+
+![](/img/item_data_4.png)
+
+```yaml
+components:
+  minecraft:instrument: "seek_goat_horn"
+```
+
+```yaml
+components:
+  minecraft:instrument:
+    description:
+      text: "自定义乐器"
+      color: "red"
+    sound_event: minecraft:block.note_block.bell
+    use_duration: 1
+    range: 16
+```
+
+**★★★★ fireworks**
+
+![](/img/item_data_5.png)
+
+```yaml
+components:
+  minecraft:fireworks:
+    flight_duration: 3
+    explosions:
+      - shape: small_ball
+        colors: [11223344]
+        fade_colors: [0]
+        has_trail: true
+        has_twinkle: true
+```
+
 </Details>
 
 :::tip
 
-若某个组件只需存在而无需赋值，那么直接参考如下配置即可：
+组件仅需存在（无需值）时：
 
 ```yaml
 components:
@@ -710,67 +564,137 @@ components:
 
 :::
 
-### 移除组件 (1.20.5+)
-
-去除物品的组件
+### 移除组件
 
 ```yaml
 items:
-  test:item:
+  demo:item:
     data:
       remove_components:
         - minecraft:equippable
 ```
 
-## 客户端侧数据
+## 🔀 条件数据
 
-<Highlight color="#f2184eff">**付费版专属**</Highlight>
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
 
-client_bound_data 仅存在于客户端侧，不涉及任何服务端侧数据。通过使用客户端侧物品数据，您可以轻松实时更新物品提示框中的描述信息，包括 item_model 和 custom_model_data 等数据。此外，与其他插件不同，CraftEngine 的客户端侧物品数据在创造模式不会被<Comment text="也就是仅客户端侧的数据永久留存在了服务端侧">摸坏</Comment>。
-
-:::caution
-如果你启用了 `paper-global.yml` 的 [`enable-item-obfuscation`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_enable_item_obfuscation) 则需要将 `minecraft:custom_data` 添加到 [`dont-obfuscate`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_all_models_dont_obfuscate) 部分内，否则在查看其他实体时无法正确显示。
-:::
-
-:::info
-只需在您的配置区域添加一个 `client_bound_data` 部分，然后将所需数据从之前的 `data` 部分移动<Comment text="Ctrl+X Ctrl+V">（剪切+粘贴）</Comment>到里面。
+基于条件的不同数据。
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:mythic_sword:
     client_bound_data:
-      item_name: "<!i><#FF8C00>骗你的我不是黄玉钓竿"
-    data:
-      item_name: "<!i><#FF8C00>黄玉钓竿"
+      conditional#1:
+        conditions:
+          - type: permission
+            permission: item.unlock
+        data:
+          item_name: "Mythic Sword"
+          lore:
+            - "A blade forged in fallen stars"
+      conditional#2:
+        conditions:
+          - type: "!permission"
+            permission: item.unlock
+        data:
+          item_name: "???? Sword"
 ```
 
-:::
+## 📡 客户端绑定数据
 
-:::tip
-client_bound_data 对冒险模式中的玩家非常有用，它允许玩家在服务端破坏某些真自定义方块。我建议在这里尽可能使用方块标签，而不是具体的方块 id。这有助于解决一些客户端网络协议问题。
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+
+### 是什么
+
+平时你在 `data` 里写的东西，全都刻在服务端的 `ItemStack` 上——所有人看到的都一样，别的插件扫物品也能读到这些组件。
+
+`client_bound_data` 则把纯展示用的数据搬到客户端去。这些数据不存服务端，而是通过网络包发给玩家，在渲染那一刻才解析。服务端的物品干干净净，不同玩家还能看到不同的东西。
+
+### 怎么用
+
+把数据拆成两份：服务端需要的搁 `data`，给玩家看的搁 `client_bound_data`。`data` 的所有键这里都能用——`item_name`、`lore`、`custom_model_data`、`item_model`、`components`，哪个都行。
+
+比如这把剑，玩家有没有解锁，看到的名字和描述完全不一样：
 
 ```yaml
 items:
-  default:topaz_pickaxe:
-    material: golden_pickaxe
-    settings:
-      tags:
-        - "default:topaz_tools"
+  demo:mythic_sword:
+    material: diamond_sword
     data:
-      components:
-        minecraft:max_damage: 64
-        # 服务端侧方块状态
-        can_break:
-          blocks: "#mineable/pickaxe"
+      item_name: "<!i><#FF8C00>Mythic Sword"
     client_bound_data:
-      components:
-        # 客户端侧方块状态
-        can_break:
-          blocks: minecraft:mushroom_stem
-    model:
-      template: default:model/simplified_handheld
-      arguments:
-        path: "minecraft:item/custom/topaz_pickaxe"
+      conditional#unlocked:
+        conditions:
+          - type: permission
+            permission: item.mythic_sword.unlock
+        data:
+          item_name: "<!i><#FF8C00>Mythic Sword"
+          lore:
+            - "<green>已解锁"
+            - "<gray>等级 <arg:player.level>"
+      conditional#locked:
+        conditions:
+          - type: "!permission"
+            permission: item.mythic_sword.unlock
+        data:
+          item_name: "<!i><gray>???? Sword"
+          lore:
+            - "<red>已锁定"
+            - "<gray>需要等级 30"
 ```
+
+有权限的玩家看到金色名称和其当前等级。其他玩家看到 "???? Sword" 和锁定提示。两人看的是同一个 `ItemStack`。
+
+### 为什么要用
+
+**不同玩家，不同画面。** 不用 `client_bound_data`，同一件物品谁拿手里看的都一样。用了它，解锁状态、个人属性、倒计时这些都能做到千人千面——每个客户端渲染的时候各算各的。
+
+**性能更好。** 服务端的物品不再扛着大段大段的描述文本。好处有三：
+
+- **`getItemMeta` 更快。** 别的插件读物品信息时，不用反序列化那些留在客户端的显示组件。
+- **内存更省。** 生存服箱子里屯几千件物品，服务端的物品轻飘飘，花哨的描述全在渲染层。
+- **区块加载更快。** lore 这些东西只有在拿给玩家看的时候才在 netty 线程上序列化。平时加载区块，物品上就一点点数据。
+
+### client_bound_material（客户端绑定材质）
+
+更改客户端看到的**视觉**材质，同时保持服务端材质不变。
+
+```yaml
+items:
+  demo:palm_planks:
+    material: nether_brick
+    client_bound_material: mushroom_stem
+    client_bound_data:
+      block_state: default:palm_planks
+```
+
+适用于服务端材质必须与视觉材质不同的场景——例如以 `nether_brick` 为基础物品，而客户端渲染绑定到 `mushroom_stem` 的自定义方块模型。
+
+### 可覆盖变体
+
+这些仅在物品尚未拥有对应数据时才生效——允许其他插件设置自己的值而不被覆盖。
+
+```yaml
+# lore——仅在没有 lore 时显示
+overwritable_lore:
+  - "默认描述"
+
+# item_name——仅在没有自定义名称时显示
+overwritable_item_name: "<!i><#FF8C00>默认名称"
+
+# item_model（1.21.2+）——仅在没有模型时设置
+overwritable_item_model: default:sword
+
+# custom_model_data——仅在没有 CMD 时设置
+overwritable_custom_model_data: 10001
+```
+
+:::danger
+
+此功能改变了物品数据在服务端和客户端之间的流转方式。它适用于精心筛选插件生态并有独立排错能力的服务器。
+
+- **插件兼容性。** 通过读取服务端名称或模型值来识别物品的插件可能无法识别使用 `client_bound_data` 的物品。必要时在 `data` 中添加一组最小的真实组件与仅客户端的数据并存。
+- **数据包冲突。** 其他通过数据包修改物品的插件可能意外剥离或损坏客户端组件。这可能导致物品粘滞在光标上（出现视觉复制）或组件永久残留在物品上。
+- **Paper 混淆。** 若使用 Paper 的 `enable-item-obfuscation`，需在 `paper-global.yml` 中将 `minecraft:custom_data` 添加到 `dont-obfuscate`。
 
 :::

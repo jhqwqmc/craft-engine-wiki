@@ -5,6 +5,7 @@ id: data
 
 import Highlight from '@site/src/components/Highlight';
 import Details from '@site/src/components/Details';
+import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 
 ## Introduction
 
@@ -366,7 +367,10 @@ items:
 
 Block state properties applied when placing this item as a block. Also improves placement responsiveness for high-latency players. Alias: `blockstate`.
 
+<Details summary="block_state examples" defaultOpen={false}>
+
 ```yaml
+# Use detailed vanilla block properties
 items:
   demo:sofa:
     material: note_block
@@ -389,8 +393,41 @@ items:
 :::tip
 The material must visually match the block state. Use `note_block` or `mushroom_stem` instead of `paper` for block items.
 
-[Premium] Use `client_bound_material` + `client_bound_data.block_state` for items that need a different server-side material.
+If you have the premium version, you can use `client_bound_material` + `client_bound_data.block_state` to improve the client-side experience while keeping the original server-side material:
+
+<AnnotatedYaml>
+{`
+items:
+    default:palm_planks:
+      material: nether_brick
+      data:
+        item_name: <!i><i18n:item.palm_planks>
++   client_bound_material: mushroom_stem
++   client_bound_data:
++     block_state: default:palm_planks
+      settings:
+        fuel_time: 300
+        tags:
+          - minecraft:planks
+          - minecraft:wooden_tool_materials
+      model: minecraft:block/custom/palm_planks
+      behavior:
+        type: block_item
+        block:
+          settings:
+            template: default:settings/planks
+          loot:
+            template: default:loot_table/self
+          state:
+-         auto_state: solid
++         auto_state: mushroom_stem
+            texture: minecraft:block/custom/palm_planks
+`}
+</AnnotatedYaml>
+
 :::
+
+</Details>
 
 ## 💾 Stored Data
 
@@ -440,7 +477,7 @@ See [External Item Sources](../../compatibility/external_item_sources.mdx) for s
 
 ## 🧩 Custom Components (1.20.5+)
 
-Your own components — not maintained or version-checked by CraftEngine. Format may break across Minecraft updates.
+Your own components — not maintained or version-checked by CraftEngine. Format may break across Minecraft updates. See the [data component format](https://minecraft.wiki/w/Data_component_format) on the Minecraft Wiki for the full component reference.
 
 ### Components
 
