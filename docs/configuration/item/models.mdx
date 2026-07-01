@@ -4,6 +4,8 @@ id: models
 ---
 
 import UrlCard from '@site/src/components/UrlCard';
+import Highlight from '@site/src/components/Highlight';
+import Details from '@site/src/components/Details';
 
 ## Overview
 
@@ -48,6 +50,61 @@ items:
 ```
 
 :::
+
+<Details summary="item_model & custom_model_data" defaultOpen={false}>
+
+`custom_model_data` (pre-1.21.4) and `item_model` (1.21.4+) are two ways Minecraft identifies which model to render for an item. They sit at the item root level — siblings of `material` and `model`. CraftEngine manages both automatically; you rarely need to set them by hand.
+
+### What they do
+
+| Field | Version | Format | How it works |
+|-------|---------|--------|-------------|
+| `custom_model_data` | All | Integer | Attached to the item stack. The resource pack's model JSON `overrides` list matches this number to a model path. |
+| `item_model` | 1.21.2+ | Namespaced ID | Points directly to `assets/<ns>/items/<id>.json`. No override lookup needed. |
+
+CraftEngine generates **both** when your resource pack spans the 1.21.4 boundary — modern for 1.21.4+ clients, legacy overrides for older ones.
+
+### When CraftEngine auto-generates them
+
+For a typical item that has `model` or `texture` configured:
+
+- **`custom_model_data`** is auto-allocated if the pack's minimum version is below 1.21.2, or if `always-use-custom-model-data` is enabled. The starting number is controlled by `item.custom-model-data-starting-value` in config.yml (default `10000`).
+- **`item_model`** is auto-generated from the item's ID (`demo:sword` → `item_model: demo:sword`) if the server is 1.21.2+ and the pack's maximum version is 1.21.4+. This happens as long as `custom_model_data` is 0, or if `always-use-item-model` is enabled.
+
+### When to set them manually
+
+```yaml
+items:
+  demo:sword:
+    material: diamond_sword
+    custom_model_data: 10001     # Force a specific number
+    item_model: demo:sword       # Force a specific path
+    model:
+      type: minecraft:model
+      path: minecraft:item/custom/sword
+```
+
+| Scenario | What to set |
+|----------|------------|
+| You need a **specific** CMD number (e.g. another plugin references it) | `custom_model_data: <number>` |
+| You want a **custom** item_model path (instead of auto-generated from ID) | `item_model: <namespace:path>` |
+
+### config.yml settings
+
+| Setting | Default | Effect |
+|---------|---------|--------|
+| `item.always-use-item-model` | `true` | Generate `item_model` even when `custom_model_data` is present. Recommended. |
+| `item.always-use-custom-model-data` | `false` | Force CMD allocation even for 1.21.2+-only packs. |
+| `item.always-generate-model-overrides` | `false` | Force legacy overrides even for 1.21.4+-only packs (useful for Bedrock converters). |
+| `item.custom-model-data-starting-value.default` | `10000` | First auto-allocated CMD number. |
+| `item.custom-model-data-starting-value.overrides.<material>` | — | Per-material override, e.g. `paper: 20000`. |
+| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">Premium</Highlight> Keep CMD and item_model client-side, enabling dynamic updates without affecting existing items. |
+
+:::tip
+For nearly all items, you don't need to set either field. Configure `model` or `texture` and CraftEngine handles the rest.
+:::
+
+</Details>
 
 ## Model Types
 
@@ -94,8 +151,6 @@ transformation:
 :::
 
 ## Simplified Models
-
-import Details from '@site/src/components/Details';
 
 Writing out a full model tree by hand gets tedious. CraftEngine can figure it out for you — just feed it the textures and pick the right base material. It looks at what you're basing the item on and builds the right model structure behind the scenes.
 

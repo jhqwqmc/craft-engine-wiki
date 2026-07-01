@@ -4,99 +4,79 @@ id: data
 ---
 
 import Highlight from '@site/src/components/Highlight';
-import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 import Details from '@site/src/components/Details';
 
 ## Introduction
 
-Item Data refers to the <Highlight color="#3c5cb3ff">**NBT**</Highlight> (Named Binary Tag) of an item in older versions, or the item <Highlight color="#3c5cb3ff">**Components**</Highlight> in version 1.20.5 and above. Through this data, we can customize various aspects of an item such as its name, description, attributes, and other functionalities provided by **vanilla Minecraft**.
-
-## Compatibility with Other Plugins
-
-If you want a CraftEngine item to retain the data of an external plugin's item, follow this configuration:
-
-```yaml
-items:
-  default:example_item:
-    data:
-      external:
-        plugin: neigeitems
-        id: example_item
-```
-
-:::info
-
-Support plugins can be found on [**this page**](../../compatibility/external_item_sources.mdx).
-
-For plugins that use ResourceLocation for items, just use `namespace:path` as id. For example:
-
-```yaml
-id: test_namespace:test/my_path
-```
-
-For plugins like MMOItems that include types, you need to use a colon `:` to separate the type from the ID. For example:
-
-```yaml
-id: MATERIAL:IRON_INGOT
-```
-
-:::
-
-## Hard-coded Data
+`data` sets the **data components** on an item stack — its name, lore, attributes, enchantments, food properties, and everything else that isn't the model or behavior. Most keys under `data` map directly to [vanilla data components](https://minecraft.wiki/w/Data_component_format), with CraftEngine handling cross-version conversion automatically.
 
 :::tip
-Hardcoded data, in this context, means that the configuration formats are provided and maintained by plugin, which ensures compatibility across different versions. These formats are defined by the plugin, so they may differ from the standard NBT (Named Binary Tag) or Components formats used by the game itself. The advantage of this approach is that the plugin handles all the maintenance, including version compatibility, so you do not need to worry about changes or updates between game versions.
+
+Append `#<id>` to a data key to apply the same processor multiple times. The `#id` part is stripped during parsing and only serves to make the key unique:
+
+```yaml
+data:
+  insert_lore#1:
+    position: TAIL
+    lore:
+      - "First insertion"
+  insert_lore#2:
+    position: HEAD
+    lore:
+      - "Second insertion"
+```
+
+Works with any data key: `attribute_modifiers#main`, `attribute_modifiers#bonus`, `lore#static`, `lore#conditional`, etc.
+
 :::
+
+## 🎨 Appearance
 
 ### item_name
 
-Determines the default name of this item, unlike the `custom_name`, this name can't be erased using an anvil, won't be italicized, and does not show in some labels, such as banner markers and item frames.
+The item's default name, present on all items by default. Unlike `custom_name`, this cannot be erased by an anvil, is not italicized, and does not display in certain labels such as banner markers or item frames. Alias: `display_name`.
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:sword:
     data:
-      item_name: "<!i><#FF8C00>Topaz Rod" # we use <!i> here because 1.20.4 and below
-                                          # don't have item_name component
+      item_name: "<!i><#FF8C00>Topaz Sword"
 ```
 
 ### custom_name
 
-Used to specify the item's custom name, like you can in an anvil.
+A player-assigned name for the item, typically set via an anvil. Has highest priority for display and appears italicized by default.
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:sword:
     data:
-      custom_name: "<!i><#FF8C00>Topaz Rod"
+      custom_name: "<!i><#FF8C00>Topaz Sword"
 ```
 
 ### lore
 
-Determines the displayed description of the item.
+The item's description lines.
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:sword:
     data:
-      lore: 
-        - "What a shiny rod!"
+      lore:
+        - "What a shiny sword!"
 ```
 
-:::info
+<Details summary="Advanced lore format" defaultOpen={false}>
 
-For performance considerations, more complex configuration is required when we need to dynamically split a line of lore into multiple lines or add custom conditions. Below is the advanced lore configuration format, which is more intricate but offers greater flexibility. The "priority" determines the final position of the text segment—the lower the priority, the closer it will be to the top.
+For conditional lines, split text, or priority-based ordering:
 
 ```yaml
 lore:
-  - content: 
-      - "hello"
-      - 123456
   - content: "Priority 2"
     priority: 2
+    operation: APPEND        # APPEND (default) | PREPEND
   - content: "Priority 1"
     priority: 1
-  - content: "This line inherits the the priority of the above one"
   - content: "Split\nThis Line"
     split_lines: true
     conditions:
@@ -104,154 +84,58 @@ lore:
         permission: craftengine.admin
 ```
 
-:::
+Lower `priority` appears closer to the top. `operation` defaults to `APPEND`.
 
-### overwritable_lore
-
-This is a specialized data type designed for `client_bound_data`. The `overwritable_lore` will only be applied if the item has no existing lore. The name `overwritable_lore` reflects its behavior—it prioritizes and displays lore set by other plugins. For example, if a shop plugin is compatible with CraftEngine, you can purchase a CraftEngine item from the shop without the client_bound_data `lore` overriding the shop item's description.
-
-```yaml
-items:
-  default:topaz_rod:
-    client_bound_data:
-      overwritable_lore:
-        - "What a shiny rod!"
-```
+</Details>
 
 ### insert_lore
 
-Used to dynamically insert new lines into an item's existing Lore. It is more powerful than the standard lore configuration as it supports positional insertion based on regular expressions and a fallback mechanism.
+Inserts lines into existing lore at a specific position.
 
 ```yaml
 items:
-  default:example_item:
+  demo:sword:
     data:
       insert_lore:
-        # Insertion position: HEAD, TAIL, BEFORE, AFTER
-        position: AFTER
-        # Regular expression to match existing Lore lines (only for BEFORE and AFTER)
-        pattern: "Match this line"
-        # Content to be inserted, supports advanced Lore format
+        position: AFTER          # HEAD | TAIL | BEFORE | AFTER
+        pattern: "Match this"    # Regex for BEFORE/AFTER
         lore:
           - content: "<green>Inserted line"
-            priority: 1
-        # Fallback operation if the pattern does not match any line (Optional)
-        fallback:
+        fallback:                # Optional — if pattern doesn't match
           position: TAIL
           lore:
-            - content: "<red>Fallback to tail"
+            - content: "<red>Fallback"
 ```
-
-:::info
-
-When `position` is `HEAD` or `TAIL`, the `pattern` configuration is not required.
-
-:::
 
 ### remove_lore
 
-Used to remove matching lines from an item's existing Lore based on regular expressions.
+Removes lines matching a regex.
 
 ```yaml
 items:
-  default:example_item:
+  demo:sword:
     data:
-      # Remove lines matched by the regular expression
       remove_lore: "Remove this line"
 ```
 
-### overwritable_item_name
+### tooltip_style (1.21.2+)
 
-Similar to `overwritable_lore` but designed for item_name
-
-```yaml
-items:
-  default:topaz_rod:
-    client_bound_data:
-      overwritable_item_name: "<!i><#FF8C00>Topaz Rod"
-```
-
-### unbreakable
-
-Determines whether the item is unbreakable.
+The tooltip background texture.
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:sword:
     data:
-      unbreakable: true
+      tooltip_style: minecraft:topaz
 ```
-
-### enchantment
-
-Determines the enchantments of the item.
-
-```yaml
-items:
-  default:topaz_rod:
-    data:
-      enchantment:
-        minecraft:sharpness: 1
-        custom:enchant: 3
-```
-
-:::tip
-When the item type is an enchanted book, any enchantments will automatically be converted to stored enchantments.
-
-You can add the `merge` option to decide whether to merge with the existing enchantments on the item. This is useful for the result post-processor of recipes.
-```yaml
-items:
-  default:topaz_rod:
-    data:
-      enchantment:
-        merge: true
-        enchantments:
-          minecraft:sharpness: 1
-          custom:enchant: 3
-```
-:::
-
-### dyed_color
-
-Determines the color of the item
-
-```yaml
-items:
-  default:sofa:
-    data:
-      dyed_color: 255,255,255
-```
-
-### custom_model_data
-
-```yaml
-items:
-  default:sofa:
-    data:
-      custom_model_data: 100
-```
-
-:::tip
-The custom_model_data defined within the `data` does not bind a model to the specified material's custom_model_data mapping. In most cases, you should configure it under the root node of the item, unless you know exactly what you are doing.
-
-```yaml
-items:
-  default:sofa:
-    custom_model_data: 100
-```
-:::
-
-:::caution
-To ensure backward compatibility, custom_model_data in this context only supports integer values. If you want to use newer version features, you should use `components` instead.
-:::
 
 ### hide_tooltip
 
-Hides any tooltips provided by the specified **components** on this item. This works for all versions as plugin handles the cross version compatibility. Formerly known as `HideFlags`.
+Hides tooltips from specific components. Wraps vanilla `minecraft:tooltip_display` with cross-version support (formerly `HideFlags`).
 
 ```yaml
 items:
-  default:sofa:
+  demo:sword:
     data:
       hide_tooltip:
         - dyed_color
@@ -259,16 +143,234 @@ items:
         - attribute_modifiers
 ```
 
-### block_state
+### dyed_color
 
-The block state properties to apply when placing this block.
+Color for dyeable items (leather armor, etc.).
 
 ```yaml
 items:
-  default:sofa:
+  demo:armor:
+    data:
+      dyed_color: 255,128,64
+```
+
+### trim
+
+Armor trim pattern and material.
+
+```yaml
+items:
+  demo:chestplate:
+    data:
+      trim:
+        pattern: eye
+        material: iron
+```
+
+### custom_model_data
+
+:::caution
+`custom_model_data` inside `data` only sets a plain integer and **does not bind models**. To link a value to a model definition, configure it at the [item root level](models#root-fields) instead.
+:::
+
+```yaml
+# Inside data — sets the component, no model binding
+items:
+  demo:sword:
+    data:
+      custom_model_data: 10001
+
+# At item root — sets the component AND binds to model definitions
+items:
+  demo:sword:
+    custom_model_data: 10001
+```
+
+### item_model (1.21.2+)
+
+:::caution
+`item_model` inside `data` only sets the component value and **does not generate models**. To link to a model definition and trigger model generation, configure it at the [item root level](models#root-fields) instead.
+:::
+
+```yaml
+# Inside data — sets the component, no model generation
+items:
+  demo:sword:
+    data:
+      item_model: default:sword
+
+# At item root — sets the component AND triggers model generation
+items:
+  demo:sword:
+    item_model: default:sword
+```
+
+### profile
+
+Sets a player head skin. Accepts strings (auto-detected as name, URL, or base64) or a map.
+
+```yaml
+# By player name
+profile: XiaoMoMi
+
+# By texture URL
+profile: http://textures.minecraft.net/texture/ed83db5c...
+
+# By Base64
+profile: eyJ0ZXh0dXJlcyI6...
+
+# Map form (1.20.5+)
+profile:
+  name: XiaoMoMi       # Player name
+  # texture: minecraft:entity/player/slim/alex  # Resource-pack texture path
+  # url: https://...    # Texture URL
+  # base64: eyJ0ZXh...  # Base64-encoded texture
+```
+
+## ⚡ Behavior
+
+### food (1.20.5+)
+
+Sets the food stats applied when this item is consumed. The item must also have a `consumable` component to be edible (CraftEngine adds this automatically for food items).
+
+```yaml
+items:
+  demo:apple:
+    material: apple
+    data:
+      food:
+        nutrition: 5
+        saturation: 3.5
+        can_always_eat: false
+```
+
+### equippable (1.21.2+)
+
+Lets the item be worn in an equipment slot.
+
+```yaml
+items:
+  demo:helmet:
+    data:
+      equippable:
+        slot: head
+        asset_id: minecraft:topaz
+        swappable: true
+        damage_on_hurt: true
+        dispensable: false
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `slot` | string | `head` / `chest` / `legs` / `feet` / `body` / `mainhand` / `offhand` / `saddle` |
+| `asset_id` | asset path | Equipment model at `assets/<ns>/equipment/<id>.json` |
+| `camera_overlay` | asset path | Overlay texture at `assets/<ns>/textures/<id>` |
+| `swappable` | bool | Can be equipped by right-clicking |
+| `damage_on_hurt` | bool | Takes durability damage when the wearer is hurt |
+| `dispensable` | bool | Can be equipped via dispenser |
+| `equip_on_interact` | bool | (1.21.5+) Can be equipped onto a mob by using on it |
+
+### use_remainder (1.21.2+)
+
+Replaces this item with the specified remainder when its stack count decreases after use.
+
+```yaml
+items:
+  demo:cooked_chicken:
+    data:
+      use_remainder:
+        id: default:chicken_bone
+        count: 1               # Optional, default 1
+```
+
+### unbreakable
+
+```yaml
+items:
+  demo:sword:
+    data:
+      unbreakable: true
+```
+
+### max_damage (1.20.5+)
+
+The item's maximum durability.
+
+```yaml
+items:
+  demo:sword:
+    material: wooden_sword
+    data:
+      max_damage: 100
+```
+
+### attribute_modifiers
+
+Applies [attribute modifiers](https://minecraft.wiki/w/Attribute#Modifiers) to the item. Alias: `attributes`.
+
+```yaml
+items:
+  demo:sword:
+    data:
+      attribute_modifiers:
+        - type: attack_speed
+          amount: 1.0
+          operation: add_value
+          id: namespace:custom_attribute   # Optional
+          slot: mainhand
+```
+
+### enchantment
+
+```yaml
+items:
+  demo:sword:
+    data:
+      enchantment:
+        minecraft:sharpness: 3
+```
+
+<Details summary="Merging with existing enchantments" defaultOpen={false}>
+
+```yaml
+enchantment:
+  merge: true
+  enchantments:
+    minecraft:sharpness: 3
+```
+
+</Details>
+
+### painting_variant
+
+```yaml
+items:
+  demo:painting:
+    data:
+      painting_variant: default:painting_custom
+```
+
+### jukebox_playable (1.21+)
+
+The jukebox song to play when this item is inserted into a jukebox.
+
+```yaml
+items:
+  demo:music_stick:
+    material: stick
+    data:
+      jukebox_playable: default:credits_music
+```
+
+### block_state
+
+Block state properties applied when placing this item as a block. Also improves placement responsiveness for high-latency players. Alias: `blockstate`.
+
+```yaml
+items:
+  demo:sofa:
     material: note_block
     data:
-      # use detailed vanilla block properties
       block_state:
         note: "1"
         powered: "false"
@@ -276,417 +378,147 @@ items:
 ```
 
 ```yaml
+# Shorthand — copies block state from a defined custom block
 items:
-  default:palm_sapling:
+  demo:sapling:
     material: oak_sapling
     data:
-      # Automatically use the visual properties of any custom block state you define.
       block_state: default:palm_sapling[stage=0]
 ```
 
 :::tip
-This is particularly beneficial for players with high latency, as it significantly improves the block placement experience, **espcially for PVP servers**.
+The material must visually match the block state. Use `note_block` or `mushroom_stem` instead of `paper` for block items.
 
-Please note: the material must correspond to the visual block state. 
-This means you can no longer use items like `paper` or `nether_brick`, but must instead use ones like `note_block`, `string`, or `oak_leaves` that match the intended block's appearance.
-
-⚠️ **Of course, this approach has a limitation: it's not compatible with custom blocks that possess multiple visual states. For instance, if you forcibly apply the block_state component to a directional block, you will observe a brief visual flicker.**
-
-If you have the **premium** version, you can consider using a configuration format like the following. 
-This improves the client-side experience while maintaining the original server-side item mechanics.
-
-<AnnotatedYaml>
-{`
-items:
-    default:palm_planks:
-      material: nether_brick
-      data:
-        item_name: <!i><i18n:item.palm_planks>
-+   client_bound_material: mushroom_stem
-+   client_bound_data:
-+     block_state: default:palm_planks
-      settings:
-        fuel_time: 300
-        tags:
-          - minecraft:planks
-          - minecraft:wooden_tool_materials
-      model:
-        type: minecraft:model
-        path: minecraft:item/custom/palm_planks
-        generation:
-          parent: minecraft:block/custom/palm_planks
-      behavior:
-        type: block_item
-        block:
-          settings:
-            template: default:settings/planks
-          loot:
-            template: default:loot_table/self
-          state:
--         auto_state: solid
-+         auto_state: mushroom_stem
-            model:
-              template: default:model/simplified_cube_all
-              arguments:
-                path: minecraft:block/custom/palm_planks
-`}
-</AnnotatedYaml>
-
+[Premium] Use `client_bound_material` + `client_bound_data.block_state` for items that need a different server-side material.
 :::
 
-### attribute_modifiers
-
-Applies [attribute modifiers](https://minecraft.wiki/w/Attribute#Modifiers) onto items.
-
-```yaml
-items:
-  default:sofa:
-    data:
-      attribute_modifiers:
-        - type: attack_speed
-          amount: 1.0
-          operation: add_value # add_value, add_multiplied_base, add_multiplied_total
-          id: namespace:custom_attribute # Optional
-          slot: any # any, hand, armor, mainhand, offhand, head, chest, legs, feet, body or saddle
-          display: # 1.21.5
-            type: override
-            value: <yellow>Attack Speed +1
-```
-
-:::tip
-
-You can safely use the latest attribute names on legacy versions as plugin will help you convert them.
-Lastest attribute names can be found on https://minecraft.wiki/w/Attribute
-
-:::
-
-### food (1.20.5+)
-
-```yaml
-items:
-  default:magic_apple:
-    material: apple
-    data:
-      food: 
-        nutrition: 5
-        saturation: 3.5
-        can_always_eat: false
-```
-
-:::tip
-
-For setting food-related properties in older Minecraft versions, please refer to [food](./settings.mdx#food).
-
-:::
-
-### max_damage (1.20.5+)
-
-In other words, this is customizable durability.
-
-```yaml
-items:
-  default:sword:
-    material: wooden_sword
-    data:
-      max_damage: 100
-```
-
-### jukebox_playable (1.21+)
-
-One jukebox song to play when inserted into a jukebox. 
-
-```yaml
-items:
-  default:music_stick:
-    material: stick
-    data:
-      jukebox_playable: default:credits_music
-```
-
-### item_model (1.21.2+)
-
-Defines the item model of this item.
-
-```yaml
-items:
-  default:music_stick:
-    data:
-      item_model: default:music_stick
-```
-
-:::tip
-The item_model defined within `data` does not generate a model for the corresponding path. In most cases, you should configure it under the root node of the item, unless you know exactly what you are doing.
-
-```yaml
-items:
-  default:music_stick:
-    item_model: default:music_stick
-```
-:::
-
-### tooltip_style (1.21.2+)
-
-Determines the tooltip style of the item.
-
-```yaml
-items:
-  default:topaz_rod:
-    data:
-      tooltip_style: minecraft:topaz #namespace:tooltip_style_id
-```
-
-:::tip
-To create a tooltip style, you must place the texture in the directory as follows: https://minecraft.wiki/w/Data_component_format/tooltip_style
-:::
-
-### use_remainder (1.21.2+)
-
-```yaml
-items:
-  default:cooked_chicken:
-    use_remainder: default:chicken_bone
-```
-
-### trim
-
-Apply a decorative alteration to a tool or armor
-
-```yaml
-items:
-  default:my_chestplate:
-    data:
-      trim:
-        pattern: eye # https://minecraft.wiki/w/Smithing#Trimming
-        material: iron # https://minecraft.wiki/w/Smithing#Material
-```
-
-### equippable (1.21.2+)
-
-If present, this item can be equipped in the specified slot.
-
-```yaml
-items:
-  default:my_helmet:
-    data:
-      equippable:
-        # The slot to put the item on
-        slot: head # head / chest / legs / feet / body / mainhand / offhand / saddle
-
-        # Optional Arguments
-        # The directory this refers to is assets/<namespace>/equipment/<id>.json
-        asset_id: minecraft:topaz
-        # The resource location of the overlay texture to use when equipped. The directory this refers to is assets/<namespace>/textures/<id>.
-        camera_overlay: namespace:id
-        # Whether the item can be dispensed by using a dispenser.
-        dispensable: true
-        # Whether this item is damaged when the wearing entity is damaged.
-        damage_on_hurt: true
-        # Whether the item can be equipped into the relevant slot by right-clicking.
-        swappable: true
-        # >= 1.21.5
-        # Whether this item can be equipped onto a target mob by pressing use on it (as long as this item can be equipped on the target at all)
-        equip_on_interact: true
-```
+## 💾 Stored Data
 
 ### pdc (Persistent Data Container)
 
-The [Persistent Data Container](https://docs.papermc.io/paper/dev/pdc/) is a method for storing custom data on various objects, here specifically used to define item data. It is commonly employed to store custom plugin data, allowing you to define item data for recognition by other plugins.
-
-```yaml
-pdc:
-  key1: string_value # String
-  key2: 114514 # Number
-  example_list: # List
-    - 1
-    - 2
-    - 3
-  map_example: # Map
-    key: "value"
-```
-
-### profile
-
-This component displays a player's head.
-
-By player name:
-
-```yaml
-profile: XiaoMoMi
-profile: <arg:player.name>
-```
-
-By texture URL:
-
-```yaml
-profile: http://textures.minecraft.net/texture/ed83db5c2294f03bf069f4a2ac5428df93a13c7c7487d6b1f2ed3ce30b5acec8
-```
-
-By Base64 string:
-
-```yaml
-profile: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWQ4M2RiNWMyMjk0ZjAzYmYwNjlmNGEyYWM1NDI4ZGY5M2ExM2M3Yzc0ODdkNmIxZjJlZDNjZTMwYjVhY2VjOCJ9fX0=
-```
-
-### conditional
-
-<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
-
-Conditional data allows you to assign different item data based on conditions
+Stores custom key-value data for other plugins to read.
 
 ```yaml
 items:
-  default:mythic_sword:
-    client_bound_data:
-      conditional#1:
-        conditions:
-          - type: permission
-            permission: item.unlock
-        data:
-          item_name: "A Mythic Sword"
-          lore:
-            - "A blade forged in the crucible of fallen stars"
-      conditional#2:
-        conditions:
-          - type: "!permission"
-            permission: item.unlock
-        data:
-          item_name: "???? Sword"
-          lore:
-            - "????????"
-```
-
-### painting_variant
-
-```yaml
-items:
-  default:custom_painting:
+  demo:sword:
     data:
-      painting_variant: default:painting_custom
+      pdc:
+        key: "value"
+        number: 42
+        list:
+          - 1
+          - 2
 ```
 
-## Customizable Data
+### tags / nbt
 
-:::caution
-Customizable Data is not maintained by CraftEngine, and its format can change with updates to Minecraft. 
-:::
-
-### NBT (1.20-1.20.4)
-
-:::warning
-Since NBT (Named Binary Tag) has become outdated, it will not be discussed in detail here. https://minecraft.wiki/w/Item_format/Before_1.20.5
-:::
+Low-level NBT access. Sets arbitrary NBT tags on the item. Use `@` prefix on keys to flatten nested structures.
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:sword:
     data:
-      nbt:
-        CustomModelData: 1000
+      tags:
+        CustomTag: "value"
+        "@nested.path": 42
 ```
 
-### Components (1.20.5+)
+## 📦 External Data
 
-The format for custom Components strictly adheres to the [Minecraft Wiki](https://minecraft.wiki/w/Data_component_format) guidelines. Below, I will guide you through a few examples to help you become familiar with how to configure custom components. The examples here are arranged in order of increasing difficulty, from simple to advanced. We recommend studying them one by one to ensure a smooth learning curve.
+Inherit data from another plugin's item.
 
-<Details summary="max_damage [★]">
-    ![](/img/item_data_1.png)
+```yaml
+items:
+  default:example_item:
+    data:
+      external:
+        plugin: neigeitems       # or "source"
+        id: example_item
+```
 
-    From the image, we can see that max_damage accepts an `I` (which stands for an integer type parameter). Therefore, in our configuration, we simply need to use a numerical value directly.
-    ```yaml
-    items:
-      guide:test:
-        data:
-          components:
-            minecraft:max_damage: 128
-    ```
-</Details>
+See [External Item Sources](../../compatibility/external_item_sources.mdx) for supported plugins.
 
-<Details summary="food [★★]">
-    ![](/img/item_data_2.png)
+## 🧩 Custom Components (1.20.5+)
 
-    From the image, we can see that food requires three parameters: nutrition of type `int`, saturation of type `float`, and can_always_eat of type `boolean`.
+Your own components — not maintained or version-checked by CraftEngine. Format may break across Minecraft updates.
 
-    ```yaml
-    items:
-      guide:test:
-        data:
-          components:
-            minecraft:food:
-              nutrition: 4
-              saturation: 2.0
-              can_always_eat: false
-    ```
-</Details>
+### Components
 
-<Details summary="block_state [★★]">
-    ![](/img/item_data_3.png)
+<Details summary="Examples by difficulty" defaultOpen={false}>
 
-    According to the description here, we need to provide **key-value** pairs where the value must be a **string** type.
+**★ max_damage**
 
-    ```yaml
-    items:
-      default:palm_leaves:
-        data:
-          components:
-            minecraft:block_state:
-              distance: '1'
-              persistent: 'false'
-              waterlogged: 'false'
-    ```
-</Details>
+![](/img/item_data_1.png)
 
-<Details summary="instrument [★★★]">
-    ![](/img/item_data_4.png)
+```yaml
+components:
+  minecraft:max_damage: 128
+```
 
-    When an option supports multiple data types, you can simply choose the appropriate type based on your specific needs.
+**★★ food**
 
-    ```yaml
-    items:
-      guide:horn:
-        material: goat_horn
-        data:
-          components:
-            minecraft:instrument: "seek_goat_horn"
-    ```
-    ```yaml
-    items:
-      guide:horn:
-        material: goat_horn
-        data:
-          components:
-            minecraft:instrument:
-              description:
-                text: "Custom Instrument"
-                color: "red"
-              sound_event: minecraft:block.note_block.bell
-              use_duration: 1
-              range: 16
-    ```
-</Details>
+![](/img/item_data_2.png)
 
-<Details summary="fireworks [★★★★]">
-    ![](/img/item_data_5.png)
+```yaml
+components:
+  minecraft:food:
+    nutrition: 4
+    saturation: 2.0
+    can_always_eat: false
+```
 
-    ```yaml
-    items:
-      guide:firework:
-        material: firework_rocket
-        data:
-          components:
-            minecraft:fireworks:
-              flight_duration: 3
-              explosions:
-                - shape: small_ball
-                  colors: [11223344]
-                  fade_colors: [0]
-                  has_trail: true
-                  has_twinkle: true
-    ```
+**★★ block_state**
+
+![](/img/item_data_3.png)
+
+```yaml
+components:
+  minecraft:block_state:
+    distance: '1'
+    persistent: 'false'
+```
+
+**★★★ instrument**
+
+![](/img/item_data_4.png)
+
+```yaml
+components:
+  minecraft:instrument: "seek_goat_horn"
+```
+
+```yaml
+components:
+  minecraft:instrument:
+    description:
+      text: "Custom Instrument"
+      color: "red"
+    sound_event: minecraft:block.note_block.bell
+    use_duration: 1
+    range: 16
+```
+
+**★★★★ fireworks**
+
+![](/img/item_data_5.png)
+
+```yaml
+components:
+  minecraft:fireworks:
+    flight_duration: 3
+    explosions:
+      - shape: small_ball
+        colors: [11223344]
+        fade_colors: [0]
+        has_trail: true
+        has_twinkle: true
+```
+
 </Details>
 
 :::tip
 
-When a component only needs to be set (without requiring a value), you can simply use the following configuration:
+When a component needs only to be present (no value):
 
 ```yaml
 components:
@@ -695,66 +527,138 @@ components:
 
 :::
 
-### Remove Components (1.20.5+)
-
-Removes the component from the item.
+### Remove Components
 
 ```yaml
 items:
-  test:item:
+  demo:item:
     data:
       remove_components:
         - minecraft:equippable
 ```
 
-## Client Bound Data
+## 🔀 Conditional
 
 <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
 
-The client_bound_data exists exclusively on the client side, with no server-side components involved. Using the client-side item component, you can effortlessly update item descriptions in real time—including properties like item_model and custom_model_data. Additionally, unlike other plugins, CraftEngine items remain permanently unaltered in creative mode!
-
-:::caution
-If you have enabled [`enable-item-obfuscation`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_enable_item_obfuscation) in `paper-global.yml`, you need to add `minecraft:custom_data` to the [`dont-obfuscate`](https://docs.papermc.io/paper/reference/global-configuration/#anticheat_obfuscation_items_all_models_dont_obfuscate) section, otherwise items will not display correctly when viewing other entities.
-:::
-
-:::info
-Simply add a `client_bound_data` section in your configuration area, then move (cut/paste) the required data from the original `data` section into it
+Different data based on conditions.
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:mythic_sword:
     client_bound_data:
-      item_name: "<!i><#FF8C00>I'm not Topaz Rod"
-    data:
-      item_name: "<!i><#FF8C00>Topaz Rod"
+      conditional#1:
+        conditions:
+          - type: permission
+            permission: item.unlock
+        data:
+          item_name: "Mythic Sword"
+          lore:
+            - "A blade forged in fallen stars"
+      conditional#2:
+        conditions:
+          - type: "!permission"
+            permission: item.unlock
+        data:
+          item_name: "???? Sword"
 ```
 
-:::
+## 📡 Client Bound Data
 
-:::tip
-client_bound_data is quite useful for players in adventure mode, allowing them to break certain real custom blocks on serverside. I recommend using block tags here whenever possible, rather than specific block IDs. This helps resolve some client-side protocol issues.
+<Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
+
+### What it is
+
+Normally, everything you put in `data` lives on the server-side `ItemStack` — every player sees the same thing, and every plugin reading the item sees all of its components.
+
+`client_bound_data` moves display-only information off the server. The data is sent through the network protocol and resolved on the client at render time. The server-side item stays lightweight, and different players can see different things.
+
+### How it works
+
+Split your data: keep what the server needs in `data`, put what the player sees in `client_bound_data`. Any key from `data` works here — `item_name`, `lore`, `custom_model_data`, `item_model`, `components`, etc.
+
+Here is a sword that shows different names and descriptions depending on whether the player has unlocked it:
 
 ```yaml
 items:
-  default:topaz_pickaxe:
-    material: golden_pickaxe
-    settings:
-      tags:
-        - "default:topaz_tools"
+  demo:mythic_sword:
+    material: diamond_sword
     data:
-      components:
-        # server side block state
-        can_break:
-          blocks: "#mineable/pickaxe"
+      item_name: "<!i><#FF8C00>Mythic Sword"
     client_bound_data:
-      components:
-        # client side block state
-        can_break:
-          blocks: minecraft:mushroom_stem
-    model:
-      template: default:model/simplified_handheld
-      arguments:
-        path: "minecraft:item/custom/topaz_pickaxe"
+      conditional#unlocked:
+        conditions:
+          - type: permission
+            permission: item.mythic_sword.unlock
+        data:
+          item_name: "<!i><#FF8C00>Mythic Sword"
+          lore:
+            - "<green>Unlocked"
+            - "<gray>Level <arg:player.level>"
+      conditional#locked:
+        conditions:
+          - type: "!permission"
+            permission: item.mythic_sword.unlock
+        data:
+          item_name: "<!i><gray>???? Sword"
+          lore:
+            - "<red>Locked"
+            - "<gray>Requires Level 30"
 ```
 
+A player with the permission sees the golden name and their current level. Everyone else sees "???? Sword" and a lock message. Both are looking at the same `ItemStack`.
+
+### Why use it
+
+**Different players, different views.** Without `client_bound_data`, every player holding the same item sees identical text. With it, item unlock states, player-specific stats, or real-time counters are all possible — resolved per-client at render time.
+
+**Performance.** The server-side `ItemStack` no longer carries complex display components. This matters in three ways:
+
+- **Faster `getItemMeta`.** Other plugins reading item metadata don't need to deserialize display components that only exist on the client.
+- **Lower memory.** Survival servers with thousands of stored items benefit from lightweight server-side stacks — the rich data only lives in the rendering pipeline.
+- **Faster chunk loading.** Display components are serialized on the netty thread only when shown to a player. During chunk loads, items carry minimal data.
+
+### client_bound_material
+
+Changes the visual material the client sees while keeping the server-side material unchanged.
+
+```yaml
+items:
+  demo:palm_planks:
+    material: nether_brick
+    client_bound_material: mushroom_stem
+    client_bound_data:
+      block_state: default:palm_planks
+```
+
+Useful when the server-side material must differ from the visual one — for example, using `nether_brick` as a base while the client renders a block model tied to `mushroom_stem`.
+
+### Overwritable variants
+
+These only take effect when the item doesn't already have the corresponding data — allowing other plugins to set their own values without being overwritten.
+
+```yaml
+# Lore — only shown if no lore is present
+overwritable_lore:
+  - "Default description"
+
+# item_name — only shown if no custom name is present
+overwritable_item_name: "<!i><#FF8C00>Default name"
+
+# item_model (1.21.2+) — only set if no model is present
+overwritable_item_model: default:sword
+
+# custom_model_data — only set if no CMD is present
+overwritable_custom_model_data: 10001
+```
+
+:::danger
+
+This feature changes how item data flows between server and client. It is intended for servers that curate their plugin ecosystem and can troubleshoot independently.
+
+- **Plugin compatibility.** Plugins that identify items by reading server-side names or model values may not recognize items using `client_bound_data`. If needed, add a minimal set of real components in `data` alongside the client-only ones.
+- **Packet conflicts.** Other plugins that modify items via packets may strip or corrupt client-side components. This can cause items to visually stick on the cursor (appearing duplicated) or components to become permanently attached.
+- **Paper obfuscation.** If you use Paper's `enable-item-obfuscation`, add `minecraft:custom_data` to `dont-obfuscate` in `paper-global.yml`.
+
 :::
+
