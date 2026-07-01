@@ -3,183 +3,172 @@ title: 👻 Special
 id: special
 ---
 
-import UrlCard from '@site/src/components/UrlCard';
+## Overview
 
-## Introdcution
-
-<UrlCard
-  url="https://minecraft.wiki/w/Items_model_definition#special"
-  title="👻 Special"
-/>
-
-Render a special model.
-
-:::caution
-When using `minecraft:special`, you need to specify a speical model type. `path` argument is required for the base model rendering.
-:::
+Renders a **hardcoded special model** — things Minecraft knows how to draw natively (heads, chests, shields, banners, etc.). Each special type has its own fields. A `base` model provides the transform reference, particle texture, and GUI lighting.
 
 ```yaml
 items:
-  default:gui_head_size_1:
+  demo:head:
+    material: player_head
     model:
       type: minecraft:special
-      path: minecraft:item/custom/gui_head_size_1
+      base: minecraft:item/custom/head_base
       model:
         type: minecraft:head
-        kind: player
-      transformation: # Optional; Model transformation; 26.1+
-        scale: 1,1,1 # Scale the model centered on the origin
-        translation: 0,0,0 # Translation transformation
-        right_rotation: # Initial rotation
-          angle: 0.0 # The angle of rotation, in radians
-          axis: 0,0,0 # Axis vector with 3 elements
-        left_rotation: 0,0,0,0 # Rotates the model again
+        kind: skeleton
+        texture: minecraft:custom/heads/wizard
+        animation: 0.0
 ```
 
-## Special Models
+## Fields
 
-Check [https://minecraft.wiki/w/Items\_model\_definition#special](https://minecraft.wiki/w/Items_model_definition#special) for the explanation of each argument.
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `type` | string | Yes | — | `minecraft:special` |
+| `base` | asset path | Yes | — | Namespaced model path for transforms, particle texture, and GUI light |
+| `model` | object | Yes | — | Special model object with its own `type` (see below) |
+| `transformation` | object | No | — | Display transform overlay (26.1+) |
 
-### minecraft\:trident
-
-> Render a trident.
-
-### minecraft\:conduit
-
-> Render conduit.
-
-### minecraft\:shield
-
-> Render a shield. Uses patterns from `minecraft:banner_patterns` component and color from `minecraft:base_color` component.
-
-### minecraft\:decorated\_pot
-
-> Render a decorated pot. Uses values from `minecraft:pot_decorations` component.
-
-### minecraft\:hanging\_sign
-
-> Renders a hanging sign.
-
-```yaml
-model:
-  type: "minecraft:hanging_sign"
-  attachment: "ceiling_middle" # 26.1+
-  wood_type: "oak"
-  texture: ...
-```
-
-### minecraft\:standing\_sign
-
-> Renders a standing sign.
-
-```yaml
-model:
-  type: "minecraft:standing_sign"
-  attachment: "ground" # 26.1+
-  wood_type: "oak"
-  texture: ...
-```
+## Special Model Types
 
 ### minecraft\:head
 
-> Render a head. \[Uses profile from `minecraft:profile` component when applicable. (1.21.4-1.21.5)]
+Renders a mob head or skull.
 
 ```yaml
 model:
-  type: "minecraft:head"
-  kind: player
-  texture: ...
-  animation: 0.0
+  type: minecraft:head
+  kind: skeleton          # skeleton | wither_skeleton | player | zombie | creeper | piglin | dragon
+  texture: minecraft:custom/heads/wizard  # Optional, defaults per kind. Omits textures/entity/ prefix and .png suffix
+  animation: 0.0          # Dragon jaw: -2.5 (closed) to 2.5 (open); Piglin ear wiggle
 ```
 
-### minecraft\:player\_head (1.21.6+)
+### minecraft\:player_head (1.21.6+)
 
-> Render a head. Uses profile from `minecraft:profile` component when applicable.
+Uses `minecraft:profile` component for the skin texture. No extra fields.
 
 ```yaml
 model:
-  type: "minecraft:player_head"
+  type: minecraft:player_head
 ```
 
 ### minecraft\:chest
 
-> Render a single chest.
+Renders a single chest.
 
 ```yaml
 model:
-  type: "minecraft:chest"
-  chest_type: "single" # 26.1+
-  openness: 0.0
-  texture: ...
+  type: minecraft:chest
+  texture: minecraft:custom/chest  # Path in chests atlas, no .png suffix
+  chest_type: single         # "single" | "left" | "right" (26.1+)
+  openness: 0.0              # 0.0 (closed) to 1.0 (open)
 ```
 
-### minecraft\:shulker\_box
+### minecraft\:shulker_box
 
-> Render a shulker box.
+Renders a shulker box.
 
 ```yaml
 model:
-  type: "minecraft:shulker_box"
-  openness: 0.0
-  orientation: up # 1.21.4~1.21.11
-  texture: ...
+  type: minecraft:shulker_box
+  texture: minecraft:custom/shulker  # Path in shulker atlas, no .png suffix
+  openness: 0.0              # 0.0 (closed) to 1.0 (open)
 ```
 
-### minecraft\:bed (Removed in 26.2)
+### minecraft\:shield
 
-> Render a whole bed.
+Reads `minecraft:banner_patterns` and `minecraft:base_color` components. No extra fields.
 
 ```yaml
 model:
-  type: "minecraft:bed"
-  part: "head" # 26.1+
-  texture: ...
+  type: minecraft:shield
 ```
 
 ### minecraft\:banner
 
-> Render a banner with patterns from `minecraft:banner_patterns` component.
+Reads `minecraft:banner_patterns` component.
 
 ```yaml
 model:
-  type: "minecraft:banner"
-  attachment: "ground" # 26.1+
-  color: white
+  type: minecraft:banner
+  color: red                 # One of 16 colors (required)
+  attachment: ground         # "ground" | "wall" (26.1+)
 ```
 
-### minecraft\:copper_golem_statue
+### minecraft\:trident
 
-> Render a copper golem statue.
+Renders a trident. No extra fields.
 
 ```yaml
 model:
-  type: "minecraft:copper_golem_statue"
-  pose: sitting
-  texture: ...
+  type: minecraft:trident
+```
+
+### minecraft\:conduit
+
+Renders a conduit. No extra fields.
+
+```yaml
+model:
+  type: minecraft:conduit
+```
+
+### minecraft\:decorated_pot
+
+Reads `minecraft:pot_decorations` component. No extra fields.
+
+```yaml
+model:
+  type: minecraft:decorated_pot
 ```
 
 ### minecraft\:bell (26.1+)
 
-> Render the animated part of a Bell block.
+Renders the animated bell block part. No extra fields.
+
+```yaml
+model:
+  type: minecraft:bell
+```
 
 ### minecraft\:book (26.1+)
 
-> Render the book that normally is a part of Enchanting Table and Lectern.
+Renders a book (enchanting table / lectern).
 
 ```yaml
 model:
-  type: "minecraft:book"
-  open_angle: 0
-  page1: 0
-  page2: 0
+  type: minecraft:book
+  open_angle: 0    # Degrees: 0 = closed, 90 = flat
+  page1: 0.0       # Page turn progress 0.0–1.0
+  page2: 0.0
 ```
 
-### minecraft\:end\_cube (26.1+)
+### minecraft\:end_cube (26.1+)
 
-> Render a cube with the same texture effects as the End Portal and the End Gateway blocks.
+Renders a starfield cube (end portal / gateway).
 
 ```yaml
 model:
-  type: "minecraft:end_cube"
-  effect: "portal"
+  type: minecraft:end_cube
+  effect: portal     # "portal" | "gateway"
 ```
+
+### minecraft\:copper_golem_statue
+
+Renders a copper golem statue.
+
+```yaml
+model:
+  type: minecraft:copper_golem_statue
+  pose: standing       # "standing" | "sitting" | "running" | "star"
+  texture: minecraft:custom/statue.png  # Full path, .png suffix required
+```
+
+### Removed types
+
+| Type | Removed in | Notes |
+|------|-----------|-------|
+| `minecraft:bed` | 26.2 snap3 | Replaced by block-based rendering |
+| `minecraft:standing_sign` | 26.2 snap7 | Replaced by block-based rendering |
+| `minecraft:hanging_sign` | 26.2 snap7 | Replaced by block-based rendering |

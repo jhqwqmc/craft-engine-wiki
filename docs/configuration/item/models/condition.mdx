@@ -5,113 +5,111 @@ id: condition
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## Introdcution
+## Overview
 
-<UrlCard
-  url="https://minecraft.wiki/w/Items_model_definition#condition"
-  title="⚖️ Condition"
-/>
-
-Render an item model based on the condition.
-
-:::caution
-When you use `minecraft:condition`, you need to specify the condition type, which is the **property** mentioned below. `on_false` and `on_true` respectively represent displaying different models under different conditions.
-:::
+Switches between two child models based on a **boolean property**. Evaluates the property on the item stack — if `true`, uses `on_true`; otherwise `on_false`.
 
 ```yaml
 items:
-  default:condition_item:
+  demo:bow:
+    material: bow
     model:
-      type: "minecraft:condition"
-      property: "minecraft:using_item"
-      on_false:
-        type: "minecraft:model"
-        path: "minecraft:item/custom/model_false"
+      type: minecraft:condition
+      property: minecraft:using_item
       on_true:
-        type: "minecraft:model"
-        path: "minecraft:item/custom/model_true"
-      transformation: # Optional; Model transformation; 26.1+
-        scale: 1,1,1 # Scale the model centered on the origin
-        translation: 0,0,0 # Translation transformation
-        right_rotation: # Initial rotation
-          angle: 0.0 # The angle of rotation, in radians
-          axis: 0,0,0 # Axis vector with 3 elements
-        left_rotation: 0,0,0,0 # Rotates the model again
+        type: minecraft:model
+        path: minecraft:item/custom/bow_pull
+      on_false:
+        type: minecraft:model
+        path: minecraft:item/custom/bow
 ```
+
+## Fields
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `type` | string | Yes | — | `minecraft:condition` |
+| `property` | string | Yes | — | Boolean property type (see below) |
+| `on_true` | model | Yes | — | Model when property is `true` |
+| `on_false` | model | Yes | — | Model when property is `false` |
+| `transformation` | object | No | — | Display transform overlay (26.1+) |
 
 ## Properties
 
-Check [https://minecraft.wiki/w/Items\_model\_definition#condition](https://minecraft.wiki/w/Items_model_definition#condition) for the explanation of each argument.
+<UrlCard
+  url="https://minecraft.wiki/w/Items_model_definition#condition"
+  title="Minecraft Wiki | Condition Properties"
+/>
 
-### minecraft\:broken
+### No extra fields
 
-> Return `true` if the item is damageable and has only one use remaining before breaking.
+These properties require only the `property` name — no additional parameters.
 
-### minecraft\:carried
-
-> Return `true` if item is carried between slots in GUI.
-
-### minecraft\:damaged
-
-> Return `true` if the item is damageable and has been used at least once.
-
-### minecraft\:extended\_view
-
-> Return `true` if player has requested extended details by holding shift key down. Only works when item is displayed in UI. Note: not a keybind, can't be rebound.
-
-### minecraft\:fishing\_rod/cast
-
-> Return `true` if there is a fishing bobber attached to currently used fishing rod.
-
-### minecraft\:selected
-
-> Return `true` if item is selected on a hotbar.
-
-### minecraft\:using\_item
-
-> Return `true` if player is currently using this item.
-
-### minecraft\:view\_entity
-
-> * When not spectating, return `true` if context entity is the local player entity, i.e. the one controlled by client.
-> * When spectating, return `true` if context entity is the _spectated_ entity.
-> * If context entity is not present, will return `false`.
-
-### minecraft\:bundle/has\_selected\_item
-
-> Return `true` if bundle is "open", i.e. it has selected item visible in GUI.
+| Property | Triggers when… |
+|----------|---------------|
+| `minecraft:broken` | Item is about to break |
+| `minecraft:carried` | Item is being carried between slots in GUI |
+| `minecraft:damaged` | Item is damageable and has been used at least once |
+| `minecraft:extended_view` | Player holds Shift while item is in a GUI |
+| `minecraft:fishing_rod/cast` | A fishing bobber is attached to this rod |
+| `minecraft:selected` | Item is on the selected hotbar slot |
+| `minecraft:using_item` | Player is currently using this item (eating, bow drawing, etc.) |
+| `minecraft:view_entity` | Context entity is the local player (or spectated entity) |
+| `minecraft:bundle/has_selected_item` | Bundle is "open" with a selected item visible in GUI |
 
 ### minecraft\:component (1.21.5+)
 
-> Uses component [item sub predicates](https://minecraft.wiki/w/Item_sub-predicate) to match item components.
-
-### minecraft\:has\_component
-
-> Return `true` if the given component is present on the item.
+Uses a data component predicate to match item components.
 
 ```yaml
-type: "minecraft:condition"
-property: "minecraft:has_component"
-component: "minecraft:enchantments"
-ignore-default: false
+property: minecraft:component
+predicate: minecraft:damage   # Component predicate type
+value:                        # Structure depends on the predicate
+  damage: 0
 ```
 
-### minecraft\:keybind\_down
+| Field | Type | Description |
+|-------|------|-------------|
+| `predicate` | string | Component predicate type from `minecraft:data_component_predicate_type` registry |
+| `value` | varies | Predicate-specific value |
 
-> Return `true` if keybind is currently active.
+### minecraft\:has_component
+
+`true` if the specified component exists on the item.
 
 ```yaml
-type: "minecraft:condition"
-property: "minecraft:keybind_down"
-keybind: "key.left"
+property: minecraft:has_component
+component: minecraft:enchantments
+ignore_default: false   # If true, default-valued components count as absent
 ```
 
-### minecraft\:custom\_model\_data
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `component` | string | — | Namespaced component ID |
+| `ignore_default` | bool | `false` | Treat default-valued components as absent |
 
-> Return value from `flags` list in `minecraft:custom_model_data` component.
+### minecraft\:keybind_down
+
+`true` while the specified key is held down.
 
 ```yaml
-type: "minecraft:condition"
-property: "minecraft:custom_model_data"
-index: 0
+property: minecraft:keybind_down
+keybind: key.left   # Keybind ID from Controls menu
 ```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `keybind` | string | Keybind identifier (e.g. `key.left`, `key.sprint`) |
+
+### minecraft\:custom_model_data
+
+Reads from the `flags` list in `minecraft:custom_model_data` component.
+
+```yaml
+property: minecraft:custom_model_data
+index: 0   # Position in the flags array
+```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `index` | int | `0` | Position in the `flags` array |

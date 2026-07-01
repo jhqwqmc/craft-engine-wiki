@@ -3,34 +3,28 @@ title: 🧩 Composite
 id: composite
 ---
 
-import UrlCard from '@site/src/components/UrlCard';
+## Overview
 
-## Introdcution
-
-<UrlCard
-  url="https://minecraft.wiki/w/Items_model_definition#composite"
-  title="🧩 Composite"
-/>
-
-Render multiple sub-models in the same space.
+Renders multiple child models **layered on top of each other** in the same space. Order matters — later models render on top.
 
 ```yaml
 items:
-  default:composite_item:
+  demo:gem:
+    material: diamond
     model:
-      type: "minecraft:composite"
+      type: minecraft:composite
       models:
         - type: minecraft:model
-          path: "minecraft:item/custom/model_1"
+          path: minecraft:item/custom/gem_base
         - type: minecraft:model
-          path: "minecraft:item/custom/model_2"
-        - type: minecraft:model
-          path: "minecraft:item/custom/model_3"
-      transformation: # Optional; Model transformation; 26.1+
-        scale: 1,1,1 # Scale the model centered on the origin
-        translation: 0,0,0 # Translation transformation
-        right_rotation: # Initial rotation
-          angle: 0.0 # The angle of rotation, in radians
-          axis: 0,0,0 # Axis vector with 3 elements
-        left_rotation: 0,0,0,0 # Rotates the model again
+          path: minecraft:item/custom/gem_glow
 ```
+
+## Fields
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `type` | string | Yes | — | `minecraft:composite` |
+| `models` | list | Yes | — | List of child item models to render in order |
+| `transformation` | object | No | — | Display transform overlay, composed with child transforms (26.1+) |
+

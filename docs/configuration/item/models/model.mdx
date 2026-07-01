@@ -5,221 +5,162 @@ id: model
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## Introdcution
+## Overview
 
-<UrlCard
-  url="https://minecraft.wiki/w/Items_model_definition#model"
-  title="📐 Model"
-/>
-
-Render an item model.
+Renders a single model file from `assets/<namespace>/models/`. `type` defaults to `minecraft:model` — you can omit it when this is the only type you need.
 
 ```yaml
 items:
-  default:topaz_pickaxe:
+  demo:sword:
+    material: diamond_sword
     model:
-      type: minecraft:model # type is optional in this case
-      path: minecraft:item/custom/topaz_pickaxe
-      generation: # Optional; Model generation
-        parent: "minecraft:item/handheld" # Required; Parent model path
-        textures:
-          "layer0": "minecraft:item/custom/topaz_pickaxe"
-      transformation: # Optional; Model transformation; 26.1+
-        scale: 1,1,1 # Scale the model centered on the origin
-        translation: 0,0,0 # Translation transformation
-        right_rotation: # Initial rotation
-          angle: 0.0 # The angle of rotation, in radians
-          axis: 0,0,0 # Axis vector with 3 elements
-        left_rotation: 0,0,0,0 # Rotates the model again
+      path: minecraft:item/custom/sword
 ```
 
-:::tip
-If you do not specify a type, it will default to using `minecraft:model`.
-:::
+## Fields
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `type` | string | No | `minecraft:model` | Model type identifier |
+| `path` | asset path | Yes | — | Namespaced path to the model JSON (e.g. `demo:item/sword`) |
+| `generation` | object | No | — | Auto-generate the model JSON from a parent template |
+| `tints` | list | No | — | Tint sources, indexed by `tintindex` in the model geometry |
+| `transformation` | object | No | — | Display transform overlay (26.1+) |
+
+## Generation
+
+When `generation` is set, CraftEngine auto-generates the model JSON — you don't need to provide a model file. The `parent` is the only required field.
+
+```yaml
+items:
+  demo:sword:
+    material: diamond_sword
+    model:
+      path: demo:item/sword
+      generation:
+        parent: minecraft:item/handheld
+        textures:
+          layer0: demo:item/sword
+          layer1: demo:item/sword_glow
+        display:
+          thirdperson_righthand:
+            rotation: 0,0,0
+            translation: 0,1,1
+            scale: 0.85,0.85,0.85
+        gui_light: front
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `parent` | asset path | Yes | Parent model to inherit from (e.g. `minecraft:item/generated`) |
+| `textures` | map | No | Texture variable overrides (`layer0`, `layer1`, …) |
+| `display` | object | No | Per-context display transforms (`thirdperson_righthand`, `gui`, `ground`, `fixed`, `head`, `firstperson_righthand`, …) |
+| `gui_light` | string | No | GUI lighting mode: `front` or `side` |
 
 ## Tints
 
-In this configuration, we create a model for custom leaves. However, the default leaves in the vanilla game do not have color, so we need to configure a tint to color them.
-
-```yaml
-default:palm_leaves:
-  model:
-    type: "minecraft:model"
-    path: "minecraft:item/custom/palm_leaves"
-    generation:
-      parent: "minecraft:block/custom/palm_leaves"
-    tints:
-      - type: "minecraft:constant"
-        value: -12012264
-```
-
 <UrlCard
   url="https://minecraft.wiki/w/Items_model_definition#Tint_sources_types"
-  title="🎨 Tint"
+  title="Minecraft Wiki | Tint Sources"
 />
 
-:::info
-Places where colors are required support the use of decimal or RGB format
-
 ```yaml
-value: 16711680
+items:
+  demo:dyeable_armor:
+    material: leather_chestplate
+    model:
+      path: minecraft:item/custom/armor
+      generation:
+        parent: minecraft:item/generated
+        textures:
+          layer0: minecraft:item/custom/armor
+          layer1: minecraft:item/custom/armor_overlay
+      tints:
+        - type: minecraft:dye
+          default: 16777215
 ```
 
-```yaml
-value:
-  - 255
-  - 0
-  - 0
-# or
-value:
-  - 1.0
-  - 0.0
-  - 0.0
-```
+Each tint source applies a color to the model faces tagged with the corresponding `tintindex`. List order = `tintindex` order (first entry → `tintindex: 0`).
+
+All color values accept these formats:
 
 ```yaml
-value: 255,0,0
-# or
-value: 1.0,0.0,0.0
+value: 16711680           # Decimal (0x00FF0000)
+value: 255,0,0            # RGB 0–255
+value: 1.0,0.0,0.0        # RGB 0.0–1.0
 ```
-:::
 
 ### minecraft\:constant
 
-```yaml
-type: "minecraft:constant"
-value: -12012264
-```
-
-### minecraft\:custom\_model\_data
+Returns a fixed RGB color.
 
 ```yaml
-type: "minecraft:custom_model_data"
-index: 0
-default: -12012264
+tints:
+  - type: minecraft:constant
+    value: 16711680   # Red
 ```
 
 ### minecraft\:dye
 
+Reads `minecraft:dyed_color` component; falls back to `default`.
+
 ```yaml
-type: "minecraft:dye"
-default: -12012264
+  - type: minecraft:dye
+    default: 16777215
 ```
 
 ### minecraft\:firework
 
+Averages colors from `minecraft:firework_explosion` component.
+
 ```yaml
-type: "minecraft:firework"
-default: -12012264
+  - type: minecraft:firework
+    default: 16777215
 ```
 
 ### minecraft\:grass
 
+Samples `textures/colormap/grass.png` by climate.
+
 ```yaml
-type: "minecraft:grass"
-temperature: 0.5
-downfall: 0.5
+  - type: minecraft:grass
+    temperature: 0.5   # 0.0–1.0
+    downfall: 0.5       # 0.0–1.0
 ```
 
-### minecraft\:map\_color
+### minecraft\:map_color
+
+Reads `minecraft:map_color` component.
 
 ```yaml
-type: "minecraft:map_color"
-default: -12012264
+  - type: minecraft:map_color
+    default: 16777215
 ```
 
 ### minecraft\:potion
 
+Reads `minecraft:potion_contents` component (priority: custom_color → average of effects → `default`).
+
 ```yaml
-type: "minecraft:potion"
-default: -12012264
+  - type: minecraft:potion
+    default: 16777215
 ```
 
 ### minecraft\:team
 
-```yaml
-type: "minecraft:team"
-default: -12012264
-```
-
-:::tip
-
-## How to Create a Tintable Model
-
-Step 1: Create a grayscale texture. \
-Step 2: In the preview window, select the target model's surface texture. \
-Step 3: Open the "UV" tab from the top toolbar. \
-Step 4: Check the "Tint" option.
-
-![](/img/item_model_display_1.png)
-
-Step 5: Repeat this for every face you want tinted. After exporting the model, you’ll notice that the selected faces now include a `tintindex` property.
-
-```json
-{
-  "format_version": "1.21.6",
-  "credit": "jhqwqmc",
-  "textures": {
-    "0": "tints:block/example_1",
-    "1": "tints:block/example_2",
-    "particle": "tints:block/example_1"
-  },
-  "elements": [
-    {
-      "from": [1, 7, 1],
-      "to": [2, 8, 15],
-      "rotation": {"angle": 0, "axis": "y", "origin": [-6, 7, 10]},
-      "faces": {
-        "north": {"uv": [0.25, 0.25, 0.75, 0.75], "texture": "#0", "tintindex": 0}, // tintindex has been added here
-        "east": {"uv": [1.25, 0.25, 1.75, 0.75], "texture": "#0", "tintindex": 0},
-        "south": {"uv": [2.25, 0.25, 2.75, 0.75], "texture": "#0", "tintindex": 0},
-        "west": {"uv": [3.25, 0.25, 3.75, 0.75], "texture": "#0", "tintindex": 0},
-        "up": {"uv": [4.25, 0.25, 4.75, 0.75], "texture": "#0", "tintindex": 0},
-        "down": {"uv": [5.25, 0.25, 5.75, 0.75], "texture": "#0", "tintindex": 0}
-      }
-    },
-    ...
-    {
-      "from": [2, 8, 2],
-      "to": [14, 8, 14],
-      "rotation": {"angle": 0, "axis": "y", "origin": [2, 12, 6]},
-      "faces": {
-        "north": {"uv": [2, 2, 14, 2], "texture": "#1"},
-        "east": {"uv": [2, 2, 14, 2], "texture": "#1"},
-        "south": {"uv": [2, 2, 14, 2], "texture": "#1"},
-        "west": {"uv": [2, 2, 14, 2], "texture": "#1"},
-        "up": {"uv": [2, 2, 14, 14], "texture": "#1", "tintindex": 1}, // tintindex has been added here
-        "down": {"uv": [2, 2, 14, 14], "texture": "#1"}
-      }
-    }
-  ]
-}
-```
-
-Step 6: Open your item configuration and then edit your model section:
+Returns team color of the context entity.
 
 ```yaml
-items:
-  example:tinted_item:
-    model:
-      type: minecraft:model
-      path: tints:item/example
-      generation:
-        parent: "tints:block/example"
-      tints:
-        # tintindex 0
-        - type: "minecraft:dye"
-          default: 144,80,62
-        # tintindex 1
-        - type: "minecraft:grass"
-          temperature: 0.5
-          downfall: 0.5
-        # tintindex 2 if you have more tint sources
-        ...
+  - type: minecraft:team
+    default: 16777215
 ```
 
-![](/img/item_model_display_2.png)
+### minecraft\:custom_model_data
 
-**If you have questions about certain details, you can download the example here: [Download](/file/tints.zip)**
+Reads from the `colors` list in `minecraft:custom_model_data` component.
 
-:::
+```yaml
+  - type: minecraft:custom_model_data
+    index: 0            # Position in the colors array
+    default: 16777215
+```

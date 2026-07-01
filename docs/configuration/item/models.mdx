@@ -5,264 +5,316 @@ id: models
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## Introduction
+## Overview
 
-Since version 1.21.4, Minecraft has started supporting more complex item models. This allows you to create more dynamic variants for items. This document is specifically for version 1.21.4 and above. For older versions, the plugin will downgrade the corresponding model files (note: this is not 100% compatible with older versions, as many conditions and model types do not exist in older versions).
+Since 1.21.4, Minecraft uses **items model definitions** to control which model renders for an item. CraftEngine wraps this into YAML — the `model` field on an item determines everything about how it looks. A model is a tree: each node has a `type`, and types that branch (`condition`, `select`, `range_dispatch`, `composite`) contain child models.
 
 <UrlCard
-  url="../../getting_start/item_model_display"
-  title="Getting Start | Tutorial"
-  subtitle="🏹 Item Model Display"
+  url="https://minecraft.wiki/w/Items_model_definition"
+  title="Minecraft Wiki | Items model definition"
 />
 
-:::info
-If you discover that CraftEngine lacks some features in latest Minecraft version, you might submit an issue on GitHub to bring this to the attention of the developers.
+## Root Fields
+
+These go at the **item level** — siblings of `material`, `model`, `data`, etc. They map to the root of the generated items model definition JSON.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `hand_animation_on_swap` | bool | `true` | Whether the first-person swap animation plays when the held item changes |
+| `oversized_in_gui` | bool | `true` | If `true`, disables GUI slot clipping — the model can render larger than the slot |
+| `swap_animation_scale` | float | `1.0` | Speed multiplier for the swap animation; larger = faster |
+
+```yaml
+items:
+  demo:sword:
+    material: diamond_sword
+    hand_animation_on_swap: false   # No swap animation
+    oversized_in_gui: true          # Allow rendering beyond slot bounds
+    swap_animation_scale: 1.5       # 1.5× swap animation speed
+    model:
+      type: minecraft:model
+      path: minecraft:item/custom/sword
+```
+
+:::tip
+
+`model` can also be written as a single path when you don't need extra fields:
+
+```yaml
+items:
+  demo:sword:
+    material: diamond_sword
+    model: minecraft:item/custom/sword
+```
+
+:::
+
+## Model Types
+
+`type` defaults to `minecraft:model` when omitted. The `minecraft:` prefix is optional.
+
+<UrlCard url="models/model" title="📐 Model" subtitle="Render a single static model file" />
+<UrlCard url="models/composite" title="🧩 Composite" subtitle="Layer multiple models on top of each other" />
+<UrlCard url="models/condition" title="⚖️ Condition" subtitle="Switch between two models based on a boolean property" />
+<UrlCard url="models/select" title="✅ Select" subtitle="Choose a model from multiple cases based on a string/enum property" />
+<UrlCard url="models/range_dispatch" title="📡 Range Dispatch" subtitle="Choose a model based on a numeric property crossing thresholds" />
+<UrlCard url="models/special" title="👻 Special" subtitle="Render a hardcoded special model (head, chest, shield, banner, etc.)" />
+<UrlCard url="models/empty" title="∅ Empty" subtitle="Render nothing at all" />
+<UrlCard url="models/bundle_selected_item" title="📦 Bundle Selected Item" subtitle="Render the selected item inside an open bundle" />
+
+:::tip Transformation (26.1+)
+
+`transformation` applies an extra display transform on top of the item's normal display settings. Available on all types except `empty`.
+
+The decomposed form takes 4 fields. They are applied in this exact order: **right_rotation → scale → left_rotation → translation**.
+
+```yaml
+# Decomposed form
+transformation:
+  right_rotation: 0,0,0,1 # [x, y, z, w] quaternion
+  scale: 1,1,1            # [x, y, z]
+  left_rotation: 0,0,0,1  # [x, y, z, w] quaternion
+  translation: 0,0,0      # [x, y, z]
+  # Rotations also accept axis-angle object:
+  # right_rotation:
+  #   angle: 0.0           # Radians
+  #   axis: 0,1,0          # [x, y, z]
+```
+
+```yaml
+# Matrix (16 floats in row-major order, 4 rows × 4 columns)
+# Equivalent to: T × L × S × R  (same order as decomposed form)
+transformation:
+  - 1,0,0,0   # row 0
+  - 0,1,0,0   # row 1
+  - 0,0,1,0   # row 2
+  - 0,0,0,1   # row 3
+```
+
 :::
 
 ## Simplified Models
 
-The purpose of a simplified model is to reduce the configuration overhead for common use cases. Although CraftEngine provides templates, using parameters still requires 3-4 lines of configuration. Simplified models lower this barrier at the cost of some flexibility.
+import Details from '@site/src/components/Details';
 
-Simplified Models are intelligent. They automatically analyze your chosen base material and select the most appropriate method to generate the model. In most cases, simply specifying a `texture` parameter is all you need to get everything working.
+Writing out a full model tree by hand gets tedious. CraftEngine can figure it out for you — just feed it the textures and pick the right base material. It looks at what you're basing the item on and builds the right model structure behind the scenes.
 
-In the following examples, a series of configuration comparisons between simplified models and normal models will be provided. This will help you understand the corresponding normal model configuration while using the simplified approach.
+There are three ways to use this, depending on what you have:
 
-### 2D icons
+<Details summary="textures only" defaultOpen={false}>
 
-Simplified
-
-```yaml
-items:
-  default:ender_pearl_flower_seeds:
-    material: paper
-    texture: minecraft:item/custom/ender_pearl_flower_seeds
-```
-
-Normal
+You have the PNGs but no model JSONs. Feed CraftEngine a `texture` (one) or `textures` (list) and it generates the model files automatically, assigning paths for you. This is the most common case — start here unless you have a reason not to.
 
 ```yaml
-items:
-  default:ender_pearl_flower_seeds:
-    material: paper
-    model:
-      type: minecraft:model
-      path: minecraft:item/custom/ender_pearl_flower_seeds
-      generation:
-        parent: minecraft:item/generated
-        textures:
-          layer0: minecraft:item/custom/ender_pearl_flower_seeds
+demo:rod:
+  material: fishing_rod
+  textures:
+    - minecraft:item/custom/rod
+    - minecraft:item/custom/rod_cast
 ```
 
-### Handheld items
+</Details>
 
-Simplified
+<Details summary="models only" defaultOpen={false}>
+
+You already made model JSON files in BlockBench (or elsewhere). Drop the `model` or `models` field with the paths to your JSONs. CraftEngine uses them as-is with no generation. The positional order rules are the same as `textures`.
 
 ```yaml
-items:
-  default:topaz_axe:
-    material: golden_axe
-    texture: minecraft:item/custom/topaz_axe
+demo:shield_3d:
+  material: shield
+  models:
+    - minecraft:item/custom/shield_3d            # Idle
+    - minecraft:item/custom/shield_3d_blocking   # Blocking
 ```
 
-Normal
+</Details>
+
+<Details summary="textures + models combined" defaultOpen={false}>
+
+You want CraftEngine to generate the model JSONs, but saved at paths you control — for instance, you reference these paths elsewhere in your config. List `models` for the output location and `textures` for the textures to bake in. Both lists must stay aligned slot-for-slot.
 
 ```yaml
-items:
-  default:topaz_axe:
-    material: golden_axe
-    model:
-      type: minecraft:model
-      path: minecraft:item/custom/topaz_axe
-      generation:
-        parent: minecraft:item/handheld
-        textures:
-          layer0: minecraft:item/custom/topaz_axe
+demo:bow:
+  material: bow
+  models:
+    - minecraft:item/custom/my_bow
+    - minecraft:item/custom/my_bow_pulling_0
+    - minecraft:item/custom/my_bow_pulling_1
+    - minecraft:item/custom/my_bow_pulling_2
+  textures:
+    - minecraft:item/custom/my_bow
+    - minecraft:item/custom/my_bow_pulling_0
+    - minecraft:item/custom/my_bow_pulling_1
+    - minecraft:item/custom/my_bow_pulling_2
 ```
+
+</Details>
 
 :::tip
-**[1.21.4+]** For simple 2D icons and handheld item models, configuring multiple textures will overlay the images, like this.
 
-```yaml
-items:
-  default:topaz_axe:
-    material: golden_axe
-    textures: 
-      - minecraft:item/custom/topaz_axe
-      - minecraft:item/custom/topaz
-```
-
-![](/img/composite_model.png)
+**Order matters.** Each slot in the list means something specific, and it changes depending on the material. Get the order wrong and your bow will show the pulled texture when it's idle.
 
 :::
 
-### Fishing Rod
 
-Simplified
+### 2D icon or handheld tool
+
+For plain items (`paper`, `diamond`, `gold_ingot`…) the parent is `item/generated`. For tools and weapons (`golden_axe`, `diamond_sword`…) it's `item/handheld`. A single `texture` is all you need.
+
+<Details summary="2D icon" defaultOpen={false}>
 
 ```yaml
-items:
-  default:topaz_rod:
-    material: fishing_rod
-    textures:
-      - minecraft:item/custom/topaz_rod
-      - minecraft:item/custom/topaz_rod_cast
+demo:icon:
+  material: paper
+  texture: minecraft:item/custom/icon
 ```
 
-Normal
+</Details>
+
+<Details summary="Handheld tool" defaultOpen={false}>
+
+```yaml
+demo:axe:
+  material: golden_axe
+  texture: minecraft:item/custom/axe
+```
+
+</Details>
+
+
+### Fishing rod — 2 slots
+
+Shows the cast model whenever the line has been thrown.
+
+<Details summary="Fishing rod" defaultOpen={false}>
+
+```yaml
+demo:rod:
+  material: fishing_rod
+  textures:
+    - minecraft:item/custom/rod         # Idle
+    - minecraft:item/custom/rod_cast    # Bobber is out
+```
+
+</Details>
+
+### Elytra — 2 slots
+
+Switches to the broken texture when the elytra is about to break.
+
+<Details summary="Elytra" defaultOpen={false}>
+
+```yaml
+demo:elytra:
+  material: elytra
+  textures:
+    - minecraft:item/custom/elytra         # Intact
+    - minecraft:item/custom/elytra_broken  # Broken
+```
+
+</Details>
+
+### Shield — 2 slots
+
+Shields are typically 3D models, so you'll usually use `models` with pre-made JSON files.
+
+<Details summary="Shield" defaultOpen={false}>
+
+```yaml
+demo:shield:
+  material: shield
+  models:
+    - minecraft:item/custom/shield            # Idle
+    - minecraft:item/custom/shield_blocking   # Actively blocking
+```
+
+</Details>
+
+### Spear — 2 slots
+
+Uses one model when the item is sitting in a GUI or on the ground, and a different one when the player is actually holding it.
+
+<Details summary="Spear" defaultOpen={false}>
+
+```yaml
+demo:spear:
+  material: golden_spear
+  textures:
+    - minecraft:item/custom/spear       # GUI, ground, item frame
+    - minecraft:item/custom/spear_hand  # Held in hand
+```
+
+</Details>
+
+### Bow — 4 slots
+
+One idle texture, then three pulling stages that ramp up as you draw the bow back.
+
+<Details summary="Bow" defaultOpen={false}>
+
+```yaml
+demo:bow:
+  material: bow
+  textures:
+    - minecraft:item/custom/bow              # Standby, not being used
+    - minecraft:item/custom/bow_pulling_0    # Just started pulling
+    - minecraft:item/custom/bow_pulling_1    # Mid-pull
+    - minecraft:item/custom/bow_pulling_2    # Fully drawn
+```
+
+</Details>
+
+### Crossbow — 6 slots
+
+The most complex one. Three pull stages like the bow, plus two extra slots for when the crossbow is loaded with an arrow or a firework.
+
+<Details summary="Crossbow" defaultOpen={false}>
+
+```yaml
+demo:crossbow:
+  material: crossbow
+  textures:
+    - minecraft:item/custom/crossbow              # Standby, unloaded
+    - minecraft:item/custom/crossbow_pulling_0    # Start of pull
+    - minecraft:item/custom/crossbow_pulling_1    # Mid-pull
+    - minecraft:item/custom/crossbow_pulling_2    # Fully pulled
+    - minecraft:item/custom/crossbow_arrow        # Loaded with an arrow
+    - minecraft:item/custom/crossbow_firework     # Loaded with a firework
+```
+
+</Details>
+
+
+## Legacy Model
+
+Pre-1.21.4 compatibility. CraftEngine auto-converts modern models to legacy format automatically — you should not need this. If you only target 1.21.4+, skip this entirely.
+
+:::warning
+Not recommended for general use. Only reach for this if the auto-conversion produces incorrect results.
+:::
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:rod:
     material: fishing_rod
     model:
       type: minecraft:condition
       property: minecraft:fishing_rod/cast
       on_false:
         type: minecraft:model
-        path: minecraft:item/custom/topaz_rod
-        generation:
-          parent: minecraft:item/fishing_rod
-          textures:
-            layer0: minecraft:item/custom/topaz_rod
+        path: minecraft:item/custom/rod
       on_true:
         type: minecraft:model
-        path: minecraft:fishing_rod/cast
-        generation:
-          parent: minecraft:item/fishing_rod
-          textures:
-            layer0: minecraft:fishing_rod/cast
-```
-
-:::info
-The following configuration only displays a simplified version. If you are curious about how the normal model is configured, you can refer to the default configuration template.
-:::
-
-### Elytra
-
-```yaml
-items:
-  default:flame_elytra:
-    material: elytra
-    textures:
-      - minecraft:item/custom/flame_elytra
-      - minecraft:item/custom/flame_elytra_broken
-```
-
-### Bow
-
-```yaml
-items:
-  default:topaz_bow:
-    material: bow
-    textures:
-      - minecraft:item/custom/topaz_bow
-      - minecraft:item/custom/topaz_bow_pulling_0
-      - minecraft:item/custom/topaz_bow_pulling_1
-      - minecraft:item/custom/topaz_bow_pulling_2
-```
-
-### Crossbow
-
-```yaml
-items:
-  default:topaz_crossbow:
-    material: crossbow
-    textures:
-      - minecraft:item/custom/topaz_crossbow
-      - minecraft:item/custom/topaz_crossbow_pulling_0
-      - minecraft:item/custom/topaz_crossbow_pulling_1
-      - minecraft:item/custom/topaz_crossbow_pulling_2
-      - minecraft:item/custom/topaz_crossbow_arrow
-      - minecraft:item/custom/topaz_crossbow_firework
-```
-
-### Shield
-
-```yaml
-items:
-  default:shield_3d:
-    material: shield
-    models:
-      - minecraft:item/custom/shield_3d
-      - minecraft:item/custom/shield_3d_blocking
-```
-
-:::tip
-If you already have model json files, you can directly specify the model path to apply the simplified model.
-
-```yaml
-items:
-  default:rod_3d:
-    material: fishing_rod
-    models:
-      - minecraft:item/custom/rod_3d
-      - minecraft:item/custom/rod_3d_cast
-```
-
-```yaml
-items:
-  default:exit_icon:
-    material: paper
-    model: minecraft:item/custom/exit_icon
-```
-:::
-
-:::tip
-Normally, when you have only specified the textures, the item's model JSON path is automatically assigned. You can manually specify the path using the 'model' option, as shown in the example below.
-
-```yaml
-items:
-  default:ender_pearl_flower_seeds:
-    material: paper
-    model: minecraft:item/custom/ender_pearl_flower_seeds
-    texture: minecraft:item/custom/ender_pearl_flower_seeds
-```
-
-```yaml
-items:
-  default:topaz_rod:
-    material: fishing_rod
-    models:
-      - minecraft:item/custom/topaz_rod
-      - minecraft:item/custom/topaz_rod_cast
-    textures:
-      - minecraft:item/custom/topaz_rod
-      - minecraft:item/custom/topaz_rod_cast
-```
-
-:::
-
-## Legacy Model
-
-**Legacy Model** specifically refers to the item model format used in versions 1.21.3 and earlier. You can specify the legacy item model format using the legacy_model section. However, in most cases, you don’t need to do this because the plugin will automatically convert 1.21.4 item models into the legacy format whenever possible. You should only use this configuration section if there are issues with the legacy model format.
-
-```yaml
-items#topaz_gears:
-  default:topaz_rod:
-    material: fishing_rod
-    item_model: default:topaz_rod
-    settings:
-      tags:
-        - "default:topaz_tools"
-    data:
-      item_name: "<!i><#FF8C00><i18n:item.topaz_rod>"
-      tooltip_style: minecraft:topaz
-    model:
-      template: default:model/simplified_fishing_rod_2d
-      arguments:
-        path: minecraft:item/custom/topaz_rod
-        cast_path: minecraft:item/custom/topaz_rod_cast
-    # If you specify a model in the legacy_model section,
-    # the plugin will use your manually defined model instead of 
-    # relying on the auto-converted legacy format.
+        path: minecraft:item/custom/rod_cast
     legacy_model:
-      path: minecraft:item/custom/topaz_rod
+      path: minecraft:item/custom/rod
+      generation:
+        parent: minecraft:item/fishing_rod
+        textures:
+          layer0: minecraft:item/custom/rod
       overrides:
-        - path: minecraft:item/custom/topaz_rod_cast
-          predicate: 
+        - path: minecraft:item/custom/rod_cast
+          predicate:
             cast: 1
 ```
 
-:::tip
-If you don't require support for versions above 1.21.4, you may configure only the legacy_model section and omit the model section entirely.
-:::

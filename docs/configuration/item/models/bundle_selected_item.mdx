@@ -1,0 +1,25 @@
+---
+title: 📦 Bundle Selected Item
+id: bundle_selected_item
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+## Overview
+
+Renders the selected item stack inside a bundle when the bundle is "open" in the GUI. If the bundle has no selected item, renders nothing.
+
+<UrlCard
+  url="https://minecraft.wiki/w/Items_model_definition#bundle_selected_item"
+  title="Minecraft Wiki | Bundle Selected Item"
+/>
+
+```yaml
+items:
+  demo:bundle:
+    material: bundle
+    model:
+      type: minecraft:bundle/selected_item
+```
+
+`transformation` is **not** supported.

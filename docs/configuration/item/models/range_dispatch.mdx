@@ -5,130 +5,143 @@ id: range_dispatch
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## Introdcution
+## Overview
 
-<UrlCard
-  url="https://minecraft.wiki/w/Items_model_definition#range_dispatch"
-  title="📡 Range Dispatch"
-/>
-
-Render an item model based on numeric property. Will select last entry with threshold less or equal to property value.
-
-:::caution
-When using `minecraft:range_dispatch`, you need to specify the numeric property type. `scale` represents the factor to multiply the property value with, `entries` represent the models under different numerical values, and `fallback` represents the item model object if no valid entry was found. It is optional, but if not specified, it will render a **missing** error model.
-:::
+Selects a child model by comparing a **numeric property** against threshold entries. The last entry whose `threshold` ≤ the property value is chosen. If no threshold matches, `fallback` is used; without a fallback, renders as `empty`.
 
 ```yaml
 items:
-  default:range_dispatch_item:
+  demo:shield:
+    material: shield
     model:
-      type: "minecraft:range_dispatch"
-      property: "minecraft:crossbow/pull"
+      type: minecraft:range_dispatch
+      property: minecraft:damage
+      scale: 1.0
       entries:
-        - model:
+        - threshold: 0.0
+          model:
             type: minecraft:model
-            path: "minecraft:item/custom/model_1"
-          threshold: 0.58
-        - model:
+            path: minecraft:item/custom/shield_full
+        - threshold: 0.5
+          model:
             type: minecraft:model
-            path: "minecraft:item/custom/model_2"
-          threshold: 1.0
+            path: minecraft:item/custom/shield_cracked
       fallback:
         type: minecraft:model
-        path: "minecraft:item/custom/model_3"
-      transformation: # Optional; Model transformation; 26.1+
-        scale: 1,1,1 # Scale the model centered on the origin
-        translation: 0,0,0 # Translation transformation
-        right_rotation: # Initial rotation
-          angle: 0.0 # The angle of rotation, in radians
-          axis: 0,0,0 # Axis vector with 3 elements
-        left_rotation: 0,0,0,0 # Rotates the model again
+        path: minecraft:item/custom/shield_full
 ```
+
+## Fields
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `type` | string | Yes | — | `minecraft:range_dispatch` |
+| `property` | string | Yes | — | Numeric property type (see below) |
+| `scale` | float | No | `1.0` | Multiplier applied to the property value before comparing |
+| `entries` | list | Yes | — | List of `{threshold, model}` pairs |
+| `fallback` | model | No | empty | Model used when property < all thresholds |
+| `transformation` | object | No | — | Display transform overlay (26.1+) |
+
+Each entry:
+| Field | Type | Description |
+|-------|------|-------------|
+| `threshold` | float | Minimum property value for this model |
+| `model` | model | Model used when property ≥ this threshold (and < next threshold) |
 
 ## Properties
 
-Check [https://minecraft.wiki/w/Items\_model\_definition#range\_dispatch](https://minecraft.wiki/w/Items_model_definition#range_dispatch) for the explanation of each argument.
+<UrlCard
+  url="https://minecraft.wiki/w/Items_model_definition#range_dispatch"
+  title="Minecraft Wiki | Range Dispatch Properties"
+/>
 
-### minecraft\:crossbow/pull
+### No extra fields
 
-> Return crossbow-specific use time.
-
-### minecraft\:bundle/fullness
-
-> Return weight of `minecraft:bundle_contents` component or `0` if not present.
-
-### minecraft\:cooldown
-
-> Return remaining cooldown for item, scaled between `0.0` to `1.0`.
+| Property | Returns (0.0–1.0 unless noted) |
+|----------|-------------------------------|
+| `minecraft:crossbow/pull` | Crossbow-specific pull progress |
+| `minecraft:bundle/fullness` | Weight of `minecraft:bundle_contents` (0 if absent) |
+| `minecraft:cooldown` | Remaining cooldown ratio (0 if not in inventory) |
+| `minecraft:use_cycle` | Remaining use ticks modulo `period` |
 
 ### minecraft\:compass
 
-> Return an angle, scaled from `0.0` to `1.0` in x-z plane between holder position and target. If target is not valid (not present, in other dimension or too close to holder position) random value will be returned.
+Returns angle 0.0–1.0 in the x-z plane toward the target. Returns random value if target is invalid.
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:compass"
-target: spawn
-wobble: true
+property: minecraft:compass
+target: spawn       # "spawn", "lodestone", "recovery", or "none"
+wobble: true        # Whether pointer oscillates before settling
 ```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `target` | string | — | Target type |
+| `wobble` | bool | `true` | Simulate compass wobble |
 
 ### minecraft\:count
 
-> Return stack size.
+Returns stack size (normalized or raw).
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:count"
-normalize: true
+property: minecraft:count
+normalize: true     # true — count/max_stack_size (0–1); false — raw count
 ```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `normalize` | bool | `true` | Scale to 0.0–1.0 |
 
 ### minecraft\:damage
 
-> Return value for `minecraft:damage` component or `0` if not present.
+Returns damage value from `minecraft:damage` component (0 if absent or unbreakable).
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:damage"
-normalize: true
+property: minecraft:damage
+normalize: true     # true — damage/max_damage (0–1); false — raw damage value
 ```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `normalize` | bool | `true` | Scale to 0.0–1.0 |
 
 ### minecraft\:time
 
-> Return value of a in-game time, scaled betewen `0.0` to `1.0`.
+Returns in-game time scaled 0.0–1.0.
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:time"
-source: daytime
-wobble: true
+property: minecraft:time
+source: daytime      # "daytime" (sun angle), "moon_phase", or "random"
+wobble: true         # Smooth clock-like oscillation
 ```
 
-### minecraft\:use\_cycle
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `source` | string | — | Time source |
+| `wobble` | bool | `true` | Smooth oscillation |
 
-> Return remaining use ticks modulo `period`.
+### minecraft\:use_duration
+
+Returns item use ticks elapsed (or remaining).
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:use_cycle"
-period: 1.0
+property: minecraft:use_duration
+remaining: false    # false — elapsed ticks; true — remaining ticks
 ```
 
-### minecraft\:use\_duration
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `remaining` | bool | `false` | Return remaining ticks instead of elapsed |
 
-> Return item use ticks.
+### minecraft\:custom_model_data
 
-```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:use_duration"
-remaining: false
-```
-
-### minecraft\:custom\_model\_data
-
-> Return value from `floats` list in `minecraft:custom_model_data` component or `0` if not present.
+Reads from the `floats` list in `minecraft:custom_model_data` component.
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:custom_model_data"
+property: minecraft:custom_model_data
 index: 0
 ```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `index` | int | `0` | Position in the `floats` array |

@@ -5,112 +5,117 @@ id: select
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## Introdcution
+## Overview
 
-<UrlCard
-  url="https://minecraft.wiki/w/Items_model_definition#select"
-  title="✅ Select"
-/>
-
-Render an item model based on discrete property.
-
-:::caution
-When using `minecraft:select`, you need to specify a **property** type. `cases` represent a list of scenarios to match against, while `fallback` represents the item model object that will be used if no valid entry is found. It is optional, but if not provided, a "missing" error model will be rendered.
-:::
+Chooses a child model by matching a **discrete (string/enum) property** against a list of cases. If no case matches, the `fallback` is used; if no fallback is provided, renders as `empty`.
 
 ```yaml
 items:
-  default:select_item:
+  demo:crossbow:
+    material: crossbow
     model:
-      type: "minecraft:select"
-      property: "minecraft:charge_type"
+      type: minecraft:select
+      property: minecraft:charge_type
       cases:
         - when: arrow
           model:
             type: minecraft:model
-            path: "minecraft:item/custom/model_1"
+            path: minecraft:item/custom/crossbow_arrow
         - when: rocket
           model:
             type: minecraft:model
-            path: "minecraft:item/custom/model_2"
+            path: minecraft:item/custom/crossbow_firework
       fallback:
         type: minecraft:model
-        path: "minecraft:item/custom/model_3"
-      transformation: # Optional; Model transformation; 26.1+
-        scale: 1,1,1 # Scale the model centered on the origin
-        translation: 0,0,0 # Translation transformation
-        right_rotation: # Initial rotation
-          angle: 0.0 # The angle of rotation, in radians
-          axis: 0,0,0 # Axis vector with 3 elements
-        left_rotation: 0,0,0,0 # Rotates the model again
+        path: minecraft:item/custom/crossbow_standby
 ```
+
+## Fields
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `type` | string | Yes | — | `minecraft:select` |
+| `property` | string | Yes | — | Select property type (see below) |
+| `cases` | list | Yes | — | List of `{when, model}` pairs |
+| `fallback` | model | No | empty | Model used when no case matches |
+| `transformation` | object | No | — | Display transform overlay (26.1+) |
+
+Each case:
+| Field | Type | Description |
+|-------|------|-------------|
+| `when` | string / list | Value(s) to match (case-sensitive) |
+| `model` | model | Model used when the property equals this value |
 
 ## Properties
 
-Check [https://minecraft.wiki/w/Items\_model\_definition#select](https://minecraft.wiki/w/Items_model_definition#select) for the explanation of each argument.
+<UrlCard
+  url="https://minecraft.wiki/w/Items_model_definition#select"
+  title="Minecraft Wiki | Select Properties"
+/>
 
-### minecraft\:charge\_type
+### No extra fields
 
-> Return charge type stored in `minecraft:charged_projectiles` component.
+| Property | Returns | Possible values |
+|----------|--------|-----------------|
+| `minecraft:charge_type` | Type of projectile in `charged_projectiles` | `none`, `arrow`, `rocket` |
+| `minecraft:context_dimension` | Dimension ID of the context entity | Any dimension ID (e.g. `minecraft:overworld`) |
+| `minecraft:context_entity_type` | Entity type holding the item | Any entity type ID |
+| `minecraft:display_context` | Where the item is being rendered | `none`, `thirdperson_lefthand`, `thirdperson_righthand`, `firstperson_lefthand`, `firstperson_righthand`, `head`, `gui`, `ground`, `fixed`, `on_shelf` |
+| `minecraft:main_hand` | Player's main hand | `left`, `right` |
+| `minecraft:trim_material` | `material` field from `minecraft:trim` | Any trim material ID |
 
-### minecraft\:context\_dimension
+### minecraft\:block_state
 
-> Return the ID of the dimension in context, if any.
-
-### minecraft\:context\_entity\_type
-
-> Return the holding entity type, if present.
-
-### minecraft\:display\_context
-
-> Return context this item is rendered in.
-
-### minecraft\:main\_hand
-
-> Return main hand of holding player.
-
-### minecraft\:trim\_material
-
-> Return value of `material` field from `minecraft:trim` component, if present.
-
-### minecraft\:block\_state
-
-> Return value for some property from `minecraft:block_state` component.
+Reads a property from `minecraft:block_state` component.
 
 ```yaml
-type: "minecraft:select"
-property: "minecraft:block_state"
-block_state_property: "facing"
+property: minecraft:block_state
+block_state_property: facing   # Block state key to read
 ```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `block_state_property` | string | Block state property key |
 
 ### minecraft\:component (1.21.5+)
 
-> Return value from a [component](https://minecraft.wiki/w/Data_component_format). If the selected value comes from a registry and the current datapacks does not provide it, the entry will be silently ignored.
+Returns the value of a component from the item stack. Values from a registry that the current datapack doesn't provide are silently ignored.
 
 ```yaml
-type: "minecraft:select"
-property: "minecraft:component"
-component: "minecraft:unbreakable"
+property: minecraft:component
+component: minecraft:unbreakable
 ```
 
-### minecraft\:custom\_model\_data
+| Field | Type | Description |
+|-------|------|-------------|
+| `component` | string | Namespaced component ID |
 
-> Return value from `strings` list in `minecraft:custom_model_data` component.
+### minecraft\:custom_model_data
+
+Reads from the `strings` list in `minecraft:custom_model_data` component.
 
 ```yaml
-type: "minecraft:select"
-property: "minecraft:custom_model_data"
+property: minecraft:custom_model_data
 index: 0
 ```
 
-### minecraft\:local\_time
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `index` | int | `0` | Position in the `strings` array |
 
-> Returns the current time formatted according to a given pattern. The value is updated every second. For full format documentation for locale, time zone and pattern, see ICU (International Components for Unicode) documentation.
+### minecraft\:local_time
+
+Returns the current time formatted by an ICU pattern. Updated every second.
 
 ```yaml
-type: "minecraft:select"
-property: "minecraft:local_time"
-locale: "en_US"
-time_zone: "GMT+0:45"
+property: minecraft:local_time
 pattern: "HH:mm:ss"
+locale: "en_US"          # Default: system locale
+time_zone: "GMT+8:00"    # Default: client timezone
 ```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `pattern` | string | — | ICU date/time format pattern |
+| `locale` | string | `""` (root) | Locale for formatting |
+| `time_zone` | string | client TZ | Time zone ID |

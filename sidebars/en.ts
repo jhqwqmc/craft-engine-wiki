@@ -205,6 +205,16 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/item/models/special",
                   label: '👻 Special',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/item/models/empty",
+                  label: '∅ Empty',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/item/models/bundle_selected_item",
+                  label: '📦 Bundle Selected Item',
+                },
               ]
             },
             {
