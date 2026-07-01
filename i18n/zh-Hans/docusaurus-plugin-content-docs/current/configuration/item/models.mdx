@@ -4,265 +4,312 @@ id: models
 ---
 
 import UrlCard from '@site/src/components/UrlCard';
+import Details from '@site/src/components/Details';
 
-## 简介
+## 概述
 
-自 1.21.4 版本起，Minecraft 开始支持更复杂的物品模型。这允许你为物品创建更具动态性的变体。本文档专为 1.21.4 及以上版本编写。对于旧版本，插件将自动降级相应的模型文件（注意：这并非 100% 兼容旧版本，因为许多条件和模型类型在旧版本中并不存在）。
+自 1.21.4 起，Minecraft 使用**物品模型映射**控制物品渲染哪个模型。CraftEngine 将其封装为 YAML —— `model` 字段决定了物品的一切外观。模型是一棵树：每个节点有一个 `type`，分支类型（`condition`、`select`、`range_dispatch`、`composite`）可嵌套子模型。
 
 <UrlCard
-  url="../../getting_start/item_model_display"
-  title="入门指南 | 教程"
-  subtitle="🏹 物品模型展示"
+  url="https://zh.minecraft.wiki/w/物品模型映射"
+  title="Minecraft Wiki | 物品模型映射"
 />
 
-:::info
-如果你发现 CraftEngine 在最新的 Minecraft 版本中缺少某些功能，可以在 GitHub 上提交提议，以引起开发者的注意。
+## 根字段
+
+以下字段写在**物品层级** —— 与 `material`、`model`、`data` 同级。它们映射到生成的物品模型映射 JSON 根级。
+
+| 字段 | 类型 | 默认值 | 说明 |
+|-------|------|---------|------|
+| `hand_animation_on_swap` | bool | `true` | 切换手持物品时是否播放第一人称交换动画 |
+| `oversized_in_gui` | bool | `true` | 若为 `true`，取消 GUI 槽位裁剪——模型可渲染得比槽位更大 |
+| `swap_animation_scale` | float | `1.0` | 交换动画速度倍率；越大越快 |
+
+```yaml
+items:
+  demo:sword:
+    material: diamond_sword
+    hand_animation_on_swap: false   # 无交换动画
+    oversized_in_gui: true          # 允许超出 GUI 格子边界
+    swap_animation_scale: 1.5       # 交换动画速度 ×1.5
+    model:
+      type: minecraft:model
+      path: minecraft:item/custom/sword
+```
+
+:::tip
+
+`model` 不需要额外字段时可直接写为路径：
+
+```yaml
+items:
+  demo:sword:
+    material: diamond_sword
+    model: minecraft:item/custom/sword
+```
+
+:::
+
+## 模型类型
+
+`type` 省略时默认为 `minecraft:model`。`minecraft:` 前缀可省略。
+
+<UrlCard url="models/model" title="📐 模型" subtitle="按照指定的参数渲染指定的物品模型" />
+<UrlCard url="models/composite" title="🧩 组合" subtitle="将多个模型叠加在一起" />
+<UrlCard url="models/condition" title="⚖️ 布尔条件型" subtitle="计算给定的谓词，选择物品模型映射" />
+<UrlCard url="models/select" title="✅ 枚举条件型" subtitle="计算枚举属性值并查找，选择物品模型映射" />
+<UrlCard url="models/range_dispatch" title="📡 值调配型" subtitle="计算数值并查找数值区间，选择物品模型映射" />
+<UrlCard url="models/special" title="👻 特殊模型" subtitle="调用游戏的特殊模型渲染物品堆叠" />
+<UrlCard url="models/empty" title="∅ 空模型" subtitle="不渲染任何物品模型" />
+<UrlCard url="models/bundle_selected_item" title="📦 收纳袋选中物品" subtitle="渲染收纳袋内选中的物品堆叠" />
+
+:::tip 变换（26.1+）
+
+`transformation` 可以额外指定展示实体使用的物品模型变换。除 `empty` 和 `bundle/selected_item` 外所有类型均可指定。
+
+分解形式接收 4 个字段，按此顺序应用：**right_rotation → scale → left_rotation → translation**。
+
+```yaml
+# 分解形式
+transformation:
+  right_rotation: 0,0,0,1 # [x, y, z, w] 四元数
+  scale: 1,1,1            # [x, y, z]
+  left_rotation: 0,0,0,1  # [x, y, z, w] 四元数
+  translation: 0,0,0      # [x, y, z]
+  # 旋转也可用轴角度对象形式：
+  # right_rotation:
+  #   angle: 0.0           # 弧度
+  #   axis: 0,1,0          # [x, y, z]
+```
+
+```yaml
+# 矩阵（16 个浮点数，行优先，4 行 × 4 列）
+# 等价于 T × L × S × R（与分解形式相同的顺序）
+transformation:
+  - 1,0,0,0   # 第 0 行
+  - 0,1,0,0   # 第 1 行
+  - 0,0,1,0   # 第 2 行
+  - 0,0,0,1   # 第 3 行
+```
+
 :::
 
 ## 简化模型
 
-简化模型的目的是为了降低常见用例的配置复杂度。虽然 CraftEngine 提供了模板，但使用参数仍需要 3-4 行配置。简化模型以牺牲一部分灵活性为代价，大幅降低了这一门槛。
+亲手写出完整模型树很繁琐。CraftEngine 可以替你搞定——只需提供纹理并选择正确的基础材质。它会根据你基于的物品自动构建正确的模型结构。
 
-简化模型会自动分析你选择的基础材质，并选择最合适的方法生成模型。在大多数情况下，只需指定一个 `texture` 参数，即可完成所有操作。
+根据你手中已有的资源，有三种用法：
 
-下面的示例中展示了一系列简化模型与普通模型的配置对比，这将帮助你在使用简化写法的同时理解其对应的普通写法。
+<Details summary="仅使用纹理" defaultOpen={false}>
 
-### 2D 图标
-
-简化写法
+你只有纹理 PNG，没有模型 JSON。给 CraftEngine 填入 `texture`（单个）或 `textures`（列表），它会自动生成模型文件并分配路径。这是最常见的场景——没有特殊需求就从这里开始。
 
 ```yaml
-items:
-  default:ender_pearl_flower_seeds:
-    material: paper
-    texture: minecraft:item/custom/ender_pearl_flower_seeds
+demo:rod:
+  material: fishing_rod
+  textures:
+    - minecraft:item/custom/rod
+    - minecraft:item/custom/rod_cast
 ```
 
-普通写法
+</Details>
+
+<Details summary="仅使用模型" defaultOpen={false}>
+
+你已经在 BlockBench（或其他工具）中制作好了模型 JSON 文件。填入 `model` 或 `models` 字段，附带你的 JSON 路径。CraftEngine 原样使用，不做生成。位置顺序规则与 `textures` 相同。
 
 ```yaml
-items:
-  default:ender_pearl_flower_seeds:
-    material: paper
-    model:
-      type: minecraft:model
-      path: minecraft:item/custom/ender_pearl_flower_seeds
-      generation:
-        parent: minecraft:item/generated
-        textures:
-          layer0: minecraft:item/custom/ender_pearl_flower_seeds
+demo:shield_3d:
+  material: shield
+  models:
+    - minecraft:item/custom/shield_3d            # 待机
+    - minecraft:item/custom/shield_3d_blocking   # 格挡
 ```
 
-### 手持物品
+</Details>
 
-简化写法
+<Details summary="纹理 + 模型混用" defaultOpen={false}>
+
+你希望 CraftEngine 生成模型 JSON，但输出到你指定的路径——比如你在配置的其他地方引用了这些路径。用 `models` 列表指定输出位置，用 `textures` 列表提供纹理。两个列表必须槽位一一对应。
 
 ```yaml
-items:
-  default:topaz_axe:
-    material: golden_axe
-    texture: minecraft:item/custom/topaz_axe
+demo:bow:
+  material: bow
+  models:
+    - minecraft:item/custom/my_bow
+    - minecraft:item/custom/my_bow_pulling_0
+    - minecraft:item/custom/my_bow_pulling_1
+    - minecraft:item/custom/my_bow_pulling_2
+  textures:
+    - minecraft:item/custom/my_bow
+    - minecraft:item/custom/my_bow_pulling_0
+    - minecraft:item/custom/my_bow_pulling_1
+    - minecraft:item/custom/my_bow_pulling_2
 ```
 
-普通写法
-
-```yaml
-items:
-  default:topaz_axe:
-    material: golden_axe
-    model:
-      type: minecraft:model
-      path: minecraft:item/custom/topaz_axe
-      generation:
-        parent: minecraft:item/handheld
-        textures:
-          layer0: minecraft:item/custom/topaz_axe
-```
+</Details>
 
 :::tip
-**[1.21.4+]** 对于简单的 2D 图标或手持物品模型，配置多个纹理会使图像叠加，效果如下。
 
-```yaml
-items:
-  default:topaz_axe:
-    material: golden_axe
-    textures:
-      - minecraft:item/custom/topaz_axe
-      - minecraft:item/custom/topaz
-```
-
-![](/img/composite_model.png)
+**顺序至关重要。** 列表中的每个槽位都有特定含义，且会根据材质而变化。顺序搞错了，你的弓会在待机时显示拉满的纹理。
 
 :::
 
-### 钓鱼竿
+### 2D 图标或手持工具
 
-简化写法
+普通物品（`paper`、`diamond`、`gold_ingot` …）父模型为 `item/generated`。工具武器（`golden_axe`、`diamond_sword` …）为 `item/handheld`。一个 `texture` 即可。
+
+<Details summary="2D 图标" defaultOpen={false}>
 
 ```yaml
-items:
-  default:topaz_rod:
-    material: fishing_rod
-    textures:
-      - minecraft:item/custom/topaz_rod
-      - minecraft:item/custom/topaz_rod_cast
+demo:icon:
+  material: paper
+  texture: minecraft:item/custom/icon
 ```
 
-普通写法
+</Details>
+
+<Details summary="手持工具" defaultOpen={false}>
+
+```yaml
+demo:axe:
+  material: golden_axe
+  texture: minecraft:item/custom/axe
+```
+
+</Details>
+
+### 钓鱼竿——2 个槽位
+
+抛出鱼线后显示抛竿模型。
+
+<Details summary="钓鱼竿" defaultOpen={false}>
+
+```yaml
+demo:rod:
+  material: fishing_rod
+  textures:
+    - minecraft:item/custom/rod         # 待机
+    - minecraft:item/custom/rod_cast    # 已抛竿
+```
+
+</Details>
+
+### 鞘翅——2 个槽位
+
+即将损坏时切换到破损纹理。
+
+<Details summary="鞘翅" defaultOpen={false}>
+
+```yaml
+demo:elytra:
+  material: elytra
+  textures:
+    - minecraft:item/custom/elytra         # 完好
+    - minecraft:item/custom/elytra_broken  # 破损
+```
+
+</Details>
+
+### 盾牌——2 个槽位
+
+盾牌通常是 3D 模型，所以一般用 `models` 配合已有的 JSON 文件。
+
+<Details summary="盾牌" defaultOpen={false}>
+
+```yaml
+demo:shield:
+  material: shield
+  models:
+    - minecraft:item/custom/shield            # 待机
+    - minecraft:item/custom/shield_blocking   # 格挡中
+```
+
+</Details>
+
+### 矛——2 个槽位
+
+物品在 GUI 或地面上时用一个模型，玩家手持时用另一个。
+
+<Details summary="矛" defaultOpen={false}>
+
+```yaml
+demo:spear:
+  material: golden_spear
+  textures:
+    - minecraft:item/custom/spear       # GUI、地面、物品展示框
+    - minecraft:item/custom/spear_hand  # 手中持有
+```
+
+</Details>
+
+### 弓——4 个槽位
+
+一个待机纹理，三个逐步拉弓阶段。
+
+<Details summary="弓" defaultOpen={false}>
+
+```yaml
+demo:bow:
+  material: bow
+  textures:
+    - minecraft:item/custom/bow              # 待机，未使用
+    - minecraft:item/custom/bow_pulling_0    # 刚开始拉
+    - minecraft:item/custom/bow_pulling_1    # 拉至中途
+    - minecraft:item/custom/bow_pulling_2    # 完全拉满
+```
+
+</Details>
+
+### 弩——6 个槽位
+
+最复杂的一种。三个拉弦阶段类似弓，外加两个额外槽位：装箭和装烟花火箭。
+
+<Details summary="弩" defaultOpen={false}>
+
+```yaml
+demo:crossbow:
+  material: crossbow
+  textures:
+    - minecraft:item/custom/crossbow              # 待机，未装填
+    - minecraft:item/custom/crossbow_pulling_0    # 开始拉弦
+    - minecraft:item/custom/crossbow_pulling_1    # 拉至中途
+    - minecraft:item/custom/crossbow_pulling_2    # 完全拉满
+    - minecraft:item/custom/crossbow_arrow        # 装填了箭
+    - minecraft:item/custom/crossbow_firework     # 装填了烟花火箭
+```
+
+</Details>
+
+## 旧版模型
+
+1.21.4 之前的兼容格式。CraftEngine 会自动将现代模型转换为旧版格式——你通常不需要手动处理。如果只面向 1.21.4+，完全跳过此部分。
+
+:::warning
+不推荐日常使用。仅在自动转换产生错误结果时才需要手动指定。
+:::
 
 ```yaml
 items:
-  default:topaz_rod:
+  demo:rod:
     material: fishing_rod
     model:
       type: minecraft:condition
       property: minecraft:fishing_rod/cast
       on_false:
         type: minecraft:model
-        path: minecraft:item/custom/topaz_rod
-        generation:
-          parent: minecraft:item/fishing_rod
-          textures:
-            layer0: minecraft:item/custom/topaz_rod
+        path: minecraft:item/custom/rod
       on_true:
         type: minecraft:model
-        path: minecraft:fishing_rod/cast
-        generation:
-          parent: minecraft:item/fishing_rod
-          textures:
-            layer0: minecraft:fishing_rod/cast
-```
-
-:::info
-以下配置仅展示简化版本。如果你好奇普通模型是如何配置的，可以参考默认配置的模板。
-:::
-
-### 鞘翅
-
-```yaml
-items:
-  default:flame_elytra:
-    material: elytra
-    textures:
-      - minecraft:item/custom/flame_elytra
-      - minecraft:item/custom/flame_elytra_broken
-```
-
-### 弓
-
-```yaml
-items:
-  default:topaz_bow:
-    material: bow
-    textures:
-      - minecraft:item/custom/topaz_bow
-      - minecraft:item/custom/topaz_bow_pulling_0
-      - minecraft:item/custom/topaz_bow_pulling_1
-      - minecraft:item/custom/topaz_bow_pulling_2
-```
-
-### 弩
-
-```yaml
-items:
-  default:topaz_crossbow:
-    material: crossbow
-    textures:
-      - minecraft:item/custom/topaz_crossbow
-      - minecraft:item/custom/topaz_crossbow_pulling_0
-      - minecraft:item/custom/topaz_crossbow_pulling_1
-      - minecraft:item/custom/topaz_crossbow_pulling_2
-      - minecraft:item/custom/topaz_crossbow_arrow
-      - minecraft:item/custom/topaz_crossbow_firework
-```
-
-### 盾牌
-
-```yaml
-items:
-  default:shield_3d:
-    material: shield
-    models:
-      - minecraft:item/custom/shield_3d
-      - minecraft:item/custom/shield_3d_blocking
-```
-
-:::tip
-如果你已经有了模型文件，你可以直接指定模型路径来应用简化模型。
-
-```yaml
-items:
-  default:rod_3d:
-    material: fishing_rod
-    models:
-      - minecraft:item/custom/rod_3d
-      - minecraft:item/custom/rod_3d_cast
-```
-
-```yaml
-items:
-  default:exit_icon:
-    material: paper
-    model: minecraft:item/custom/exit_icon
-```
-:::
-
-:::tip
-通常情况下，当你只指定了纹理时，物品的模型路径会自动分配。你也可以使用 'model' 选项手动指定路径，例如：
-
-```yaml
-items:
-  default:ender_pearl_flower_seeds:
-    material: paper
-    model: minecraft:item/custom/ender_pearl_flower_seeds
-    texture: minecraft:item/custom/ender_pearl_flower_seeds
-```
-
-```yaml
-items:
-  default:topaz_rod:
-    material: fishing_rod
-    models:
-      - minecraft:item/custom/topaz_rod
-      - minecraft:item/custom/topaz_rod_cast
-    textures:
-      - minecraft:item/custom/topaz_rod
-      - minecraft:item/custom/topaz_rod_cast
-```
-
-:::
-
-## 旧版模型
-
-**旧版模型**特指 1.21.3 及更早版本中使用的物品模型格式。你可以通过 legacy_model 部分来指定旧版物品模型格式。然而，在大多数情况下，你无需这样做，因为插件会尽可能自动将 1.21.4 的物品模型转换为旧版格式。只有当旧版模型格式出现问题时，你才应该使用此配置部分。
-
-```yaml
-items#topaz_gears:
-  default:topaz_rod:
-    material: fishing_rod
-    item_model: default:topaz_rod
-    settings:
-      tags:
-        - "default:topaz_tools"
-    data:
-      item_name: "<!i><#FF8C00><i18n:item.topaz_rod>"
-      tooltip_style: minecraft:topaz
-    model:
-      template: default:model/simplified_fishing_rod_2d
-      arguments:
-        path: minecraft:item/custom/topaz_rod
-        cast_path: minecraft:item/custom/topaz_rod_cast
-    # 如果你在 legacy_model 部分中指定了模型，
-    # 插件将使用你手动定义的模型，
-    # 而不是依赖自动转换的旧版格式。
+        path: minecraft:item/custom/rod_cast
     legacy_model:
-      path: minecraft:item/custom/topaz_rod
+      path: minecraft:item/custom/rod
+      generation:
+        parent: minecraft:item/fishing_rod
+        textures:
+          layer0: minecraft:item/custom/rod
       overrides:
-        - path: minecraft:item/custom/topaz_rod_cast
-          predicate: 
+        - path: minecraft:item/custom/rod_cast
+          predicate:
             cast: 1
 ```
-
-:::tip
-如果你不需要支持 1.21.4 以上的版本，你可以只配置 legacy_model 部分，并完全省略 model 部分。
-:::

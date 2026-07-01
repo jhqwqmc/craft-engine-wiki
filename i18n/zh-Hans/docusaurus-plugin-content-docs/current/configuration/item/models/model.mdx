@@ -5,221 +5,162 @@ id: model
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## 简介
+## 概述
 
-<UrlCard
-  url="https://zh.minecraft.wiki/w/物品模型映射#model"
-  title="📐 模型"
-/>
-
-指定游戏使用哪一个物品模型进行渲染，并且指定各个着色索引使用的颜色。
+指定游戏使用哪一个物品模型进行渲染，并且指定各个着色索引使用的颜色。`type` 默认为 `minecraft:model`。
 
 ```yaml
 items:
-  default:topaz_pickaxe:
+  demo:sword:
+    material: diamond_sword
     model:
-      type: minecraft:model # 在这种情况下 type 是可选的
-      path: minecraft:item/custom/topaz_pickaxe
-      generation: # 可选; 模型生成
-        parent: "minecraft:item/handheld" # 必填; 父模型路径
-        textures:
-          "layer0": "minecraft:item/custom/topaz_pickaxe"
-      transformation: # 可选; 模型变换; 26.1+
-        scale: 1,1,1 # 以原点为中心缩放模型
-        translation: 0,0,0 # 平移变换
-        right_rotation: # 初始旋转
-          angle: 0.0 # 表示绕旋转轴的旋转角度（以弧度为单位）
-          axis: 0,0,0 # 一个3维向量，表示旋转轴
-        left_rotation: 0,0,0,0 # 再次旋转模型
+      path: minecraft:item/custom/sword
 ```
 
-:::tip
-如果你不指定类型，它将默认使用 `minecraft:model`。
-:::
+## 字段
 
-## 着色
+| 字段 | 类型 | 必需 | 默认值 | 说明 |
+|-------|------|----------|---------|-------------|
+| `type` | string | 否 | `minecraft:model` | 模型类型标识 |
+| `path` | 资源路径 | 是 | — | 模型 JSON 的命名空间路径（如 `demo:item/sword`） |
+| `generation` | object | 否 | — | 从父模板自动生成模型 JSON |
+| `tints` | list | 否 | — | 指定各个着色索引使用的颜色提供器，数组下标对应着色索引 |
+| `transformation` | object | 否 | — | 物品模型变换（26.1+） |
 
-在本配置中，我们为自定义树叶创建了一个模型。但原版游戏中的默认树叶模型是没有颜色的，因此我们需要配置一个颜色提供器来为其着色。
+## Generation
+
+设置 `generation` 后，CraftEngine 自动生成模型 JSON —— 无需手动提供模型文件。只有 `parent` 是必填的。
 
 ```yaml
-default:palm_leaves:
-  model:
-    type: "minecraft:model"
-    path: "minecraft:item/custom/palm_leaves"
-    generation:
-      parent: "minecraft:block/custom/palm_leaves"
-    tints:
-      - type: "minecraft:constant"
-        value: -12012264
+items:
+  demo:sword:
+    material: diamond_sword
+    model:
+      path: demo:item/sword
+      generation:
+        parent: minecraft:item/handheld
+        textures:
+          layer0: demo:item/sword
+          layer1: demo:item/sword_glow
+        display:
+          thirdperson_righthand:
+            rotation: 0,0,0
+            translation: 0,1,1
+            scale: 0.85,0.85,0.85
+        gui_light: front
 ```
+
+| 字段 | 类型 | 必需 | 说明 |
+|-------|------|----------|-------------|
+| `parent` | 资源路径 | 是 | 继承的父模型（如 `minecraft:item/generated`） |
+| `textures` | map | 否 | 纹理变量覆盖（`layer0`、`layer1` …） |
+| `display` | object | 否 | 各上下文显示变换（`thirdperson_righthand`、`gui`、`ground`、`fixed`、`head`、`firstperson_righthand` …） |
+| `gui_light` | string | 否 | GUI 光照模式：`front` 或 `side` |
+
+## Tints
 
 <UrlCard
   url="https://zh.minecraft.wiki/w/物品模型映射#model"
-  title="🎨 着色"
+  title="Minecraft Wiki | 着色器"
 />
 
-:::info
-需要颜色的地方支持使用十进制或 RGB 格式
-
 ```yaml
-value: 16711680
+items:
+  demo:dyeable_armor:
+    material: leather_chestplate
+    model:
+      path: minecraft:item/custom/armor
+      generation:
+        parent: minecraft:item/generated
+        textures:
+          layer0: minecraft:item/custom/armor
+          layer1: minecraft:item/custom/armor_overlay
+      tints:
+        - type: minecraft:dye
+          default: 16777215
 ```
 
-```yaml
-value:
-  - 255
-  - 0
-  - 0
-# 或
-value:
-  - 1.0
-  - 0.0
-  - 0.0
-```
+指定物品模型各个着色索引使用的颜色，数组下标对应着色索引。
+
+所有颜色值接受以下格式：
 
 ```yaml
-value: 255,0,0
-# 或
-value: 1.0,0.0,0.0
+value: 16711680           # 十进制 (0x00FF0000)
+value: 255,0,0            # RGB 0–255
+value: 1.0,0.0,0.0        # RGB 0.0–1.0
 ```
-:::
 
 ### minecraft\:constant
 
-```yaml
-type: "minecraft:constant"
-value: -12012264
-```
-
-### minecraft\:custom\_model\_data
+返回固定 RGB 颜色。
 
 ```yaml
-type: "minecraft:custom_model_data"
-index: 0
-default: -12012264
+tints:
+  - type: minecraft:constant
+    value: 16711680   # 红色
 ```
 
 ### minecraft\:dye
 
+返回 `minecraft:dyed_color` 组件的值，组件不存在时使用 `default`。
+
 ```yaml
-type: "minecraft:dye"
-default: -12012264
+  - type: minecraft:dye
+    default: 16777215
 ```
 
 ### minecraft\:firework
 
+返回 `minecraft:firework_explosion` 组件中颜色的平均值，若无颜色则使用 `default`。
+
 ```yaml
-type: "minecraft:firework"
-default: -12012264
+  - type: minecraft:firework
+    default: 16777215
 ```
 
 ### minecraft\:grass
 
+根据气候采样 `textures/colormap/grass.png`。
+
 ```yaml
-type: "minecraft:grass"
-temperature: 0.5
-downfall: 0.5
+  - type: minecraft:grass
+    temperature: 0.5   # 0.0–1.0
+    downfall: 0.5       # 0.0–1.0
 ```
 
-### minecraft\:map\_color
+### minecraft\:map_color
+
+返回 `minecraft:map_color` 组件的值，组件不存在时使用 `default`。
 
 ```yaml
-type: "minecraft:map_color"
-default: -12012264
+  - type: minecraft:map_color
+    default: 16777215
 ```
 
 ### minecraft\:potion
 
+返回 `minecraft:potion_contents` 组件的颜色：优先 custom_color，其次效果颜色平均值，最后 `default`。组件不存在时返回 `default`。
+
 ```yaml
-type: "minecraft:potion"
-default: -12012264
+  - type: minecraft:potion
+    default: 16777215
 ```
 
 ### minecraft\:team
 
-```yaml
-type: "minecraft:team"
-default: -12012264
-```
-
-:::::tip
-
-:::warning
-在阅读本教程前，请先查看[使用 BlockBench 创建模型](../../../getting_start/add_custom_model.mdx#使用-blockbench-创建模型)
-:::
-
-## 如何创建可染色模型
-
-首先，创建一个带有灰度纹理的模型。
-然后，在预览界面中点击需要着色的模型面，点击顶部工具栏的 `UV` 选项，找到并勾选 `着色`。
-⚠️ 注意：必须在 **预览界面** 点击模型面，而不是在右侧面板中选择块，否则你找不到这个选项。
-
-![](/img/i18n/zh-Hans/item_model_display_1.png)
-
-将所有需要着色的面都执行一遍相同的操作。完成后，导出模型文件，你会在对应的面上看到多出了一个 `tintindex` 属性。
-
-```json
-{
-  "format_version": "1.21.6",
-  "credit": "jhqwqmc",
-  "textures": {
-    "0": "tints:block/example_1",
-    "1": "tints:block/example_2",
-    "particle": "tints:block/example_1"
-  },
-  "elements": [
-    {
-      "from": [1, 7, 1],
-      "to": [2, 8, 15],
-      "rotation": {"angle": 0, "axis": "y", "origin": [-6, 7, 10]},
-      "faces": {
-        "north": {"uv": [0.25, 0.25, 0.75, 0.75], "texture": "#0", "tintindex": 0},
-        "east": {"uv": [1.25, 0.25, 1.75, 0.75], "texture": "#0", "tintindex": 0},
-        "south": {"uv": [2.25, 0.25, 2.75, 0.75], "texture": "#0", "tintindex": 0},
-        "west": {"uv": [3.25, 0.25, 3.75, 0.75], "texture": "#0", "tintindex": 0},
-        "up": {"uv": [4.25, 0.25, 4.75, 0.75], "texture": "#0", "tintindex": 0},
-        "down": {"uv": [5.25, 0.25, 5.75, 0.75], "texture": "#0", "tintindex": 0}
-      }
-    },
-    ...
-    {
-      "from": [2, 8, 2],
-      "to": [14, 8, 14],
-      "rotation": {"angle": 0, "axis": "y", "origin": [2, 12, 6]},
-      "faces": {
-        "north": {"uv": [2, 2, 14, 2], "texture": "#1"},
-        "east": {"uv": [2, 2, 14, 2], "texture": "#1"},
-        "south": {"uv": [2, 2, 14, 2], "texture": "#1"},
-        "west": {"uv": [2, 2, 14, 2], "texture": "#1"},
-        "up": {"uv": [2, 2, 14, 14], "texture": "#1", "tintindex": 1}, // 可以看到这里额外多出了一个 tintindex 属性
-        "down": {"uv": [2, 2, 14, 14], "texture": "#1"}
-      }
-    }
-  ]
-}
-```
-
-接下来，我们编写物品模型配置：
+返回上下文实体的队伍颜色，若无实体、无队伍或队伍无颜色时使用 `default`。
 
 ```yaml
-items:
-  tints:example:
-    model:
-      type: minecraft:model
-      path: tints:item/example
-      generation:
-        parent: "tints:block/example"
-      tints: # 定义在 BlockBench 中勾选过“着色”的面
-        - type: "minecraft:dye" # 第一个着色，对应 tintindex=0 的面（计算机从 0 开始计数）
-          default: 144,80,62
-        - type: "minecraft:grass" # 第二个着色，对应 tintindex=1 的面
-          temperature: 0.5
-          downfall: 0.5
+  - type: minecraft:team
+    default: 16777215
 ```
 
-最后，你可以在此处下载完整示例包：[点击下载](/file/tints.zip)
-游戏内的效果如下所示：
+### minecraft\:custom_model_data
 
-![](/img/item_model_display_2.png)
+读取 `minecraft:custom_model_data` 组件中的 `colors` 列表。
 
-:::::
+```yaml
+  - type: minecraft:custom_model_data
+    index: 0            # colors 数组中的位置
+    default: 16777215
+```

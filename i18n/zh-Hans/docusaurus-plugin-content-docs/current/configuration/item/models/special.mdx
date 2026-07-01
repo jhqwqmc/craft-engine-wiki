@@ -3,183 +3,172 @@ title: 👻 特殊模型
 id: special
 ---
 
-import UrlCard from '@site/src/components/UrlCard';
+## 概述
 
-## 简介
-
-<UrlCard
-  url="https://zh.minecraft.wiki/w/物品模型映射#special"
-  title="👻 特殊模型"
-/>
-
-调用游戏的硬编码渲染器渲染物品堆叠。物品堆叠渲染时的渲染变换、粒子纹理变量等可以从物品模型中获取。
-
-:::caution
-当使用 `minecraft:special` 时，你需要指定一个**硬编码渲染器**。`path` 参数是基础模型渲染所必需的。
-:::
+调用游戏的**特殊模型**渲染物品堆叠。物品堆叠渲染时的渲染变换、粒子纹理变量等可以从 `base` 指定的基础物品模型中获取。
 
 ```yaml
 items:
-  default:gui_head_size_1:
+  demo:head:
+    material: player_head
     model:
       type: minecraft:special
-      path: minecraft:item/custom/gui_head_size_1
+      base: minecraft:item/custom/head_base
       model:
         type: minecraft:head
-        kind: player
-      transformation: # 可选; 模型变换; 26.1+
-        scale: 1,1,1 # 以原点为中心缩放模型
-        translation: 0,0,0 # 平移变换
-        right_rotation: # 初始旋转
-          angle: 0.0 # 表示绕旋转轴的旋转角度（以弧度为单位）
-          axis: 0,0,0 # 一个3维向量，表示旋转轴
-        left_rotation: 0,0,0,0 # 再次旋转模型
+        kind: skeleton
+        texture: minecraft:custom/heads/wizard
+        animation: 0.0
 ```
 
-## 硬编码渲染器
+## 字段
 
-请查看 [https://zh.minecraft.wiki/w/物品模型映射#special](https://zh.minecraft.wiki/w/物品模型映射#special) 以获取每个参数的解释。
+| 字段 | 类型 | 必需 | 默认值 | 说明 |
+|-------|------|----------|---------|-------------|
+| `type` | string | 是 | — | `minecraft:special` |
+| `base` | 资源路径 | 是 | — | 用于变换、粒子纹理和 GUI 光照的模型路径 |
+| `model` | object | 是 | — | 特殊模型对象，带有自己的 `type`（见下方） |
+| `transformation` | object | 否 | — | 物品模型变换（26.1+） |
 
-### minecraft\:trident
-
-> 渲染三叉戟
-
-### minecraft\:conduit
-
-> 渲染潮涌核心
-
-### minecraft\:shield
-
-> 渲染盾牌，底色和图案取决于 `base_color` 和 `banner_patterns` 组件
-
-### minecraft\:decorated\_pot
-
-> 渲染饰纹陶罐，四个面取决于 `pot_decorations` 组件
-
-### minecraft\:hanging\_sign
-
-> 根据指定的纹理渲染悬挂式告示牌
-
-```yaml
-model:
-  type: "minecraft:hanging_sign"
-  attachment: "ceiling_middle" # 26.1+
-  wood_type: "oak"
-  texture: ...
-```
-
-### minecraft\:standing\_sign
-
-> 根据指定的纹理渲染告示牌
-
-```yaml
-model:
-  type: "minecraft:standing_sign"
-  attachment: "ground" # 26.1+
-  wood_type: "oak"
-  texture: ...
-```
+## 特殊模型类型
 
 ### minecraft\:head
 
-> 按照指定的头颅类型渲染生物头颅 \[当适用时，使用 `minecraft:profile` 组件中的玩家游戏档案信息。(1.21.4-1.21.5)]
+按照指定的头颅类型渲染生物头颅。
 
 ```yaml
 model:
-  type: "minecraft:head"
-  kind: player
-  texture: ...
-  animation: 0.0
+  type: minecraft:head
+  kind: skeleton          # skeleton | wither_skeleton | player | zombie | creeper | piglin | dragon
+  texture: minecraft:custom/heads/wizard  # 可选，每种 kind 有默认值。省略 textures/entity/ 前缀和 .png 后缀
+  animation: 0.0          # 龙嘴：-2.5（闭合）到 2.5（张开）；猪灵耳朵摆动
 ```
 
-### minecraft\:player\_head (1.21.6+)
+### minecraft\:player_head（1.21.6+）
 
-> 渲染玩家的头，皮肤取决于 `profile` 组件
+使用 `minecraft:profile` 组件获取皮肤纹理。无额外字段。
 
 ```yaml
 model:
-  type: "minecraft:player_head"
+  type: minecraft:player_head
 ```
 
 ### minecraft\:chest
 
-> 根据指定的纹理和开合程度渲染箱子
+渲染单个箱子。
 
 ```yaml
 model:
-  type: "minecraft:chest"
-  chest_type: "single" # 26.1+
-  openness: 0.0
-  texture: ...
+  type: minecraft:chest
+  texture: minecraft:custom/chest  # 箱子纹理图集中的路径，不含 .png
+  chest_type: single         # "single" | "left" | "right"（26.1+）
+  openness: 0.0              # 0.0（关闭）到 1.0（打开）
 ```
 
-### minecraft\:shulker\_box
+### minecraft\:shulker_box
 
-> 根据指定的纹理、开合程度和方向渲染潜影盒
+渲染潜影盒。
 
 ```yaml
 model:
-  type: "minecraft:shulker_box"
-  openness: 0.0
-  orientation: up # 1.21.4~1.21.11
-  texture: ...
+  type: minecraft:shulker_box
+  texture: minecraft:custom/shulker  # 潜影盒纹理图集中的路径，不含 .png
+  openness: 0.0              # 0.0（关闭）到 1.0（打开）
 ```
 
-### minecraft\:bed (已在 26.2 移除)
+### minecraft\:shield
 
-> 根据指定的纹理渲染床
+读取 `minecraft:banner_patterns` 和 `minecraft:base_color` 组件。无额外字段。
 
 ```yaml
 model:
-  type: "minecraft:bed"
-  part: "head" # 26.1~26.1.2
-  texture: ...
+  type: minecraft:shield
 ```
 
 ### minecraft\:banner
 
-> 根据底色和 `banner_patterns` 物品堆叠组件渲染旗帜
+读取 `minecraft:banner_patterns` 组件。
 
 ```yaml
 model:
-  type: "minecraft:banner"
-  attachment: "ground" # 26.1+
-  color: white
+  type: minecraft:banner
+  color: red                 # 16 种颜色之一（必填）
+  attachment: ground         # "ground" | "wall"（26.1+）
+```
+
+### minecraft\:trident
+
+渲染三叉戟。无额外字段。
+
+```yaml
+model:
+  type: minecraft:trident
+```
+
+### minecraft\:conduit
+
+渲染潮涌核心。无额外字段。
+
+```yaml
+model:
+  type: minecraft:conduit
+```
+
+### minecraft\:decorated_pot
+
+读取 `minecraft:pot_decorations` 组件。无额外字段。
+
+```yaml
+model:
+  type: minecraft:decorated_pot
+```
+
+### minecraft\:bell（26.1+）
+
+渲染钟的动画部分。
+
+```yaml
+model:
+  type: minecraft:bell
+```
+
+### minecraft\:book（26.1+）
+
+根据指定的角度渲染书。
+
+```yaml
+model:
+  type: minecraft:book
+  open_angle: 0    # 角度：0 = 闭合，90 = 平摊
+  page1: 0.0       # 翻页进度 0.0–1.0
+  page2: 0.0
+```
+
+### minecraft\:end_cube（26.1+）
+
+渲染一个特殊效果的立方体。
+
+```yaml
+model:
+  type: minecraft:end_cube
+  effect: portal     # "portal" | "gateway"
 ```
 
 ### minecraft\:copper_golem_statue
 
-> 根据指定的纹理渲染铜傀儡像
+根据指定的纹理渲染铜傀儡像。
 
 ```yaml
 model:
-  type: "minecraft:copper_golem_statue"
-  pose: sitting
-  texture: ...
+  type: minecraft:copper_golem_statue
+  pose: standing       # "standing" | "sitting" | "running" | "star"
+  texture: minecraft:custom/statue.png  # 完整路径，需含 .png 后缀
 ```
 
-### minecraft\:bell (26.1+)
+### 已移除的类型
 
-> 渲染钟的动画部分
-
-### minecraft\:book (26.1+)
-
-> 渲染附魔台和讲台上的书
-
-```yaml
-model:
-  type: "minecraft:book"
-  open_angle: 0
-  page1: 0
-  page2: 0
-```
-
-### minecraft\:end\_cube (26.1+)
-
-> 渲染末地折跃门或末地传送门
-
-```yaml
-model:
-  type: "minecraft:end_cube"
-  effect: "portal"
-```
+| 类型 | 移除版本 | 说明 |
+|------|-----------|-------|
+| `minecraft:bed` | 26.2 snap3 | 被基于方块的渲染替代 |
+| `minecraft:standing_sign` | 26.2 snap7 | 被基于方块的渲染替代 |
+| `minecraft:hanging_sign` | 26.2 snap7 | 被基于方块的渲染替代 |

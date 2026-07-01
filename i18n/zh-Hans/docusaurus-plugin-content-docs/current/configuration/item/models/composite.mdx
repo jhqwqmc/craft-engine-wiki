@@ -3,34 +3,27 @@ title: 🧩 组合
 id: composite
 ---
 
-import UrlCard from '@site/src/components/UrlCard';
+## 概述
 
-## 简介
-
-<UrlCard
-  url="https://zh.minecraft.wiki/w/物品模型映射#composite"
-  title="🧩 组合"
-/>
-
-此物品模型映射类型会先计算数组内所有物品模型映射，再根据数组次序从后向前依次渲染。
+将多个子模型**叠加在同一个空间中**渲染。从后向前依次渲染 —— 靠前的条目出现在上层。
 
 ```yaml
 items:
-  default:composite_item:
+  demo:gem:
+    material: diamond
     model:
-      type: "minecraft:composite"
+      type: minecraft:composite
       models:
         - type: minecraft:model
-          path: "minecraft:item/custom/model_1"
+          path: minecraft:item/custom/gem_glow   # 上层
         - type: minecraft:model
-          path: "minecraft:item/custom/model_2"
-        - type: minecraft:model
-          path: "minecraft:item/custom/model_3"
-      transformation: # 可选; 模型变换; 26.1+
-        scale: 1,1,1 # 以原点为中心缩放模型
-        translation: 0,0,0 # 平移变换
-        right_rotation: # 初始旋转
-          angle: 0.0 # 表示绕旋转轴的旋转角度（以弧度为单位）
-          axis: 0,0,0 # 一个3维向量，表示旋转轴
-        left_rotation: 0,0,0,0 # 再次旋转模型
+          path: minecraft:item/custom/gem_base   # 底层
 ```
+
+## 字段
+
+| 字段 | 类型 | 必需 | 默认值 | 说明 |
+|-------|------|----------|---------|-------------|
+| `type` | string | 是 | — | `minecraft:composite` |
+| `models` | list | 是 | — | 从后向前依次渲染的物品模型映射 |
+| `transformation` | object | 否 | — | 物品模型变换，在子节点的变换之上进行（26.1+） |

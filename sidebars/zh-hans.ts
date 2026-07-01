@@ -205,6 +205,16 @@ const sidebars: SidebarsConfig = {
                   id: "configuration/item/models/special",
                   label: '👻 特殊模型',
                 },
+                {
+                  type: 'doc',
+                  id: "configuration/item/models/empty",
+                  label: '∅ 空模型',
+                },
+                {
+                  type: 'doc',
+                  id: "configuration/item/models/bundle_selected_item",
+                  label: '📦 收纳袋选中物品',
+                },
               ]
             },
             {

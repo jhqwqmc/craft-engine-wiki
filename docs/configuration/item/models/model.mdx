@@ -102,7 +102,7 @@ tints:
 
 ### minecraft\:dye
 
-Reads `minecraft:dyed_color` component; falls back to `default`.
+Returns value from `minecraft:dyed_color` component, or `default` if not present.
 
 ```yaml
   - type: minecraft:dye
@@ -111,7 +111,7 @@ Reads `minecraft:dyed_color` component; falls back to `default`.
 
 ### minecraft\:firework
 
-Averages colors from `minecraft:firework_explosion` component.
+Returns average of colors from `minecraft:firework_explosion` component, or `default` if there are none.
 
 ```yaml
   - type: minecraft:firework
@@ -130,7 +130,7 @@ Samples `textures/colormap/grass.png` by climate.
 
 ### minecraft\:map_color
 
-Reads `minecraft:map_color` component.
+Returns value from `minecraft:map_color` component, or `default` if not present.
 
 ```yaml
   - type: minecraft:map_color
@@ -139,7 +139,7 @@ Reads `minecraft:map_color` component.
 
 ### minecraft\:potion
 
-Reads `minecraft:potion_contents` component (priority: custom_color → average of effects → `default`).
+Returns color from `minecraft:potion_contents` component: custom_color if present, otherwise average of effect colors, otherwise `default`. If component is absent, returns `default`.
 
 ```yaml
   - type: minecraft:potion
@@ -148,7 +148,7 @@ Reads `minecraft:potion_contents` component (priority: custom_color → average 
 
 ### minecraft\:team
 
-Returns team color of the context entity.
+Returns the team color of the context entity, or `default` if no entity, no team, or team has no color.
 
 ```yaml
   - type: minecraft:team

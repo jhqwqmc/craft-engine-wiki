@@ -5,7 +5,7 @@ id: composite
 
 ## Overview
 
-Renders multiple child models **layered on top of each other** in the same space. Order matters — later models render on top.
+Renders multiple child models **layered on top of each other** in the same space. Rendered from last to first — earlier entries appear on top.
 
 ```yaml
 items:
@@ -15,9 +15,9 @@ items:
       type: minecraft:composite
       models:
         - type: minecraft:model
-          path: minecraft:item/custom/gem_base
+          path: minecraft:item/custom/gem_glow   # Top layer
         - type: minecraft:model
-          path: minecraft:item/custom/gem_glow
+          path: minecraft:item/custom/gem_base   # Bottom layer
 ```
 
 ## Fields

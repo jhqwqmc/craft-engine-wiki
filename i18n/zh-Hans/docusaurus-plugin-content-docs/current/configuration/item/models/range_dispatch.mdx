@@ -5,130 +5,144 @@ id: range_dispatch
 
 import UrlCard from '@site/src/components/UrlCard';
 
-## 简介
+## 概述
 
-<UrlCard
-  url="https://zh.minecraft.wiki/w/物品模型映射#range_dispatch"
-  title="📡 值调配型"
-/>
-
-根据数值属性渲染物品模型。将选择阈值小于或等于属性值的最后一个条目。
-
-:::caution
-当使用 `minecraft:range_dispatch` 时，你需要指定**数值属性类型**。`scale` 表示**与获取的数值属性相乘获得最后的检查数值**，`entries` 表示**各个阈值和对应的物品模型映射**，而 `fallback` 表示**回落物品模型映射**。如果检查数值小于所有阈值则使用此映射。如果此项不存在，且检查数值小于所有阈值，则使用**无效模型**。
-:::
+先计算物品堆叠内给定的一个**数值属性**，游戏会按照给定阈值从小到大排序，找到数值属性第一个超过或等于的阈值，并使用对应物品模型映射。如果数值属性小于所有阈值，则使用回落物品模型映射。如果此项不存在，则使用无效模型。
 
 ```yaml
 items:
-  default:range_dispatch_item:
+  demo:shield:
+    material: shield
     model:
-      type: "minecraft:range_dispatch"
-      property: "minecraft:crossbow/pull"
+      type: minecraft:range_dispatch
+      property: minecraft:damage
+      scale: 1.0
       entries:
-        - model:
+        - threshold: 0.0
+          model:
             type: minecraft:model
-            path: "minecraft:item/custom/model_1"
-          threshold: 0.58
-        - model:
+            path: minecraft:item/custom/shield_full
+        - threshold: 0.5
+          model:
             type: minecraft:model
-            path: "minecraft:item/custom/model_2"
-          threshold: 1.0
+            path: minecraft:item/custom/shield_cracked
       fallback:
         type: minecraft:model
-        path: "minecraft:item/custom/model_3"
-      transformation: # 可选; 模型变换; 26.1+
-        scale: 1,1,1 # 以原点为中心缩放模型
-        translation: 0,0,0 # 平移变换
-        right_rotation: # 初始旋转
-          angle: 0.0 # 表示绕旋转轴的旋转角度（以弧度为单位）
-          axis: 0,0,0 # 一个3维向量，表示旋转轴
-        left_rotation: 0,0,0,0 # 再次旋转模型
+        path: minecraft:item/custom/shield_full
 ```
 
-## 数值属性
+## 字段
 
-请查看 [https://zh.minecraft.wiki/w/物品模型映射#range_dispatch](https://zh.minecraft.wiki/w/物品模型映射#range_dispatch) 以获取每个参数的解释。
+| 字段 | 类型 | 必需 | 默认值 | 说明 |
+|-------|------|----------|---------|-------------|
+| `type` | string | 是 | — | `minecraft:range_dispatch` |
+| `property` | string | 是 | — | 数值属性类型（见下方） |
+| `scale` | float | 否 | `1.0` | 比较前与属性值相乘的系数 |
+| `entries` | list | 是 | — | `{threshold, model}` 配对的列表 |
+| `fallback` | model | 否 | 无效模型 | 回落物品模型映射，检查数值小于所有阈值时使用 |
+| `transformation` | object | 否 | — | 物品模型变换（26.1+） |
 
-### minecraft\:crossbow/pull
+每个条目：
 
-> 弩被拉伸的程度；如果物品堆叠没有 `charged_projectiles` 组件，或物品堆叠不在任何生物身上，则返回 0
+| 字段 | 类型 | 说明 |
+|-------|------|-------------|
+| `threshold` | float | 使用此模型的最小属性值 |
+| `model` | model | 属性 ≥ 此阈值（且 < 下一阈值）时使用的模型 |
 
-### minecraft\:bundle/fullness
+## 属性
 
-> 获取收纳袋的容量，此浮点数只会在 0-1 之间，如果物品堆叠没有 `bundle_contents` 组件则返回 0
+<UrlCard
+  url="https://zh.minecraft.wiki/w/物品模型映射#range_dispatch"
+  title="Minecraft Wiki | 值调配型属性"
+/>
 
-### minecraft\:cooldown
+### 无额外字段
 
-> 获取物品堆叠的冷却程度；如果物品不在玩家物品栏内，则返回 0
+| 属性 | 返回值（除标注外均为 0.0–1.0） |
+|----------|-------------------------------|
+| `minecraft:crossbow/pull` | 弩的拉弦进度 |
+| `minecraft:bundle/fullness` | `minecraft:bundle_contents` 的重量（无组件则为 0） |
+| `minecraft:cooldown` | 剩余冷却比例（不在物品栏则为 0） |
+| `minecraft:use_cycle` | 剩余使用 tick 对 `period` 取模 |
 
 ### minecraft\:compass
 
-> 读取指南针信息，计算指南针指针摆动进度作为返回值，返回值取值为 0-1 的闭区间。如果指向目标不存在，或指向目标和当前维度不一致，或当前位置与指向目标的距离小于 1e-5 时，指针摆动进度会使用随机浮点数。
+返回 x-z 平面内朝向目标的 0.0–1.0 角度。目标无效时返回随机值。
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:compass"
+property: minecraft:compass
 target: spawn
 wobble: true
 ```
 
+| 字段 | 类型 | 默认值 | 说明 |
+|-------|------|---------|-------------|
+| `target` | string | — | 目标类型：`spawn`、`lodestone`、`recovery`、`none` |
+| `wobble` | bool | `true` | 模拟指南针摆动 |
+
 ### minecraft\:count
 
-> 读取物品堆叠的物品数量作为返回值。如果物品数量大于物品最大堆叠数量，则返回物品最大堆叠数量。
+返回物品堆叠的数量。若 `normalize` 为 true，返回数量除以最大堆叠数，钳制至 0.0–1.0；否则返回原始数量。
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:count"
+property: minecraft:count
 normalize: true
 ```
+
+| 字段 | 类型 | 默认值 | 说明 |
+|-------|------|---------|-------------|
+| `normalize` | bool | `true` | 缩放到 0.0–1.0；false 则返回原始数量 |
 
 ### minecraft\:damage
 
-> 读取物品堆叠的损坏值（`damage` 组件）。如果物品没有损坏或无法损坏，则返回 0。如果损坏值大于最大耐久度（`max_damage` 组件），则返回最大耐久度。
+返回 `minecraft:damage` 组件的值，不存在则为 0。若 `normalize` 为 true，返回损坏值除以最大耐久度，钳制至 0.0–1.0；否则返回原始损坏值。
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:damage"
+property: minecraft:damage
 normalize: true
 ```
 
+| 字段 | 类型 | 默认值 | 说明 |
+|-------|------|---------|-------------|
+| `normalize` | bool | `true` | 缩放到 0.0–1.0；false 则返回原始损坏值 |
+
 ### minecraft\:time
 
-> 读取当前维度的时间，计算并平滑模拟时钟摆动进度，将时钟摆动进度作为返回值返回，返回值取值为 0-1 的闭区间。
+返回缩放到 0.0–1.0 的游戏内时间值。来源可为 `daytime`（太阳角度）、`moon_phase`（月相）或 `random`（每帧随机）。
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:time"
+property: minecraft:time
 source: daytime
 wobble: true
 ```
 
-### minecraft\:use\_cycle
+| 字段 | 类型 | 默认值 | 说明 |
+|-------|------|---------|-------------|
+| `source` | string | — | 时间来源：`daytime`、`moon_phase`、`random` |
+| `wobble` | bool | `true` | 平滑摆动 |
 
-> 读取当前物品堆叠的剩余使用时间，并对给定的周期取模作为返回值。如果物品堆叠不在任何生物身上，或生物没有使用这个物品堆叠，则返回 0。
+### minecraft\:use_duration
 
-```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:use_cycle"
-period: 1.0
-```
-
-### minecraft\:use\_duration
-
-> 读取物品堆叠的使用时间或剩余使用时间作为返回值。如果物品堆叠不在任何生物身上，或生物没有使用这个物品堆叠，则返回 0。
+返回物品已使用的 tick 数（或剩余 tick）。
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:use_duration"
+property: minecraft:use_duration
 remaining: false
 ```
 
-### minecraft\:custom\_model\_data
+| 字段 | 类型 | 默认值 | 说明 |
+|-------|------|---------|-------------|
+| `remaining` | bool | `false` | 返回剩余而非已过的 tick |
 
-> 读取物品堆叠的 `custom_model_data` 组件中的字符串数组，获取指定下标的字符串。如果下标超过字符串数组的长度范围，或物品堆叠不存在 `custom_model_data` 组件，则返回 null，无法匹配。
+### minecraft\:custom_model_data
+
+读取 `minecraft:custom_model_data` 组件中的 `floats` 列表。
 
 ```yaml
-type: "minecraft:range_dispatch"
-property: "minecraft:custom_model_data"
+property: minecraft:custom_model_data
 index: 0
 ```
+
+| 字段 | 类型 | 默认值 | 说明 |
+|-------|------|---------|-------------|
+| `index` | int | `0` | `floats` 数组中的位置 |

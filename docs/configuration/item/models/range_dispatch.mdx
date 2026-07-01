@@ -81,7 +81,7 @@ wobble: true        # Whether pointer oscillates before settling
 
 ### minecraft\:count
 
-Returns stack size (normalized or raw).
+Returns stack size. If `normalize` is true, returns count divided by max stack size, clamped 0.0–1.0. Otherwise returns raw count.
 
 ```yaml
 property: minecraft:count
@@ -94,7 +94,7 @@ normalize: true     # true — count/max_stack_size (0–1); false — raw count
 
 ### minecraft\:damage
 
-Returns damage value from `minecraft:damage` component (0 if absent or unbreakable).
+Returns value from `minecraft:damage` component, or 0 if not present. If `normalize` is true, returns damage divided by max damage, clamped 0.0–1.0. Otherwise returns raw damage value.
 
 ```yaml
 property: minecraft:damage
@@ -107,7 +107,7 @@ normalize: true     # true — damage/max_damage (0–1); false — raw damage v
 
 ### minecraft\:time
 
-Returns in-game time scaled 0.0–1.0.
+Returns an in-game time value scaled 0.0–1.0. Source can be `daytime` (sun angle), `moon_phase`, or `random` (new value every frame).
 
 ```yaml
 property: minecraft:time

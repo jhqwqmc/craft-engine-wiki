@@ -1,0 +1,25 @@
+---
+title: 📦 收纳袋选中物品
+id: bundle_selected_item
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+## 概述
+
+渲染当前收纳袋内被选中的物品堆叠。要求物品堆叠必须具有 `bundle_contents` 组件，否则不渲染任何东西。
+
+<UrlCard
+  url="https://zh.minecraft.wiki/w/物品模型映射#bundle_selected_item"
+  title="Minecraft Wiki | 收纳袋选中物品"
+/>
+
+```yaml
+items:
+  demo:bundle:
+    material: bundle
+    model:
+      type: minecraft:bundle/selected_item
+```
+
+`transformation` **不**支持。
