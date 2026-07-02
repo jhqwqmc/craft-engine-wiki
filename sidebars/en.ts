@@ -174,15 +174,24 @@ const sidebars: SidebarsConfig = {
       label: '📈 Advanced Tutorial',
       collapsed: true,
       link: {
-        type: 'generated-index',
-        title: '📈 Advanced Tutorial',
-        slug: '/category/advanced',
+        type: 'doc',
+        id: "advanced",
       },
       items: [
         {
           type: 'doc',
           id: "advanced/template_in_action",
           label: '📄 Templates in Action',
+        },
+        {
+          type: 'doc',
+          id: "advanced/item_model_definition",
+          label: '🎨 Item Model Definitions',
+        },
+        {
+          type: 'doc',
+          id: "advanced/model_tinting",
+          label: '🖌️ Model Tinting',
         },
       ]
     },

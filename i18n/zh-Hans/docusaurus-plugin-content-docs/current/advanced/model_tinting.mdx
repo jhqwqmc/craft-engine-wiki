@@ -1,0 +1,96 @@
+---
+title: 🎨 模型着色
+id: model_tinting
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+import Details from '@site/src/components/Details';
+
+着色源在运行时给模型部件重新上色——一张灰度贴图即可产生无限颜色变体。本页重点讲**如何设置模型**来配合着色。
+
+## 着色原理
+
+1. 你的模型给某些面标记一个 `tintindex` 编号（0、1、2……）
+2. 在物品配置中，给每个索引绑定一个**着色源**
+3. 运行时，着色源向所有匹配该索引的面提供颜色
+
+可着色面的贴图应为灰度。白色像素完全呈现着色颜色；黑色像素不变；灰色呈现减弱版。
+
+## 在 BlockBench 中设置 tintindex
+
+选中你想设为可着色的元素，在 **Elements** 面板中为每个面设置 **Tint Index**。
+
+- `-1` 或留空 → 面不被着色，贴图原样渲染
+- `0` → 由第一个着色源着色
+- `1` → 由第二个着色源着色
+
+典型设置：剑刃各面设 `0`，宝石设 `1`，剑柄不设。
+
+<Details summary="如何将 Tint Index 添加到 Elements 面板">
+
+默认情况下 Tint Index 字段可能不可见。以下是添加方法：
+
+![](/img/tint1.png)
+
+![](/img/tint2.png)
+
+![](/img/tint3.png)
+
+</Details>
+
+## 在 JSON 中的样子
+
+BlockBench 保存模型后，你设置的 tintindex 会出现在模型 JSON 中。不需要手写，认识一下就行：
+
+```json
+"north": {"uv": [6, 3, 8, 12], "texture": "#layer0", "tintindex": 0}
+```
+
+在 BlockBench 中设置了 tintindex 的面，导出的 JSON 中就会多一个 `"tintindex"` 字段。没设置的则不出现。
+
+## 配置着色源
+
+`tints:` 列表是按位置对应的——第 0 位对应 `tintindex: 0`，第 1 位对应 `tintindex: 1`：
+
+```yaml
+model:
+  path: tutorial:item/magic_sword
+  tints:
+    - type: minecraft:constant
+      value: 255,100,50     # → tintindex 0 → 剑刃 → 橙色
+    - type: minecraft:dye
+      default: 16777215      # → tintindex 1 → 宝石 → 玩家染色
+```
+
+:::warning tintindex 映射规则在 1.21.4 中发生了变化
+
+**1.21.4 之前**，tintindex 的值由**原版硬编码**——而且每个索引的含义完全取决于使用的是哪种物品。每种物品类型有自己固定的映射，无法更改或重新赋予含义。
+
+**从 1.21.4 起**，有了物品模型定义系统，tintindex 仅仅是 **`tints:` 列表中的位置**。第 0 位是什么，tintindex 0 就是什么；第 1 位是什么，tintindex 1 就是什么。不再有硬编码含义。
+
+如果你的资源包要兼容 1.21.4 之前的客户端，请遵循原版硬编码映射。如果只面向 1.21.4+，按任意顺序排列 `tints:` 即可。
+
+:::
+
+## 示例：可染色剑
+
+剑刃随 `minecraft:dyed_color` 组件改变颜色：
+
+```yaml
+items:
+  tutorial:dyeable_sword:
+    material: golden_sword
+    model:
+      path: tutorial:item/sword_blade
+      tints:
+        - type: minecraft:dye
+          default: 16777215
+```
+
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard url="../configuration/item/models/model#tints" title="📐 着色参考" subtitle="每种着色源类型的完整语法"/>
+<UrlCard url="https://minecraft.wiki/w/Items_model_definition#Tint_sources_types" title="Minecraft Wiki" subtitle="原版着色源规范"/>
+
+</div>

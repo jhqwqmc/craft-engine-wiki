@@ -1,0 +1,190 @@
+---
+title: 🎨 Item Model Definitions
+id: item_model_definition
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+In the beginner tutorial you gave an item a custom texture with one line. Now let's understand the system behind that line — and what you can really do with it.
+
+## Model vs. item model definition
+
+These two terms sound similar but mean different things:
+
+| | Model | Item Model Definition |
+|:---|:---|:---|
+| **What it is** | A single JSON file — geometry, textures, display transforms | A JSON file that decides WHICH model(s) to render |
+| **Where it lives** | `assets/<ns>/models/` | `assets/<ns>/items/` |
+| **Analogy** | A single outfit | A wardrobe that picks outfits based on context |
+
+A **model** is the static thing: `block/cube_all`, `item/handheld`, your BlockBench export. An **item model definition** is the logic that picks which model renders in each situation — in hand vs. in GUI vs. on the ground, when damaged, when charging, and so on.
+
+CraftEngine's `model:` field on items writes the item model definition. When you write:
+
+```yaml
+items:
+  tutorial:sword:
+    material: golden_sword
+    texture: tutorial:item/toxic_sword
+```
+
+CraftEngine generates an item model definition that says "always use this one model." That's the simplest case — but the system goes far deeper.
+
+## The model types
+
+An item model definition is a tree. Each node has a `type`. Six types exist:
+
+| Type | What it does |
+|:---|:---|
+| `minecraft:model` | Renders one static model file |
+| `minecraft:composite` | Layers multiple models on top of each other |
+| `minecraft:condition` | Switches between two models based on a boolean property |
+| `minecraft:select` | Picks a model from a set of cases based on an enum property |
+| `minecraft:range_dispatch` | Picks a model based on a number crossing thresholds |
+| `minecraft:special` | Renders a hardcoded vanilla special model (head, banner, shield…) |
+
+## Example 1: static model
+
+The one you already know — always renders the same thing:
+
+```yaml
+model:
+  type: minecraft:model
+  path: tutorial:item/sword
+```
+
+Or the shorthand:
+
+```yaml
+model: tutorial:item/sword
+```
+
+## Example 2: durability changes appearance
+
+A sword that cracks as it wears down, using `range_dispatch`:
+
+```yaml
+model:
+  type: minecraft:range_dispatch
+  property: minecraft:damage
+  scale: 0.25
+  entries:
+    - threshold: 0.0
+      model:
+        type: minecraft:model
+        path: tutorial:item/sword_pristine
+    - threshold: 0.5
+      model:
+        type: minecraft:model
+        path: tutorial:item/sword_damaged
+    - threshold: 0.75
+      model:
+        type: minecraft:model
+        path: tutorial:item/sword_broken
+```
+
+`scale` divides the durability fraction. When durability is above 75%, it's pristine; between 50–75% shows cracks; below 50% looks nearly broken.
+
+## Example 3: layered glow effect
+
+A gem that has a static base with a pulsing glow layer on top, using `composite`:
+
+```yaml
+model:
+  type: minecraft:composite
+  models:
+    - type: minecraft:model
+      path: tutorial:item/gem_glow
+    - type: minecraft:model
+      path: tutorial:item/gem_base
+```
+
+The glow layer can be a separate model with transparency — it renders on top of the base. Combine with an animated texture for a pulsing effect.
+
+## Example 4: hotbar glow
+
+Shows a different model when the item is on the selected hotbar slot, using `condition` + `minecraft:selected`:
+
+```yaml
+model:
+  type: minecraft:condition
+  property: minecraft:selected
+  on_true:
+    type: minecraft:model
+    path: tutorial:item/sword_selected    # On the hotbar slot
+  on_false:
+    type: minecraft:model
+    path: tutorial:item/sword_normal      # In inventory or other slots
+```
+
+## Example 5: charging weapon (nested)
+
+A weapon that shows 3 charge levels AND cracks when damaged — `range_dispatch` nested inside `composite`:
+
+```yaml
+model:
+  type: minecraft:composite
+  models:
+    - type: minecraft:condition
+      property: minecraft:damaged
+      on_true:
+        type: minecraft:model
+        path: tutorial:item/damage_overlay
+      on_false:
+        type: minecraft:empty
+    - type: minecraft:range_dispatch
+      property: minecraft:use_duration
+      scale: 0.33
+      entries:
+        - threshold: 0.0
+          model:
+            type: minecraft:model
+            path: tutorial:item/mace_idle
+        - threshold: 0.33
+          model:
+            type: minecraft:model
+            path: tutorial:item/mace_charging_1
+        - threshold: 0.66
+          model:
+            type: minecraft:model
+            path: tutorial:item/mace_charging_2
+```
+
+The damage cracks render ON TOP of the charging model. Both change independently. This can't be done with simple texture swaps — it needs the composable tree structure.
+
+## Example 6: biome-aware tool
+
+A pickaxe that looks different in the Nether, using `select` + `minecraft:context_dimension`:
+
+```yaml
+model:
+  type: minecraft:select
+  property: minecraft:context_dimension
+  cases:
+    - when: minecraft:the_nether
+      model:
+        type: minecraft:model
+        path: tutorial:item/pickaxe_nether
+    - when: minecraft:the_end
+      model:
+        type: minecraft:model
+        path: tutorial:item/pickaxe_end
+  fallback:
+    type: minecraft:model
+    path: tutorial:item/pickaxe_overworld
+```
+
+The item visually adapts to where the player stands. Combine with `range_dispatch` on durability and you have a pickaxe that looks different in each dimension AND shows damage.
+
+:::tip Start simple
+
+You don't need to build these trees by hand. CraftEngine's simplified syntax — `texture:`, `textures:`, `model:` as a plain path — covers 90% of use cases. The tree syntax is for the 10% that need it.
+
+:::
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard url="../configuration/item/models" title="🟰 Item Models Reference" subtitle="Full syntax for every model type, properties, and transformation"/>
+<UrlCard url="https://minecraft.wiki/w/Items_model_definition" title="Minecraft Wiki" subtitle="The vanilla items model definition specification"/>
+
+</div>

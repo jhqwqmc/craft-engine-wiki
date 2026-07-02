@@ -1,0 +1,190 @@
+---
+title: 🎨 物品模型定义
+id: item_model_definition
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+入门教程里你一行代码就给物品换上了自定义贴图。现在来理解这行代码背后的系统——以及你真正能用它做什么。
+
+## 模型 vs. 物品模型定义
+
+这两个词听起来相似，但含义不同：
+
+| | 模型 | 物品模型定义 |
+|:---|:---|:---|
+| **是什么** | 单个 JSON 文件——几何体、贴图、显示变换 | 一个 JSON 文件，决定渲染哪个（哪些）模型 |
+| **存放在** | `assets/<ns>/models/` | `assets/<ns>/items/` |
+| **类比** | 一件衣服 | 一个衣柜，根据场合挑衣服 |
+
+**模型**是静态的东西：`block/cube_all`、`item/handheld`、你从 BlockBench 导出的文件。**物品模型定义**是逻辑——决定每种情况下渲染哪个模型：手持 vs. 背包 vs. 掉落在地面、受损时、蓄力时等等。
+
+CraftEngine 物品配置中的 `model:` 字段，写的就是物品模型定义。当你写：
+
+```yaml
+items:
+  tutorial:sword:
+    material: golden_sword
+    texture: tutorial:item/toxic_sword
+```
+
+CraftEngine 生成的物品模型定义就是"始终用这一个模型"。这是最简单的情况——但这个系统远比这深。
+
+## 六种模型类型
+
+物品模型定义是一棵树。每个节点有一个 `type`。共六种：
+
+| 类型 | 作用 |
+|:---|:---|
+| `minecraft:model` | 渲染一个静态模型文件 |
+| `minecraft:composite` | 叠加多层模型 |
+| `minecraft:condition` | 根据布尔属性在两种模型间切换 |
+| `minecraft:select` | 根据枚举属性从多个候选中选择 |
+| `minecraft:range_dispatch` | 根据数值跨越阈值选择模型 |
+| `minecraft:special` | 渲染硬编码的原版特殊模型（头、旗帜、盾牌……） |
+
+## 示例 1：静态模型
+
+你已经知道的——始终渲染同一个模型：
+
+```yaml
+model:
+  type: minecraft:model
+  path: tutorial:item/sword
+```
+
+或者缩写：
+
+```yaml
+model: tutorial:item/sword
+```
+
+## 示例 2：耐久度改变外观
+
+一把随着磨损出现裂纹的剑，使用 `range_dispatch`：
+
+```yaml
+model:
+  type: minecraft:range_dispatch
+  property: minecraft:damage
+  scale: 0.25
+  entries:
+    - threshold: 0.0
+      model:
+        type: minecraft:model
+        path: tutorial:item/sword_pristine
+    - threshold: 0.5
+      model:
+        type: minecraft:model
+        path: tutorial:item/sword_damaged
+    - threshold: 0.75
+      model:
+        type: minecraft:model
+        path: tutorial:item/sword_broken
+```
+
+`scale` 划分耐久度比例。耐久度高于 75% 时显示崭新；50–75% 之间出现裂纹；低于 50% 接近断裂。
+
+## 示例 3：叠加发光效果
+
+一颗宝石，静态基底 + 脉冲光晕叠加，使用 `composite`：
+
+```yaml
+model:
+  type: minecraft:composite
+  models:
+    - type: minecraft:model
+      path: tutorial:item/gem_glow
+    - type: minecraft:model
+      path: tutorial:item/gem_base
+```
+
+光晕层可以是带透明的独立模型——渲染在基底之上。配合动画贴图可以实现脉冲发光效果。
+
+## 示例 4：快捷栏选中发光
+
+物品在快捷栏被选中时显示不同外观，使用 `condition` + `minecraft:selected`：
+
+```yaml
+model:
+  type: minecraft:condition
+  property: minecraft:selected
+  on_true:
+    type: minecraft:model
+    path: tutorial:item/sword_selected    # 当前选中的快捷栏格子
+  on_false:
+    type: minecraft:model
+    path: tutorial:item/sword_normal      # 背包或其他格子
+```
+
+## 示例 5：蓄力武器（嵌套）
+
+一把有 3 档蓄力 + 受损裂纹的武器——`range_dispatch` 嵌套在 `composite` 内：
+
+```yaml
+model:
+  type: minecraft:composite
+  models:
+    - type: minecraft:condition
+      property: minecraft:damaged
+      on_true:
+        type: minecraft:model
+        path: tutorial:item/damage_overlay
+      on_false:
+        type: minecraft:empty
+    - type: minecraft:range_dispatch
+      property: minecraft:use_duration
+      scale: 0.33
+      entries:
+        - threshold: 0.0
+          model:
+            type: minecraft:model
+            path: tutorial:item/mace_idle
+        - threshold: 0.33
+          model:
+            type: minecraft:model
+            path: tutorial:item/mace_charging_1
+        - threshold: 0.66
+          model:
+            type: minecraft:model
+            path: tutorial:item/mace_charging_2
+```
+
+裂纹渲染在蓄力模型**之上**。两者独立变化。这是简单贴图切换做不到的——必须用可组合的树状结构。
+
+## 示例 6：跨维度变色工具
+
+一把在地狱里外观不同的镐子，使用 `select` + `minecraft:context_dimension`：
+
+```yaml
+model:
+  type: minecraft:select
+  property: minecraft:context_dimension
+  cases:
+    - when: minecraft:the_nether
+      model:
+        type: minecraft:model
+        path: tutorial:item/pickaxe_nether
+    - when: minecraft:the_end
+      model:
+        type: minecraft:model
+        path: tutorial:item/pickaxe_end
+  fallback:
+    type: minecraft:model
+    path: tutorial:item/pickaxe_overworld
+```
+
+物品外观随玩家所在维度自动切换。再叠加上耐久度的 `range_dispatch`，你就能拥有一把在不同维度显示不同外观、且会磨损的镐子。
+
+:::tip 从简单开始
+
+你不需要手写这些树。CraftEngine 的简化语法——`texture:`、`textures:`、`model:` 直接写路径——覆盖了 90% 的用例。树状语法是为那 10% 需要深度定制的场景准备的。
+
+:::
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard url="../configuration/item/models" title="🟰 物品模型参考" subtitle="每种模型类型的完整语法、属性与变换"/>
+<UrlCard url="https://minecraft.wiki/w/Items_model_definition" title="Minecraft Wiki" subtitle="原版物品模型定义规范"/>
+
+</div>

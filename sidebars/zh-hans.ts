@@ -174,15 +174,24 @@ const sidebars: SidebarsConfig = {
       label: '📈 进阶教程',
       collapsed: true,
       link: {
-        type: 'generated-index',
-        title: '📈 进阶教程',
-        slug: '/category/advanced',
+        type: 'doc',
+        id: "advanced",
       },
       items: [
         {
           type: 'doc',
           id: "advanced/template_in_action",
           label: '📄 模板系统实战',
+        },
+        {
+          type: 'doc',
+          id: "advanced/item_model_definition",
+          label: '🎨 物品模型定义',
+        },
+        {
+          type: 'doc',
+          id: "advanced/model_tinting",
+          label: '🖌️ 模型着色',
         },
       ]
     },
