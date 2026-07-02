@@ -13,7 +13,7 @@ CraftEngine 把 PNG 注册成某个字体里的字符，你用 `<image:命名空
 
 ## 第 1 步：放 PNG
 
-图片放在 `textures/font/` 下。和模型贴图不同，字体图片不限尺寸、不需要 2 的幂：
+[⬇ 下载星星图标](/img/star.png)，放到 `textures/font/` 下。和模型贴图不同，字体图片不限尺寸、不需要 2 的幂：
 
 ```
 resourcepack/assets/tutorial/textures/font/star.png
@@ -51,7 +51,7 @@ images:
     height: 10
     ascent: 9
     font: tutorial:ui
-    file: tutorial:textures/font/star
+    file: tutorial:font/star
 ```
 
 ### 字段说明
@@ -80,7 +80,11 @@ items:
       item_name: "<!i><white><image:tutorial:star> 星之剑"
 ```
 
-`/ce reload all`，`/ce item get tutorial:star_sword`。剑名前出现星标。`<image:命名空间:ID>` 在任何解析 MiniMessage 的地方都能用——物品名、lore、聊天、GUI、告示牌。
+`/ce reload all`，`/ce item get tutorial:star_sword`。剑名前出现星标。
+
+![带星标的剑](/img/star_sword.png)
+
+`<image:命名空间:ID>` 在任何解析 MiniMessage 的地方都能用——物品名、lore、聊天、GUI、告示牌。
 
 ## 预览调试
 
