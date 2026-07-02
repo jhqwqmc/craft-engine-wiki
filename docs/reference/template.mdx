@@ -299,30 +299,32 @@ arguments:
 
 By configuring a config factory, you can instantiate a large number of configurations. This is especially suitable for creating a series of configurations that share the same characteristics.
 
+For example, CraftEngine's own destroy progress textures (the cracking animation when you break a block) are generated with a config factory — 10 stages, identical structure, only the stage number changes:
+
 ```yaml
-config_factory#wool:
+config_factory:
+  instances:
+    - stage: 0
+    - stage: 1
+    - stage: 2
+    - stage: 3
+    - stage: 4
+    - stage: 5
+    - stage: 6
+    - stage: 7
+    - stage: 8
+    - stage: 9
   blueprint:
     items:
-      "custom:${color}_wool":
-        material: ${color}_wool
-        data::item_name: "<lang:block.minecraft.${color}_wool>"
-    recipes:
-      "custom:${color}_wool":
-        type: shaped
-        pattern:
-          - AA
-          - AB
-        ingredients:
-          A: "minecraft:white_wool"
-          B: "minecraft:${color}_dye"
-        result:
-          id: ${__NAMESPACE__}:${__ID__}  #  __NAMESPACE__ -> custom
-                                          #  __ID__  -> xxx_wool (xxx=red,blue,orange)
-          count: ${result_count:-3}
-  instances:
-    - color: red
-      result_count: 5
-    - color: blue
-      result_count: 2
-    - color: orange
+      ${namespace:-"minecraft"}:destroy_stage_${stage}:
+        data::item_name: destroy stage ${stage}
+        model:
+          path: item/custom/destroy_stage_${stage}
+          generation:
+            parent: block/cube_all
+            textures:
+              all: block/custom/destroy_stage_${stage}
 ```
+
+`${namespace:-"minecraft"}` sets a default value — if `namespace` isn't provided in the instance, it falls back to `minecraft`. The only thing each instance specifies is `stage`, and 10 items are generated from a single blueprint.
+

@@ -1,0 +1,145 @@
+---
+title: 📄 模板系统实战
+id: template_in_action
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+在方块教程中你已经见过 `default:loot_table/self`——那是一个内置模板，一行展开成一个完整的战利品表。现在来理解什么时候用模板、为什么用模板。
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard url="../reference/template" title="📄 模板系统" subtitle="多模板叠加、overrides、条件块、列表合并、配置工厂"/>
+
+</div>
+
+## 模板解决什么问题
+
+复制粘贴同样的配置、只改几个值，是大型资源包中出错的罪魁祸首。模板解决了这个问题：定义一次结构，只填不同的部分。
+
+最简示例：
+
+```yaml
+# 定义模板
+templates:
+  tutorial:common_sounds:
+    break: minecraft:${sound_type}.break
+    step: minecraft:${sound_type}.step
+    place: minecraft:${sound_type}.place
+    hit: minecraft:${sound_type}.hit
+    fall: minecraft:${sound_type}.fall
+```
+
+```yaml
+# 使用模板
+settings:
+  template: tutorial:common_sounds
+  arguments:
+    sound_type: block.stone
+```
+
+就这样。`${sound_type}` 被替换，五条音效路径生成完毕。你再也不用写那五行了。
+
+## 什么时候用模板
+
+判断很简单：
+
+| 应该用模板 | 不必用模板 |
+|:---|:---|
+| 3 个以上物品共享相同结构 | 一次性配置 |
+| 后续还会添加更多物品 | 每个字段都完全不同 |
+| 想保证整个资源包的配置一致性 | 模板参数比原配置还多 |
+
+**复制粘贴同一段配置超过两次，就写模板。**
+
+:::warning 公开资源包注意事项
+
+如果你制作的资源包需要**公开发布**，切勿引用内置模板（`default:*`）。它们的内容可能随 CraftEngine 版本更新而变化，导致你的资源包悄悄出问题。
+
+用你自己的命名空间定义模板：
+
+```yaml
+# ❌ 公开资源包不要这样做
+loot:
+  template: default:loot_table/self
+
+# ✅ 定义自己的模板然后引用
+loot:
+  template: mypack:self_loot
+```
+
+这样你的资源包不会受 CraftEngine 更新影响——模板何时改、怎么改，由你掌控。
+
+:::
+
+## 配置工厂
+
+一个自定义物品很少单独存在——它需要合成配方，可能需要战利品表，有时还要方块定义。给每个变体分开写这些配置既繁琐又容易遗漏。
+
+**配置工厂**跨多种配置类型一次性批量生成。把物品所需的一切——items、recipes 等——写进同一份**蓝图**，列出变体，CraftEngine 为每个实例自动生成全套配置：
+
+```yaml
+config_factory#sofa:
+  blueprint:
+    items:
+      "custom:${color}_sofa":
+        material: paper
+        data:
+          item_name: "<!i><${dye_color}>${display_name} 沙发"
+        behavior:
+          type: furniture_item
+          furniture:
+            variants:
+              ground:
+                elements:
+                  - item: custom:${color}_sofa
+                hitboxes:
+                  - position: 0,0,0
+                    type: shulker
+                    seats:
+                      - 0,0.35,0
+            settings:
+              hit_times: 3
+            loot:
+              pools:
+                - rolls: 1
+                  entries:
+                    - type: furniture_item
+    recipes:
+      "custom:${color}_sofa":
+        type: shaped
+        pattern:
+          - "WWW"
+          - "WDW"
+          - "SSS"
+        ingredients:
+          W: "minecraft:${color}_wool"
+          D: "minecraft:${color}_dye"
+          S: minecraft:stick
+        result:
+          id: ${__NAMESPACE__}:${__ID__}
+  instances:
+    - {color: white,      display_name: 白色,   dye_color: white}
+    - {color: light_gray, display_name: 淡灰色, dye_color: gray}
+    - {color: gray,       display_name: 灰色,   dye_color: dark_gray}
+    - {color: black,      display_name: 黑色,   dye_color: dark_gray}
+    - {color: brown,      display_name: 棕色,   dye_color: dark_gray}
+    - {color: red,        display_name: 红色,   dye_color: red}
+    - {color: orange,     display_name: 橙色,   dye_color: gold}
+    - {color: yellow,     display_name: 黄色,   dye_color: yellow}
+    - {color: lime,       display_name: 黄绿色, dye_color: green}
+    - {color: green,      display_name: 绿色,   dye_color: dark_green}
+    - {color: cyan,       display_name: 青色,   dye_color: dark_aqua}
+    - {color: light_blue, display_name: 淡蓝色, dye_color: aqua}
+    - {color: blue,       display_name: 蓝色,   dye_color: blue}
+    - {color: purple,     display_name: 紫色,   dye_color: dark_purple}
+    - {color: magenta,    display_name: 品红色, dye_color: light_purple}
+    - {color: pink,       display_name: 粉红色, dye_color: light_purple}
+```
+
+`${__NAMESPACE__}` 和 `${__ID__}` 从条目键自动推导——`custom:red_sofa` 解析为 `__NAMESPACE__ → custom`、`__ID__ → red_sofa`。无需重复写。
+
+一个 `config_factory` 块生成全部 16 种沙发变体——每个都同时包含物品、家具定义和配方。没有循环，没有复制粘贴，纯 YAML。
+
+**什么时候用配置工厂**：同一组关联配置重复 5 次以上时——带配方的彩色家具、带装备和战利品表的等级盔甲、带方块和掉落的矿石变体。批量较小时，普通模板就够了。
+

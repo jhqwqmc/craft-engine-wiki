@@ -301,30 +301,32 @@ arguments:
 
 通过配置一个配置工厂，你可以实例化大量的配置。这特别适合用于创建一系列具有相同特征的配置。
 
+例如，CraftEngine 自身的破坏进度纹理（你打破方块时看到的裂痕动画）就是用配置工厂生成的——10 个阶段，相同结构，只改阶段编号：
+
 ```yaml
-config_factory#wool:
+config_factory:
+  instances:
+    - stage: 0
+    - stage: 1
+    - stage: 2
+    - stage: 3
+    - stage: 4
+    - stage: 5
+    - stage: 6
+    - stage: 7
+    - stage: 8
+    - stage: 9
   blueprint:
     items:
-      "custom:${color}_wool":
-        material: ${color}_wool
-        data::item_name: "<lang:block.minecraft.${color}_wool>"
-    recipes:
-      "custom:${color}_wool":
-        type: shaped
-        pattern:
-          - AA
-          - AB
-        ingredients:
-          A: "minecraft:white_wool"
-          B: "minecraft:${color}_dye"
-        result:
-          id: ${__NAMESPACE__}:${__ID__}  #  __NAMESPACE__ -> custom
-                                          #  __ID__  -> xxx_wool (xxx=red,blue,orange)
-          count: ${result_count:-3}
-  instances:
-    - color: red
-      result_count: 5
-    - color: blue
-      result_count: 2
-    - color: orange
+      ${namespace:-"minecraft"}:destroy_stage_${stage}:
+        data::item_name: destroy stage ${stage}
+        model:
+          path: item/custom/destroy_stage_${stage}
+          generation:
+            parent: block/cube_all
+            textures:
+              all: block/custom/destroy_stage_${stage}
 ```
+
+`${namespace:-"minecraft"}` 设置了默认值——如果实例中没有提供 `namespace`，则回退为 `minecraft`。每个实例只需指定 `stage`，一份蓝图即可生成 10 个物品。
+

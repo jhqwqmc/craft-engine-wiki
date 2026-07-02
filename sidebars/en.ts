@@ -171,6 +171,23 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: '📈 Advanced Tutorial',
+      collapsed: true,
+      link: {
+        type: 'generated-index',
+        title: '📈 Advanced Tutorial',
+        slug: '/category/advanced',
+      },
+      items: [
+        {
+          type: 'doc',
+          id: "advanced/template_in_action",
+          label: '📄 Templates in Action',
+        },
+      ]
+    },
+    {
+      type: 'category',
       label: '⚙️ Configuration',
       collapsed: true,
       link: {

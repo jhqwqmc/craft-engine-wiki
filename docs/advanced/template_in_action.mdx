@@ -1,0 +1,145 @@
+---
+title: 📄 Templates in Action
+id: template_in_action
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+You've seen `default:loot_table/self` in the block tutorial — that's a built-in template. One line that expands into a full loot table. Now let's understand when and why to use templates.
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard url="../reference/template" title="📄 Template System" subtitle="Multiple templates, overrides, conditional blocks, list merging, config factory"/>
+
+</div>
+
+## What templates solve
+
+Copy-pasting the same config with minor tweaks is the #1 source of errors in large packs. Templates solve this: define the structure once, fill in only what differs.
+
+Here's the simplest possible example:
+
+```yaml
+# Define the template
+templates:
+  tutorial:common_sounds:
+    break: minecraft:${sound_type}.break
+    step: minecraft:${sound_type}.step
+    place: minecraft:${sound_type}.place
+    hit: minecraft:${sound_type}.hit
+    fall: minecraft:${sound_type}.fall
+```
+
+```yaml
+# Use it
+settings:
+  template: tutorial:common_sounds
+  arguments:
+    sound_type: block.stone
+```
+
+That's it. `${sound_type}` gets replaced, the five sound paths are generated. You never write those five lines again.
+
+## When to use templates
+
+The decision is simple:
+
+| Use a template when | Don't use a template when |
+|:---|:---|
+| 3+ items share the same structure | It's a one-off config |
+| You'll add more items later | Every field is completely different |
+| You want consistency across your pack | The template has more params than the original config |
+
+**If you copy-paste the same config block more than twice, write a template.**
+
+:::warning Public resource packs
+
+If you're building a resource pack for **public distribution**, never reference built-in templates (`default:*`). Their contents may change across CraftEngine versions, breaking your pack silently.
+
+Define your own templates under your own namespace instead:
+
+```yaml
+# ❌ Don't do this in public packs
+loot:
+  template: default:loot_table/self
+
+# ✅ Do this — define your own template and reference it
+loot:
+  template: mypack:self_loot
+```
+
+This keeps your pack stable across CraftEngine updates — you control when and how your templates change.
+
+:::
+
+## Config factory
+
+A single custom item rarely lives alone — it needs a recipe, maybe a loot table, sometimes a block definition. Writing each piece separately for every variant is error-prone.
+
+**Config factory** generates across multiple config types at once. Put everything the item needs — items, recipes, whatever — into one **blueprint**, list the variants, and CraftEngine stamps out the full set for every instance:
+
+```yaml
+config_factory#sofa:
+  blueprint:
+    items:
+      "custom:${color}_sofa":
+        material: paper
+        data:
+          item_name: "<!i><${dye_color}>${display_name} Sofa"
+        behavior:
+          type: furniture_item
+          furniture:
+            variants:
+              ground:
+                elements:
+                  - item: custom:${color}_sofa
+                hitboxes:
+                  - position: 0,0,0
+                    type: shulker
+                    seats:
+                      - 0,0.35,0
+            settings:
+              hit_times: 3
+            loot:
+              pools:
+                - rolls: 1
+                  entries:
+                    - type: furniture_item
+    recipes:
+      "custom:${color}_sofa":
+        type: shaped
+        pattern:
+          - "WWW"
+          - "WDW"
+          - "SSS"
+        ingredients:
+          W: "minecraft:${color}_wool"
+          D: "minecraft:${color}_dye"
+          S: minecraft:stick
+        result:
+          id: ${__NAMESPACE__}:${__ID__}
+  instances:
+    - {color: white,      display_name: White,      dye_color: white}
+    - {color: light_gray, display_name: Light Gray, dye_color: gray}
+    - {color: gray,       display_name: Gray,       dye_color: dark_gray}
+    - {color: black,      display_name: Black,      dye_color: dark_gray}
+    - {color: brown,      display_name: Brown,      dye_color: dark_gray}
+    - {color: red,        display_name: Red,        dye_color: red}
+    - {color: orange,     display_name: Orange,     dye_color: gold}
+    - {color: yellow,     display_name: Yellow,     dye_color: yellow}
+    - {color: lime,       display_name: Lime,       dye_color: green}
+    - {color: green,      display_name: Green,      dye_color: dark_green}
+    - {color: cyan,       display_name: Cyan,       dye_color: dark_aqua}
+    - {color: light_blue, display_name: Light Blue, dye_color: aqua}
+    - {color: blue,       display_name: Blue,       dye_color: blue}
+    - {color: purple,     display_name: Purple,     dye_color: dark_purple}
+    - {color: magenta,    display_name: Magenta,    dye_color: light_purple}
+    - {color: pink,       display_name: Pink,       dye_color: light_purple}
+```
+
+`${__NAMESPACE__}` and `${__ID__}` are auto-derived from the entry key — `custom:red_sofa` resolves to `__NAMESPACE__ → custom`, `__ID__ → red_sofa`. No need to repeat yourself.
+
+One `config_factory` block produces all 16 sofa variants — each with its item (furniture inline) and recipe. No loops, no copy-paste, just YAML.
+
+**Use config factory when** the same set of related configs repeats 5+ times — colored furniture with recipes, tiered armor with equipment and loot tables, ore variants with blocks and drops. For smaller batches, plain templates are enough.
+

@@ -171,6 +171,23 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: '📈 进阶教程',
+      collapsed: true,
+      link: {
+        type: 'generated-index',
+        title: '📈 进阶教程',
+        slug: '/category/advanced',
+      },
+      items: [
+        {
+          type: 'doc',
+          id: "advanced/template_in_action",
+          label: '📄 模板系统实战',
+        },
+      ]
+    },
+    {
+      type: 'category',
       label: '⚙️ 配置',
       collapsed: true,
       link: {
