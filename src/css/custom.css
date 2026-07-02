@@ -533,6 +533,15 @@ html[data-theme-color='green'][data-theme='dark'] {
 }
 
 /* =========================================================================
+   文档正文图片：统一圆角。
+   作用于 .theme-doc-markdown 内的所有 <img>，覆盖 markdown 的 ![]()
+   与 MDX 里的 <img>。navbar / sidebar / footer 等非正文图片不受影响。
+   ========================================================================= */
+.theme-doc-markdown img {
+  border-radius: 8px;
+}
+
+/* =========================================================================
    Custom YAML syntax highlighting (high-contrast vibrant)
    Applies ONLY to language-yaml code blocks; other languages keep the
    default github / dracula themes. Overrides prism-react-renderer's inline
