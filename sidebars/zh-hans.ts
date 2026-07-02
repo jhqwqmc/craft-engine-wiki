@@ -132,14 +132,20 @@ const sidebars: SidebarsConfig = {
           label: '🗂️ 认识项目',
         },
         {
-          type: 'doc',
-          id: "getting_start/items",
+          type: 'category',
           label: '🗡️ 第一个物品',
-        },
-        {
-          type: 'doc',
-          id: "getting_start/item_models",
-          label: '🎨 物品模型',
+          collapsed: true,
+          link: {
+            type: 'doc',
+            id: "getting_start/items",
+          },
+          items: [
+            {
+              type: 'doc',
+              id: "getting_start/item_models",
+              label: '🎨 为物品绑定模型',
+            },
+          ]
         },
         {
           type: 'doc',

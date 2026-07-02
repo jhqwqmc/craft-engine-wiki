@@ -132,14 +132,20 @@ const sidebars: SidebarsConfig = {
           label: '🗂️ Project Structure',
         },
         {
-          type: 'doc',
-          id: "getting_start/items",
-          label: '🗡️ Items',
-        },
-        {
-          type: 'doc',
-          id: "getting_start/item_models",
-          label: '🎨 Item Models',
+          type: 'category',
+          label: '🗡️ First Item',
+          collapsed: true,
+          link: {
+            type: 'doc',
+            id: "getting_start/items",
+          },
+          items: [
+            {
+              type: 'doc',
+              id: "getting_start/item_models",
+              label: '🎨 Binding Models',
+            },
+          ]
         },
         {
           type: 'doc',
@@ -154,7 +160,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'doc',
           id: "getting_start/first_image",
-          label: '🖼️ Custom Images',
+          label: '🖼️ First Image',
         },
         {
           type: 'doc',
