@@ -1,0 +1,180 @@
+---
+title: 🧱 第一个方块
+id: first_block
+---
+
+现在做一个能放进世界的方块。
+
+## 第 1 步：最简方块
+
+贴图准备好，放 `textures/block/` 下：
+
+```
+resourcepack/assets/tutorial/textures/block/topaz_block.png
+```
+
+正方形 PNG，边长 2 的幂（16/32/64）。在 `items.yml` 里加一个新物品：
+
+```yaml
+items:
+  tutorial:topaz_block:
+    material: paper
+    behavior:
+      type: block_item
+      block:
+        state:
+          auto_state: note_block
+          texture: tutorial:block/topaz_block
+```
+
+```
+/ce reload all
+/ce item get tutorial:topaz_block
+```
+
+右键地面——方块出现了。
+
+### 刚才写的是什么
+
+先看最外层。这个条目写在 `items:` 下——和之前做物品一样。多出来的就是 `behavior`：
+
+- `type: block_item` — 告诉 CraftEngine：这个物品右键时不是吃、不是挥，是**放一个方块**
+- `block:` — 下面写的就是"放什么方块"
+
+`block:` 里面：
+- `state` — 方块长什么样。**必填**，没有它方块就不存在
+- `auto_state: note_block` — 让插件自己从音符盒里挑位置来显示你的方块。不用管挑了哪个
+- `texture: tutorial:block/topaz_block` — 贴图路径。和物品的 `texture` 一模一样，自动生成一个六面都贴这张图的立方体模型
+
+> ⚠️ 记得跑的是 `/ce reload all`。你在方块里写了贴图路径，这涉及资源包——`config` 不会推送贴图。
+
+## 第 2 步：让它像真方块——有硬度、有声音
+
+现在这个方块没有掉落物、也没有自定义音效。在 `block:` 下面加上 `settings`：
+
+```yaml
+items:
+  tutorial:topaz_block:
+    material: paper
+    behavior:
+      type: block_item
+      block:
+        state:
+          auto_state: note_block
+          texture: tutorial:block/topaz_block
+        settings:
+          hardness: 4.5
+          sounds:
+            break: minecraft:block.stone.break
+            step: minecraft:block.stone.step
+            place: minecraft:block.stone.place
+            hit: minecraft:block.stone.hit
+            fall: minecraft:block.stone.fall
+          tags:
+            - minecraft:mineable/pickaxe
+```
+
+`/ce reload all`。再挖一次——需要用镐、有石头声、要挖一会儿。
+
+### 加了什么
+
+- `hardness: 4.5` — 硬度。数字越大挖越久
+- `sounds` — 五种音效：破坏、走过、放置、敲击、摔落。格式 `minecraft:block.方块名.动作`
+- `tags: [minecraft:mineable/pickaxe]` — 告诉 Minecraft"这个方块应该用镐来挖"。有了它，用镐挖得快、用手挖得慢
+
+## 第 3 步：挖了掉东西
+
+现在挖了这个方块——什么都不掉。在 `block:` 下加 `loot`：
+
+```yaml
+        settings:
+          hardness: 4.5
+          sounds: ...
+          tags:
+            - minecraft:mineable/pickaxe
+        loot:
+          template: default:loot_table/self
+```
+
+`/ce reload all`。挖掉它——掉落一个 `tutorial:topaz_block` 物品。
+
+`default:loot_table/self` 是 CraftEngine 内置的战利品表模板——先用着，不用纠结它是什么意思，进阶教程会详细讲。没有它，方块破坏后什么也不掉。
+
+## 第 4 步：背后的原理——视觉方块状态
+
+现在你知道怎么做了。理解一下背后发生了什么。
+
+Minecraft 原版能用的方块状态数量是固定的——没法凭空造新的。CraftEngine 的做法是：把原版方块里没被用到的状态"借"过来，覆盖上自定义模型。这些被借走的状态叫**视觉方块状态**——玩家在客户端看到的东西。
+
+`auto_state: note_block` 的意思：从音符盒这个 group 里自动分配一个空闲的状态，拿它来显示你的方块。同一个 group 里的所有状态有相同的碰撞箱形状，所以方块行为一致。
+
+常用 `auto_state` group：
+
+| group | 包含的方块 | 碰撞箱形状 | 适合什么 |
+|:---|:---|:---|:---|
+| `note_block` | 全部音符盒 | 完整立方体（1×1×1） | 石头、矿石、木头——默认选它 |
+| `solid` | 音符盒 + 全部蘑菇方块 | 完整立方体 | 同上，状态池更大 |
+| `mushroom_stem` | 蘑菇柄 | 完整立方体 | 备选 |
+| `tripwire` | 全部绊线 | 薄片 | 农作物、小花、小装饰 |
+| `sapling` | 全部树苗 | 小体积 | 树苗、花草 |
+| `leaves` | 全部树叶 | 完整立方体 | 树叶（不可含水） |
+| `waterlogged_leaves` | 全部树叶 | 完整立方体 | 树叶（含水） |
+
+> 💡 绝大多数整方块用 `note_block` 或 `solid` 就行。做植物、装饰品时才需要考虑其他 group。
+
+## 第 5 步：不止一种写模型的方式
+
+方块模型有三种写法，从简到繁：
+
+**① 一张贴图 → `texture:`**（你刚才用的）
+```yaml
+state:
+  auto_state: note_block
+  texture: tutorial:block/topaz_block
+```
+自动生成六面同一贴图的立方体。最简。
+
+**② 多张贴图 → `textures:` 列表**
+```yaml
+state:
+  auto_state: note_block
+  model:
+    path: tutorial:block/topaz_block      # 多张时必须指定
+    textures:
+      - tutorial:block/topaz_block_top    # 顶面
+      - tutorial:block/topaz_block_side   # 侧面
+```
+贴图数量决定模型类型：2 张 = 柱形（顶+侧），3 张 = 底面+侧面+顶面。`path` 必须写，告诉插件模型文件放哪。
+
+**③ 自己指定父模型 → `generation`**
+```yaml
+state:
+  auto_state: note_block
+  model:
+    path: tutorial:block/topaz_block
+    generation:
+      parent: minecraft:block/cube_bottom_top
+      textures:
+        bottom: tutorial:block/topaz_block_bottom
+        side: tutorial:block/topaz_block_side
+        top: tutorial:block/topaz_block_top
+```
+当你需要指定特定的父模型时用这个。`textures` 下的变量名由 `parent` 决定——选好 parent 后去 [Data Pack Generator](https://misode.github.io/assets/model/) 看它定义了哪些变量，照着写。
+
+## 第 6 步：背包里别再是一张纸了
+
+到现在为止，`tutorial:topaz_block` 拿在手上、放在背包里都是一张纸——因为 `material: paper`。方块用 `texture:` 已经生成了一个模型文件（在 `models/block/topaz_block.json`），让物品直接引用它：
+
+```yaml
+items:
+  tutorial:topaz_block:
+    material: paper
+    model: tutorial:block/topaz_block    # ← 加这一行
+    behavior:
+      type: block_item
+      block: ...
+```
+
+`model: tutorial:block/topaz_block` 告诉 CraftEngine：这个物品在背包里显示为方块模型的缩略图。不需要重新生成模型——方块那边已经生成了，物品直接复用。
+
+`/ce reload all`，`/ce item get tutorial:topaz_block`。现在背包里显示的是方块的样子，不再是纸了。

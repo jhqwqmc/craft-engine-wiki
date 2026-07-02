@@ -1,0 +1,89 @@
+---
+title: 🖼️ Your First Image
+id: first_image
+---
+
+import PluginFileTree from '@site/src/components/PluginFileTree';
+
+Turn a PNG into an in-game icon you can embed in item names, chat, and GUIs — using an `<image:tutorial:star>` tag.
+
+## How it works
+
+CraftEngine registers your PNG as a character in a custom font. You "type" the icon using an `<image:namespace:id>` tag. The player sees an image; the game sees text.
+
+## Step 1: place the PNG
+
+Put your image in `textures/font/`:
+
+```
+resourcepack/assets/tutorial/textures/font/star.png
+```
+
+<PluginFileTree
+  title="resourcepack/assets/tutorial"
+  initialTreeData={[
+    {
+      id: "textures", name: "textures",
+      children: [
+        {
+          id: "textures-font", name: "font",
+          hoverText: "Font images — any size, no power-of-two requirement.",
+          children: [
+            { id: "star.png", name: "star.png", isLeaf: true },
+          ]
+        },
+      ]
+    },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+> ⚠️ Don't put font images in `textures/item/` or `textures/block/`. Those directories belong to the texture atlas and can cause unintended mipmap degradation.
+
+## Step 2: define the image
+
+In `configuration/`, create `images.yml`:
+
+```yaml
+images:
+  tutorial:star:
+    height: 10
+    ascent: 9
+    font: tutorial:ui
+    file: tutorial:textures/font/star
+```
+
+| Field | Required | Description |
+|:---|:---|:---|
+| `file` | yes | Path to the PNG. `.png` extension auto-appended. Corresponds to `textures/font/star.png` |
+| `height` | no | Glyph height in pixels. Omit to auto-detect from PNG |
+| `ascent` | no | Baseline offset. Higher = image sits higher. Defaults to `height - 1` |
+| `font` | no | Which font this image belongs to. Defaults to `namespace:default` |
+| `char` | no | The codepoint. **Leave blank** — CraftEngine auto-assigns a free one, no conflicts |
+
+> ⚠️ `height` must be ≥ `ascent`. If you need a larger `ascent`, add transparent pixels to the bottom of the PNG to increase `height`.
+
+> ⚠️ A single glyph must not exceed 256×256 pixels.
+
+> 💡 **Use a custom font** (like `tutorial:ui`), not `minecraft:default`. With a custom font, players can't type the raw icon characters in chat — only your resource pack can render them.
+
+## Step 3: use it in an item name
+
+```yaml
+items:
+  tutorial:star_sword:
+    material: diamond_sword
+    data:
+      item_name: "<!i><white><image:tutorial:star> Star Sword"
+```
+
+`/ce reload all`, then `/ce item get tutorial:star_sword`. A star icon prefixes the sword's name. The `<image:namespace:id>` tag works anywhere MiniMessage is parsed — item names, lore, chat, GUIs, signs.
+
+## Preview & debug
+
+```
+/ce debug image tutorial:star
+```
+
+Prints clickable copy buttons in three formats: MiniMessage, MineDown, and RAW JSON.

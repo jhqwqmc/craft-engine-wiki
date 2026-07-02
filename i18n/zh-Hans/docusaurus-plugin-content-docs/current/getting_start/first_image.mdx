@@ -1,0 +1,92 @@
+---
+title: 🖼️ 第一张图片
+id: first_image
+---
+
+import PluginFileTree from '@site/src/components/PluginFileTree';
+
+把 PNG 图标嵌进物品名、聊天、GUI——用 `<image:tutorial:star>` 标签就能引用。
+
+## 原理
+
+CraftEngine 把 PNG 注册成某个字体里的字符，你用 `<image:命名空间:ID>` 标签把它"打"出来。玩家看到的是图标，游戏以为它是文字。
+
+## 第 1 步：放 PNG
+
+图片放在 `textures/font/` 下。和模型贴图不同，字体图片不限尺寸、不需要 2 的幂：
+
+```
+resourcepack/assets/tutorial/textures/font/star.png
+```
+
+<PluginFileTree
+  title="resourcepack/assets/tutorial"
+  initialTreeData={[
+    {
+      id: "textures", name: "textures",
+      children: [
+        {
+          id: "textures-font", name: "font",
+          hoverText: "字体图片不限尺寸，不必 2 的幂。",
+          children: [
+            { id: "star.png", name: "star.png", isLeaf: true },
+          ]
+        },
+      ]
+    },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+> ⚠️ **不要把字体图片放进 `textures/item/` 或 `textures/block/`。** 那些目录受贴图图集管理，会被纳入图集导致意外的 mipmap 降级。
+
+## 第 2 步：定义图片
+
+在 `configuration/` 下新建 `images.yml`：
+
+```yaml
+images:
+  tutorial:star:
+    height: 10
+    ascent: 9
+    font: tutorial:ui
+    file: tutorial:textures/font/star
+```
+
+### 字段说明
+
+| 字段 | 必需 | 说明 |
+|:---|:---|:---|
+| `file` | 是 | PNG 路径。`.png` 后缀自动补。对应 `textures/font/star.png` |
+| `height` | 否 | 字形高度（像素）。省略则自动读取 PNG 高度 |
+| `ascent` | 否 | 基线偏移。越大越靠上。默认 `height - 1` |
+| `font` | 否 | 所属字体。默认 `命名空间:default` |
+| `char` | 否 | 映射到的码点。**推荐留空**让 CraftEngine 自动分配空闲码点，没有冲突风险 |
+
+> ⚠️ `height` 必须 ≥ `ascent`，Minecraft 硬性限制。如果 `ascent` 不够大，在 PNG 底部加透明像素把 `height` 撑大。
+
+> ⚠️ 单个字形不超过 256×256 像素。
+
+> 💡 **为什么用自定义字体？** 用 `minecraft:default` 的话，玩家能在聊天框直接打出图标的原始字符。用自定义字体（如 `tutorial:ui`）则只有你的资源包能渲染这些字符，更安全。
+
+## 第 3 步：用进物品名
+
+```yaml
+items:
+  tutorial:star_sword:
+    material: diamond_sword
+    data:
+      item_name: "<!i><white><image:tutorial:star> 星之剑"
+```
+
+`/ce reload all`，`/ce item get tutorial:star_sword`。剑名前出现星标。`<image:命名空间:ID>` 在任何解析 MiniMessage 的地方都能用——物品名、lore、聊天、GUI、告示牌。
+
+## 预览调试
+
+```
+/ce debug image tutorial:star
+```
+
+打印 MiniMessage、MineDown、RAW JSON 三种格式的可点击按钮，点一下即可复制。
+

@@ -3,8 +3,41 @@ title: 👋 Getting Started
 id: getting_start
 ---
 
-import Highlight from '@site/src/components/Highlight';
+Build custom items, blocks, furniture, and images for your Minecraft server — step by step, with something to see in-game at the end of every chapter.
 
-## Alright, let's kick off the CraftEngine tutorial!
+## Prerequisites
 
-A heads-up: please read ALL docs in this category (👋 Getting Start) - ideally in the order we've arranged them. Yeah, CraftEngine has a steeper learning curve than other plugins, but don't sweat it. Our documentation is way more thorough and beginner-friendly.
+- A Paper-based Minecraft server (1.20+) with the CraftEngine plugin installed
+- A text editor that can edit YAML files
+- (Optional) [BlockBench](https://www.blockbench.net/) for making 3D models
+
+If you haven't installed the plugin yet, start with [Installation & Hosting](./getting_start/installation).
+
+## What you'll build
+
+Each chapter builds on the previous one using a single `tutorial` pack. Read in order and follow along:
+
+1. [Installation & Hosting](./getting_start/installation) — get the plugin running, serve the pack
+2. [Project Structure](./getting_start/project_structure) — folders, namespaces, and `/ce reload`
+3. [Your First Item](./getting_start/items) — start from a single YAML line
+4. [Item Models](./getting_start/item_models) — give your item a custom look
+5. [Your First Block](./getting_start/first_block) — a block you can place in the world
+6. [Your First Furniture](./getting_start/first_furniture) — a chair you can sit on
+7. [Your First Image](./getting_start/first_image) — turn a PNG into an in-game icon
+8. [Next Steps](./getting_start/next_steps) — where to go from here
+
+## Key commands
+
+You'll use these throughout the tutorial:
+
+| When you… | Run |
+|:---|:---|
+| Edit `.yml` configs (items, blocks, etc.) | `/ce reload config` |
+| Edit recipes | `/ce reload recipe` |
+| Edit models or textures | `/ce reload all` |
+
+> ⚠️ **The most common mistake:** you change a texture, run `/ce reload config`, and nothing happens. `config` doesn't rebuild the resource pack — texture and model changes need `all`.
+
+Stuck? Most errors are printed to the server console. Check there first.
+
+Ready? Start with [Installation & Hosting](./getting_start/installation).

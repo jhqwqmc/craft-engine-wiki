@@ -1,0 +1,151 @@
+---
+title: 🗡️ Your First Item
+id: items
+---
+
+import Highlight from '@site/src/components/Highlight';
+
+You created the `tutorial` pack last chapter. Now make your first custom item inside it.
+
+Open `configuration/items.yml` (if you haven't created it yet, go back to [Project Structure](./project_structure) step 2). Open it with VS Code or any text editor, and copy the examples below exactly as written.
+
+## Step 1: three lines, one item
+
+Write this into `items.yml`:
+
+```yaml
+items:
+  tutorial:diamond:
+    material: diamond
+```
+
+Save the file. In-game, run:
+
+```
+/ce reload config
+```
+
+Once you see the green success message, then run:
+
+```
+/ce item get tutorial:diamond
+```
+
+A diamond appears in your inventory. 🎉 That's your first custom item!
+
+### What each line means
+
+Line by line:
+
+- `items:` — "I'm about to define items"
+- `tutorial:diamond:` — "This item is called `tutorial:diamond`." `tutorial` is your namespace (your pack name), `diamond` is the item name. Everything after the colon must be indented
+- `material: diamond` — "This item is based on a vanilla diamond." Based on diamond means it looks and behaves like a diamond (no right-click action, stacks to 64)
+
+> ⚠️ **The most common beginner mistake:** incorrect indentation. YAML uses spaces for indentation, not tabs. Line two is 2 more spaces than line one; line three is 2 more spaces than line two. If you use the Tab key, CraftEngine will throw an error.
+
+## Step 2: give it a name
+
+Right now the item is called "Diamond" — just like the vanilla one. Let's give it a proper name:
+
+```yaml
+items:
+  tutorial:diamond:
+    material: diamond
+    data:
+      item_name: "<blue>Shiny Diamond"
+      lore:
+        - "<!i><gray>Blessed by the CraftEngine magic"
+```
+
+Save, then:
+
+```
+/ce reload config
+/ce item get tutorial:diamond
+```
+
+Hover over the item — a blue "Shiny Diamond" with a gray description line beneath it.
+
+### What the new lines mean
+
+- `data:` — "I'm defining how this item displays"
+- `item_name:` — the item's name. `<blue>` makes it blue
+- `lore:` — description lines below the name. `-` marks a list item, one per line
+- `<!i>` — turns off italics. Minecraft renders all lore text as purple italic by default. Add `<!i>` and it goes back to normal. You'll want it at the start of almost every lore line
+- `<gray>` — gray text
+
+These `<blue>`, `<gray>` tags are called **MiniMessage** — Paper's standard text format. It uses angle-bracket tags to control color and style.
+
+### Common MiniMessage tags
+
+| You write | Effect |
+|:---|:---|
+| `<red>` `<blue>` `<green>` `<yellow>` | basic colors |
+| `<#FF8C00>` | custom hex color |
+| `<bold>` | bold |
+| `<!i>` | remove italics |
+| `<underlined>` | underline |
+
+Full reference: [MiniMessage docs](https://docs.papermc.io/adventure/minimessage/format/).
+
+## Step 3: make it craftable
+
+Right now you can only get this item via command. Let players craft it instead.
+
+In the **same** `items.yml` file, **continue writing below**:
+
+```yaml
+items:
+  tutorial:diamond:
+    material: diamond
+    data:
+      item_name: "<blue>Shiny Diamond"
+      lore:
+        - "<!i><gray>Blessed by the CraftEngine magic"
+
+recipes:
+  tutorial:diamond:
+    type: shaped
+    pattern:
+      - "AAA"
+      - "AAA"
+      - "AAA"
+    ingredients:
+      A: minecraft:diamond_block
+    result:
+      id: tutorial:diamond
+      count: 9
+```
+
+**Important:** `recipes:` is at the same level as `items:` — don't indent it inside. Both are flush left.
+
+Save, then `/ce reload recipe`. Open a crafting table, place one diamond block in the 3×3 grid — you get 9 "Shiny Diamonds."
+
+### What the recipe means
+
+- `recipes:` — "I'm about to define crafting recipes"
+- `type: shaped` — shaped crafting (ingredients must be placed in a specific pattern)
+- `pattern` — the 3×3 crafting grid. Each row is 3 characters. `A` marks the ingredient, spaces are empty
+- `ingredients.A: minecraft:diamond_block` — the `A` in the pattern stands for a vanilla diamond block
+- `result` — what you get. `id: tutorial:diamond` is the product ID, `count: 9` means 9 items per craft
+
+### Common recipe types
+
+| Type | When to use |
+|:---|:---|
+| `shaped` | Shaped crafting — ingredients must match the pattern |
+| `shapeless` | Shapeless crafting — ingredients anywhere, just have the right ones |
+| `smelting` | Furnace — one ingredient gets smelted |
+
+> ⚠️ Ingredients can use **tags** instead of specific items. For example `#minecraft:planks` matches any kind of plank. Tags are more flexible than hardcoding specific items.
+
+> ⚠️ Recipe changes need `/ce reload recipe`, not `config`. Also, if your server has other datapack plugins or you manually run `/minecraft:reload`, you'll need to run `/ce reload recipe` again afterwards or your recipes may stop working.
+
+## What you've learned
+
+1. Define an item with 3 lines of YAML
+2. Add a name and lore with `data`
+3. Add a crafting recipe with `recipes`
+4. Run `/ce reload config` for config changes, `/ce reload recipe` for recipe changes
+
+The item works — but it **still looks exactly like a vanilla diamond**. Next chapter: give it a completely custom appearance.

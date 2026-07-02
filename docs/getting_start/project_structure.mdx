@@ -1,0 +1,219 @@
+---
+title: 🗂️ Project Structure
+id: project_structure
+---
+
+import PluginFileTree from '@site/src/components/PluginFileTree';
+import Details from '@site/src/components/Details';
+
+You installed the plugin last chapter. Now let's look at how CraftEngine's files are organized, then create the workspace for this tutorial with a single command.
+
+## The plugin folder
+
+Open `plugins/CraftEngine/` and you'll see:
+
+<PluginFileTree
+  title="CraftEngine"
+  initialTreeData={[
+    { id: "generated", name: "generated", hoverText: "The compiled resource_pack.zip lands here", children: [] },
+    { id: "libs", name: "libs", hoverText: "Runtime dependencies, loaded on demand — don't touch", children: [] },
+    { id: "resources", name: "resources", hoverText: "★ Your packs live here. Each subfolder is a pack.", children: [] },
+    { id: "translations", name: "translations", hoverText: "Multi-language messages for commands and warnings", children: [] },
+    { id: "commands.yml", name: "commands.yml", isLeaf: true, hoverText: "Command state, permissions, and aliases. Requires restart." },
+    { id: "config.yml", name: "config.yml", isLeaf: true, hoverText: "Main config: hosting, performance, feature toggles" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+The `resources/` folder is where everything you create lives.
+
+## What's a "pack"
+
+In CraftEngine, your work is organized into **packs**. A pack is a folder under `resources/` containing:
+
+- **`configuration/`** — your `.yml` config files. Items, blocks, furniture — all defined here
+- **`resourcepack/`** — model files (`.json`), texture files (`.png`), sound files (`.ogg`). Same structure as a vanilla Minecraft resource pack
+- **`pack.yml`** — the pack's identity card: what it's called, who made it, what namespace it uses
+
+> 💡 Folder names starting with `.` (like `.hidden_pack`) are ignored by CraftEngine and won't be loaded.
+
+You can have multiple packs (`tutorial`, `my_weapons`, `furniture_pack`) — CraftEngine merges them together. This tutorial uses a single pack called `tutorial`.
+
+## What's a namespace
+
+A namespace is like a surname. Everything in Minecraft has an ID like `minecraft:diamond` — `minecraft` is the vanilla namespace, `diamond` is the thing's name.
+
+Your creations need their own namespace so they don't collide with vanilla items. This tutorial uses `tutorial` as the namespace, so your item IDs look like `tutorial:xxx`.
+
+Namespaces only allow lowercase letters, digits, `-`, `_`, `.`, `/`. **No uppercase, no spaces.**
+
+💡 **Quick quiz: which IDs are valid?**
+
+1. `MyFirst:golden_sword`
+2. `minecraft:steel furnace`
+3. `abcd-efgh:1122.3344`
+4. `craftengine:happy$crafting`
+5. `test:tutorial_book`
+
+<Details summary="Click for answers">
+
+1. ❌ uppercase not allowed
+2. ❌ spaces not allowed
+3. ✅ digits, hyphens, and dots are all valid
+4. ❌ `$` is not a valid character
+5. ✅ lowercase and underscores are valid
+
+</Details>
+
+## Step 1: create a pack with a command
+
+Don't create folders by hand. CraftEngine has a command that generates the full pack structure for you.
+
+In-game, run:
+
+```
+/ce resource create tutorial
+```
+
+What this does:
+- `tutorial` = the pack name and folder name. The namespace defaults to this too
+- Auto-generates `pack.yml` (with namespace `tutorial`, author, version, etc.)
+- Auto-creates the `configuration/` folder and the full subfolder tree under `resourcepack/`
+
+You'll see a success message. Now open `plugins/CraftEngine/resources/tutorial/` — all the subfolders are already there:
+
+<PluginFileTree
+  title="tutorial"
+  initialTreeData={[
+    {
+      id: "configuration", name: "configuration", hoverText: "Put your .yml configs here — empty, waiting for you",
+      children: []
+    },
+    {
+      id: "resourcepack", name: "resourcepack", hoverText: "Models and textures — same structure as a vanilla resource pack",
+      children: [
+        {
+          id: "assets", name: "assets",
+          children: [
+            {
+              id: "tutorial", name: "tutorial", hoverText: "Your namespace folder",
+              children: [
+                {
+                  id: "models", name: "models",
+                  children: [
+                    { id: "models-block", name: "block", children: [] },
+                    { id: "models-item", name: "item", children: [] },
+                  ]
+                },
+                { id: "sounds", name: "sounds", children: [] },
+                {
+                  id: "textures", name: "textures",
+                  children: [
+                    { id: "textures-block", name: "block", children: [] },
+                    { id: "textures-font", name: "font", children: [] },
+                    { id: "textures-gui", name: "gui", children: [] },
+                    { id: "textures-item", name: "item", children: [] },
+                  ]
+                },
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    { id: "pack.yml", name: "pack.yml", isLeaf: true, hoverText: "Auto-generated metadata: namespace, author, version" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+> ⚠️ If you get "pack already exists", the `tutorial` folder is already there. Delete it first or pick a different name.
+
+> 💡 You can open `pack.yml` to take a look — namespace, author, and version are already filled in. No changes needed.
+
+## Step 2: create a config file
+
+The pack is ready. Now create your first config file under `configuration/`. You'll need it for the next chapter.
+
+### What editor to use
+
+You need a **plain text editor**. [VS Code](https://code.visualstudio.com/) is recommended (free, with syntax highlighting).
+
+### Option A: file manager
+
+Open the `configuration` folder, **right-click → New → Text Document**, rename to `items.yml`.
+
+> ⚠️ **The filename must be `items.yml`, not `items.yml.txt`.** Windows hides file extensions by default — you might think you've renamed to `.yml` when it's actually `.yml.txt`. To check: click "View" in File Explorer → check "File name extensions", then verify the extension is really `.yml`.
+
+### Option B: command line
+
+```bash
+# Navigate to the configuration directory
+cd plugins/CraftEngine/resources/tutorial/configuration
+
+# Linux / Mac
+touch items.yml
+
+# Windows PowerShell
+ni items.yml
+```
+
+Once created, open it with VS Code or a command-line editor (`nano items.yml`) and you're ready to write configs.
+
+## Step 3: how configs get loaded
+
+Every `.yml` and `.json` file under `configuration/` gets loaded. You can put everything in **one file**, or **split across many** — CraftEngine reads and merges them all.
+
+You could organize by type:
+
+<PluginFileTree
+  title="configuration"
+  initialTreeData={[
+    { id: "items.yml", name: "items.yml", isLeaf: true, hoverText: "All items" },
+    { id: "blocks.yml", name: "blocks.yml", isLeaf: true, hoverText: "All blocks" },
+    { id: "furniture.yml", name: "furniture.yml", isLeaf: true, hoverText: "All furniture" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+Or by theme:
+
+<PluginFileTree
+  title="configuration"
+  initialTreeData={[
+    { id: "weapons.yml", name: "weapons.yml", isLeaf: true, hoverText: "Weapons" },
+    { id: "materials.yml", name: "materials.yml", isLeaf: true, hoverText: "Materials" },
+    { id: "decorations.yml", name: "decorations.yml", isLeaf: true, hoverText: "Decoration blocks" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+However you split them is fine. This tutorial keeps it simple — everything in `items.yml`. We'll create new files later for blocks and furniture.
+
+> 💡 You can also use subfolders under `configuration/`, like `configuration/weapons/` or `configuration/blocks/`. CraftEngine scans all subdirectories recursively — every `.yml` and `.json` inside gets loaded.
+
+## How to apply your changes
+
+After editing configs or resource pack files, tell CraftEngine to reload:
+
+| What you changed | Command |
+|:---|:---|
+| `.yml` configs (items, names, properties) | `/ce reload config` |
+| Recipes | `/ce reload recipe` |
+| Texture files (`.png`) or model files (`.json`) | `/ce reload all` |
+| Not sure which | `/ce reload all` (safest) |
+
+> ⚠️ **This is the most important reminder in the entire tutorial:** if you change a texture and only run `/ce reload config`, nothing will happen. Texture changes must rebuild the resource pack — that means `all`. "Why didn't my texture change show up?" — 99% of the time it's because you ran `config`.
+
+Running `/ce reload` with no argument defaults to `config`.
+
+## AI-assisted config editing
+
+CraftEngine provides a VS Code AI Skill that can auto-complete, validate configs, and explain field meanings. Once installed, the AI assists you in real time while editing `.yml` files in VS Code.
+
+> 📦 Skill download: not yet available
+
+Ready? Next chapter — your first item.

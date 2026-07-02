@@ -6,9 +6,9 @@ id: self
 import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#1877F2">**Basic Solution**</Highlight>
+Self hosting runs a small HTTP server inside your Minecraft server that serves the resource pack directly. Free, zero external services, and perfect for small servers and development. Not recommended for large player counts unless you have ample upload bandwidth.
 
-The good part? It's completely free - just needs your existing server. Perfect for testing and development. But unless you've got killer bandwidth, don't use this for production environments. Resource pack downloads will hog your server's connection and might lag out other players.
+## Configuration
 
 <AnnotatedYaml>
 {`
@@ -17,43 +17,66 @@ resource-pack:
       hosting:
         - type: "self"
 -       ip: "localhost"
-+       ip: "Your Server Ip" # for instance 111.222.333.444
++       ip: "Your Server IP" # e.g. 111.222.333.444, or "auto"
           port: 8163
           protocol: "http"
-          # Blocks all requests from non-Minecraft clients.
+          # Block requests from non-Minecraft clients (checks User-Agent header)
           deny_non_minecraft_request: true
-          # Generates a single-use, time-limited download link for each player.
+          # Generate single-use, time-limited download links
           one_time_token: true
-          # Improved validation for deny_non_minecraft_request and one_time_token; do not enable on offline servers or validation will fail.
+          # Enhanced validation for token and Minecraft-only check.
+          # Do NOT enable on offline-mode servers.
           strict_validation: false
           rate_limiting:
-            # Maximum bandwidth per second to prevent server instability for other players during resource pack downloads
-            max_bandwidth_per_second: 5_000_000 # 5MB/s
-            # Minimum guaranteed download speed per player to ensure acceptable download performance during concurrent downloads
-            min_download_speed_per_player: 50_000 # 50KB/s
-            # Prevent a single IP from sending too many resource pack download requests in a short time period
-            qps_per_ip: 5/60 #  5 requests per 60 seconds
+            max_bandwidth_per_second: 5_000_000   # 5 MB/s total upload cap
+            min_download_speed_per_player: 50_000  # 50 KB/s per-player floor
+            qps_per_ip: 5/60                       # 5 requests per 60 seconds per IP
 `}
 </AnnotatedYaml>
 
-:::info
+## Field Reference
 
-The `deny_non_minecraft_request` setting blocks all requests from non-Minecraft clients. \
-As for `one_time_token`, it generates a single-use, time-limited download link for each player.
+| Field | Default | Description |
+|:---|:---|:---|
+| `ip` | `"auto"` | IP the HTTP server binds to. `"auto"` detects the public IP via Cloudflare trace. Set `"127.0.0.1"` or `"0.0.0.0"` to bind locally. |
+| `port` | `"auto"` | Port the HTTP server listens on. `"auto"` shares the Minecraft server port (piggybacks on its Netty pipeline). Set a number (e.g. `8163`) for a dedicated port. |
+| `url` | (auto) | If set, overrides the auto-generated URL sent to clients. See below. Must start with `http://` or `https://`. Trailing `/` auto-appended. |
+| `protocol` | `"http"` | Protocol for the auto-generated URL. Ignored when `url` is set. |
+| `deny_non_minecraft_request` | `true` | Rejects requests whose `User-Agent` doesn't start with `Minecraft Java/`. |
+| `one_time_token` | `true` | Appends a unique `?token=` to each player's download URL. Tokens expire after 1 minute and are single-use. |
+| `strict_validation` | `false` | Binds the token to the player's UUID via the `X-Minecraft-UUID` header. Do not enable on offline-mode servers. |
+| `rate_limiting.*` | — | IP-based rate limiting. |
 
-You can avoid using IPv4 addresses for resource pack URLs by setting a full/complete URL instead.
-```yaml
-- type: "self"
-  ip: "111.222.333.444"
-  port: 8163
-  url: "https://mydomain.com:8163/"
-  # ...more options
+## When the public address differs from the bind address
+
+By default, the download URL sent to players is auto-built from `ip`, `port`, and `protocol`:
+
+```
+http://111.222.333.444:8163/download
 ```
 
-:::
+When the internal bind address differs from what players should use — a reverse proxy, a CDN, or VPS NAT where the public IP and port don't match the internal ones — set `url` to override it:
+
+```yaml
+url: "https://real-public-address/"
+```
+
+This produces `https://real-public-address/download` (with optional `?token=...`). Two common scenarios:
+
+**Reverse proxy** — nginx, Caddy, or HAProxy sits in front, handles TLS, and forwards to the internal HTTP server.
+
+**VPS with NAT / port mapping** — the server's internal IP and port differ from the public ones (common with cloud providers).
+
+```yaml
+- type: "self"
+  ip: "127.0.0.1"
+  port: 8163
+  url: "https://real-public-address/"
+  deny_non_minecraft_request: false
+  strict_validation: false
+```
 
 :::caution
-
-Don't use `https` if you don't have an SSL certificate.
-
+Do **not** use `https` in `url` or `protocol` without a valid SSL certificate, or players will fail to download the resource pack.
 :::
+

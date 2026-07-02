@@ -1,0 +1,230 @@
+---
+title: 🎨 Item Models
+id: item_models
+---
+
+import PluginFileTree from '@site/src/components/PluginFileTree';
+
+Your item works, but it looks exactly like the vanilla version. Time to give it a custom look.
+
+CraftEngine offers three ways to configure models, simplest first:
+
+| Approach | Syntax | When to use |
+|:---|:---|:---|
+| Simplified texture | `texture: path` | You have a single texture — let the plugin do the rest |
+| Auto-generate | `model:` + `generation:` | You need a specific parent, multiple texture layers, or display transforms |
+| External model | `model: path` | You already have a model JSON file |
+
+> ⚠️ This chapter involves editing resource pack files (textures / models). **Run `/ce reload all` afterwards, not `config`.** Running `config` alone will not push your texture changes — this is the single most-asked question in the entire tutorial.
+
+## Where models and textures go
+
+Your pack's `resourcepack/` mirrors a vanilla resource pack:
+
+<PluginFileTree
+  title="resourcepack/assets/tutorial"
+  initialTreeData={[
+    {
+      id: "models", name: "models",
+      children: [
+        { id: "models-item", name: "item", hoverText: "Item model .json files go here", children: [] },
+        { id: "models-block", name: "block", hoverText: "Block model .json files go here", children: [] },
+      ]
+    },
+    {
+      id: "textures", name: "textures",
+      children: [
+        { id: "textures-item", name: "item", hoverText: "Item texture .png files go here", children: [] },
+        { id: "textures-block", name: "block", hoverText: "Block texture .png files go here", children: [] },
+      ]
+    },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+When referencing files, the `models/` and `textures/` prefixes are implied: `tutorial:item/toxic_sword` resolves to `models/item/toxic_sword.json` in a model context, and `textures/item/toxic_sword.png` in a texture context.
+
+> ⚠️ Textures must go in `textures/item/` or `textures/block/`. Minecraft's texture atlas only loads those two directories. Put textures anywhere else and they won't load — you'll see the purple-black missing-texture pattern.
+
+> ⚠️ Model textures must be powers of two: 16×16, 32×32, 64×64… anything else won't render.
+
+## Prepare the texture
+
+[⬇ Download the tutorial sword texture](/img/toxic_sword.png) and place it at:
+
+```
+resourcepack/assets/tutorial/textures/item/toxic_sword.png
+```
+
+## Approach 1: just `texture` — one line
+
+The simplest form. CraftEngine picks the parent model automatically based on your `material`, generates the model JSON, and handles CMD allocation.
+
+```yaml
+items:
+  tutorial:toxic_sword:
+    material: golden_sword
+    data:
+      item_name: "<!i><#3CB371>Toxic Sword"
+    texture: tutorial:item/toxic_sword
+```
+
+`/ce reload all`, then `/ce item get tutorial:toxic_sword`. Your sword now has the custom texture.
+
+CraftEngine infers the parent from the material: `golden_sword` → `handheld` (tool), `paper` → `generated` (flat icon), block items → `cube_all`. **You don't need to specify a parent, write a model block, or touch CMD.**
+
+`texture:` (singular) is for single-state items — which covers most items. Multi-state items (bows, crossbows, fishing rods) use `textures:` (plural), covered below.
+
+## Approach 2: `generation` for full control
+
+When `texture:` isn't enough — you want a different parent, a glow layer, or display transforms — use the `generation` format.
+
+### Basic syntax
+
+```yaml
+items:
+  tutorial:toxic_sword:
+    material: golden_sword
+    data:
+      item_name: "<!i><#3CB371>Toxic Sword"
+    model:
+      path: tutorial:item/toxic_sword
+      generation:
+        parent: minecraft:item/handheld
+        textures:
+          layer0: tutorial:item/toxic_sword
+```
+
+| Field | Required | Description |
+|:---|:---|:---|
+| `parent` | yes | Parent model to inherit from. Determines what texture variables exist |
+| `textures` | no | Assign textures to the variables defined by the parent |
+| `display` | no | Per-context rotation / translation / scale |
+| `gui_light` | no | GUI lighting: `front` (flat) or `side` (3D, default) |
+
+### Common parents
+
+| parent | Best for |
+|:---|:---|
+| `minecraft:item/handheld` | Swords, pickaxes, tools |
+| `minecraft:item/generated` | Food, ingots, materials |
+| `minecraft:block/cube_all` | Blocks |
+
+> ⚠️ **The texture variable names are determined by the parent, not by you.** `handheld` and `generated` use `layer0`. `cube_all` uses `all`. If you write the wrong name, the model breaks. Before picking a parent, look up its JSON on [misode.github.io/assets/model](https://misode.github.io/assets/model/) to see what texture variables it defines.
+
+### Adding a glow layer
+
+```yaml
+generation:
+  parent: minecraft:item/handheld
+  textures:
+    layer0: tutorial:item/toxic_sword        # base
+    layer1: tutorial:item/toxic_sword_glow   # glow overlay
+```
+
+### How `texture:` and `generation:` relate
+
+`texture: tutorial:item/toxic_sword` is equivalent to:
+
+```yaml
+model:
+  path: tutorial:item/toxic_sword
+  generation:
+    parent: minecraft:item/handheld    # inferred from material
+    textures:
+      layer0: tutorial:item/toxic_sword
+```
+
+Stick with `texture:` unless you need a different parent, multiple texture layers, or display transforms.
+
+### Multi-state items
+
+Items like bows, crossbows, and fishing rods have multiple states (idle / pulling / loaded), each with its own texture. CraftEngine provides a `textures:` (plural) shortcut:
+
+```yaml
+# Bow — 4 slots
+items:
+  tutorial:my_bow:
+    material: bow
+    textures:
+      - tutorial:item/bow              # idle
+      - tutorial:item/bow_pulling_0    # start pulling
+      - tutorial:item/bow_pulling_1    # mid-pull
+      - tutorial:item/bow_pulling_2    # fully pulled
+```
+
+> ⚠️ Slot order is fixed per material. Get the order wrong and your bow will show the pulled texture when idle.
+
+Common slot counts:
+
+| material | slots | Description |
+|:---|:---|:---|
+| `bow` | 4 | idle + pull 0/1/2 |
+| `crossbow` | 6 | idle + pull 0/1/2 + arrow + firework |
+| `fishing_rod` | 2 | idle + cast |
+| `shield` | 2 | idle + blocking |
+| `elytra` | 2 | intact + broken |
+
+## Approach 3: external model files
+
+If you have a pre-made model JSON — from BlockBench, a download, or a purchased pack — use it directly:
+
+```yaml
+items:
+  tutorial:toxic_sword:
+    material: golden_sword
+    data:
+      item_name: "<!i><#3CB371>Toxic Sword"
+    model: tutorial:item/toxic_sword
+```
+
+CraftEngine uses the existing JSON file as-is. Texture paths are already baked into the model file.
+
+For multi-state items like bows or shields that need different model files per state, use `models:` (plural) — the slot order and count are the same as with `textures:`:
+
+```yaml
+items:
+  tutorial:my_shield:
+    material: shield
+    models:
+      - tutorial:item/shield            # idle
+      - tutorial:item/shield_blocking   # blocking
+```
+
+> 💡 CraftEngine's `resourcepack/` is a complete Minecraft resource pack. You can open model JSONs directly in BlockBench — the file structure matches vanilla, so BlockBench can resolve texture paths. This makes it easy to verify your textures without loading the game.
+
+> ⚠️ Filenames must follow [namespace path rules](./project_structure#namespaces): lowercase letters, digits, `-`, `_`, `.`, `/` only. Uppercase or special characters will cause load failures.
+
+### Texture paths inside models
+
+Open a model JSON and look at the `textures` section:
+
+```json
+{
+  "textures": {
+    "0": "tutorial:item/toxic_sword",
+    "particle": "tutorial:item/toxic_sword"
+  }
+}
+```
+
+`"tutorial:item/toxic_sword"` resolves to `assets/tutorial/textures/item/toxic_sword.png`.
+
+Common issues:
+
+| What you see | Why | Fix |
+|:---|:---|:---|
+| Texture path contains `C:\Users\...` or `/home/...` | BlockBench saved to the wrong location | Replace all texture paths with `namespace:item/filename`, move PNGs to `textures/item/` |
+| Texture path uses `minecraft:item/xxx` | Model copied from vanilla assets | Switch to your namespace, or make sure the corresponding texture file exists |
+| Path looks correct but still purple-black | Files missing or typos in the filename | Check filenames are all lowercase and spelled correctly |
+
+### Repurposing a purchased model pack
+
+Models you buy typically use the author's namespace (e.g. `fantasy_pack`). To switch it to `tutorial`:
+
+1. Open the model JSON in VS Code
+2. Ctrl+H — find `fantasy_pack:`, replace with `tutorial:`
+3. Save
+4. Move the PNGs from `assets/fantasy_pack/textures/item/` to `assets/tutorial/textures/item/`
+5. `/ce reload all`

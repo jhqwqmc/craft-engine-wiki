@@ -56,16 +56,16 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'doc',
-          id: "getting_start/create_first_item",
-          label: '💎 首个物品',
+          id: "getting_start/installation",
+          label: '📦 安装与托管',
         },
         {
           type: 'category',
-          label: '🛜 配置资源包托管',
+          label: '🛜 资源包托管后端',
           collapsed: true,
           link: {
             type: 'doc',
-            id: "getting_start/set_up_host",
+            id: "getting_start/installation",
           },
           items: [
             {
@@ -128,15 +128,39 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: "getting_start/add_custom_model",
-          label: '🌌 添加自定义模型',
+          id: "getting_start/project_structure",
+          label: '🗂️ 认识项目',
         },
         {
           type: 'doc',
-          id: "getting_start/item_model_display",
-          label: '🏹 物品模型展示',
+          id: "getting_start/items",
+          label: '🗡️ 第一个物品',
         },
-        
+        {
+          type: 'doc',
+          id: "getting_start/item_models",
+          label: '🎨 物品模型',
+        },
+        {
+          type: 'doc',
+          id: "getting_start/first_block",
+          label: '🧱 第一个方块',
+        },
+        {
+          type: 'doc',
+          id: "getting_start/first_furniture",
+          label: '🪑 第一件家具',
+        },
+        {
+          type: 'doc',
+          id: "getting_start/first_image",
+          label: '🖼️ 第一张图片',
+        },
+        {
+          type: 'doc',
+          id: "getting_start/next_steps",
+          label: '🧭 下一步',
+        },
       ]
     },
     {

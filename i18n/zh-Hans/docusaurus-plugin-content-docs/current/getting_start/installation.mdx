@@ -1,0 +1,107 @@
+---
+title: 📦 安装与托管
+id: installation
+---
+
+import Highlight from '@site/src/components/Highlight';
+import ColoredLink from '@site/src/components/ColoredLink';
+import UrlCard from '@site/src/components/UrlCard';
+import PluginFileTree from '@site/src/components/PluginFileTree';
+
+把插件跑起来，让资源包能发给玩家。
+
+## 要求
+
+- Paper 系服务端，已验证以下：
+
+**Paper 及其下游**：Paper、Purpur、Pufferfish、Leaf、Leaves、UniverseSpigot
+
+**Folia 及其下游**：Folia、Canvas、Luminol
+
+:::info
+- **Java：** JDK 21 或更高
+- **Minecraft：** 1.20 或更高
+:::
+
+## 获取插件
+
+- **社区版**<Highlight color="#00AF5C"><ColoredLink to="https://modrinth.com/plugin/craftengine" color="#ffffff">**Modrinth**</ColoredLink></Highlight>
+- **付费版**<Highlight color="#06B6D4"><ColoredLink to="https://voxel.shop/product/7624/craftengine" color="#ffffff">**VoxelShop**</ColoredLink></Highlight>、<Highlight color="#2563EB"><ColoredLink to="https://builtbybit.com/resources/craftengine.82674/" color="#ffffff">**BuiltByBit**</ColoredLink></Highlight>、<Highlight color="#7C3AED"><ColoredLink to="https://afdian.com/a/xiaomomi" color="#ffffff">**爱发电**</ColoredLink></Highlight>
+
+## 安装
+
+把 `.jar` 放进 `plugins/`，启动服务器。首次启动会生成：
+
+<PluginFileTree
+  title="CraftEngine"
+  initialTreeData={[
+    { id: "generated", name: "generated", hoverText: "生成好的 resource_pack.zip 生成在这里", children: [] },
+    { id: "libs", name: "libs", hoverText: "运行时依赖，按需加载，不用管", children: [] },
+    { id: "resources", name: "resources", hoverText: "★ 你的所有创作放在这里。每个子文件夹是一个包。", children: [] },
+    { id: "translations", name: "translations", hoverText: "命令反馈与警告的多语言文本", children: [] },
+    { id: "commands.yml", name: "commands.yml", isLeaf: true, hoverText: "命令的启用、权限、别名" },
+    { id: "config.yml", name: "config.yml", isLeaf: true, hoverText: "主配置：托管方式、性能、功能开关" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+进游戏打 `/ce`，弹出物品浏览器说明安装成功。
+
+> ⚠️ 没弹出来？看控制台有没有报错。最常见的原因：JDK 版本不够、用了非 Paper 分支（Spigot 不行）、Minecraft 版本太老。
+
+## 资源包托管
+
+CraftEngine 把你 `resources/` 下的内容生成成一个资源包，通过 HTTP 发给玩家。
+
+**现在先试试能不能用**：进游戏打 `/ce reload all`。如果资源包下载成功、没有紫黑贴图——说明托管已经生效。这是因为默认配置就是 `self` 模式，服务器自带 HTTP 分发功能，不需要额外设置。
+
+如果下载失败，看下一节。
+
+### 默认：自托管
+
+```yaml
+# config.yml 默认配置，不需要改
+resource-pack:
+  delivery:
+    hosting:
+      - type: "self"
+        ip: "auto"
+        port: "auto"
+```
+
+`type: "self"` = 服务器自己开一个 HTTP 服务。`ip: "auto"` 和 `port: "auto"` = 自动检测地址和端口。大多数情况直接就能用。
+
+### 换托管方式
+
+默认 self 不行的话，试试这些：
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard url="set_up_host/lobfile" title="📤 Lobfile" subtitle="免费文件托管，零配置"/>
+<UrlCard url="set_up_host/s3" title="☁️ S3 / 对象存储" subtitle="Cloudflare R2、腾讯云 COS 等"/>
+<UrlCard url="set_up_host/self" title="🖥️ 自托管" subtitle="服务器自己发，免费"/>
+<UrlCard url="set_up_host/external" title="🔗 外部托管" subtitle="指向你已有的托管"/>
+<UrlCard url="set_up_host/openlist" title="📋 OpenList" subtitle="OpenList 实例分发"/>
+<UrlCard url="set_up_host/onedrive" title="📁 OneDrive" subtitle="OneDrive 分发"/>
+<UrlCard url="set_up_host/gitlab" title="🦊 Gitlab" subtitle="GitLab 仓库分发"/>
+<UrlCard url="set_up_host/dropbox" title="📦 Dropbox" subtitle="Dropbox 分发"/>
+<UrlCard title="🚫 None" subtitle="只生成 zip，不上传"/>
+
+</div>
+
+### 快速选型
+
+| 你在干嘛 | 推荐 |
+|:---|:---|
+| 一个人开发测试 | Lobfile 或自托管 |
+| 公开服务器 | S3（Cloudflare R2 免费） |
+| 在 Velocity / BungeeCord 上分发资源包 | None |
+
+> ⚠️ 改完 `config.yml` 的托管配置后，跑 `/ce reload all`。单跑 `config` 不会重建资源包。
+
+> ⚠️ 需要 API 密钥的托管（如 S3），用**环境变量**传密钥，不要把密钥直接写在 `config.yml` 里。**不要**把含密钥的配置文件发给你不信任的人。
+
+### 预期表现
+
+托管生效后，`/ce reload all` 应该：包重新生成 → 在线玩家弹出下载提示 → 接受后正常应用 → 没有紫黑方块。新玩家进服自动弹提示。

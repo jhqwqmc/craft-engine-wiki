@@ -1,0 +1,107 @@
+---
+title: 📦 Installation & Hosting
+id: installation
+---
+
+import Highlight from '@site/src/components/Highlight';
+import ColoredLink from '@site/src/components/ColoredLink';
+import UrlCard from '@site/src/components/UrlCard';
+import PluginFileTree from '@site/src/components/PluginFileTree';
+
+Get the plugin running so the resource pack can reach your players.
+
+## Requirements
+
+CraftEngine runs on Paper-based servers. Verified and supported:
+
+**Paper forks** — Paper, Purpur, Pufferfish, Leaf, Leaves, UniverseSpigot
+
+**Folia forks** — Folia, Canvas, Luminol
+
+:::info
+- **Java:** JDK 21 or later
+- **Minecraft:** 1.20 or later
+:::
+
+## Get the plugin
+
+- **Community Edition** — <Highlight color="#00AF5C"><ColoredLink to="https://modrinth.com/plugin/craftengine" color="#ffffff">**Modrinth**</ColoredLink></Highlight>
+- **Premium Edition** — <Highlight color="#06B6D4"><ColoredLink to="https://voxel.shop/product/7624/craftengine" color="#ffffff">**VoxelShop**</ColoredLink></Highlight>, <Highlight color="#2563EB"><ColoredLink to="https://builtbybit.com/resources/craftengine.82674/" color="#ffffff">**BuiltByBit**</ColoredLink></Highlight>
+
+## Install
+
+Drop the `.jar` into `plugins/` and start the server. First boot generates:
+
+<PluginFileTree
+  title="CraftEngine"
+  initialTreeData={[
+    { id: "generated", name: "generated", hoverText: "The compiled resource_pack.zip lands here", children: [] },
+    { id: "libs", name: "libs", hoverText: "Runtime dependencies, loaded on demand", children: [] },
+    { id: "resources", name: "resources", hoverText: "★ Your packs live here. Each subfolder is a pack.", children: [] },
+    { id: "translations", name: "translations", hoverText: "Multi-language messages for commands and warnings", children: [] },
+    { id: "commands.yml", name: "commands.yml", isLeaf: true, hoverText: "Command state, permissions, and aliases" },
+    { id: "config.yml", name: "config.yml", isLeaf: true, hoverText: "Main config: hosting, performance, feature toggles" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+Run `/ce` in-game. The item browser opens — you're good.
+
+> ⚠️ Nothing happened? Check the console. Common causes: wrong JDK version, not a Paper fork (Spigot won't work), Minecraft version too old.
+
+## Resource pack hosting
+
+CraftEngine compiles your `resources/` into a resource pack and serves it over HTTP to players.
+
+**Try it now:** run `/ce reload all` in-game. If the pack downloads successfully with no purple-black textures, hosting is working. The default config uses `self` mode — the server includes a built-in HTTP server, no extra setup needed.
+
+If the download fails, keep reading.
+
+### Default: self hosting
+
+```yaml
+# config.yml — the default. You don't need to change anything.
+resource-pack:
+  delivery:
+    hosting:
+      - type: "self"
+        ip: "auto"
+        port: "auto"
+```
+
+`type: "self"` starts a built-in HTTP server on your Minecraft server. `ip: "auto"` and `port: "auto"` detect your address automatically. Works out of the box in most cases.
+
+### Alternative hosts
+
+If self hosting doesn't work, try one of these:
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard url="set_up_host/lobfile" title="📤 Lobfile" subtitle="Free file host, zero setup"/>
+<UrlCard url="set_up_host/s3" title="☁️ S3 / Object Storage" subtitle="Cloudflare R2, Tencent COS, and more"/>
+<UrlCard url="set_up_host/self" title="🖥️ Self Hosting" subtitle="Free, served from your own server"/>
+<UrlCard url="set_up_host/external" title="🔗 External" subtitle="Point at an existing pack URL"/>
+<UrlCard url="set_up_host/openlist" title="📋 OpenList" subtitle="Serve via an OpenList instance"/>
+<UrlCard url="set_up_host/onedrive" title="📁 OneDrive" subtitle="Host on OneDrive"/>
+<UrlCard url="set_up_host/gitlab" title="🦊 Gitlab" subtitle="Use a GitLab repository"/>
+<UrlCard url="set_up_host/dropbox" title="📦 Dropbox" subtitle="Host on Dropbox"/>
+<UrlCard title="🚫 None" subtitle="Generate the zip, don't upload"/>
+
+</div>
+
+### Quick pick
+
+| Your situation | Recommendation |
+|:---|:---|
+| Solo development / testing | Lobfile or self hosting |
+| Public server | S3 (Cloudflare R2 is free) |
+| Distributing via Velocity / BungeeCord | None |
+
+> ⚠️ After changing the host config, run `/ce reload all`. `config` alone won't rebuild the pack.
+
+> ⚠️ For hosts requiring API keys, pass secrets via **environment variables** — don't write them directly in `config.yml`. Never share a config file containing real keys.
+
+### Expected behavior
+
+With hosting working, `/ce reload all` should: regenerate the pack → online players get a download prompt → they accept and it applies → no purple-black textures. Players receive the pack prompt automatically when they join.

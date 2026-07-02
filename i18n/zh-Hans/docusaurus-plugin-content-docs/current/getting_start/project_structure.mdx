@@ -1,0 +1,219 @@
+---
+title: 🗂️ 认识项目
+id: project_structure
+---
+
+import PluginFileTree from '@site/src/components/PluginFileTree';
+import Details from '@site/src/components/Details';
+
+上一章装好了插件。现在看看 CraftEngine 的文件长什么样，然后用一条命令建好我们教程的工作区。
+
+## 插件目录长什么样
+
+打开 `plugins/CraftEngine/`，你会看到这些：
+
+<PluginFileTree
+  title="CraftEngine"
+  initialTreeData={[
+    { id: "generated", name: "generated", hoverText: "生成的 resource_pack.zip 放在这里", children: [] },
+    { id: "libs", name: "libs", hoverText: "运行时依赖，按需加载，不用管", children: [] },
+    { id: "resources", name: "resources", hoverText: "★ 你的所有创作放在这里。每个子文件夹是一个包", children: [] },
+    { id: "translations", name: "translations", hoverText: "命令反馈与警告的多语言文本", children: [] },
+    { id: "commands.yml", name: "commands.yml", isLeaf: true, hoverText: "命令的启用、权限、别名。改后需重启" },
+    { id: "config.yml", name: "config.yml", isLeaf: true, hoverText: "主配置：托管方式、性能、功能开关" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+目前重点是 `resources/` 文件夹——你做的所有物品、方块、家具都放在这里面。
+
+## 什么是"包"
+
+在 CraftEngine 里，你的创作按"包"来组织。一个包就是 `resources/` 下的一个文件夹，里面包含：
+
+- **`configuration/`** —— 放 `.yml` 配置文件。物品怎么定义、方块什么属性，全写在这里
+- **`resourcepack/`** —— 放模型文件（`.json`）、贴图文件（`.png`）、音效文件（`.ogg`）。结构和原版 Minecraft 资源包一样
+- **`pack.yml`** —— 包的"身份证"：叫什么、谁做的、用哪个命名空间
+
+> 💡 文件夹名以 `.` 开头（比如 `.hidden_pack`）会被 CraftEngine 忽略，不会被加载。
+
+你可以有多个包（比如 `tutorial`、`my_weapons`、`furniture_pack`），CraftEngine 会把它们的内容合并起来。本教程从头到尾只做一个包，跟着做就行。
+
+## 什么是命名空间
+
+命名空间就是你的"姓"。Minecraft 里每个东西——物品、方块、贴图——都有一个 ID，比如 `minecraft:diamond`。`minecraft` 是原版的命名空间，`diamond` 是东西的名字。
+
+你做的东西需要自己的命名空间，这样就不会和原版物品重名。本教程用 `tutorial` 作为命名空间，所以你的物品 ID 会是 `tutorial:xxx` 这样的格式。
+
+命名空间只能用小写字母、数字、`-`、`_`、`.`、`/`。**不能有大写字母、不能有空格**。
+
+💡 **快问快答：哪些 ID 是合法的？**
+
+1. `MyFirst:golden_sword`
+2. `minecraft:steel furnace`
+3. `abcd-efgh:1122.3344`
+4. `craftengine:happy$crafting`
+5. `test:tutorial_book`
+
+<Details summary="点击看答案">
+
+1. ❌ 大写字母不合法
+2. ❌ 空格不合法
+3. ✅ 数字、连字符、点号都合法
+4. ❌ `$` 不合法
+5. ✅ 小写字母和下划线都合法
+
+</Details>
+
+## 第 1 步：用命令创建包
+
+不用手动建文件夹。CraftEngine 提供了一条命令帮你一键生成完整的包结构。
+
+在游戏里输入：
+
+```
+/ce resource create tutorial
+```
+
+这条命令做了什么：
+- `tutorial` = 包的名字，也是文件夹的名字。命名空间默认也用这个名字
+- 自动生成 `pack.yml`（写好了命名空间 `tutorial`、作者、版本等信息）
+- 自动创建 `configuration/` 文件夹和 `resourcepack/` 下的全套子目录
+
+成功后会提示创建成功。现在去 `plugins/CraftEngine/resources/tutorial/` 看看——所有子文件夹都自动建好了：
+
+<PluginFileTree
+  title="tutorial"
+  initialTreeData={[
+    {
+      id: "configuration", name: "configuration", hoverText: "放 .yml 配置，空的等你填",
+      children: []
+    },
+    {
+      id: "resourcepack", name: "resourcepack", hoverText: "放模型和贴图，结构和原版资源包一样",
+      children: [
+        {
+          id: "assets", name: "assets",
+          children: [
+            {
+              id: "tutorial", name: "tutorial", hoverText: "你的命名空间文件夹",
+              children: [
+                {
+                  id: "models", name: "models",
+                  children: [
+                    { id: "models-block", name: "block", children: [] },
+                    { id: "models-item", name: "item", children: [] },
+                  ]
+                },
+                { id: "sounds", name: "sounds", children: [] },
+                {
+                  id: "textures", name: "textures",
+                  children: [
+                    { id: "textures-block", name: "block", children: [] },
+                    { id: "textures-font", name: "font", children: [] },
+                    { id: "textures-gui", name: "gui", children: [] },
+                    { id: "textures-item", name: "item", children: [] },
+                  ]
+                },
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    { id: "pack.yml", name: "pack.yml", isLeaf: true, hoverText: "自动生成的元数据：命名空间、作者、版本" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+> ⚠️ 如果提示"pack already exists"（包已存在），说明 `resources/tutorial/` 已经有文件夹了。删掉它再跑命令，或者换个包名。
+
+> 💡 你也可以打开 `pack.yml` 看一眼——里面已经自动填好了命名空间、作者、版本信息。不需要改。
+
+## 第 2 步：创建配置文件
+
+包建好了，现在在 `configuration/` 里创建你的第一个配置文件。下一章做物品就要用到它。
+
+### 用什么编辑器
+
+你需要一个**纯文本编辑器**。推荐 [VS Code](https://code.visualstudio.com/)（免费，有语法高亮，不容易写错）。
+
+### 方式一：文件管理器
+
+打开 `configuration` 文件夹，**右键 → 新建 → 文本文档**，把文件名改成 `items.yml`。
+
+> ⚠️ **文件名必须是 `items.yml`，不是 `items.yml.txt`。** Windows 默认隐藏文件后缀——你可能以为改成了 `.yml`，实际是 `.yml.txt`。检查方法：文件管理器顶部点「查看」→ 勾选「文件扩展名」，确认后缀确实是 `.yml`。
+
+### 方式二：命令行
+
+```bash
+# 先进到 configuration 目录
+cd plugins/CraftEngine/resources/tutorial/configuration
+
+# Linux / Mac
+touch items.yml
+
+# Windows PowerShell
+ni items.yml
+```
+
+建好之后，用记事本或者命令行编辑器（`nano items.yml`）打开，就可以往里写配置了。
+
+## 第 3 步：理解配置怎么加载
+
+所有 `.yml` 和 `.json` 文件放在 `configuration/` 下就会被加载。你可以把配置写在**一个文件**里，也可以**拆成多个文件**——CraftEngine 会把它们全读进去合并。
+
+比如你可以按类型分：
+
+<PluginFileTree
+  title="configuration"
+  initialTreeData={[
+    { id: "items.yml", name: "items.yml", isLeaf: true, hoverText: "所有物品" },
+    { id: "blocks.yml", name: "blocks.yml", isLeaf: true, hoverText: "所有方块" },
+    { id: "furniture.yml", name: "furniture.yml", isLeaf: true, hoverText: "所有家具" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+也可以按功能分：
+
+<PluginFileTree
+  title="configuration"
+  initialTreeData={[
+    { id: "weapons.yml", name: "weapons.yml", isLeaf: true, hoverText: "武器类物品" },
+    { id: "materials.yml", name: "materials.yml", isLeaf: true, hoverText: "材料类物品" },
+    { id: "decorations.yml", name: "decorations.yml", isLeaf: true, hoverText: "装饰方块" },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+怎么分都行。本教程为简单起见，全写在 `items.yml` 里。后面做方块和家具时再建新文件。
+
+> 💡 `configuration/` 下也可以建子文件夹来分类管理。比如 `configuration/weapons/`、`configuration/blocks/`——CraftEngine 会递归扫描所有子目录，里面的 `.yml` 和 `.json` 全都会被加载。
+
+## 改完配置后怎么生效
+
+每次改完配置文件（`.yml` / `.json`），需要告诉 CraftEngine 重新加载。记住这张表：
+
+| 你改了什么 | 跑哪个命令 |
+|:---|:---|
+| 改了 `.yml` 配置（加物品、改名字、改属性） | `/ce reload config` |
+| 改了合成配方 | `/ce reload recipe` |
+| 改了贴图文件（`.png`）或模型文件（`.json`） | `/ce reload all` |
+| 不确定该用哪个 | `/ce reload all`（最保险） |
+
+> ⚠️ **这是整个教程最重要的提醒**：改了贴图只跑 `/ce reload config` 是没用的——贴图变更必须重建资源包，也就是 `all`。"明明改了贴图为什么游戏里没变化"——99% 是因为跑成了 `config`。
+
+不带参数直接 `/ce reload` 等于 `/ce reload config`。
+
+## 用 AI 辅助写配置
+
+CraftEngine 提供了 VS Code 的 AI Skill，可以帮你自动补全、校验配置、提示字段含义。安装后，在 VS Code 里编辑 `.yml` 文件时 AI 会实时辅助你。
+
+> 📦 Skill 下载链接：暂无
+
+准备好了——下一章做你第一个物品。

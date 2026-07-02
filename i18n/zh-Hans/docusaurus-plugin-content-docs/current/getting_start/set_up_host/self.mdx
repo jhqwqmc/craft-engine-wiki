@@ -6,9 +6,9 @@ id: self
 import AnnotatedYaml from '@site/src/components/AnnotatedYaml';
 import Highlight from '@site/src/components/Highlight';
 
-<Highlight color="#1877F2">**基础方案**</Highlight>
+自托管在 Minecraft 服务器内启动轻量 HTTP 服务器直接分发资源包。免费、无需外部服务，适合小服和开发环境。带宽不足时不推荐大量玩家使用。
 
-优点？它完全免费 —— 只需要你现有的服务器即可使用。非常适合用于测试和开发环境。但请注意，除非你拥有极高的上行带宽，否则不要在生产环境中使用这种方式。资源包的下载会占用服务器的上行带宽，可能会导致其他玩家卡顿或掉线。
+## 配置
 
 <AnnotatedYaml>
 {`
@@ -17,43 +17,66 @@ resource-pack:
       hosting:
         - type: "self"
 -       ip: "localhost"
-+       ip: "你服务器的IP" # 例如 111.222.333.444
++       ip: "服务器IP" # 例如 111.222.333.444，或 "auto"
           port: 8163
           protocol: "http"
-          # 拒绝非 Minecraft 客户端请求
+          # 拒绝非 Minecraft 客户端请求（检查 User-Agent 头）
           deny_non_minecraft_request: true
-          # 生成一次性限时的下载链接
+          # 生成一次性限时下载链接
           one_time_token: true
-          # 改进 deny_non_minecraft_request 和 one_time_token 的验证，如果你的服务器未完全启用正版验证请勿启用
+          # 增强 token 和 Minecraft 客户端验证
+          # 离线模式服务器切勿启用
           strict_validation: false
           rate_limiting:
-            # 每秒最大带宽限制，防止资源包下载时影响服务器其他玩家的稳定性
-            max_bandwidth_per_second: 5_000_000 # 5MB/s
-            # 每个玩家保障的最低下载速度，确保并发下载时仍能保持可接受的下载性能
-            min_download_speed_per_player: 50_000 # 50KB/s
-            # 防止单个 IP 在短时间内发送过多资源包下载请求
-            qps_per_ip: 5/60 # 每 60 秒 5 次请求
+            max_bandwidth_per_second: 5_000_000   # 总上传上限 5 MB/s
+            min_download_speed_per_player: 50_000  # 每玩家保障 50 KB/s
+            qps_per_ip: 5/60                       # 每 IP 每 60 秒 5 次请求
 `}
 </AnnotatedYaml>
 
-:::info
+## 字段参考
 
-`deny_non_minecraft_request` 设置会阻止所有非标准 Minecraft 客户端发起的请求。 \
-至于 `one_time_token`，它会为每位玩家生成一个一次性且限时的下载链接。
+| 字段 | 默认 | 说明 |
+|:---|:---|:---|
+| `ip` | `"auto"` | HTTP 服务器绑定 IP。`"auto"` 通过 Cloudflare trace 自动检测公网 IP。设为 `"127.0.0.1"` 或 `"0.0.0.0"` 仅本地绑定。 |
+| `port` | `"auto"` | HTTP 服务器监听端口。`"auto"` 共享 Minecraft 服务器端口（注入其 Netty 管线）。设具体数字（如 `8163`）使用独立端口。 |
+| `url` | 自动生成 | 设后覆盖自动生成的下载链接，见下方说明。须以 `http://` 或 `https://` 开头，末尾 `/` 自动补。 |
+| `protocol` | `"http"` | 自动生成 URL 的协议。设 `url` 后忽略。 |
+| `deny_non_minecraft_request` | `true` | 拒绝 `User-Agent` 不以 `Minecraft Java/` 开头的请求。 |
+| `one_time_token` | `true` | 为每位玩家生成一次性 `?token=`，有效期 1 分钟。 |
+| `strict_validation` | `false` | 将 token 绑定到玩家 UUID（通过 `X-Minecraft-UUID` 头验证）。离线模式服务器切勿启用。 |
+| `rate_limiting.*` | — | 基于 IP 的限流。 |
 
-你可以通过设置完整的 URL 来避免在资源包链接中使用 IPv4 地址。
-```yaml
-- type: "self"
-  ip: "111.222.333.444"
-  port: 8163
-  url: "https://mydomain.com:8163/"
-  # ...更多选项
+## 内外地址不一致时
+
+默认情况下，发给玩家的下载链接由 `ip`、`port`、`protocol` 自动拼接：
+
+```
+http://111.222.333.444:8163/download
 ```
 
-:::
+当内部绑定地址与玩家应使用的地址不同时——反向代理、CDN、VPS 内外 IP 端口不一致——设 `url` 覆盖：
+
+```yaml
+url: "https://对外实际地址/"
+```
+
+生成 `https://对外实际地址/download`（可选附带 `?token=...`）。两种常见场景：
+
+**反向代理** —— nginx、Caddy、HAProxy 前置处理 TLS，转发到内部 HTTP 服务器。
+
+**VPS NAT / 端口映射** —— 云服务器内外 IP 和端口不一致。
+
+```yaml
+- type: "self"
+  ip: "127.0.0.1"
+  port: 8163
+  url: "https://对外实际地址/"
+  deny_non_minecraft_request: false
+  strict_validation: false
+```
 
 :::caution
-
-如果你没有 SSL 证书，请不要使用 `https`。
-
+没有有效 SSL 证书时，切勿在 `url` 或 `protocol` 中使用 `https`，否则玩家将无法下载资源包。
 :::
+

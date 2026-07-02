@@ -1,0 +1,104 @@
+---
+title: 🪑 Your First Furniture
+id: first_furniture
+---
+
+Blocks snap to the grid. Furniture doesn't. Furniture uses CraftEngine's display-entity-based decoration system with pixel-precise placement. Chairs, lamps, statues — anything that shouldn't be grid-locked.
+
+## Step 1: give the furniture an item model
+
+Furniture doesn't specify textures directly — it displays an item's model. So start by making an item with a model.
+
+Make a chair model in BlockBench, export the JSON to `models/item/chair.json`, and place your textures under `textures/item/`. Then:
+
+```yaml
+items:
+  tutorial:my_chair:
+    material: paper
+    model: tutorial:item/chair
+```
+
+`/ce item get tutorial:my_chair` — a chair model appears in your inventory. It's just a normal item for now. Right-click does nothing.
+
+## Step 2: make the item place furniture
+
+Add a `behavior` to the same item:
+
+```yaml
+items:
+  tutorial:my_chair:
+    material: paper
+    model: tutorial:item/chair
+    behavior:
+      type: furniture_item
+      rules:
+        ground:
+          rotation: four
+          alignment: center
+      furniture:
+        variants:
+          ground:
+            elements:
+              - item: tutorial:my_chair
+            hitboxes:
+              - position: 0,0,0
+                type: shulker
+```
+
+`/ce reload all`, `/ce item get tutorial:my_chair`, right-click the ground — a chair appears.
+
+- `model: tutorial:item/chair` — the inventory icon, your chair model from step 1
+- `type: furniture_item` — right-click places furniture
+- `rules.ground` — placement rules. `rotation: four` snaps to 4 directions, `alignment: center` aligns to block center. Both optional
+- `variants` — **required.** At least one variant. The default `furniture_item` picks the variant based on the face you click: top face → `ground`
+- `elements.item: tutorial:my_chair` — display this item's model as the furniture's appearance. This is why step 1 was necessary
+- `hitboxes` — collision boxes. `type: shulker` = shulker collision, entities and players can't pass through
+
+## Step 3: settings — sounds & hit durability
+
+```yaml
+      furniture:
+        settings:
+          hit_times: 3
+          sounds:
+            break: minecraft:block.bamboo_wood.break
+            place: minecraft:block.bamboo_wood.place
+            hit: minecraft:block.bamboo_wood.hit
+        variants:
+          ...
+```
+
+- `hit_times: 3` — hits needed to break. Default 0 = instant
+- `sounds` — break, place, hit
+
+## Step 4: make it sittable
+
+```yaml
+            hitboxes:
+              - position: 0,0,0
+                type: shulker
+                blocks_building: true
+                interactive: true
+                interaction_entity: true
+                seats:
+                  - 0,0.5,0
+```
+
+- `blocks_building: true` — prevent block placement inside the hitbox
+- `interactive: true` — whether the interaction entity is interactive
+- `interaction_entity: true` — spawn extra interaction entities for better click accuracy
+- `seats: [0,0.5,0]` — seat coordinates
+
+## Step 5: make it drop when broken
+
+```yaml
+      furniture:
+        settings: ...
+        variants: ...
+        loot:
+          template: default:loot_table/furniture
+          arguments:
+            item: tutorial:my_chair
+```
+
+Use this template for now. The furniture drops the `tutorial:my_chair` item when broken.

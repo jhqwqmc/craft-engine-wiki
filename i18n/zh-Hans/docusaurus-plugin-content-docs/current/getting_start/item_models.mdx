@@ -1,0 +1,236 @@
+---
+title: 🎨 物品模型
+id: item_models
+---
+
+import PluginFileTree from '@site/src/components/PluginFileTree';
+
+上一章的物品能用了，但长得和原版一样。这章给它换外观。
+
+CraftEngine 提供了三种配置模型的方式，从简到繁：
+
+| 方式 | 写法 | 什么时候用 |
+|:---|:---|:---|
+| 简化纹理 | `texture: 路径` | 只有一张贴图，让插件自动搞定一切 |
+| 自动生成 | `model:` + `generation:` | 需要指定 parent、多个贴图层、display 变换 |
+| 外部模型 | `model: 路径` | 已有现成的模型 JSON 文件 |
+
+> ⚠️ 这章要改资源包文件（贴图/模型）。**改完跑 `/ce reload all`，不是 `config`。** 只跑 `config` 贴图变更不生效——这是整个教程被问最多的问题。
+
+## 模型和贴图放哪
+
+包的 `resourcepack/` 结构和原版资源包一样：
+
+<PluginFileTree
+  title="resourcepack/assets/tutorial"
+  initialTreeData={[
+    {
+      id: "models", name: "models",
+      children: [
+        { id: "models-item", name: "item", hoverText: "物品模型 .json 放这里", children: [] },
+        { id: "models-block", name: "block", hoverText: "方块模型 .json 放这里", children: [] },
+      ]
+    },
+    {
+      id: "textures", name: "textures",
+      children: [
+        { id: "textures-item", name: "item", hoverText: "物品贴图 .png 放这里", children: [] },
+        { id: "textures-block", name: "block", hoverText: "方块贴图 .png 放这里", children: [] },
+      ]
+    },
+  ]}
+/>
+
+<div style={{ marginBottom: "32px" }}></div>
+
+引用时 `models/` 和 `textures/` 前缀省略：`tutorial:item/toxic_sword` 在模型上下文里解析为 `models/item/toxic_sword.json`，在贴图上下文里解析为 `textures/item/toxic_sword.png`。
+
+> ⚠️ 贴图必须放在 `textures/item/` 或 `textures/block/` 下。Minecraft 的贴图图集只加载这两个目录。放在别处（比如 `textures/custom/`）不会加载，显示为紫黑方格。
+
+> ⚠️ 模型贴图尺寸必须是 2 的幂：16×16、32×32、64×64……不满足的不渲染。
+
+## 准备贴图
+
+[⬇ 下载教程用的剑贴图](/img/toxic_sword.png)，放到：
+
+```
+resourcepack/assets/tutorial/textures/item/toxic_sword.png
+```
+
+## 方式一：`texture` 一行搞定
+
+最简写法。CraftEngine 根据 `material` 自动选择 parent、自动生成模型文件、自动分配 CMD。
+
+```yaml
+items:
+  tutorial:toxic_sword:
+    material: golden_sword
+    data:
+      item_name: "<!i><#3CB371>剧毒之剑"
+    texture: tutorial:item/toxic_sword
+```
+
+`/ce reload all`，`/ce item get tutorial:toxic_sword`。剑有了新贴图。
+
+CraftEngine 根据 `material` 判断物品类型并自动选 parent：`golden_sword` → `handheld`（手持工具），`paper` → `generated`（平面图标），方块物品 → `cube_all`。**你不需要指定 parent、不需要写 model 段、不需要管 CMD。**
+
+`texture:` 是单数，用于只有一个状态的物品（大多数物品）。多状态物品（弓、弩、钓鱼竿）需要用 `textures:`（复数），见方式二的简化写法。
+
+## 方式二：`generation` 精确控制
+
+当 `texture:` 一行不够用时——比如想自己选 parent、加发光层、设置 display 变换——用 `generation` 格式。
+
+### 基本写法
+
+```yaml
+items:
+  tutorial:toxic_sword:
+    material: golden_sword
+    data:
+      item_name: "<!i><#3CB371>剧毒之剑"
+    model:
+      path: tutorial:item/toxic_sword
+      generation:
+        parent: minecraft:item/handheld
+        textures:
+          layer0: tutorial:item/toxic_sword
+```
+
+`generation` 下各字段：
+
+| 字段 | 必需 | 说明 |
+|:---|:---|:---|
+| `parent` | 是 | 继承的父模型。决定了贴图变量名叫什么 |
+| `textures` | 否 | 给父模型里定义的贴图变量赋值 |
+| `display` | 否 | 各场景的旋转/平移/缩放 |
+| `gui_light` | 否 | GUI 光照：`front`（扁平）或 `side`（3D 光照，默认） |
+
+### 常用 parent
+
+| parent | 适合什么 | 效果 |
+|:---|:---|:---|
+| `minecraft:item/handheld` | 剑、镐、斧 | 第三人称斜着拿 |
+| `minecraft:item/generated` | 食物、材料、锭 | 平面 2D |
+| `minecraft:block/cube_all` | 方块 | 六面立方体 |
+
+> ⚠️ **`textures` 下的参数名由 `parent` 决定，不能自己随便写。** `handheld` 和 `generated` 用 `layer0`，`cube_all` 用 `all`。写错名字模型就坏了。选定 parent 后先去 [misode.github.io/assets/model](https://misode.github.io/assets/model/) 搜它的 JSON，看 `textures` 下定义了哪些变量，照着写。
+
+### 加发光层
+
+`layer0` 是底图，`layer1` 是叠加在上面的发光层：
+
+```yaml
+generation:
+  parent: minecraft:item/handheld
+  textures:
+    layer0: tutorial:item/toxic_sword        # 底图
+    layer1: tutorial:item/toxic_sword_glow   # 发光层
+```
+
+### `texture` 和 `generation` 的关系
+
+`texture: tutorial:item/toxic_sword` 等价于：
+
+```yaml
+model:
+  path: tutorial:item/toxic_sword
+  generation:
+    parent: minecraft:item/handheld    # 由 material 自动推断
+    textures:
+      layer0: tutorial:item/toxic_sword
+```
+
+大多数情况下 `texture:` 就够。需要用 `generation` 的场景：想用不同的 parent、有多个贴图层、需要在模型上加 `display` 变换。
+
+### 多状态物品的简化写法
+
+弓、弩、钓鱼竿等物品有多个状态（待机/拉弓/装填），每个状态对应一张贴图。CraftEngine 提供了 `textures:`（复数）简化写法：
+
+```yaml
+# 弓——4 个槽位
+items:
+  tutorial:my_bow:
+    material: bow
+    textures:
+      - tutorial:item/bow              # 待机
+      - tutorial:item/bow_pulling_0    # 刚开始拉弓
+      - tutorial:item/bow_pulling_1    # 拉至中途
+      - tutorial:item/bow_pulling_2    # 完全拉满
+```
+
+> ⚠️ 槽位**顺序固定**，由 `material` 决定。顺序搞错会导致待机时显示拉满的贴图。
+
+常见 material 的槽位数：
+
+| material | 槽位 | 说明 |
+|:---|:---|:---|
+| `bow` | 4 | 待机 + 拉弓 0/1/2 |
+| `crossbow` | 6 | 待机 + 拉弦 0/1/2 + 装箭 + 装烟花 |
+| `fishing_rod` | 2 | 待机 + 已抛竿 |
+| `shield` | 2 | 待机 + 格挡中 |
+| `elytra` | 2 | 完好 + 破损 |
+
+多状态物品通常用 `textures:` 简化写法就够了。如果需要对每个状态用不同的 parent 或 display，才需要完整的 `model:` + `generation:` 写法，见[简化模型参考](../configuration/item/models.mdx#简化模型)。
+
+## 方式三：外部模型文件
+
+从网上下载的、BlockBench 做的、买来的模型包——它们是现成的 `.json` 模型文件，直接用：
+
+```yaml
+items:
+  tutorial:toxic_sword:
+    material: golden_sword
+    data:
+      item_name: "<!i><#3CB371>剧毒之剑"
+    model: tutorial:item/toxic_sword
+```
+
+`model:` 后面直接跟模型路径，CraftEngine 使用已有的 JSON 文件，不做任何生成。贴图路径在模型 JSON 里已经写好了。
+
+多状态物品（弓、盾牌等）需要不同状态用不同模型文件时，用 `models:`（复数），槽位顺序和 `textures:` 一致：
+
+```yaml
+items:
+  tutorial:my_shield:
+    material: shield
+    models:
+      - tutorial:item/shield            # 待机
+      - tutorial:item/shield_blocking   # 格挡中
+```
+
+> 💡 CraftEngine 的 `resourcepack/` 就是一个完整的 Minecraft 资源包。你可以直接用 BlockBench 打开里面的模型 JSON——文件结构和原版一样，BlockBench 能正确解析贴图路径，方便校验贴图是否正常。
+
+> ⚠️ 文件名必须满足[命名空间路径规范](./project_structure#什么是命名空间)，只能用小写字母、数字、`-`、`_`、`.`、`/`。大写和特殊字符会导致加载失败。
+
+### 模型里的贴图路径
+
+打开一个模型 JSON 文件，`textures` 部分类似这样：
+
+```json
+{
+  "textures": {
+    "0": "tutorial:item/toxic_sword",
+    "particle": "tutorial:item/toxic_sword"
+  }
+}
+```
+
+`"tutorial:item/toxic_sword"` 解析到 `assets/tutorial/textures/item/toxic_sword.png`。
+
+常见问题：
+
+| 看到的情况 | 原因 | 怎么修 |
+|:---|:---|:---|
+| 贴图路径有 `C:\Users\...` 这种本地路径 | BlockBench 保存位置错了 | 把 `textures` 里的路径全改成 `命名空间:item/文件名`，PNG 放到 `textures/item/` 下 |
+| 贴图路径写的是 `minecraft:item/xxx` | 用的是原版贴图 | 改用你自己的命名空间，或确保对应贴图文件存在 |
+| 路径对了但还是紫黑 | 贴图文件不在对应位置或拼写有误 | 检查文件名是否全小写、拼写是否正确 |
+
+### 买来的模型包改命名空间
+
+市面上买的资源包通常用作者自己的命名空间（比如 `fantasy_pack`）。想改成你的 `tutorial`：
+
+1. 用 VS Code 打开模型 JSON 文件
+2. Ctrl+H 查找替换，把 `fantasy_pack:` 全部换成 `tutorial:`
+3. 保存
+4. 把贴图文件从 `assets/fantasy_pack/textures/item/` 复制到 `assets/tutorial/textures/item/`
+5. `/ce reload all`

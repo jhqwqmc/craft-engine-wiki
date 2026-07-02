@@ -3,6 +3,43 @@ title: 👋 入门指南
 id: getting_start
 ---
 
-## 好的，让我们开始 CraftEngine 教程！
+本教程带你从零开始，用 CraftEngine 给你的 Minecraft 服务器添加自定义物品、方块、家具和图片。每一章都能在游戏里看到亲手做出来的东西。
 
-友情提示：请阅读本分类（👋 入门指南）中的所有文档，最好按照我们安排的顺序阅读。是的，CraftEngine 的学习曲线比其他插件稍陡，但别担心。我们的文档非常详尽且对初学者友好。
+## 准备
+
+开始前确保你有：
+
+- 一个 Paper 系 Minecraft 服务端（1.20+），已装好 CraftEngine 插件
+- 能编辑 YAML 的文本编辑器
+- （可选）[BlockBench](https://www.blockbench.net/)，做模型用
+
+如果插件还没装，先看[安装与托管](./getting_start/installation)。
+
+## 路线
+
+每一章在前一章基础上做同一个 `tutorial` 包。按顺序读，跟着动手：
+
+1. [安装与托管](./getting_start/installation) —— 装插件，配资源包
+2. [认识项目](./getting_start/project_structure) —— 目录结构、命名空间、reload
+3. [第一个物品](./getting_start/items) —— 从一行 YAML 开始
+4. [物品模型](./getting_start/item_models) —— 给物品换外观
+5. [第一个方块](./getting_start/first_block) —— 能放置的方块
+6. [第一件家具](./getting_start/first_furniture) —— 能坐的椅子
+7. [第一张图片](./getting_start/first_image) —— PNG 变图标
+8. [下一步](./getting_start/next_steps) —— 会了基础，去哪深入
+
+## 关键命令
+
+教程里反复用这两个：
+
+| 情况 | 命令 |
+|:---|:---|
+| 改了 `.yml` 配置（物品、方块等） | `/ce reload config` |
+| 改了合成配方 | `/ce reload recipe` |
+| 改了模型/贴图文件 | `/ce reload all` |
+
+> ⚠️ **最常见的坑**：改了贴图，跑了 `/ce reload config`，发现没变化——因为 `config` 不会重建资源包。贴图变更必须 `all`。
+
+卡住了？多数错误 CraftEngine 都打印在控制台了，先看一眼。
+
+准备好了？开始——[安装与托管](./getting_start/installation)。

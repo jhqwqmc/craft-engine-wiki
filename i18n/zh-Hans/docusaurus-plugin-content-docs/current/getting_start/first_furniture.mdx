@@ -1,0 +1,125 @@
+---
+title: 🪑 第一件家具
+id: first_furniture
+---
+
+方块锁网格，家具不锁。家具是 CraftEngine 基于展示实体的装饰系统，位置精确到像素。
+
+## 第 1 步：给家具准备一个物品模型
+
+家具本身不直接指定贴图——它通过引用一个物品来显示模型。所以先做一个物品。
+
+在 BlockBench 做一个椅子模型，导出 JSON 放到 `models/item/chair.json`，贴图也放好。然后：
+
+```yaml
+items:
+  tutorial:my_chair:
+    material: paper
+    model: tutorial:item/chair
+```
+
+`/ce item get tutorial:my_chair`——背包里出现一把椅子。现在它只是个普通物品，右键什么也不发生。
+
+## 第 2 步：让物品能放置家具
+
+```yaml
+items:
+  tutorial:my_chair:
+    material: paper
+    model: tutorial:item/chair
+    behavior:
+      type: furniture_item
+      rules:
+        ground:
+          rotation: four
+          alignment: center
+      furniture:
+        variants:
+          ground:
+            elements:
+              - item: tutorial:my_chair
+            hitboxes:
+              - position: 0,0,0
+                type: shulker
+```
+
+`/ce reload all`，`/ce item get tutorial:my_chair`，右键地面——出现一把椅子。
+
+- `model: tutorial:item/chair` — 背包里的样子，第 1 步建的椅子模型
+- `type: furniture_item` — 右键放置家具
+- `rules.ground` — 放置规则。`rotation: four` 吸附 4 个方向，`alignment: center` 对齐方块中心。选填
+- `variants` — 家具至少一个变体。默认根据点击面选：顶面 → `ground`
+- `elements.item: tutorial:my_chair` — 把这个物品的模型显示出来
+- `hitboxes` — 判定箱。`type: shulker` = 潜影贝判定，实体和玩家无法穿过
+
+## 第 3 步：给家具属性
+
+在 `variants` 同级别加上 `settings`：
+
+```yaml
+      furniture:
+        settings:
+          hit_times: 3
+          sounds:
+            break: minecraft:block.bamboo_wood.break
+            place: minecraft:block.bamboo_wood.place
+            hit: minecraft:block.bamboo_wood.hit
+        variants:
+          ground:
+            elements:
+              - item: tutorial:my_chair
+            hitboxes:
+              - position: 0,0,0
+                type: shulker
+```
+
+- `hit_times: 3` — 破坏所需击打次数。默认 0 = 秒破
+- `sounds` — 破坏、放置、敲击音效
+
+## 第 4 步：能坐
+
+```yaml
+            hitboxes:
+              - position: 0,0,0
+                type: shulker
+                blocks_building: true
+                interactive: true
+                interaction_entity: true
+                seats:
+                  - 0,0.5,0
+```
+
+- `blocks_building: true` — 阻止在判定箱区域放方块
+- `interactive: true` — 交互实体是否可交互
+- `interaction_entity: true` — 额外生成交互实体
+- `seats` — 座位坐标
+
+## 第 5 步：挖了掉东西
+
+```yaml
+      furniture:
+        settings:
+          hit_times: 3
+          sounds:
+            break: minecraft:block.bamboo_wood.break
+            place: minecraft:block.bamboo_wood.place
+            hit: minecraft:block.bamboo_wood.hit
+        variants:
+          ground:
+            elements:
+              - item: tutorial:my_chair
+            hitboxes:
+              - position: 0,0,0
+                type: shulker
+                blocks_building: true
+                interactive: true
+                interaction_entity: true
+                seats:
+                  - 0,0.5,0
+        loot:
+          template: default:loot_table/furniture
+          arguments:
+            item: tutorial:my_chair
+```
+
+先用这个模板，不用管它从哪来的。破坏后掉落 `tutorial:my_chair` 物品。

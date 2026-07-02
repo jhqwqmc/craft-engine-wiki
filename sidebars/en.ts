@@ -56,16 +56,16 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'doc',
-          id: "getting_start/create_first_item",
-          label: '💎 First Item',
+          id: "getting_start/installation",
+          label: '📦 Installation & Hosting',
         },
         {
           type: 'category',
-          label: '🛜 Set Up Pack Host',
+          label: '🛜 Pack Host Backends',
           collapsed: true,
           link: {
             type: 'doc',
-            id: "getting_start/set_up_host",
+            id: "getting_start/installation",
           },
           items: [
             {
@@ -128,15 +128,39 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: "getting_start/add_custom_model",
-          label: '🌌 Add Custom Model',
+          id: "getting_start/project_structure",
+          label: '🗂️ Project Structure',
         },
         {
           type: 'doc',
-          id: "getting_start/item_model_display",
-          label: '🏹 Item Model Display',
+          id: "getting_start/items",
+          label: '🗡️ Items',
         },
-        
+        {
+          type: 'doc',
+          id: "getting_start/item_models",
+          label: '🎨 Item Models',
+        },
+        {
+          type: 'doc',
+          id: "getting_start/first_block",
+          label: '🧱 First Block',
+        },
+        {
+          type: 'doc',
+          id: "getting_start/first_furniture",
+          label: '🪑 First Furniture',
+        },
+        {
+          type: 'doc',
+          id: "getting_start/first_image",
+          label: '🖼️ Custom Images',
+        },
+        {
+          type: 'doc',
+          id: "getting_start/next_steps",
+          label: '🧭 Next Steps',
+        },
       ]
     },
     {
