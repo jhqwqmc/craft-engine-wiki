@@ -212,6 +212,26 @@ recipes:
     unlock_on_ingredient_obtained: true
 ```
 
+### Unlock on Join
+
+When set to `true`, the recipe is automatically unlocked for the player when they join the server, regardless of whether they have obtained the ingredients.
+
+```yaml
+recipes:
+  default:amethyst_torch:
+    unlock_on_join: true
+```
+
+You can also control this behavior globally in `config.yml`:
+
+```yaml
+recipe:
+  unlock-on-join:
+    all: false   # whether to unlock all recipes on join
+    list:        # additional recipe ids to unlock on join
+      - default:amethyst_torch
+```
+
 ## Recipe Types
 
 :::caution

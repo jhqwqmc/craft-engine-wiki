@@ -629,6 +629,20 @@ silent: false # optional; boolean; default: false
 target: "self" # optional; enum[all, self]/player selector; default: self
 ```
 
+### totem\_animation
+
+Play the totem animation. Similar to `play_totem_animation`, but the `volume` and `pitch` values are not clamped.
+
+```yaml
+type: totem_animation
+item: "default:topaz" # required; string
+sound: minecraft:entity.player.levelup # optional; string
+volume: 1 # optional; number; default: 1
+pitch: 1 # optional; number; default: 1
+silent: false # optional; boolean; default: false
+target: "self" # optional; enum[all, self]/player selector; default: self
+```
+
 ### close\_inventory
 
 Close the current inventory

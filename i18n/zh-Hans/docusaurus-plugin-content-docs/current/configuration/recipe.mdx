@@ -212,6 +212,26 @@ recipes:
     unlock_on_ingredient_obtained: true
 ```
 
+### 进服解锁
+
+设为 `true` 时，玩家进服后会自动解锁该配方，无需先获取原料。
+
+```yaml
+recipes:
+  default:amethyst_torch:
+    unlock_on_join: true
+```
+
+也可以在 `config.yml` 中全局控制此行为：
+
+```yaml
+recipe:
+  unlock-on-join:
+    all: false   # 是否在进服时解锁全部配方
+    list:        # 额外在进服时解锁的配方 id
+      - default:amethyst_torch
+```
+
 ## 配方类型
 
 :::caution
