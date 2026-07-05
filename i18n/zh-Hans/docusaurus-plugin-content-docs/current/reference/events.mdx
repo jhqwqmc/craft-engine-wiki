@@ -631,6 +631,20 @@ silent: false # 可选; 布尔; 默认值: false
 target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
 ```
 
+### 图腾动画
+
+播放图腾动画。与 `play_totem_animation` 类似，但 `volume` 和 `pitch` 不会被截断。
+
+```yaml
+type: totem_animation
+item: "default:topaz" # 必填; 字符串
+sound: minecraft:entity.player.levelup # 可选; 字符串
+volume: 1 # 可选; 数字; 默认值: 1
+pitch: 1 # 可选; 数字; 默认值: 1
+silent: false # 可选; 布尔; 默认值: false
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
 ### 关闭容器
 
 关闭当前打开的容器
