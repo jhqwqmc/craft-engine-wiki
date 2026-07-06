@@ -294,8 +294,9 @@ type: potion_effect
 potion_effect: minecraft:blindness # required; string
 duration: 20  # optional; number; default: 20
 amplifier: 0   # optional; number; default: 0
-ambient: false # optional; boolean; if the particle is spawned by beacon
+ambient: false # optional; boolean; if the effect is given by beacon
 particles: true  # optional; boolean
+show_icon: true  # optional; boolean
 ```
 
 ### remove\_potion\_effect
@@ -625,20 +626,6 @@ item: "default:topaz" # required; string
 sound: minecraft:entity.player.levelup # optional; string
 pitch: 1 # optional; number; default: 1
 volume: 1 # optional; number; default: 1
-silent: false # optional; boolean; default: false
-target: "self" # optional; enum[all, self]/player selector; default: self
-```
-
-### totem\_animation
-
-Play the totem animation. Similar to `play_totem_animation`, but the `volume` and `pitch` values are not clamped.
-
-```yaml
-type: totem_animation
-item: "default:topaz" # required; string
-sound: minecraft:entity.player.levelup # optional; string
-volume: 1 # optional; number; default: 1
-pitch: 1 # optional; number; default: 1
 silent: false # optional; boolean; default: false
 target: "self" # optional; enum[all, self]/player selector; default: self
 ```
