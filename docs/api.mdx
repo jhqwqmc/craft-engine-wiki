@@ -110,19 +110,6 @@ https://github.com/Xiao-MoMi/craft-engine/tree/main/bukkit/src/main/java/net/mom
 
 ## Some Development Conventions
 
-### Naming
-
-1. IDs for new types: Use lowercase letters with underscores (e.g., `my_plugin:test_function`).
-2. Config parameters: If users need to pass values in config files, use hyphens (`-`) for keys (better readability).
-
-Example:
-
-```yaml
-type: my_plugin:test_function
-send-to-all: true
-message: "Test TeST tEST"
-```
-
 ### Block Events
 
 Please avoid directly using events like `CustomBlockBreakEvent`. Instead, you should:
