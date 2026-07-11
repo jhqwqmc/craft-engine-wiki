@@ -21,6 +21,11 @@ items:
       liquid_type:
         - water
         # - lava
+      against_blocks:            # Blocks the furniture CANNOT be placed against (block ID or state)
+        - minecraft:dirt
+      against_block_tags:       # Block tags the furniture CANNOT be placed against
+        - minecraft:dirt          #   (tag without # prefix)
+      blacklist: false           # true = blacklist mode (default), false = whitelist mode
 ```
 
 See [furniture_item](furniture_item.mdx) for `rules`, `furniture`, and other shared fields.
