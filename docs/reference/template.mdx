@@ -178,6 +178,33 @@ item_name: "<!i><white>${arg1:-'${arg2:-\'${arg3:-abc}\'}'}"
 
 :::
 
+### Case Modifiers
+
+Append `^` or `^^` to a placeholder name to transform the resolved value:
+
+| Syntax | Effect |
+|--------|--------|
+| `${arg}` | No transformation. |
+| `${arg^}` | Capitalize each word (first character upper-cased, the rest unchanged). Words separated by `_` or space are joined with spaces. |
+| `${arg^^}` | Convert the whole value to upper case. |
+
+```yaml
+arguments:
+  part: chainmail_helmet
+
+# ${part}   -> chainmail_helmet
+# ${part^}  -> Chainmail Helmet
+# ${part^^} -> CHAINMAIL_HELMET
+```
+
+The modifier is applied after the value is resolved, so it also works on values produced by other argument types or default values.
+
+:::tip
+
+Case modifiers use the JVM default locale. If you need locale-specific conversion, use the `to_upper_case` / `to_lower_case` argument types instead.
+
+:::
+
 ### Additional Argument Types
 
 While most parameters are simple strings or numbers, some scenarios benefit from more user-friendly options. The extended parameter types were created for these cases.
