@@ -13,8 +13,6 @@ Now make something you can place in the world.
 resourcepack/assets/tutorial/textures/block/topaz_block.png
 ```
 
-Square PNG, power-of-two dimensions (16/32/64).
-
 Then write the config — inline, everything in one item entry:
 
 ```yaml
@@ -102,13 +100,9 @@ Common `auto_state` groups:
 
 | group | source blocks | collision shape | use for |
 |:---|:---|:---|:---|
-| `note_block` | all note blocks | full cube (1×1×1) | stone, ore, wood — default pick |
-| `solid` | note blocks + mushroom blocks | full cube | same, larger pool |
-| `mushroom_stem` | mushroom stems | full cube | backup option |
-| `tripwire` | all tripwires | thin | crops, small plants, decorations |
-| `sapling` | all saplings | small | saplings, flowers |
-| `leaves` | all leaves | full cube | leaves (non-waterloggable) |
-| `waterlogged_leaves` | all leaves | full cube | leaves (waterloggable) |
+| `solid` | note blocks + mushroom blocks | full cube | 1x1x1 block |
+| `tripwire` | tripwires | thin | crops, small plants, decorations |
+| `leaves` | leaves | full cube | 1x1x1 transparent block |
 
 > 💡 For most full blocks, `note_block` or `solid` is all you need. The other groups are for specific shapes.
 

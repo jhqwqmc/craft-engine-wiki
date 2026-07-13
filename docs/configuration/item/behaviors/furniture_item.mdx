@@ -17,6 +17,11 @@ items:
           alignment: center             # any / center / half / quarter / corner / center_quarter
       ignore_placer: false              # Ignore placer's collision during placement
       ignore_entities: false            # Ignore entity collisions during placement
+      against_blocks:                   # Blocks the furniture CANNOT be placed against (block ID or state)
+        - minecraft:stone               #   e.g. minecraft:oak_fence[east=true]
+      against_block_tags:              # Block tags the furniture CANNOT be placed against
+        - minecraft:planks              #   (tag without # prefix)
+      blacklist: true                   # true = blacklist mode (default), false = whitelist mode
 ```
 
 The `furniture` field also accepts an inline definition — the furniture is registered under the item's own ID:

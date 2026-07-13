@@ -124,19 +124,6 @@ https://github.com/Xiao-MoMi/craft-engine/tree/main/bukkit/src/main/java/net/mom
 
 ## 一些开发规范
 
-### 命名
-
-1. 新类型的标识符：使用小写字母加下划线（例如，`my_plugin:test_function`）。
-2. 配置参数：如果用户需要在配置文件中传递值，键使用连字符（`-`）以提高可读性。
-
-示例:
-
-```yaml
-type: my_plugin:test_function
-send-to-all: true
-message: "Test TeST tEST"
-```
-
 ### 方块事件
 
 请避免直接使用如 `CustomBlockBreakEvent` 的事件。相反，您应该：

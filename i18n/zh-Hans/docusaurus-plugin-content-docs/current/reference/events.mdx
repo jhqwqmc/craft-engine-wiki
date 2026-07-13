@@ -296,7 +296,8 @@ potion_effect: minecraft:blindness # 必填; 字符串
 duration: 20  # 可选; 数字; 默认值: 20
 amplifier: 0   # 可选; 数字; 默认值: 0
 ambient: false # 可选; 布尔; 是否来自信标
-particles: true  # 可选; 布尔
+particles: true  # 可选; 布尔；是否渲染药水粒子
+show_icon: true  # 可选; 布尔；是否显示效果图标
 ```
 
 ### 移除状态效果
@@ -627,20 +628,6 @@ item: "default:topaz" # 必填; 字符串
 sound: minecraft:entity.player.levelup # 可选; 字符串
 pitch: 1 # 可选; 数字; 默认值: 1
 volume: 1 # 可选; 数字; 默认值: 1
-silent: false # 可选; 布尔; 默认值: false
-target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
-```
-
-### 图腾动画
-
-播放图腾动画。与 `play_totem_animation` 类似，但 `volume` 和 `pitch` 不会被截断。
-
-```yaml
-type: totem_animation
-item: "default:topaz" # 必填; 字符串
-sound: minecraft:entity.player.levelup # 可选; 字符串
-volume: 1 # 可选; 数字; 默认值: 1
-pitch: 1 # 可选; 数字; 默认值: 1
 silent: false # 可选; 布尔; 默认值: false
 target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
 ```
