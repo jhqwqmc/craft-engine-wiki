@@ -53,6 +53,68 @@ furniture:
 
 **元素**是组成家具的各个独立渲染部件。大多数家具一个元素就够了。需要复杂设计时，可以组合多个元素。比如一个全息投影仪可以拆成底座和投影两个元素：底座固定朝向，投影始终面朝玩家。
 
+## 展示实体通用参数
+
+以下参数适用于 `item_display`、`text_display` 和 `block_display` 三种元素类型。
+
+<Details summary="展开参数列表">
+```yaml
+# 平移、位置与缩放
+translation: 0,0.5,0       # 偏移量 (x,y,z)，推荐使用此方式调整位置
+position: 0.5,0,0          # 绝对位置 (x,y,z)
+scale: 1,1,1               # 缩放 (x,y,z)，也支持单个数字如 scale: 1.5
+
+# 旋转（推荐使用 rotation）
+yaw: 0                     # 绕 Y 轴旋转
+pitch: 0                   # 绕 X 轴旋转
+rotation: 45               # 基于 Y 轴旋转
+rotation: 45,45,0          # 欧拉角，见下方旋转工具
+rotation: 0,0,0.707,0.707  # 四元数，见下方旋转工具
+
+# 展示
+billboard: fixed           #      fixed      /  vertical   /  horizontal /         center
+                           # 固定垂直和水平轴 /  固定垂直轴  /  固定水平轴  / 按照中心旋转跟随玩家视角
+glow_color: 255,255,255    # 发光边框颜色 (R,G,B)
+brightness:                # 渲染亮度值
+  block_light: 15
+  sky_light: 15
+view_range: 1.0            # 可视距离系数
+
+# 阴影
+shadow_radius: 0           # 阴影半径
+shadow_strength: 1         # 阴影的不透明度
+```
+
+</Details>
+
+<ExpandableIframeCard
+    url="https://rotation-master.gtemc.cn/zh-Hans/"
+    title="旋转工具"
+    expandedLabel="收起"
+    collapsedLabel="展开"
+/>
+
+:::tip
+建议使用 `translation` 代替 `position`，使用 `rotation` 代替 `yaw`/`pitch`。这样插件可以在不发送位置同步包的情况下更新渲染，保证最佳视觉效果。
+:::
+
+:::warning
+`position` 改的是实体坐标，`translation` 是在坐标不动的前提下偏移实体位置。
+
+如果家具的 `wall` 或 `ceiling` 变体中的元素的 `position` 选项是 `0,0,0` 时，实体可能会出现发黑的问题。可以给 `position` 一个微小偏移，再用反向的 `translation` 拉回原位：
+
+```yaml
+wall:
+  elements:
+    - type: item_display
+      item: default:my_furniture
+      position: 0,0,0.5        # 从墙面推出半格
+      translation: 0,0,-0.5    # 拉回来，确保渲染位置正确
+```
+
+![](/img/dark_furniture.png)
+:::
+
 ### 物品展示实体
 
 https://zh.minecraft.wiki/w/展示实体
@@ -73,52 +135,13 @@ display_transform: none # none  / third_person_left_hand / third_person_right_ha
                         #   第一人称视角左手变换  /   第一人称视角右手变换
                         #         head         /        gui        /     ground     /  fixed  /    on_shelf
                         # 放置在头部物品栏的变换 / 在图形界面中的变换 / 平铺在地面的变换 / 默认变换 / 在展示架中的变换
-billboard: fixed  #      fixed      /  vertical   /  horizontal /         center
-                  # 固定垂直和水平轴 /  固定垂直轴  /  固定水平轴  / 按照中心旋转跟随玩家视角
-position: 0.5,0,0
-translation: 0,0.5,0
-pitch: 0.0
-yaw: 0.0
-scale: 1 # scale: 1,2,1
-glow_color: 255,255,255 # RGB
-shadow_radius: 0
-shadow_strength: 1
-brightness:
-  block_light: 15
-  sky_light: 15
-view_range: 1.0
-# rotation 支持 3 种格式
-rotation: 45  # 绕 Y 轴
-rotation: 45,45,0  # 欧拉角，参见下方旋转工具
-rotation: 0,0,0.7071,0.7071  # 四元数，参见下方旋转工具
-# 从源物品提取颜色。根据元素所用的物品选择下面的任一组件类型即可。
-tint_source: 
-  type: dyed_color # dyed_color / map_color / firework_explosion / potion_contents
 ```
 
-<ExpandableIframeCard
-    url="https://rotation-master.gtemc.cn/zh-Hans/"
-    title="旋转工具"
-    expandedLabel="收起"
-    collapsedLabel="展开"
-/>
+更多参数参见[展示实体通用参数](#展示实体通用参数)。
 
-:::warning
-`position` 改的是实体坐标，`translation` 是在坐标不动的前提下偏移实体位置。
+`display_transform` 决定物品模型的变换方式。大多数情况下保持默认为 `none` 即可。
 
-如果家具的 `wall` 或 `ceiling` 变体中的元素的 `position` 选项是 `0,0,0` 时，实体可能会出现发黑的问题。可以给 `position` 一个微小偏移，再用反向的 `translation` 拉回原位：
-
-```yaml
-wall:
-  elements:
-    - type: item_display
-      item: default:my_furniture
-      position: 0,0,0.5        # 从墙面推出半格
-      translation: 0,0,-0.5    # 拉回来，确保渲染位置正确
-```
-
-![](/img/dark_furniture.png)
-:::
+如需根据源物品染色，使用 `tint_source`（见下方 [着色源](#tint-source着色源)）。
 
 ### 文本展示实体
 
@@ -134,24 +157,6 @@ text: 你好 <papi:player_name>
 **可选参数**
 
 ```yaml
-billboard: fixed  #      fixed      /  vertical   /  horizontal /         center
-                  # 固定垂直和水平轴 /  固定垂直轴  /  固定水平轴  / 按照中心旋转跟随玩家视角
-position: 0.5,0,0
-translation: 0,0.5,0
-pitch: 0.0
-yaw: 0.0
-scale: 1 # scale: 1,2,1
-glow_color: 255,255,255
-shadow_radius: 0
-shadow_strength: 1
-brightness:
-  block_light: 15
-  sky_light: 15
-view_range: 1.0
-# rotation 支持 3 种格式
-rotation: 45  # 绕 Y 轴
-rotation: 45,45,0  # 欧拉角，参见下方旋转工具
-rotation: 0,0,0.7071,0.7071  # 四元数，参见下方旋转工具
 line_width: 200
 background_color: 64,0,0,0 # ARGB
 text_opacity: -1
@@ -161,6 +166,21 @@ use_default_background_color: false
 alignment: center  # center / left  / right
                    #  居中  / 左对齐 / 右对齐
 ```
+
+更多参数参见[展示实体通用参数](#展示实体通用参数)。
+
+### 方块展示实体
+
+基于原版方块展示实体渲染一个原版方块。
+
+**必填参数**
+
+```yaml
+type: block_display
+block: minecraft:stone              # 方块状态字符串，可为方块 ID 或完整状态，如 minecraft:chest[facing=north]
+```
+
+更多参数参见[展示实体通用参数](#展示实体通用参数)。
 
 ### 物品实体
 
