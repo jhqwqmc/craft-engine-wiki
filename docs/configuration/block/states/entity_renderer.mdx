@@ -46,6 +46,7 @@ Type auto-detection
 If `type` is not specified, the plugin infers it from other fields:
 - Contains `text` → `text_display`
 - Contains `item` → `item_display`
+- Contains `block` → `block_display`
 
 So the simplest form can omit `type`:
 
@@ -57,7 +58,7 @@ entity_renderer:
 
 ## Display Parameters
 
-The following parameters apply to `item_display` and `text_display` display entity types.
+The following parameters apply to `item_display`, `text_display`, and `block_display` display entity types.
 
 <Details summary="Expand display parameter list">
 ```yaml
@@ -188,6 +189,37 @@ entity_renderer:
   has_shadow: true
   is_see_through: false
   view_range: 0.8
+```
+
+</Details>
+
+### block_display
+
+Renders a vanilla block using the vanilla block display entity.
+
+**Required:**
+
+```yaml
+type: block_display
+block: minecraft:stone              # Block state string (block ID or full state like minecraft:chest[facing=north])
+```
+
+<Details summary="Full example">
+```yaml
+entity_renderer:
+  type: block_display
+  block: minecraft:amethyst_block
+  translation: 0,0.5,0
+  scale: 0.5,0.5,0.5
+  rotation: 0,45,0
+  billboard: fixed
+  glow_color: 255,200,100
+  brightness:
+    block_light: 15
+    sky_light: 15
+  view_range: 1.0
+  shadow_radius: 0
+  shadow_strength: 1
 ```
 
 </Details>

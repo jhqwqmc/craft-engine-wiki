@@ -46,6 +46,7 @@ entity_renderer:
 如果未指定 `type`，插件会根据其他选项按以下顺序尝试推导类型：
 - 包含 `text` → `text_display`
 - 包含 `item` → `item_display`
+- 包含 `block` → `block_display`
 
 因此最简单的形式可以省略 `type`：
 
@@ -57,7 +58,7 @@ entity_renderer:
 
 ## 展示实体通用参数
 
-以下参数适用于 `item_display` 和 `text_display` 两种渲染元素类型。
+以下参数适用于 `item_display`、`text_display` 和 `block_display` 三种渲染元素类型。
 
 <Details summary="展开参数列表">
 ```yaml
@@ -198,6 +199,37 @@ entity_renderer:
   has_shadow: true
   is_see_through: false
   view_range: 0.8
+```
+
+</Details>
+
+### 方块展示实体
+
+基于原版方块展示实体渲染一个原版方块。
+
+**必填：**
+
+```yaml
+type: block_display
+block: minecraft:stone              # 方块状态字符串，可为方块 ID 或完整状态，如 minecraft:chest[facing=north]
+```
+
+<Details summary="完整示例">
+```yaml
+entity_renderer:
+  type: block_display
+  block: minecraft:amethyst_block
+  translation: 0,0.5,0
+  scale: 0.5,0.5,0.5
+  rotation: 0,45,0
+  billboard: fixed
+  glow_color: 255,200,100
+  brightness:
+    block_light: 15
+    sky_light: 15
+  view_range: 1.0
+  shadow_radius: 0
+  shadow_strength: 1
 ```
 
 </Details>
