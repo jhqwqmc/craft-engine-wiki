@@ -739,6 +739,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: "configuration/worldgen_feature",
+          label: '🌍 世界生成地物',
+        },
+        {
+          type: 'doc',
           id: "configuration/global_variable",
           label: '🔢 全局变量',
         },

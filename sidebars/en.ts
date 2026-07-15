@@ -739,6 +739,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: "configuration/worldgen_feature",
+          label: '🌍 Worldgen Feature',
+        },
+        {
+          type: 'doc',
           id: "configuration/global_variable",
           label: '🔢 Global Variables',
         },
