@@ -44,6 +44,41 @@ items:
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>#minecraft:wooden_tool_materials</p>
 </div>
 
+### 数据组件谓词
+
+谓词允许你为配方原料设置除物品 ID 或标签之外的额外条件，例如特定魔咒或数据组件。
+
+```yaml
+recipes:
+  default:sharpness_upgrade:
+    type: shapeless_transform
+    ingredients:
+      - items: minecraft:diamond_sword
+        source: true
+      - items: minecraft:diamond
+        predicate:
+          - type: enchantment
+            enchantments:
+              minecraft:sharpness: 5
+    result:
+      id: default:legendary_sword
+      count: 1
+```
+
+可用谓词类型：
+
+```yaml
+# 检查魔咒
+- type: enchantment
+  enchantments:
+    minecraft:sharpness: 5
+
+# 精确数据组件匹配（高级）
+- type: exact
+  component: minecraft:custom_name
+  value: ... # NBT 标签值
+```
+
 ### 分组 / 标签栏
 
 ```yaml
@@ -234,7 +269,9 @@ recipes:
         permission: recipe.unlock.bench
 ```
 
-### 自动解锁
+### 配方解锁
+
+#### 自动解锁
 
 如果玩家拥有了该配方的所有原料且满足此配方的条件，则自动为玩家解锁该配方。该选项默认值可在 `config.yml` 里设置。
 
@@ -244,7 +281,7 @@ recipes:
     unlock_on_ingredient_obtained: true
 ```
 
-### 进服解锁
+#### 进服解锁
 
 设为 `true` 时，玩家进服后会自动解锁该配方，无需先获取原料。
 

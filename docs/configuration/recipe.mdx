@@ -44,6 +44,41 @@ items:
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>#minecraft:wooden_tool_materials</p>
 </div>
 
+### Predicate
+
+Predicates allow you to require additional conditions on ingredients beyond just their item ID or tag. This is useful when you want a recipe to only accept items with specific enchantments or data components.
+
+```yaml
+recipes:
+  default:sharpness_upgrade:
+    type: shapeless_transform
+    ingredients:
+      - items: minecraft:diamond_sword
+        source: true
+      - items: minecraft:diamond
+        predicate:
+          - type: enchantment
+            enchantments:
+              minecraft:sharpness: 5
+    result:
+      id: default:legendary_sword
+      count: 1
+```
+
+Available predicate types:
+
+```yaml
+# Check enchantments
+- type: enchantment
+  enchantments:
+    minecraft:sharpness: 5
+
+# Exact data component match (advanced)
+- type: exact
+  component: minecraft:custom_name
+  value: ... # NBT tag value
+```
+
 ### Group / Category
 
 ```yaml
@@ -234,7 +269,9 @@ recipes:
         permission: recipe.unlock.bench
 ```
 
-### Auto Unlock
+### Recipe Unlock
+
+#### Auto Unlock
 
 If the player has all the ingredients for a recipe and meets its conditions, the recipe will be automatically unlocked for the player. The default value of this option can be set in `config.yml`.
 
@@ -244,7 +281,7 @@ recipes:
     unlock_on_ingredient_obtained: true
 ```
 
-### Unlock on Join
+#### Unlock on Join
 
 When set to `true`, the recipe is automatically unlocked for the player when they join the server, regardless of whether they have obtained the ingredients.
 
