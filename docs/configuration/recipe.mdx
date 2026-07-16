@@ -44,6 +44,45 @@ items:
   <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>#minecraft:wooden_tool_materials</p>
 </div>
 
+### Predicate
+
+Predicates allow you to require additional conditions on ingredients beyond just their item ID or tag. This is useful when you want a recipe to only accept items with specific enchantments or data components.
+
+```yaml
+recipes:
+  default:sharpness_upgrade:
+    type: shapeless_transform
+    ingredients:
+      - items: minecraft:diamond_sword
+        source: true
+      - items: minecraft:paper
+        predicate:
+          - type: enchantment
+            enchantments:
+              minecraft:sharpness: 5
+    result:
+      id: default:topaz_sword
+      count: 1
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/recipe_15.png').default} alt="" />
+</div>
+
+Available predicate types:
+
+```yaml
+# Check enchantments
+- type: enchantment
+  enchantments:
+    minecraft:sharpness: 5
+
+# Exact data component match (advanced)
+- type: exact
+  component: minecraft:custom_name
+  value: ... # NBT tag value
+```
+
 ### Group / Category
 
 ```yaml
@@ -151,6 +190,38 @@ result:
 So far, there's only the apply_data type of post-processor. But you can register new ones using the API.
 :::
 
+### Transform Processors
+
+Transform processors are used by transform recipes (`smithing_transform`, `shaped_transform` and `shapeless_transform`) to control how the source item's data is merged into the result.
+
+```yaml
+transform_processors:
+  # Apply data to the combined item
+  - type: apply_data
+    data: 
+      item_name: "new name"
+
+  # Merge the enchantments of the final product and the original item, rather than choosing one of them.
+  - type: merge_enchantments
+
+  # Keep the specific data of the custom_data component (1.20.5+)
+  - type: keep_custom_data
+    paths:
+      - weapon
+      - energy.fly
+
+  # Keep the specified components (1.20.5+)
+  - type: keep_components
+    components:
+      - minecraft:enchantments
+
+  # Keep the specified nbt tags (1.20-1.20.4)
+  - type: keep_tags
+    tags:
+      - display.Name
+      - CustomModelData
+```
+
 ### Visual Result
 
 <Highlight color="#f2184eff">**Premium Exclusive**</Highlight>
@@ -202,7 +273,9 @@ recipes:
         permission: recipe.unlock.bench
 ```
 
-### Auto Unlock
+### Recipe Unlock
+
+#### Auto Unlock
 
 If the player has all the ingredients for a recipe and meets its conditions, the recipe will be automatically unlocked for the player. The default value of this option can be set in `config.yml`.
 
@@ -212,7 +285,7 @@ recipes:
     unlock_on_ingredient_obtained: true
 ```
 
-### Unlock on Join
+#### Unlock on Join
 
 When set to `true`, the recipe is automatically unlocked for the player when they join the server, regardless of whether they have obtained the ingredients.
 
@@ -306,6 +379,33 @@ recipes:
   <img src={require('/img/recipe_13.png').default} alt="" />
 </div>
 
+### Shaped Transform Recipe
+
+```yaml
+default:topaz_crossbow_transform:
+  type: shaped_transform
+  pattern:
+    - 'BBB'
+    - 'B  '
+    - 'A  '
+  ingredients:
+    A:
+      item: minecraft:crossbow
+      source: true  # Mark as the source item
+    B: default:topaz
+  result:
+    id: default:topaz_crossbow
+    count: 1
+  transform_processors:
+    - type: keep_components
+      components:
+        - enchantments
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/shaped_transform.png').default} alt="" />
+</div>
+
 ### Shapeless Crafting Recipe
 
 ```yaml
@@ -354,6 +454,29 @@ recipes:
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/recipe_14.png').default} alt="" />
 </div>
+
+### Shapeless Transform Recipe
+
+Shapeless transform recipe works like the shapeless crafting recipe, but one ingredient must be marked as `source: true`. The source item's data will be merged into the final result, making it ideal for upgrading existing items.
+
+```yaml
+recipes:
+  default:topaz_sword_transform:
+    type: shapeless_transform
+    ingredients:
+      - items: minecraft:diamond_sword
+        source: true  # Mark as the source item
+      - default:topaz
+    # merge the source item's components into the result
+    merge_components: true # default: true
+    result:
+      id: default:topaz_sword
+      count: 1
+    transform_processors:
+      - type: keep_components
+        components:
+          - enchantments
+```
 
 ### Cooking Recipe
 
@@ -426,66 +549,6 @@ default:topaz_bow:
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/recipe_10.png').default} alt="" />
 </div>
-
-### Shaped Transform Recipe
-
-```yaml
-default:topaz_crossbow_transform:
-  type: shaped_transform
-  pattern:
-    - 'BBB'
-    - 'B  '
-    - 'A  '
-  ingredients:
-    A:
-      item: minecraft:crossbow
-      source: true  # Mark as the source item
-    B: default:topaz
-  result:
-    id: default:topaz_crossbow
-    count: 1
-  transform_processors:
-    - type: keep_components
-      components:
-        - enchantments
-```
-
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/shaped_transform.png').default} alt="" />
-</div>
-
-:::tip
-
-Tranform Processors (Applicable to both smithing_transform and shaped_transform)
-
-```yaml
-transform_processors:
-  # Apply data to the combined item
-  - type: apply_data
-    data: 
-      item_name: "new name"
-
-  # Merge the enchantments of the final product and the original item, rather than choosing one of them.
-  - type: merge_enchantments
-
-  # Keep the specific data of the custom_data component (1.20.5+)
-  - type: keep_custom_data
-    paths:
-      - weapon
-      - energy.fly
-
-  # Keep the specified components (1.20.5+)
-  - type: keep_components
-    components:
-      - minecraft:enchantments
-
-  # Keep the specified nbt tags (1.20-1.20.4)
-  - type: keep_tags
-    tags:
-      - display.Name
-      - CustomModelData
-```
-:::
 
 ### Smithing Trim Recipe
 

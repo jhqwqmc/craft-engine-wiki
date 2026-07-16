@@ -1,0 +1,212 @@
+---
+title: 🌍 世界生成地物
+id: worldgen_feature
+---
+
+## 简介
+
+世界生成地物用于在游戏中生成**树木**、**矿石**、**花草**等自然结构。
+
+核心概念有两个：
+
+| 概念 | 控制什么 | 示例 |
+|---|---|---|
+| **已配置地物（Configured Feature）** | 单个地物长什么样。 | 树的形状：树干高度、树叶形态等。 |
+| **已放置地物（Placed Feature）** | 地物在世界中如何出现。 | 生成在哪些生物群系、稀有度、每区块尝试次数。 |
+
+![](/img/datapack_tree.png)
+
+## 使用数据包生成器
+
+要编写 CraftEngine 世界生成配置，你需要使用数据包生成器。直接手写这些配置通常是不现实的，语法出错的概率非常高。第一步就是打开 [misode 生成器](https://misode.github.io/worldgen/placed-feature/)，然后将输出格式更改为 YAML。
+
+![将生成器输出切换为 YAML](/img/worldgen_1.png)
+
+## 理解结构
+
+打开生成器后，第一步就是把它切换到你的服务器所在的 Minecraft 版本。版本不匹配是地物配置无法工作的最常见原因之一。
+
+![](/img/worldgen_2.png)
+
+一个已放置地物有两个根键：
+
+- **`feature`** —— 即已配置地物。它可以是引用其他已配置地物的**字符串**，也可以是直接定义地物的**对象**。
+- **`placement`** —— 即已放置地物部分。它控制地物如何、在哪里生成。
+
+### 字符串与对象的选择
+
+当你想在多个已放置地物中复用同一个已配置地物时，使用**字符串**。例如，你有一棵棕榈树的已配置地物，但想以不同方式把它种在沙滩和丛林中。
+
+```yaml title="placed_feature.yml"
+placed_features:
+  default:palm_tree_beach:
+    feature: default:palm_tree
+    placement:
+      - type: 'minecraft:rarity_filter'
+        chance: 7
+```
+
+当这个已配置地物只会用到一次，或者你不想单独维护一个已配置地物条目时，使用**对象**。
+
+```yaml title="placed_feature.yml"
+placed_features:
+  default:fairy_flower:
+    feature:
+      type: 'minecraft:simple_block'
+      config:
+        to_place:
+          type: 'minecraft:simple_state_provider'
+          state:
+            Name: 'default:fairy_flower'
+    placement:
+      - type: 'minecraft:rarity_filter'
+        chance: 100
+```
+
+你也可以在 `configured_feature` 键下单独定义已配置地物，然后在已放置地物中通过 ID 引用它们。
+
+配置已配置地物本身时，请使用 [misode 的已配置地物生成器](https://misode.github.io/worldgen/configured-feature/)。
+
+---
+
+## 已配置地物
+
+在原本使用原版方块 ID 的位置，均可使用 **CraftEngine 自定义方块 ID**。
+
+### 自定义方块支持
+
+- 方块状态：
+
+  ```yaml
+  Name: 'default:palm_log'
+  Properties:
+    axis: 'y'
+  ```
+
+- 方块谓词：
+
+  ```yaml
+  blocks: 'default:topaz_ore'
+  ```
+
+  或列表：
+
+  ```yaml
+  blocks:
+    - 'default:ore_a'
+    - 'minecraft:stone'
+  ```
+
+### CraftEngine 提供器与地物类型
+
+如果自定义方块在原版提供器下无法正常工作，可尝试 CraftEngine 提供的等价类型：
+
+| 类型 | 用途 |
+|---|---|
+| `craftengine:simple_block` | 替代 `minecraft:simple_block`，支持自定义方块。 |
+| `craftengine:simple_state_provider` | 与 `minecraft:simple_state_provider` 格式相同，但支持自定义方块 ID。 |
+| `craftengine:weighted_state_provider` | 与 `minecraft:weighted_state_provider` 格式相同，但支持自定义方块 ID。 |
+| `craftengine:rotated_block_provider` | 与 `minecraft:rotated_block_provider` 格式相同，但支持自定义方块 ID。 |
+| `craftengine:randomized_int_state_provider` | 与 `minecraft:randomized_int_state_provider` 格式相同，但支持自定义方块 ID。 |
+
+### 示例
+
+```yaml title="configured_feature.yml"
+configured_feature:
+  default:palm_tree:
+    type: 'minecraft:tree'
+    config:
+      trunk_provider:
+        type: 'craftengine:simple_state_provider'
+        state:
+          Name: 'default:palm_log'
+          Properties:
+            axis: 'y'
+```
+
+---
+
+## 已放置地物
+
+以下**顶层字段**用于限制地物的生成位置：
+
+| 字段 | 可填写值 | 作用 |
+|---|---|---|
+| `world` | 精确的世界名称列表 | 仅在指定的世界中生成。 |
+| `dimension` | 维度注册键列表，如 `minecraft:overworld` | 仅在指定的维度中生成。 |
+| `dimension_type` | 维度类型注册键列表，如 `minecraft:overworld`、`minecraft:the_end` | 仅在指定的维度类型中生成。 |
+| `biome` | 生物群系注册键列表，如 `minecraft:beach` | 仅在指定的生物群系中生成。需要在 `placement` 中包含 `minecraft:biome` 放置修饰器。 |
+
+### 示例
+
+```yaml title="placed_feature.yml"
+placed_features:
+  default:palm_tree:
+    biome:
+      - minecraft:beach
+    dimension_type:
+      - minecraft:overworld
+    feature: default:palm_tree
+    placement:
+      - type: 'minecraft:rarity_filter'
+        chance: 7
+      - type: 'minecraft:heightmap'
+        heightmap: WORLD_SURFACE
+      - type: 'minecraft:biome'
+```
+
+---
+
+## 实践指南：矿石生成
+
+本节展示如何从零开始配置一个矿石地物。下面的示例把已配置地物直接写在已放置地物内部，这也是最常用的写法。
+
+### 示例
+
+```yaml title="features.yml"
+placed_features:
+  default:topaz_ore:
+    dimension_type:
+      - 'minecraft:overworld'
+    feature:
+      type: 'minecraft:ore'
+      config:
+        discard_chance_on_air_exposure: 0.0
+        size: 10
+        targets:
+          - state:
+              Name: 'default:topaz_ore'
+            target:
+              predicate_type: 'minecraft:tag_match'
+              tag: 'minecraft:stone_ore_replaceables'
+          - state:
+              Name: 'default:deepslate_topaz_ore'
+            target:
+              predicate_type: 'minecraft:tag_match'
+              tag: 'minecraft:deepslate_ore_replaceables'
+    placement:
+      - type: 'minecraft:count'
+        count: 4
+      - type: 'minecraft:in_square'
+      - type: 'minecraft:height_range'
+        height:
+          type: 'minecraft:uniform'
+          min_inclusive:
+            absolute: -32
+          max_inclusive:
+            absolute: 112
+```
+
+### 如何调整
+
+1. 打开 [misode 已放置地物生成器](https://misode.github.io/worldgen/placed-feature/)，切换到你的服务器 Minecraft 版本。
+2. 在 `feature` 字段中选择 `ore`，填入你想要放置的方块状态。
+3. 在 `placement` 字段中设置：
+   - `count`：每区块尝试次数。
+   - `in_square`：水平散开。
+   - `height_range`：高度范围。
+   - 可选：`biome` 按生物群系限制（需要配合顶层 `biome` 列表使用）。
+4. 将输出切换为 YAML，粘贴到 CraftEngine 配置文件的 `placed_features` 下。
+
+如果你想在多个已放置地物中复用同一种矿石配置，也可以单独写在 `configured_feature` 下，然后用字符串 ID 引用。
+

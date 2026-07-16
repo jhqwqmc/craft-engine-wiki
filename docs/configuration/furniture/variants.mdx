@@ -55,44 +55,38 @@ In this system, an **Element** refers to each individual component that makes up
 However, you can create more complex designs by assembling multiple elements together. \
 For example, a hologram projector can be built from two elements: a Base and the Projection itself. The base can have a fixed orientation, while the projection can be set to always face the player.
 
-### Item Display
+## Display Parameters
 
-https://minecraft.wiki/w/Display
+The following parameters apply to `item_display`, `text_display`, and `block_display` element types.
 
-**Required Arguments**
-
+<Details summary="Expand display parameter list">
 ```yaml
-type: item_display
-item: default:bench
-```
+# Position & transform
+translation: 0,0.5,0       # Offset (x,y,z). Recommended over position
+position: 0.5,0,0          # Absolute position (x,y,z)
+scale: 1,1,1               # Scale (x,y,z). Single number like scale: 1.5 also works
 
-**Optional Arguments**
+# Rotation (choose one, rotation recommended)
+yaw: 0                     # Around Y axis
+pitch: 0                   # Around X axis
+rotation: 45               # Single number → around Y axis
+rotation: 45,45,0          # Euler angles (x,y,z), See the rotation tool below
+rotation: 0,0,0.707,0.707  # Quaternion (x,y,z,w), See the rotation tool below
 
-```yaml
-display_transform: none # none / third_person_left_hand / third_person_right_hand
-                        # first_person_left_hand / first_person_right_hand
-                        # head / gui / ground / fixed
-billboard: fixed  # fixed / vertical / horizontal / center
-position: 0.5,0,0
-translation: 0,0.5,0
-pitch: 0.0
-yaw: 0.0
-scale: 1 # scale: 1,2,1
-glow_color: 255,255,255        # RGB
-shadow_radius: 0
-shadow_strength: 1
-brightness:
+# Display
+billboard: fixed           # fixed / vertical / horizontal / center
+glow_color: 255,255,255    # Glow color (RGB)
+brightness:                # Brightness override
   block_light: 15
   sky_light: 15
-view_range: 1.0
-# rotation support 3 formats
-rotation: 45  # Y axis
-rotation: 45,45,0  # Euler angle, See the rotation tool below
-rotation: 0,0,0.7071,0.7071  # Quaternions, See the rotation tool below
-# Applies a color tint from the source item. Pick one type based on the displayed item.
-tint_source: 
-  type: dyed_color             # dyed_color / map_color / firework_explosion / potion_contents
+view_range: 1.0            # View distance coefficient
+
+# Shadows
+shadow_radius: 0           # Shadow radius
+shadow_strength: 1         # Shadow strength
 ```
+
+</Details>
 
 <ExpandableIframeCard
     url="https://rotation-master.gtemc.cn"
@@ -100,6 +94,10 @@ tint_source:
     expandedLabel="Collapse"
     collapsedLabel="Expand"
 />
+
+:::tip
+Use `translation` instead of `position`, and `rotation` instead of `yaw`/`pitch`. This avoids sending position synchronization packets and ensures the best visual performance.
+:::
 
 :::warning
 `position` moves the display entity to a new coordinate location. `translation` shifts the entity relative to its current position without changing its coordinate.
@@ -118,6 +116,31 @@ wall:
 ![](/img/dark_furniture.png)
 :::
 
+### Item Display
+
+https://minecraft.wiki/w/Display
+
+**Required Arguments**
+
+```yaml
+type: item_display
+item: default:bench
+```
+
+**Optional Arguments**
+
+```yaml
+display_transform: none # none / third_person_left_hand / third_person_right_hand
+                        # first_person_left_hand / first_person_right_hand
+                        # head / gui / ground / fixed
+```
+
+More parameters see [Display Parameters](#display-parameters).
+
+`display_transform` controls the item model's transform mode. In most cases, the default `none` is sufficient; use other modes when you need to simulate how items look in hand, on ground, etc.
+
+To apply a color tint from the source item, use `tint_source` (see the [Tint Source](#tint-source) section below).
+
 ### Text Display
 
 https://minecraft.wiki/w/Display
@@ -132,23 +155,6 @@ text: Hello <papi:player_name>
 **Optional Arguments**
 
 ```yaml
-billboard: fixed  # fixed / vertical / horizontal / center
-position: 0.5,0,0
-translation: 0,0.5,0
-pitch: 0.0
-yaw: 0.0
-scale: 1 # scale: 1,2,1
-glow_color: 255,255,255
-shadow_radius: 0
-shadow_strength: 1
-brightness:
-  block_light: 15
-  sky_light: 15
-view_range: 1.0
-# rotation support 3 formats
-rotation: 45  # Y axis based
-rotation: 45,45,0  # Euler angle
-rotation: 0,0,0.7071,0.7071  # Quaternions  https://quaternions.online/
 line_width: 200
 background_color: 64,0,0,0 # ARGB
 text_opacity: -1
@@ -157,6 +163,21 @@ is_see_through: false
 use_default_background_color: false
 alignment: center  # center / left / right
 ```
+
+More parameters see [Display Parameters](#display-parameters).
+
+### Block Display
+
+Renders a vanilla block using the block display entity.
+
+**Required Arguments**
+
+```yaml
+type: block_display
+block: minecraft:stone              # Block state string (block ID or full state like minecraft:chest[facing=north])
+```
+
+More parameters see [Display Parameters](#display-parameters).
 
 ### Item
 

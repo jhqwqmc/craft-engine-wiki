@@ -19,3 +19,53 @@ furniture:
         open: minecraft:block.iron_trapdoor.open       # 容器打开时播放的音效（可选）
         close: minecraft:block.iron_trapdoor.close     # 容器关闭时播放的音效（可选）
 ```
+
+## 按变体配置交互碰撞箱
+
+你可以通过 `variants.<变体名>.hitboxes` 把交互碰撞箱直接挂在 `simple_storage_furniture` behavior 上。这些碰撞箱属于该 behavior 自己，而不是家具的默认碰撞箱，并且只触发这个 behavior 的储物 GUI。
+
+常见用途：
+
+- 家具默认不设置碰撞箱（`hitboxes: []`），由每个 behavior 自己定义可点击区域。
+- 在同一家具上挂载多个 `simple_storage_furniture` behavior，每个使用不同 `data_key`，实现独立的多个储物槽位。
+
+```yaml
+furniture:
+  default:double_drawer:
+    settings:
+      item: default:double_drawer
+    variants:
+      ground:
+        elements:
+          - item: default:double_drawer
+        hitboxes: []                          # 家具默认没有碰撞箱
+    behavior:                                 # 家具 behavior 列表
+      - type: simple_storage_furniture
+        title: "<dark_gray>Left Drawer"
+        data_key: "left_drawer"
+        rows: 2
+        variants:
+          ground:
+            hitboxes:
+              - type: interaction
+                position: -0.25,0.5,0
+                width: 0.5
+                height: 1
+                interactive: true
+      - type: simple_storage_furniture
+        title: "<dark_gray>Right Drawer"
+        data_key: "right_drawer"
+        rows: 2
+        variants:
+          ground:
+            hitboxes:
+              - type: interaction
+                position: 0.25,0.5,0
+                width: 0.5
+                height: 1
+                interactive: true
+```
+
+| 字段 | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `variants` | map | 否 | — | 变体名映射到 `hitboxes` 列表。这些碰撞箱由本 behavior 创建，被点击时打开本 behavior 的储物 GUI。 |

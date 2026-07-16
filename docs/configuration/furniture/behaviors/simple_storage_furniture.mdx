@@ -19,3 +19,53 @@ furniture:
         open: minecraft:block.iron_trapdoor.open    # sound played when GUI opens (optional)
         close: minecraft:block.iron_trapdoor.close   # sound played when GUI closes (optional)
 ```
+
+## Per-variant interaction hitboxes
+
+You can attach interaction hitboxes directly to a `simple_storage_furniture` behavior through `variants.<variant>.hitboxes`. These hitboxes belong to the behavior itself, not the furniture's default hitboxes, and only trigger this behavior's storage GUI.
+
+This is useful when:
+
+- The furniture should have no default hitboxes (`hitboxes: []`), and each behavior defines its own clickable area.
+- You want multiple `simple_storage_furniture` behaviors on the same piece of furniture, each with a different `data_key`, creating independent storage slots.
+
+```yaml
+furniture:
+  default:double_drawer:
+    settings:
+      item: default:double_drawer
+    variants:
+      ground:
+        elements:
+          - item: default:double_drawer
+        hitboxes: []                          # no default furniture hitboxes
+    behavior:                                 # list of furniture behaviors
+      - type: simple_storage_furniture
+        title: "<dark_gray>Left Drawer"
+        data_key: "left_drawer"
+        rows: 2
+        variants:
+          ground:
+            hitboxes:
+              - type: interaction
+                position: -0.25,0.5,0
+                width: 0.5
+                height: 1
+                interactive: true
+      - type: simple_storage_furniture
+        title: "<dark_gray>Right Drawer"
+        data_key: "right_drawer"
+        rows: 2
+        variants:
+          ground:
+            hitboxes:
+              - type: interaction
+                position: 0.25,0.5,0
+                width: 0.5
+                height: 1
+                interactive: true
+```
+
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `variants` | map | No | — | Variant names mapped to a `hitboxes` list. These hitboxes are created by this behavior and open its storage GUI when clicked. |
