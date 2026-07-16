@@ -151,6 +151,38 @@ result:
 目前为止，只有 apply_data 类型的后处理器。你可以使用 API 注册新的后处理器。
 :::
 
+### 转化处理器
+
+转化处理器用于转换配方（`smithing_transform`、`shaped_transform` 和 `shapeless_transform`），控制源物品的数据如何合并到结果中。
+
+```yaml
+transform_processors:
+  # 将物品数据应用于合并的物品上
+  - type: apply_data
+    data: 
+      item_name: "新名称"
+
+  # 合并结果和原料的魔咒信息，而不是保留其中之一
+  - type: merge_enchantments
+
+  # 保留 custom_data 组件的特定数据（1.20.5+）
+  - type: keep_custom_data
+    paths:
+      - weapon
+      - energy.fly
+
+  # 保留指定组件（1.20.5+）
+  - type: keep_components
+    components:
+      - minecraft:enchantments
+
+  # 保留指定NBT标签（1.20-1.20.4）
+  - type: keep_tags
+    tags:
+      - display.Name
+      - CustomModelData
+```
+
 ### 视觉结果
 
 <Highlight color="#f2184eff">**付费版专属**</Highlight>
@@ -306,6 +338,33 @@ recipes:
   <img src={require('/img/i18n/zh-Hans/recipe_13.png').default} alt="" />
 </div>
 
+### 有序合成转化配方
+
+```yaml
+default:topaz_crossbow_transform:
+  type: shaped_transform
+  pattern:
+    - 'BBB'
+    - 'B  '
+    - 'A  '
+  ingredients:
+    A:
+      item: minecraft:crossbow
+      source: true  # 设置为源物品
+    B: default:topaz
+  result:
+    id: default:topaz_crossbow
+    count: 1
+  transform_processors:
+    - type: keep_components
+      components:
+        - enchantments
+```
+
+<div style={{textAlign: 'center'}}>
+  <img src={require('/img/shaped_transform.png').default} alt="" />
+</div>
+
 ### 无序合成配方
 
 ```yaml
@@ -354,6 +413,29 @@ recipes:
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/i18n/zh-Hans/recipe_14.png').default} alt="" />
 </div>
+
+### 无序合成转化配方
+
+无序合成转化配方与无序合成配方类似，但必须将一个原料标记为 `source: true`。源物品的数据会被合并到最终结果中，适合用于升级已有物品。
+
+```yaml
+recipes:
+  default:topaz_sword_transform:
+    type: shapeless_transform
+    ingredients:
+      - items: minecraft:diamond_sword
+        source: true  # 设置为源物品
+      - default:topaz
+    # 是否将源物品的组件合并到结果中
+    merge_components: true # 默认值：true
+    result:
+      id: default:topaz_sword
+      count: 1
+    transform_processors:
+      - type: keep_components
+        components:
+          - enchantments
+```
 
 ### 烧炼配方
 
@@ -426,66 +508,6 @@ default:topaz_bow:
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/i18n/zh-Hans/recipe_10.png').default} alt="" />
 </div>
-
-### 有序合成转化配方
-
-```yaml
-default:topaz_crossbow_transform:
-  type: shaped_transform
-  pattern:
-    - 'BBB'
-    - 'B  '
-    - 'A  '
-  ingredients:
-    A:
-      item: minecraft:crossbow
-      source: true  # 设置为源物品
-    B: default:topaz
-  result:
-    id: default:topaz_crossbow
-    count: 1
-  transform_processors:
-    - type: keep_components
-      components:
-        - enchantments
-```
-
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/shaped_transform.png').default} alt="" />
-</div>
-
-:::tip
-
-转化处理器（适用于锻造升级配方与有序合成转化配方）
-
-```yaml
-transform_processors
-  # 将物品数据应用于合并的物品上
-  - type: apply_data
-    data: 
-      item_name: "新名称"
-
-  # 合并结果和原料的魔咒信息，而不是保留其中之一
-  - type: merge_enchantments
-
-  # 保留 custom_data 组件的特定数据（1.20.5+）
-  - type: keep_custom_data
-    paths:
-      - weapon
-      - energy.fly
-
-  # 保留指定组件（1.20.5+）
-  - type: keep_components
-    components:
-      - minecraft:enchantments
-
-  # 保留指定NBT标签（1.20-1.20.4）
-  - type: keep_tags
-    tags:
-      - display.Name
-      - CustomModelData
-```
-:::
 
 ### 盔甲纹饰配方
 
