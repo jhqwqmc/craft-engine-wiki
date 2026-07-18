@@ -43,6 +43,15 @@ const config: Config = {
       tagName: 'script',
       attributes: {},
       innerHTML: `
+      if (window.location.hostname === 'ce.gtemc.cn') {
+        window.location.replace('https://ce-pre.gtemc.cn' + window.location.pathname + window.location.search + window.location.hash);
+      }
+    `,
+    },
+    {
+      tagName: 'script',
+      attributes: {},
+      innerHTML: `
       try {
         const themeColor = localStorage.getItem('theme-color');
         if (themeColor) {
