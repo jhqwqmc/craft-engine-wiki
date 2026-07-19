@@ -42,11 +42,83 @@ const config: Config = {
     {
       tagName: 'script',
       attributes: {},
-      innerHTML: `
-      if (window.location.hostname === 'ce.gtemc.cn') {
-        window.location.replace('https://ce-pre.gtemc.cn' + window.location.pathname + window.location.search + window.location.hash);
-      }
-    `,
+      innerHTML: (() => {
+        const t = process.env.DOCUSAURUS_CURRENT_LOCALE === 'zh-Hans'
+            ? {
+              title: '切换到预览站点',
+              message: '检测到您正在访问正式站点，是否跳转到预览站点 ce-pre.gtemc.cn？当前网站内容大幅落后于预览网站，如果你发现缺少内容请浏览预览网站。',
+              confirm: '跳转',
+              cancel: '留在本站',
+              remember: '不再提示',
+            }
+            : {
+              title: 'Switch to preview site',
+              message: 'You are on the production site. Redirect to the preview site ce-pre.gtemc.cn? The content on this site is significantly behind the preview site — if you notice anything missing, please check the preview site.',
+              confirm: 'Redirect',
+              cancel: 'Stay here',
+              remember: "Don't ask again",
+            };
+        return `
+      try {
+        var DISABLE_KEY = 'redirect-popup-disabled';
+        if (localStorage.getItem(DISABLE_KEY) !== 'true') {
+          var texts = ${JSON.stringify(t)};
+          var showModal = function () {
+            var overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;';
+            var modal = document.createElement('div');
+            modal.style.cssText = 'background:#fff;color:#1c1e21;border-radius:8px;padding:24px;max-width:360px;width:90%;box-shadow:0 4px 20px rgba(0,0,0,0.2);';
+            var title = document.createElement('h3');
+            title.style.cssText = 'margin:0 0 12px;font-size:18px;';
+            title.textContent = texts.title;
+            var message = document.createElement('p');
+            message.style.cssText = 'margin:0 0 16px;font-size:14px;line-height:1.5;';
+            message.textContent = texts.message;
+            var label = document.createElement('label');
+            label.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:13px;margin-bottom:16px;cursor:pointer;';
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(texts.remember));
+            var buttonRow = document.createElement('div');
+            buttonRow.style.cssText = 'display:flex;justify-content:flex-end;gap:8px;';
+            var cancelBtn = document.createElement('button');
+            cancelBtn.textContent = texts.cancel;
+            cancelBtn.style.cssText = 'padding:8px 16px;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;cursor:pointer;font-size:14px;';
+            var confirmBtn = document.createElement('button');
+            confirmBtn.textContent = texts.confirm;
+            confirmBtn.style.cssText = 'padding:8px 16px;border:none;border-radius:4px;background:#3578e5;color:#fff;cursor:pointer;font-size:14px;';
+            var persistIfChecked = function () {
+              if (checkbox.checked) {
+                try { localStorage.setItem(DISABLE_KEY, 'true'); } catch (_) {}
+              }
+            };
+            cancelBtn.onclick = function () {
+              persistIfChecked();
+              overlay.remove();
+            };
+            confirmBtn.onclick = function () {
+              persistIfChecked();
+              window.location.replace('https://ce-pre.gtemc.cn' + window.location.pathname + window.location.search + window.location.hash);
+            };
+            buttonRow.appendChild(cancelBtn);
+            buttonRow.appendChild(confirmBtn);
+            modal.appendChild(title);
+            modal.appendChild(message);
+            modal.appendChild(label);
+            modal.appendChild(buttonRow);
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+          };
+          if (document.body) {
+            showModal();
+          } else {
+            document.addEventListener('DOMContentLoaded', showModal);
+          }
+        }
+      } catch (_) {}
+    `;
+      })(),
     },
     {
       tagName: 'script',
