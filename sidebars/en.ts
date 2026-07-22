@@ -899,6 +899,27 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: '🧩 Addons',
+      collapsed: true,
+      link: {
+        type: 'doc',
+        id: "addon",
+      },
+      items: [
+        {
+          type: 'doc',
+          id: "addon/craft_engine_proxy",
+          label: 'CraftEngine Proxy',
+        },
+        {
+          type: 'doc',
+          id: "addon/craft_engine_client_mod",
+          label: 'CraftEngine Client Mod',
+        },
+      ]
+    },
+    {
+      type: 'category',
       label: '⌨️ API',
       collapsed: true,
       link: {

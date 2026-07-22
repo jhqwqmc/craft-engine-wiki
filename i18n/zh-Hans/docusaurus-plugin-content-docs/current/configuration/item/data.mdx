@@ -460,6 +460,30 @@ items:
         "@nested.path": 42
 ```
 
+### written_book_content（成书内容 / 1.20.5+）
+
+设置成书的内容——标题、作者、版本与页面。需要物品材质为 `written_book`（成书）。
+
+```yaml
+items:
+  demo:guide_book:
+    material: written_book
+    data:
+      written_book_content:
+        title: "生存指南"             # 字符串简写形式
+        author: XiaoMoMi
+        generation: 0                 # 0 原著，1 原稿的副本，2 副本的副本，3 破烂不堪
+        resolved: false               # 文本是否已解析
+        pages:
+          - "单行页面"
+          - - "第一行"
+            - "第二行"
+          - raw: "<red>高级页面"
+            filtered: "过滤后的页面"   # 对象形式，可选启用聊天过滤的版本
+```
+
+`title` 同样支持 `raw` / `filtered` 对象形式。文本支持 MiniMessage 格式，`<arg:...>` 占位符会基于构建上下文（如查看物品的玩家）解析。
+
 ## 📦 外部数据
 
 继承其他插件物品的数据。
