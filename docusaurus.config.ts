@@ -14,7 +14,7 @@ const config: Config = {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
     // Use the faster toolchain (Rspack + SWC + Lightning CSS + MDX-rs)
     // provided by the installed @docusaurus/faster package.
-    experimental_faster: true,
+    faster: true,
   },
 
   // Set the production url of your site here
