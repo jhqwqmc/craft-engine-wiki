@@ -113,6 +113,14 @@ anvil_repair_item:
 renameable: false
 ```
 
+### can_place（可放置）
+
+决定该物品材质对应的原版方块能否被放置。当你用方块类材质（如 `note_block`）作为非方块物品的基底时，将其设为 `false` 可防止玩家把它放置成方块。（默认值: false）
+
+```yaml
+can_place: false
+```
+
 ### allowed_projectiles (可装载的弹射物)
 
 决定了什么弹药可以装在弩和弓上

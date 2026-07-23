@@ -899,6 +899,27 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: '🧩 附加组件',
+      collapsed: true,
+      link: {
+        type: 'doc',
+        id: "addon",
+      },
+      items: [
+        {
+          type: 'doc',
+          id: "addon/craft_engine_proxy",
+          label: 'CraftEngine Proxy',
+        },
+        {
+          type: 'doc',
+          id: "addon/craft_engine_client_mod",
+          label: 'CraftEngine Client Mod',
+        },
+      ]
+    },
+    {
+      type: 'category',
       label: '⌨️ 应用程序编程接口',
       collapsed: true,
       link: {

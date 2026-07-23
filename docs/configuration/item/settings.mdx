@@ -106,6 +106,14 @@ Determines if the item can be renamed in anvil. (Default: true)
 renameable: false
 ```
 
+### can_place
+
+Determines whether the vanilla block corresponding to this item's material can be placed. Set it to `false` when you use a block-like material (e.g. `note_block`) as the base for a non-block item, so players can't place it as a block. (Default: false)
+
+```yaml
+can_place: false
+```
+
 ### allowed_projectiles
 
 Determines which item can be loaded into crossbows and bows
