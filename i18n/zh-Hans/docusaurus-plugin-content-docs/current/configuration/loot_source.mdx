@@ -115,15 +115,15 @@ loot_sources:
   minecraft:zombie_loot:
     type: entity_death
     target: "minecraft:zombie"
+    conditions:
+      - type: random
+        value: 0.1
     loot:
       pools:
         - rolls: 1
           entries:
             - type: item
               item: "minecraft:diamond"
-            conditions:
-              - type: random
-                value: 0.1
 ```
 
 ## fishing
@@ -153,15 +153,16 @@ loot_sources:
 loot_sources:
   minecraft:barter_extra:
     type: piglin_barter
+    overwrite: items
+    conditions:
+      - type: random
+        value: 0.05
     loot:
       pools:
         - rolls: 1
           entries:
             - type: item
               item: "minecraft:netherite_scrap"
-            conditions:
-              - type: random
-                value: 0.05
 ```
 
 ## container
@@ -214,15 +215,15 @@ loot_sources:
     type: entity_drop
     target: "minecraft:chicken"
     overwrite: items
+    conditions:
+      - type: random
+        value: 0.01
     loot:
       pools:
         - rolls: 1
           entries:
             - type: item
               item: "minecraft:gold_ingot"
-            conditions:
-              - type: random
-                value: 0.01
 ```
 
 ## harvest

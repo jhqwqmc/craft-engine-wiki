@@ -312,6 +312,19 @@ type: test_flag
 flag: break  # break, place, interact, open_container
 ```
 
+### js
+
+将一个 JavaScript 函数的返回值作为条件（必须返回布尔值）。完整的脚本使用指南见 [<u>📜 脚本</u>](script.mdx)。
+
+```yaml
+type: js
+script: "mypack:combo"      # 必填; 字符串; 脚本 id（<命名空间>:<不含 .js 的相对路径>）
+function: "canUse"         # 可选; 字符串; 默认 main
+# args - 可选; 列表或 map（注入为 args，或按名注入）
+args:
+  min_level: 10
+```
+
 :::info
 更多条件即将到来...
 :::

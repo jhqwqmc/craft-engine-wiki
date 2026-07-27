@@ -1,0 +1,201 @@
+---
+title: 📜 脚本
+id: script
+---
+
+## 简介
+
+CraftEngine 内置 JavaScript 脚本系统。脚本可以被 YAML 引用（作为[函数](events.mdx#js)和[条件](conditions.mdx#js)），也可以订阅 Bukkit 事件、注册周期任务、提供自定义 [PlaceholderAPI 变量](../compatibility/placeholderapi.mdx#cejs)。
+
+脚本系统默认关闭，请在 `config.yml` 中启用：
+
+```yaml
+scripting:
+  js:
+    # 启用 JavaScript 脚本系统，需要重启服务器才能完全生效
+    enable: true
+    # JS 引擎实现：graaljs（约 68MB）或 nashorn（约 2.4MB）
+    engine: nashorn
+    # 严格模式：对常见 JS 错误（未声明变量等）抛出异常
+    strict: true
+    # 仅 GraalJS 适用：Nashorn 兼容模式——bean getter 映射（event.block -> getBlock()）
+    nashorn-compat: false
+```
+
+:::info
+首次启用时会从 Maven Central 下载依赖（GraalJS 约 68MB，Nashorn 约 2.4MB）。下载失败不影响插件其他功能——脚本仅保持不可用状态。
+:::
+
+## 脚本文件
+
+脚本放在 pack 的 `script/` 文件夹中（与 `configuration/`、`resourcepack/` 同级）：
+
+```
+resources/
+└── mypack/
+    ├── pack.yml               # namespace: mypack
+    ├── configuration/
+    ├── resourcepack/
+    └── script/
+        ├── combo.js           # id: mypack:combo
+        └── utils/
+            └── math.js        # id: mypack:utils/math
+```
+
+脚本 id 为 `<pack命名空间>:<不含 .js 的相对路径>`。
+
+脚本随 `/ce reload` 重载。卸载脚本时会自动清理它注册的一切：事件订阅、任务、占位符和卸载回调。
+
+## 在 YAML 中使用脚本
+
+任何接受函数或条件的地方都可以调用脚本。详见 [js 函数](events.mdx#js)和 [js 条件](conditions.mdx#js)。
+
+```yaml
+events:
+  - on: right_click
+    conditions:
+      - type: js
+        script: mypack:combo
+        function: canUse
+    functions:
+      - type: js
+        script: mypack:combo
+        function: onRightClick
+        args:
+          combo: "combo_a"     # 命名 args 会按 key 注入为同名绑定
+          times: 3
+```
+
+脚本函数被调用时，触发上下文中的参数会按键名注入（`player`、`event`、`item`、`block`、`hand` 等），另有 `ctx`（上下文对象）和你自定义的 `args`。
+
+## 注解
+
+注解是写在函数正上方的注释标记。它们通过源码文本扫描注册——**不需要执行顶层代码**。
+
+| 注解 | 用途 |
+|---|---|
+| `//@Subscribe(...)` | 订阅 Bukkit 事件 |
+| `//@Enable` | 全部脚本加载完成后调用 |
+| `//@Disable` | 脚本卸载前调用（reload/关服） |
+| `//@Task(...)` | 声明周期任务 |
+| `//@Placeholder(...)` | 注册 PlaceholderAPI 变量（`%cejs_*%`） |
+| `//@RelationalPlaceholder(...)` | 注册关系占位符（`%rel_cejs_*%`） |
+
+### @Subscribe
+
+```js
+//@Subscribe(org.bukkit.event.block.BlockBreakEvent, priority: HIGH, ignoreCancelled: true)
+function onBreak(event) {
+    // event 为 Bukkit 事件本体（同时也会注入 event 绑定）
+    event.player.sendMessage("!")
+}
+```
+
+- 第一个位置参数是事件类全名（CraftEngine 的 API 事件如 `net.momirealms.craftengine.bukkit.api.event.FurnitureInteractEvent` 同样可用）
+- 选项：`priority`（LOWEST..MONITOR，默认 NORMAL）、`ignoreCancelled`（默认 true）
+
+### @Enable / @Disable
+
+```js
+//@Enable
+function onEnable() {
+    log.info("脚本已加载")
+}
+
+//@Disable
+function onDisable() {
+    log.info("脚本即将卸载")
+}
+```
+
+`//@Enable` 在每次 `/ce reload` 且**全部**脚本加载完毕后触发一次；`//@Disable` 在脚本上下文销毁前触发。
+
+### @Task
+
+```js
+//@Task(period: 200, delay: 60, async: true)
+function heartbeat() {
+    // 每 200 tick 一次，首次在 60 tick 后，异步线程执行
+}
+```
+
+- `period`（必填，tick）、`delay`（tick，默认 0）、`async`（默认 false = 主线程）
+- 声明的任务在 `//@Enable` 之后自动启动，并在脚本卸载时**必定停止**——不会在 reload 后泄漏
+
+临时/动态任务（如玩家交互触发）请使用 `scheduler` 绑定，见下文。
+
+<h3 id="placeholder">@Placeholder / @RelationalPlaceholder</h3>
+
+```js
+//@Placeholder("random_number")
+function randomNumber(player) {
+    return Math.floor(Math.random() * 100)
+}
+
+//@RelationalPlaceholder("relation")
+function relation(one, two, args) {
+    return one.getName() + " -> " + two.getName()
+}
+```
+
+分别注册为 `%cejs_random_number%` 和 `%rel_cejs_relation%`。参数传递与玩家注入详见 [PlaceholderAPI 兼容](../compatibility/placeholderapi.mdx#cejs)。
+
+## 绑定
+
+| 绑定 | 类型 | 说明 |
+|---|---|---|
+| `scheduler` | 对象 | 任务调度（见下文） |
+| `log` | 对象 | `log.info(...)`、`log.warn(...)`、`log.severe(...)` |
+| `ctx` | Context | 触发上下文（yml 调用时） |
+| `__script` | ScriptFile | 脚本自身句柄 |
+
+### scheduler
+
+```js
+scheduler.sync(fn)                         // 立即在主线程执行
+scheduler.async(fn)                        // 立即异步执行
+scheduler.later(fn, delayTicks)            // 一次性延时
+scheduler.timer((task) => { ... }, 0, 20)  // 循环任务，回调注入句柄
+scheduler.asyncLater(fn, delayTicks)
+scheduler.asyncTimer((task) => { ... }, 0, 20)
+```
+
+循环任务的回调第一个参数就是任务句柄，可以随时自停。通过该绑定创建的**所有**任务都会在脚本卸载时自动取消。
+
+注意 yml 注入的 `player` 是 CE 包装类——文本方法接收 Adventure `Component`，字符串需要先用 CraftEngine 的 MiniMessage 解析（见[包装对象](#包装对象)）：
+
+```js
+const AdventureHelper = Java.type("net.momirealms.craftengine.core.util.AdventureHelper")
+const mini = (text) => AdventureHelper.miniMessage().deserialize(text)
+
+function onInteract() {
+    const p = player
+    let ticks = 0
+    scheduler.timer((task) => {
+        ticks++
+        p.sendActionBar(mini(`蓄力中 ${ticks * 5}%`))
+        if (ticks >= 200) task.cancel()   // 10 秒后自动结束
+    }, 0, 1)
+}
+```
+
+## 包装对象
+
+从函数/条件上下文注入的对象（YAML 调用）通常是 **CraftEngine 包装类**，不是 Bukkit 对象。例如注入的 `player` 是 CE 的 `Player`，它没有 Bukkit 的 `sendMessage(String)` 方法。需要底层对象时请先解包：
+
+```js
+player.platformPlayer()     // -> org.bukkit.entity.Player（Bukkit 玩家）
+player.minecraftPlayer()    // -> NMS ServerPlayer
+
+item.platformItem()         // -> org.bukkit.inventory.ItemStack
+item.minecraftItem()        // -> NMS ItemStack
+
+entity.platformEntity()     // -> org.bukkit.entity.Entity
+entity.minecraftEntity()    // -> NMS Entity
+```
+
+:::note
+这些是普通方法而不是 getter——必须带括号调用（`player.platformPlayer()`，不要写成 `player.platformPlayer`）。
+
+其他来源的对象本身就是 Bukkit 原生对象，无需解包：`//@Subscribe` 回调里的 `event.player`，以及占位符函数的 `player`/`one`/`two` 参数。
+:::

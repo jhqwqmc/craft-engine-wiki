@@ -1,0 +1,201 @@
+---
+title: 📜 Scripting
+id: script
+---
+
+## Introduction
+
+CraftEngine ships with a JavaScript scripting system. Scripts can be referenced from YAML (as [functions](events.mdx#js) and [conditions](conditions.mdx#js)), subscribe to Bukkit events, register recurring tasks, and provide custom [PlaceholderAPI placeholders](../compatibility/placeholderapi.mdx#cejs).
+
+The system is disabled by default. Enable it in `config.yml`:
+
+```yaml
+scripting:
+  js:
+    # Enables the JavaScript scripting system. Requires server restart to fully apply.
+    enable: true
+    # JS engine implementation: graaljs (~68MB) or nashorn (~2.4MB)
+    engine: nashorn
+    # Strict mode: throws on common JS mistakes (undeclared variables etc.)
+    strict: true
+    # GraalJS only: Nashorn compatibility mode — bean getter mapping (event.block -> getBlock())
+    nashorn-compat: false
+```
+
+:::info
+Dependencies are downloaded from Maven Central on first enable (~68MB for GraalJS, ~2.4MB for Nashorn). If the download fails, the rest of the plugin is unaffected — scripting simply stays unavailable.
+:::
+
+## Script Files
+
+Scripts live in the `script/` folder of a pack (sibling to `configuration/` and `resourcepack/`):
+
+```
+resources/
+└── mypack/
+    ├── pack.yml               # namespace: mypack
+    ├── configuration/
+    ├── resourcepack/
+    └── script/
+        ├── combo.js           # id: mypack:combo
+        └── utils/
+            └── math.js        # id: mypack:utils/math
+```
+
+The script id is `<pack namespace>:<relative path without .js>`.
+
+Scripts are reloaded with `/ce reload`. Unloading a script automatically cleans up everything it registered: event subscriptions, tasks, placeholders and unload callbacks.
+
+## Using Scripts in YAML
+
+Scripts can be invoked from any place that accepts functions or conditions. See [js function](events.mdx#js) and [js condition](conditions.mdx#js).
+
+```yaml
+events:
+  - on: right_click
+    conditions:
+      - type: js
+        script: mypack:combo
+        function: canUse
+    functions:
+      - type: js
+        script: mypack:combo
+        function: onRightClick
+        args:
+          combo: "combo_a"     # named args are injected as bindings of the same name
+          times: 3
+```
+
+When a script function is invoked, the parameters of the trigger context are injected as bindings by name (`player`, `event`, `item`, `block`, `hand`, ...), plus `ctx` (the context object) and your custom `args`.
+
+## Annotations
+
+Annotations are comment-based markers placed directly above a function. They are scanned from source text — no top-level code execution is required for registration.
+
+| Annotation | Purpose |
+|---|---|
+| `//@Subscribe(...)` | Subscribe to a Bukkit event |
+| `//@Enable` | Called after all scripts finished loading |
+| `//@Disable` | Called before the script is unloaded (reload/shutdown) |
+| `//@Task(...)` | Declare a recurring task |
+| `//@Placeholder(...)` | Register a PlaceholderAPI placeholder (`%cejs_*%`) |
+| `//@RelationalPlaceholder(...)` | Register a relational placeholder (`%rel_cejs_*%`) |
+
+### @Subscribe
+
+```js
+//@Subscribe(org.bukkit.event.block.BlockBreakEvent, priority: HIGH, ignoreCancelled: true)
+function onBreak(event) {
+    // `event` is the raw Bukkit event (also injected as binding)
+    event.player.sendMessage("!")
+}
+```
+
+- The first positional argument is the event class (fully qualified name; CraftEngine API events like `net.momirealms.craftengine.bukkit.api.event.FurnitureInteractEvent` work too)
+- Options: `priority` (LOWEST..MONITOR, default NORMAL), `ignoreCancelled` (default true)
+
+### @Enable / @Disable
+
+```js
+//@Enable
+function onEnable() {
+    log.info("script loaded")
+}
+
+//@Disable
+function onDisable() {
+    log.info("script unloading")
+}
+```
+
+`//@Enable` fires once per `/ce reload` after **all** scripts have finished loading. `//@Disable` fires before the script's context is destroyed.
+
+### @Task
+
+```js
+//@Task(period: 200, delay: 60, async: true)
+function heartbeat() {
+    // runs every 200 ticks, first run after 60 ticks, on the async scheduler
+}
+```
+
+- `period` (required, ticks), `delay` (ticks, default 0), `async` (default false = main thread)
+- Declared tasks start automatically after `//@Enable` and are always stopped when the script unloads — no leaks across reloads
+
+For ad-hoc/dynamic tasks (e.g. started by a player interaction), use the `scheduler` binding instead — see below.
+
+<h3 id="placeholder">@Placeholder / @RelationalPlaceholder</h3>
+
+```js
+//@Placeholder("random_number")
+function randomNumber(player) {
+    return Math.floor(Math.random() * 100)
+}
+
+//@RelationalPlaceholder("relation")
+function relation(one, two, args) {
+    return one.getName() + " -> " + two.getName()
+}
+```
+
+Registered as `%cejs_random_number%` and `%rel_cejs_relation%`. See [PlaceholderAPI compatibility](../compatibility/placeholderapi.mdx#cejs) for details on arguments and player injection.
+
+## Bindings
+
+| Binding | Type | Description |
+|---|---|---|
+| `scheduler` | object | Task scheduling (see below) |
+| `log` | object | `log.info(...)`, `log.warn(...)`, `log.severe(...)` |
+| `ctx` | Context | The trigger context (yml invocations) |
+| `__script` | ScriptFile | The script's own handle |
+
+### scheduler
+
+```js
+scheduler.sync(fn)                         // run on main thread now
+scheduler.async(fn)                        // run async now
+scheduler.later(fn, delayTicks)            // one-shot delayed
+scheduler.timer((task) => { ... }, 0, 20)  // repeating, handle injected
+scheduler.asyncLater(fn, delayTicks)
+scheduler.asyncTimer((task) => { ... }, 0, 20)
+```
+
+Repeating tasks receive their handle as the first callback argument, so they can stop themselves. **All** tasks created through this binding are cancelled automatically when the script unloads.
+
+Note that the yml-injected `player` is a CE wrapper — text methods take Adventure `Component`, so parse strings with CraftEngine's MiniMessage first (see [Wrapped Objects](#wrapped-objects)):
+
+```js
+const AdventureHelper = Java.type("net.momirealms.craftengine.core.util.AdventureHelper")
+const mini = (text) => AdventureHelper.miniMessage().deserialize(text)
+
+function onInteract() {
+    const p = player
+    let ticks = 0
+    scheduler.timer((task) => {
+        ticks++
+        p.sendActionBar(mini(`charging ${ticks * 5}%`))
+        if (ticks >= 200) task.cancel()   // stops after 10s
+    }, 0, 1)
+}
+```
+
+## Wrapped Objects
+
+Objects injected from function/condition contexts (YAML invocations) are usually **CraftEngine wrappers**, not Bukkit objects. For example, the injected `player` is CE's `Player`, which does not have Bukkit's `sendMessage(String)`. Unwrap them when you need the underlying object:
+
+```js
+player.platformPlayer()     // -> org.bukkit.entity.Player (Bukkit)
+player.minecraftPlayer()    // -> NMS ServerPlayer
+
+item.platformItem()         // -> org.bukkit.inventory.ItemStack
+item.minecraftItem()        // -> NMS ItemStack
+
+entity.platformEntity()     // -> org.bukkit.entity.Entity
+entity.minecraftEntity()    // -> NMS Entity
+```
+
+:::note
+These are plain methods, not getters — always call them with parentheses (`player.platformPlayer()`, never `player.platformPlayer`).
+
+Objects from other sources are already native Bukkit objects and need no unwrapping: `event.player` in `//@Subscribe` handlers, and the `player`/`one`/`two` arguments of placeholder functions.
+:::
