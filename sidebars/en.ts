@@ -734,8 +734,8 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: "configuration/vanilla_loot",
-          label: '🗃️ Vanilla Loot',
+          id: "configuration/loot_source",
+          label: '🗃️ Loot Source',
         },
         {
           type: 'doc',

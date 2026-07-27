@@ -122,6 +122,15 @@ children:
           max: "${max_exp}"
 ```
 
+### loot\_table
+
+引用另一张战利品表并内联生成其战利品。当该 id 不存在对应的 CraftEngine 战利品表时，会回退到同名的数据包战利品表，因此可以直接引用原版战利品表。
+
+```yaml
+type: loot_table
+id: "minecraft:chests/simple_dungeon"
+```
+
 ## 🔧 函数
 
 `function` 的作用是在物品类型设定后执行额外操作，例如调整数量。它还可以处理并发操作，如掉落经验值或其他附加内容。

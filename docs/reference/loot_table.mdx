@@ -122,6 +122,15 @@ children:
           max: "${max_exp}"
 ```
 
+### loot\_table
+
+References another loot table and generates its loot inline. When no CraftEngine loot table with that id exists, it falls back to the datapack loot table with the same id, so vanilla tables can be referenced directly.
+
+```yaml
+type: loot_table
+id: "minecraft:chests/simple_dungeon"
+```
+
 ## 🔧 Function
 
 The role of the `function` is to perform additional operations on the item after its type has been set, such as adjusting the quantity. It can also handle concurrent operations like dropping experience or other extras.
