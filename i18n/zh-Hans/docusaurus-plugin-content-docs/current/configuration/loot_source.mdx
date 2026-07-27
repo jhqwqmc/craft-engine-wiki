@@ -1,0 +1,303 @@
+---
+title: 🗃️ 战利品源
+id: loot_source
+---
+
+## 简介
+
+Minecraft 原生的战利品系统虽然功能强大，但存在一个关键限制：它无法集成插件特有的元素，例如占位符检查、权限控制或其他高级功能。此外，配置原版数据包也较为繁琐，尤其是在覆盖默认战利品表时尤为复杂。
+
+**战利品源**将一张 [🎲 战利品表](../reference/loot_table.mdx) 绑定到一个原版战利品事件上——破坏方块、击杀实体、钓鱼、开启宝库等等。当事件触发时，所有类型（及目标）匹配的战利品源都会被评估，并将其战利品应用到事件中。
+
+所有战利品源都声明在 `loot_sources` 节点下。为了获得最佳效果，我们建议先阅读 [🎲 战利品表](../reference/loot_table.mdx)，以全面掌握战利品表的配置方法。
+
+:::tip
+如果你只想在**不影响**原版战利品的情况下**额外添加**一些新的战利品，请不要设置 `overwrite`（默认为 `none`），并使用 `random` 条件来控制掉落概率：
+
+```yaml
+loot_sources:
+  minecraft:zombie_bonus:
+    type: entity_death
+    target: "minecraft:zombie"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:rotten_essence"
+            conditions:
+              - type: random
+                value: 0.1 # 10% 概率在原版战利品之外额外掉落
+```
+:::
+
+## 通用选项
+
+```yaml
+loot_sources:
+  namespace:example:
+    type: block_break         # 战利品源类型
+    target: "minecraft:stone" # 可选；此战利品源作用的对象
+    overwrite: items          # 可选；从原版结果中移除的内容
+    conditions: []            # 可选；附加条件
+    loot: ...                 # 要生成的战利品
+```
+
+- **type** — 战利品源类型，见下文各小节。
+- **target / targets** *（可选）* — 单个 id 或 id 列表。其含义取决于类型：方块 id、实体 id、战利品表 id 或进度 id。如果省略，此战利品源将作用于该类型的**所有**对象。`fishing` 和 `piglin_barter` 不接受 target。
+- **overwrite** *（可选，默认 `none`）* — 从原版结果中移除的内容。可填单个值或列表：
+  - `items` — 移除原版掉落的物品
+  - `experience` — 移除原版掉落的经验
+  - `all` — 以上两者
+  - `none` — 不移除任何内容，你的战利品将追加到原版结果之后
+- **conditions** *（可选）* — 生成战利品前检查的附加条件。参见 [⚖️ 条件](../reference/conditions.mdx)。
+- **loot** — 要生成的战利品：可以是内联战利品表，也可以是另一张战利品表的 id。当该 id 不存在对应的 CraftEngine 战利品表时，会回退到同名的数据包战利品表，因此可以直接引用原版战利品表：
+
+```yaml
+loot: "minecraft:chests/simple_dungeon"
+```
+
+:::warning
+`target` 中**不允许**使用 `minecraft:wheat[age=7]` 这样的方块状态语法。请改用 `match_block_property` 条件——参见[匹配方块状态](#匹配方块状态)。
+:::
+
+## block_break
+
+当方块被破坏时触发——可以是被玩家破坏，也可以是被其他方块（例如活塞）破坏。
+
+- **target**：方块 id
+
+```yaml
+loot_sources:
+  minecraft:stone_loot:
+    type: block_break
+    target: "minecraft:stone"
+    overwrite: items
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:topaz"
+```
+
+### 匹配方块状态
+
+要匹配精确的方块状态，请将 `target` 与 `match_block_property` 条件组合使用：
+
+```yaml
+loot_sources:
+  minecraft:ripe_wheat_loot:
+    type: block_break
+    target: "minecraft:wheat"
+    conditions:
+      - type: match_block_property
+        properties:
+          age: "7"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:fancy_wheat"
+```
+
+这个战利品源会在任何小麦被破坏时触发，但只有在被破坏小麦的 `age` 属性为 `7` 时才会生成战利品。
+
+## entity_death
+
+当实体死亡时触发。
+
+- **target**：实体 id。若要匹配受支持插件（例如 MythicMobs）提供的实体，请在 `config.yml` 的 `loot.entity-sources` 中列出该插件，并使用其提供的 id，例如 `mythicmobs:skeletal_knight`。
+
+```yaml
+loot_sources:
+  minecraft:zombie_loot:
+    type: entity_death
+    target: "minecraft:zombie"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:diamond"
+            conditions:
+              - type: random
+                value: 0.1
+```
+
+## fishing
+
+当钓鱼浮漂钓到物品时触发。此类型没有 target。
+
+```yaml
+loot_sources:
+  minecraft:fishing_bonus:
+    type: fishing
+    overwrite: items # 必须设置，否则玩家会同时获得原版渔获和你的战利品
+    conditions:
+      - type: open_water
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:treasure_crab"
+```
+
+## piglin_barter
+
+当猪灵完成以物易物时触发。此类型没有 target。
+
+```yaml
+loot_sources:
+  minecraft:barter_extra:
+    type: piglin_barter
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:netherite_scrap"
+            conditions:
+              - type: random
+                value: 0.05
+```
+
+## container
+
+当战利品容器生成内容物时触发——箱子、木桶、运输矿车等等。
+
+- **target**：原版战利品表 id，例如 `minecraft:chests/simple_dungeon`
+
+```yaml
+loot_sources:
+  minecraft:dungeon_extra:
+    type: container
+    target: "minecraft:chests/simple_dungeon"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:magic_map"
+```
+
+## archaeology
+
+当玩家开始刷扫可疑的沙子或可疑的沙砾时触发。
+
+- **target**：考古战利品表 id，例如 `minecraft:archaeology/desert_pyramid`
+
+```yaml
+loot_sources:
+  minecraft:desert_pyramid_relic:
+    type: archaeology
+    target: "minecraft:archaeology/desert_pyramid"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:ancient_relic"
+```
+
+## entity_drop
+
+当非玩家实体丢出物品时触发——例如鸡下蛋。
+
+- **target**：实体 id
+
+```yaml
+loot_sources:
+  minecraft:golden_chicken:
+    type: entity_drop
+    target: "minecraft:chicken"
+    overwrite: items
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:gold_ingot"
+            conditions:
+              - type: random
+                value: 0.01
+```
+
+## harvest
+
+当玩家采集有掉落物的方块时触发，例如甜浆果丛。
+
+- **target**：方块 id
+
+```yaml
+loot_sources:
+  minecraft:berry_harvest:
+    type: harvest
+    target: "minecraft:sweet_berry_bush"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:juicy_berry"
+```
+
+## shear_block
+
+当玩家用剪刀修剪方块时触发，例如蜂巢或南瓜。此类型依赖 Paper 的 `PlayerShearBlockEvent`。
+
+- **target**：方块 id
+
+```yaml
+loot_sources:
+  minecraft:shear_pumpkin:
+    type: shear_block
+    target: "minecraft:pumpkin"
+    overwrite: items
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:carved_pumpkin"
+```
+
+## vault
+
+当宝库喷出奖励时触发。
+
+- **target**：宝库战利品表 id，例如 `minecraft:chests/trial_chambers/reward`
+
+```yaml
+loot_sources:
+  minecraft:vault_bonus:
+    type: vault
+    target: "minecraft:chests/trial_chambers/reward"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:chamber_key_fragment"
+```
+
+## advancement
+
+当玩家完成进度时触发。生成的物品会直接放入玩家背包。
+
+- **target**：进度 id
+
+```yaml
+loot_sources:
+  minecraft:adventure_reward:
+    type: advancement
+    target: "minecraft:adventure/root"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:golden_apple"
+```

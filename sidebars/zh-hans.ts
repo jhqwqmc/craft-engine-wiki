@@ -734,8 +734,8 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
-          id: "configuration/vanilla_loot",
-          label: '🗃️ 原版战利品',
+          id: "configuration/loot_source",
+          label: '🗃️ 战利品源',
         },
         {
           type: 'doc',

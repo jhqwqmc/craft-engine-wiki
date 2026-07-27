@@ -1,0 +1,303 @@
+---
+title: 🗃️ Loot Source
+id: loot_source
+---
+
+## Introduction
+
+Minecraft's native loot system is robust but has one key limitation: it cannot integrate plugin-specific elements like placeholder checks, permissions, or other advanced features. Additionally, configuring vanilla data packs is cumbersome, especially when overriding default loot tables.
+
+A **loot source** binds a [🎲 Loot Table](../reference/loot_table.mdx) to a vanilla loot event — breaking a block, killing an entity, fishing, opening a vault, and so on. When the event fires, every loot source of the matching type (and target) is evaluated and its loot is applied to the event.
+
+All loot sources are declared under the `loot_sources` section. For optimal results, we recommend reviewing [🎲 Loot Table](../reference/loot_table.mdx) first to master loot configuration.
+
+:::tip
+If you only want to **add** extra loot without touching the vanilla drops, leave `overwrite` unset (it defaults to `none`) and gate your entries with a `random` condition to control the chance:
+
+```yaml
+loot_sources:
+  minecraft:zombie_bonus:
+    type: entity_death
+    target: "minecraft:zombie"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:rotten_essence"
+            conditions:
+              - type: random
+                value: 0.1 # 10% chance to drop in addition to the vanilla loot
+```
+:::
+
+## Common Options
+
+```yaml
+loot_sources:
+  namespace:example:
+    type: block_break         # The loot source type
+    target: "minecraft:stone" # Optional; what this source applies to
+    overwrite: items          # Optional; what to remove from the vanilla result
+    conditions: []            # Optional; extra conditions
+    loot: ...                 # The loot to generate
+```
+
+- **type** — the loot source type, see the sections below.
+- **target / targets** *(optional)* — a single id or a list of ids. Its meaning depends on the type: block id, entity id, loot table id or advancement id. If omitted, the source applies to **every** object of that type. `fishing` and `piglin_barter` do not accept a target.
+- **overwrite** *(optional, default `none`)* — what to remove from the vanilla result. Accepts a single value or a list:
+  - `items` — remove the vanilla dropped items
+  - `experience` — remove the vanilla dropped experience
+  - `all` — both of the above
+  - `none` — remove nothing; your loot is appended
+- **conditions** *(optional)* — extra conditions checked before the loot is generated. See [⚖️ Conditions](../reference/conditions.mdx).
+- **loot** — the loot to generate: either an inline loot table, or the id of another loot table. When no CraftEngine loot table with that id exists, it falls back to the datapack loot table with the same id, which allows referencing vanilla tables directly:
+
+```yaml
+loot: "minecraft:chests/simple_dungeon"
+```
+
+:::warning
+Block state syntax such as `minecraft:wheat[age=7]` is **not** allowed in `target`. Use a `match_block_property` condition instead — see [Matching block states](#matching-block-states).
+:::
+
+## block_break
+
+Triggered when a block is broken — either by a player, or by another block (for example a piston).
+
+- **target**: block id(s)
+
+```yaml
+loot_sources:
+  minecraft:stone_loot:
+    type: block_break
+    target: "minecraft:stone"
+    overwrite: items
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:topaz"
+```
+
+### Matching block states
+
+To match a precise block state, combine `target` with a `match_block_property` condition:
+
+```yaml
+loot_sources:
+  minecraft:ripe_wheat_loot:
+    type: block_break
+    target: "minecraft:wheat"
+    conditions:
+      - type: match_block_property
+        properties:
+          age: "7"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:fancy_wheat"
+```
+
+This source triggers for any broken wheat, but only generates loot when the broken wheat's `age` property is `7`.
+
+## entity_death
+
+Triggered when an entity dies.
+
+- **target**: entity id(s). To target entities from supported plugins (for example MythicMobs), list the plugin under `loot.entity-sources` in `config.yml` and use the id it provides, e.g. `mythicmobs:skeletal_knight`.
+
+```yaml
+loot_sources:
+  minecraft:zombie_loot:
+    type: entity_death
+    target: "minecraft:zombie"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:diamond"
+            conditions:
+              - type: random
+                value: 0.1
+```
+
+## fishing
+
+Triggered when a fishing bobber catches an item. This type has no target.
+
+```yaml
+loot_sources:
+  minecraft:fishing_bonus:
+    type: fishing
+    overwrite: items # Required, otherwise the player receives both the vanilla catch and your loot
+    conditions:
+      - type: open_water
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:treasure_crab"
+```
+
+## piglin_barter
+
+Triggered when a piglin finishes bartering. This type has no target.
+
+```yaml
+loot_sources:
+  minecraft:barter_extra:
+    type: piglin_barter
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:netherite_scrap"
+            conditions:
+              - type: random
+                value: 0.05
+```
+
+## container
+
+Triggered when a loot container generates its contents — chests, barrels, minecart chests, and so on.
+
+- **target**: the vanilla loot table id, e.g. `minecraft:chests/simple_dungeon`
+
+```yaml
+loot_sources:
+  minecraft:dungeon_extra:
+    type: container
+    target: "minecraft:chests/simple_dungeon"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:magic_map"
+```
+
+## archaeology
+
+Triggered when a player starts brushing a suspicious sand or suspicious gravel block.
+
+- **target**: the archaeology loot table id, e.g. `minecraft:archaeology/desert_pyramid`
+
+```yaml
+loot_sources:
+  minecraft:desert_pyramid_relic:
+    type: archaeology
+    target: "minecraft:archaeology/desert_pyramid"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:ancient_relic"
+```
+
+## entity_drop
+
+Triggered when a non-player entity drops an item — for example a chicken laying an egg.
+
+- **target**: entity id(s)
+
+```yaml
+loot_sources:
+  minecraft:golden_chicken:
+    type: entity_drop
+    target: "minecraft:chicken"
+    overwrite: items
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:gold_ingot"
+            conditions:
+              - type: random
+                value: 0.01
+```
+
+## harvest
+
+Triggered when a player harvests a block with drops, such as a sweet berry bush.
+
+- **target**: block id(s)
+
+```yaml
+loot_sources:
+  minecraft:berry_harvest:
+    type: harvest
+    target: "minecraft:sweet_berry_bush"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:juicy_berry"
+```
+
+## shear_block
+
+Triggered when a player shears a block, such as a beehive or a pumpkin. This type relies on Paper's `PlayerShearBlockEvent`.
+
+- **target**: block id(s)
+
+```yaml
+loot_sources:
+  minecraft:shear_pumpkin:
+    type: shear_block
+    target: "minecraft:pumpkin"
+    overwrite: items
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:carved_pumpkin"
+```
+
+## vault
+
+Triggered when a vault dispenses its reward.
+
+- **target**: the vault loot table id, e.g. `minecraft:chests/trial_chambers/reward`
+
+```yaml
+loot_sources:
+  minecraft:vault_bonus:
+    type: vault
+    target: "minecraft:chests/trial_chambers/reward"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:chamber_key_fragment"
+```
+
+## advancement
+
+Triggered when a player completes an advancement. The generated items are given directly to the player's inventory.
+
+- **target**: advancement id(s)
+
+```yaml
+loot_sources:
+  minecraft:adventure_reward:
+    type: advancement
+    target: "minecraft:adventure/root"
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "minecraft:golden_apple"
+```
