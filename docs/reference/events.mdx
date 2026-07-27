@@ -695,6 +695,23 @@ time: "5s"                  # required; string; supports unit combinations: t(ti
 add: false                  # optional; boolean; default: false
 ```
 
+### js
+
+Invokes a JavaScript function. See [<u>📜 Scripting</u>](script.mdx) for the full scripting guide.
+
+```yaml
+type: js
+script: "mypack:combo"      # required; string; script id (<namespace>:<path without .js>)
+function: "onRightClick"   # required; string; the function to invoke
+# args - optional; list or map
+# List form: injected as the `args` binding
+# args: [ "a", "b" ]
+# Map form: each entry is injected as a binding of the same name
+args:
+  combo: "combo_a"
+  times: 3
+```
+
 :::info
 More functions are coming...
 :::

@@ -313,6 +313,19 @@ type: test_flag
 flag: break  # break, place, interact, open_container
 ```
 
+### js
+
+Evaluates a JavaScript function as the condition (must return a boolean). See [<u>📜 Scripting</u>](script.mdx) for the full scripting guide.
+
+```yaml
+type: js
+script: "mypack:combo"      # required; string; script id (<namespace>:<path without .js>)
+function: "canUse"         # optional; string; default: main
+# args - optional; list or map (injected as `args`, or as named bindings)
+args:
+  min_level: 10
+```
+
 :::info
 More conditions are coming...
 :::

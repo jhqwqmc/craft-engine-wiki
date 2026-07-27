@@ -92,3 +92,41 @@ import Highlight from '@site/src/components/Highlight';
 ![](/img/items_slot_number.png)
 
 :::
+
+<h2 id="cejs">%cejs\_%</h2>
+
+由 JavaScript 脚本通过 `//@Placeholder` 注解注册的变量。完整使用指南见 [<u>📜 脚本</u>](../reference/script.mdx#placeholder)。
+
+```js
+//@Placeholder("random_number")
+function randomNumber(player) {
+    return Math.floor(Math.random() * 100)
+}
+```
+
+### %cejs\_\<id\>%
+
+求值注册在 `<id>` 下的脚本函数。函数接收 **Bukkit `Player`/`OfflinePlayer`** 玩家对象（离线上下文可能为 null），需返回字符串。
+
+### %cejs\_\<id\>\_\<参数\>%
+
+如果 `<id>` 是已注册的前缀，剩余部分会作为 `args` 绑定传给函数。
+
+```js
+// %cejs_top_1_extra%  ->  args = "1_extra"
+//@Placeholder("top")
+function topN(player, args) {
+    return `第 ${args} 名`
+}
+```
+
+## %rel\_cejs\_%
+
+由 `//@RelationalPlaceholder` 注解注册的关系占位符。函数接收两个 Bukkit 玩家对象（`one`、`two`）和原始 `args` 字符串：
+
+```js
+//@RelationalPlaceholder("relation")
+function relation(one, two, args) {
+    return one.getName() + " -> " + two.getName()
+}
+```

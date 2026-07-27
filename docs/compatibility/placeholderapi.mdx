@@ -86,3 +86,41 @@ Items slot number \
 ![](/img/items_slot_number.png)
 
 :::
+
+<h2 id="cejs">%cejs\_%</h2>
+
+Placeholders registered by JavaScript scripts via the `//@Placeholder` annotation. See [<u>📜 Scripting</u>](../reference/script.mdx#placeholder) for the full guide.
+
+```js
+//@Placeholder("random_number")
+function randomNumber(player) {
+    return Math.floor(Math.random() * 100)
+}
+```
+
+### %cejs\_\<id\>%
+
+Evaluates the script function registered under `<id>`. The function receives the player as a **Bukkit `Player`/`OfflinePlayer`** (may be null for offline contexts) and must return a string.
+
+### %cejs\_\<id\>\_\<args\>%
+
+If `<id>` is a registered prefix, the remaining part is passed to the function as the `args` binding.
+
+```js
+// %cejs_top_1_extra%  ->  args = "1_extra"
+//@Placeholder("top")
+function topN(player, args) {
+    return `#${args}`
+}
+```
+
+## %rel\_cejs\_%
+
+Relational placeholders registered via `//@RelationalPlaceholder`. The function receives two Bukkit players (`one`, `two`) and the raw `args` string:
+
+```js
+//@RelationalPlaceholder("relation")
+function relation(one, two, args) {
+    return one.getName() + " -> " + two.getName()
+}
+```

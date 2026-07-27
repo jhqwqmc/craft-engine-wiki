@@ -811,6 +811,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: "reference/script",
+          label: '📜 脚本',
+        },
+        {
+          type: 'doc',
           id: "reference/loot_table",
           label: '🎲 战利品表',
         },
