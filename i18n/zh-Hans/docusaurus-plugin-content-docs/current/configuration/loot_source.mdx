@@ -19,15 +19,15 @@ loot_sources:
   minecraft:zombie_bonus:
     type: entity_death
     target: "minecraft:zombie"
+    conditions:
+      - type: random
+        value: 0.1 # 10% 概率在原版战利品之外额外掉落
     loot:
       pools:
         - rolls: 1
           entries:
             - type: item
               item: "default:rotten_essence"
-            conditions:
-              - type: random
-                value: 0.1 # 10% 概率在原版战利品之外额外掉落
 ```
 :::
 
