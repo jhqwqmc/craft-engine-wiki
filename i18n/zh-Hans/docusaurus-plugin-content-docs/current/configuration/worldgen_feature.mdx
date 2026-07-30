@@ -197,16 +197,3 @@ placed_features:
             absolute: 112
 ```
 
-### 如何调整
-
-1. 打开 [misode 已放置地物生成器](https://misode.github.io/worldgen/placed-feature/)，切换到你的服务器 Minecraft 版本。
-2. 在 `feature` 字段中选择 `ore`，填入你想要放置的方块状态。
-3. 在 `placement` 字段中设置：
-   - `count`：每区块尝试次数。
-   - `in_square`：水平散开。
-   - `height_range`：高度范围。
-   - 可选：`biome` 按生物群系限制（需要配合顶层 `biome` 列表使用）。
-4. 将输出切换为 YAML，粘贴到 CraftEngine 配置文件的 `placed_features` 下。
-
-如果你想在多个已放置地物中复用同一种矿石配置，也可以单独写在 `configured_feature` 下，然后用字符串 ID 引用。
-

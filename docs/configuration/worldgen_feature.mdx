@@ -197,16 +197,3 @@ placed_features:
             absolute: 112
 ```
 
-### How to tune it
-
-1. Open [misode's placed feature generator](https://misode.github.io/worldgen/placed-feature/) and switch to your server's Minecraft version.
-2. In the `feature` field, choose `ore` and fill in the block states you want to place.
-3. In the `placement` field, set:
-   - `count` for attempts per chunk.
-   - `in_square` to scatter horizontally.
-   - `height_range` for the vertical range.
-   - Optionally, `biome` to restrict by biome (requires a top-level `biome` list).
-4. Switch the output to YAML and paste it under `placed_features` in your CraftEngine files.
-
-If you want to reuse the same ore configuration in multiple placed features, you can define it separately under `configured_feature` and reference it with a string ID.
-
