@@ -20,3 +20,4 @@ yarn-debug.log*
 yarn-error.log*
 
 .idea
+src/fonts/seguiemj.woff2.manifest
