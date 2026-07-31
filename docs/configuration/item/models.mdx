@@ -207,28 +207,30 @@ demo:bow:
 
 <Details summary="blueprint (Blockbench)" defaultOpen={false}>
 
+<Highlight color="#FFA500">Experimental</Highlight>
+
 If you'd rather model in Blockbench than write JSON, point `blueprint` at one `.bbmodel` file **per model slot** — CraftEngine converts each file into a vanilla model JSON (textures included) and builds the same model tree it would have built from textures.
 
 ```yaml
 demo:bow:
   material: bow
   blueprint:
-    - models/bow             # Idle — <config dir>/models/bow.bbmodel
-    - models/bow_pulling_0   # Pulling 0
-    - models/bow_pulling_1   # Pulling 1
-    - models/bow_pulling_2   # Pulling 2
+    - bow                   # Idle — <pack>/blueprint/bow.bbmodel
+    - bow_pulling_0         # Pulling 0
+    - bow_pulling_1         # Pulling 1
+    - bow_pulling_2         # Pulling 2
 ```
 
-The `.bbmodel` extension is optional. Generated model paths default to each file's name under `item/`; pass `models` (in the same slot order) to pick the output paths yourself:
+The `.bbmodel` extension is optional, and paths are relative to the `blueprint` folder (sibling of `configuration` and `resourcepack`). Generated model paths default to `item/` plus each file's path relative to the `blueprint` folder; pass `models` (in the same slot order) to pick the output paths yourself:
 
 ```yaml
 demo:bow:
   material: bow
   blueprint:
-    - models/bow
-    - models/bow_pulling_0
-    - models/bow_pulling_1
-    - models/bow_pulling_2
+    - bow
+    - bow_pulling_0
+    - bow_pulling_1
+    - bow_pulling_2
   models:
     - demo:item/bow
     - demo:item/bow_pulling_0
@@ -236,7 +238,7 @@ demo:bow:
     - demo:item/bow_pulling_2
 ```
 
-Single-slot materials (`paper`, `diamond_sword`, …) take just one file: `blueprint: models/rocket`. Embedded textures are exported as PNGs alongside the model; textures referencing existing files keep their original reference. See [Blueprint](models/model.mdx#blueprint-blockbench) for the details.
+Single-slot materials (`paper`, `diamond_sword`, …) take just one file: `blueprint: rocket`. Embedded textures are exported as PNGs alongside the model; textures referencing existing files keep their original reference. See [Blueprint](models/model.mdx#blueprint-blockbench) for the details.
 
 </Details>
 

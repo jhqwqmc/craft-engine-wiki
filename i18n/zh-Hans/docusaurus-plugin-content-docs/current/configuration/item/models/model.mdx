@@ -4,6 +4,7 @@ id: model
 ---
 
 import UrlCard from '@site/src/components/UrlCard';
+import Highlight from '@site/src/components/Highlight';
 
 ## 概述
 
@@ -28,19 +29,19 @@ items:
 | `tints` | list | 否 | — | 指定各个着色索引使用的颜色提供器，数组下标对应着色索引 |
 | `transformation` | object | 否 | — | 物品模型变换（26.1+） |
 
-## Blueprint（Blockbench）
+## Blueprint（Blockbench） <Highlight color="#FFA500">实验性</Highlight>
 
-`blueprint` 指向一个 Blockbench `.bbmodel` 文件（路径相对于配置文件所在目录，后缀可省略）。生成资源包时，CraftEngine 会把它转换成原版模型 JSON——几何、展示变换、GUI 光照等一并保留，省去手动从 Blockbench 导出的麻烦。
+`blueprint` 指向 `blueprint` 文件夹中的一个 Blockbench `.bbmodel` 文件（与 `configuration`、`resourcepack` 同级；路径相对于该文件夹，后缀可省略）。生成资源包时，CraftEngine 会把它转换成原版模型 JSON——几何、展示变换、GUI 光照等一并保留，省去手动从 Blockbench 导出的麻烦。
 
 ```yaml
 items:
   demo:rocket:
     material: paper
     model:
-      blueprint: models/rocket          # <配置目录>/models/rocket.bbmodel
+      blueprint: rocket          # <资源文件夹>/blueprint/rocket.bbmodel
 ```
 
-指定 `path` 可以控制生成的模型 JSON（以及导出的贴图）保存到哪里；不写则按 bbmodel 文件名生成到 `item/` 目录下：
+指定 `path` 可以控制生成的模型 JSON（以及导出的贴图）保存到哪里；不写则按 bbmodel 相对 `blueprint` 文件夹的路径生成到 `item/` 目录下（如 `furniture/rocket.bbmodel` → `demo:item/furniture/rocket`）：
 
 ```yaml
 items:
@@ -48,7 +49,7 @@ items:
     material: paper
     model:
       path: demo:furniture/rocket_v2    # → assets/demo/models/furniture/rocket_v2.json
-      blueprint: models/rocket
+      blueprint: rocket
 ```
 
 **贴图：** bbmodel 中内嵌的贴图（即在 Blockbench 里绘制的）会导出为 PNG，存放在与模型同路径的 textures 目录（`demo:furniture/rocket_v2.png`；多张时为 `_1`、`_2`……）。引用已有文件的贴图则保留其 `命名空间:文件夹/名称` 引用，不做复制。

@@ -4,6 +4,7 @@ id: states
 ---
 
 import Details from '@site/src/components/Details';
+import Highlight from '@site/src/components/Highlight';
 
 ## 简介
 
@@ -210,21 +211,23 @@ transparent: true
 </Details>
 
 <Details summary="⑦ blueprint — Blockbench .bbmodel 源文件">
-用 `blueprint` 指定一个 Blockbench `.bbmodel` 文件（路径相对于配置文件所在目录，后缀可省略）。生成资源包时，CraftEngine 会把它转换成原版模型 JSON，并将内嵌贴图导出为 PNG。
+<Highlight color="#FFA500">实验性</Highlight>
+
+用 `blueprint` 指定 `blueprint` 文件夹中的一个 Blockbench `.bbmodel` 文件（与 `configuration`、`resourcepack` 同级；路径相对于该文件夹，后缀可省略）。生成资源包时，CraftEngine 会把它转换成原版模型 JSON，并将内嵌贴图导出为 PNG。
 
 ```yaml
 state:
   auto_state: note_block
-  blueprint: "models/rocket"                     # <配置目录>/models/rocket.bbmodel
+  blueprint: "rocket"                     # <资源文件夹>/blueprint/rocket.bbmodel
   model: "minecraft:block/custom/rocket"         # 可选：生成模型的输出路径
 ```
 
-不写 `model` 时，输出路径按 bbmodel 文件名生成到 `block/` 目录下。嵌套写法同样支持：
+不写 `model` 时，输出路径按 bbmodel 相对 `blueprint` 文件夹的路径生成到 `block/` 目录下。嵌套写法同样支持：
 
 ```yaml
 model:
   path: "minecraft:block/custom/rocket"
-  blueprint: "models/rocket"
+  blueprint: "rocket"
 ```
 
 内嵌贴图会导出为 PNG 并保存在模型同路径下；引用已有文件的贴图保持原引用。

@@ -207,28 +207,30 @@ demo:bow:
 
 <Details summary="blueprint（Blockbench）" defaultOpen={false}>
 
+<Highlight color="#FFA500">实验性</Highlight>
+
 如果你更习惯在 Blockbench 里建模而不想手写 JSON，可以用 `blueprint` 为**每个模型槽位**指定一个 `.bbmodel` 文件——CraftEngine 会把每个文件转换成原版模型 JSON（含贴图），并组装出与纹理写法完全相同的模型树。
 
 ```yaml
 demo:bow:
   material: bow
   blueprint:
-    - models/bow             # 待机 —— <配置目录>/models/bow.bbmodel
-    - models/bow_pulling_0   # 拉弓 0
-    - models/bow_pulling_1   # 拉弓 1
-    - models/bow_pulling_2   # 拉弓 2
+    - bow                   # 待机 —— <资源文件夹>/blueprint/bow.bbmodel
+    - bow_pulling_0         # 拉弓 0
+    - bow_pulling_1         # 拉弓 1
+    - bow_pulling_2         # 拉弓 2
 ```
 
-`.bbmodel` 后缀可省略。生成模型的路径默认取各文件名并置于 `item/` 下；也可以用 `models` 列表（槽位顺序一致）自行指定输出路径：
+`.bbmodel` 后缀可省略，路径相对于 `blueprint` 文件夹（与 `configuration`、`resourcepack` 同级）。生成模型的路径默认为 `item/` 加上各文件相对 `blueprint` 文件夹的路径；也可以用 `models` 列表（槽位顺序一致）自行指定输出路径：
 
 ```yaml
 demo:bow:
   material: bow
   blueprint:
-    - models/bow
-    - models/bow_pulling_0
-    - models/bow_pulling_1
-    - models/bow_pulling_2
+    - bow
+    - bow_pulling_0
+    - bow_pulling_1
+    - bow_pulling_2
   models:
     - demo:item/bow
     - demo:item/bow_pulling_0
@@ -236,7 +238,7 @@ demo:bow:
     - demo:item/bow_pulling_2
 ```
 
-单槽位材质（`paper`、`diamond_sword`……）只需一个文件：`blueprint: models/rocket`。内嵌贴图会导出为 PNG 并保存在模型同路径下；引用已有文件的贴图保持原引用。详见 [Blueprint](models/model.mdx#blueprintblockbench)。
+单槽位材质（`paper`、`diamond_sword`……）只需一个文件：`blueprint: rocket`。内嵌贴图会导出为 PNG 并保存在模型同路径下；引用已有文件的贴图保持原引用。详见 [Blueprint](models/model.mdx#blueprintblockbench)。
 
 </Details>
 

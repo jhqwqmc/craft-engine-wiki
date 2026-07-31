@@ -4,6 +4,7 @@ id: states
 ---
 
 import Details from '@site/src/components/Details';
+import Highlight from '@site/src/components/Highlight';
 
 ## Introduction
 
@@ -203,21 +204,23 @@ transparent: true
 </Details>
 
 <Details summary="⑦ blueprint — Blockbench .bbmodel source">
-Point `blueprint` at a Blockbench `.bbmodel` file (relative to the config file — the extension is optional), and CraftEngine converts it into a vanilla model JSON at pack generation, exporting embedded textures as PNGs.
+<Highlight color="#FFA500">Experimental</Highlight>
+
+Point `blueprint` at a Blockbench `.bbmodel` file in the `blueprint` folder (sibling of `configuration` and `resourcepack`; paths are relative to it — the extension is optional), and CraftEngine converts it into a vanilla model JSON at pack generation, exporting embedded textures as PNGs.
 
 ```yaml
 state:
   auto_state: note_block
-  blueprint: "models/rocket"                     # <config dir>/models/rocket.bbmodel
+  blueprint: "rocket"                     # <pack>/blueprint/rocket.bbmodel
   model: "minecraft:block/custom/rocket"         # Optional: output path of the generated model
 ```
 
-Leave `model` out, and the output path falls back to the bbmodel's file name under `block/`. The nested map form works the same way:
+Leave `model` out, and the output path falls back to `block/` plus the bbmodel's path relative to the `blueprint` folder. The nested map form works the same way:
 
 ```yaml
 model:
   path: "minecraft:block/custom/rocket"
-  blueprint: "models/rocket"
+  blueprint: "rocket"
 ```
 
 Embedded textures are exported as PNGs alongside the model; textures referencing existing files keep their original reference.

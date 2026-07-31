@@ -4,6 +4,7 @@ id: model
 ---
 
 import UrlCard from '@site/src/components/UrlCard';
+import Highlight from '@site/src/components/Highlight';
 
 ## Overview
 
@@ -28,19 +29,19 @@ items:
 | `tints` | list | No | — | Tint sources, indexed by `tintindex` in the model geometry |
 | `transformation` | object | No | — | Display transform overlay (26.1+) |
 
-## Blueprint (Blockbench)
+## Blueprint (Blockbench) <Highlight color="#FFA500">Experimental</Highlight>
 
-Point `blueprint` at a Blockbench `.bbmodel` file (relative to the config file — the extension is optional), and CraftEngine converts it into a vanilla model JSON at pack generation: geometry, display transforms, GUI lighting and all. No more exporting from Blockbench by hand.
+Point `blueprint` at a Blockbench `.bbmodel` file in the `blueprint` folder (sibling of `configuration` and `resourcepack`; paths are relative to it — the extension is optional), and CraftEngine converts it into a vanilla model JSON at pack generation: geometry, display transforms, GUI lighting and all. No more exporting from Blockbench by hand.
 
 ```yaml
 items:
   demo:rocket:
     material: paper
     model:
-      blueprint: models/rocket          # <config dir>/models/rocket.bbmodel
+      blueprint: rocket          # <pack>/blueprint/rocket.bbmodel
 ```
 
-Set `path` to choose where the generated model JSON (and its exported textures) goes. Leave it out, and the path falls back to the bbmodel's file name under `item/`:
+Set `path` to choose where the generated model JSON (and its exported textures) goes. Leave it out, and the path falls back to `item/` plus the bbmodel's path relative to the `blueprint` folder (e.g. `furniture/rocket.bbmodel` → `demo:item/furniture/rocket`):
 
 ```yaml
 items:
@@ -48,7 +49,7 @@ items:
     material: paper
     model:
       path: demo:furniture/rocket_v2    # → assets/demo/models/furniture/rocket_v2.json
-      blueprint: models/rocket
+      blueprint: rocket
 ```
 
 **Textures:** any texture embedded in the bbmodel (i.e. painted in Blockbench) is exported as a PNG alongside the model — `demo:furniture/rocket_v2.png`, or `rocket_v2_1.png`, `rocket_v2_2.png`… when there are several. Textures linked from existing files keep their original `namespace:folder/name` reference and are left untouched.
