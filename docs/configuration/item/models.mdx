@@ -205,6 +205,41 @@ demo:bow:
 
 </Details>
 
+<Details summary="blueprint (Blockbench)" defaultOpen={false}>
+
+If you'd rather model in Blockbench than write JSON, point `blueprint` at one `.bbmodel` file **per model slot** — CraftEngine converts each file into a vanilla model JSON (textures included) and builds the same model tree it would have built from textures.
+
+```yaml
+demo:bow:
+  material: bow
+  blueprint:
+    - models/bow             # Idle — <config dir>/models/bow.bbmodel
+    - models/bow_pulling_0   # Pulling 0
+    - models/bow_pulling_1   # Pulling 1
+    - models/bow_pulling_2   # Pulling 2
+```
+
+The `.bbmodel` extension is optional. Generated model paths default to each file's name under `item/`; pass `models` (in the same slot order) to pick the output paths yourself:
+
+```yaml
+demo:bow:
+  material: bow
+  blueprint:
+    - models/bow
+    - models/bow_pulling_0
+    - models/bow_pulling_1
+    - models/bow_pulling_2
+  models:
+    - demo:item/bow
+    - demo:item/bow_pulling_0
+    - demo:item/bow_pulling_1
+    - demo:item/bow_pulling_2
+```
+
+Single-slot materials (`paper`, `diamond_sword`, …) take just one file: `blueprint: models/rocket`. Embedded textures are exported as PNGs alongside the model; textures referencing existing files keep their original reference. See [Blueprint](models/model.mdx#blueprint-blockbench) for the details.
+
+</Details>
+
 :::tip
 
 **Order matters.** Each slot in the list means something specific, and it changes depending on the material. Get the order wrong and your bow will show the pulled texture when it's idle.
@@ -372,4 +407,8 @@ items:
           predicate:
             cast: 1
 ```
+
+:::tip
+`blueprint` also works in `legacy_model` and each of its `overrides` — a `.bbmodel` file is converted and used as that model, with `path` as the optional output location. See [Blueprint](models/model.mdx#blueprint-blockbench).
+:::
 

@@ -205,6 +205,41 @@ demo:bow:
 
 </Details>
 
+<Details summary="blueprint（Blockbench）" defaultOpen={false}>
+
+如果你更习惯在 Blockbench 里建模而不想手写 JSON，可以用 `blueprint` 为**每个模型槽位**指定一个 `.bbmodel` 文件——CraftEngine 会把每个文件转换成原版模型 JSON（含贴图），并组装出与纹理写法完全相同的模型树。
+
+```yaml
+demo:bow:
+  material: bow
+  blueprint:
+    - models/bow             # 待机 —— <配置目录>/models/bow.bbmodel
+    - models/bow_pulling_0   # 拉弓 0
+    - models/bow_pulling_1   # 拉弓 1
+    - models/bow_pulling_2   # 拉弓 2
+```
+
+`.bbmodel` 后缀可省略。生成模型的路径默认取各文件名并置于 `item/` 下；也可以用 `models` 列表（槽位顺序一致）自行指定输出路径：
+
+```yaml
+demo:bow:
+  material: bow
+  blueprint:
+    - models/bow
+    - models/bow_pulling_0
+    - models/bow_pulling_1
+    - models/bow_pulling_2
+  models:
+    - demo:item/bow
+    - demo:item/bow_pulling_0
+    - demo:item/bow_pulling_1
+    - demo:item/bow_pulling_2
+```
+
+单槽位材质（`paper`、`diamond_sword`……）只需一个文件：`blueprint: models/rocket`。内嵌贴图会导出为 PNG 并保存在模型同路径下；引用已有文件的贴图保持原引用。详见 [Blueprint](models/model.mdx#blueprintblockbench)。
+
+</Details>
+
 :::tip
 
 **顺序至关重要。** 列表中的每个槽位都有特定含义，且会根据材质而变化。顺序搞错了，你的弓会在待机时显示拉满的纹理。
@@ -369,3 +404,7 @@ items:
           predicate:
             cast: 1
 ```
+
+:::tip
+`blueprint` 在 `legacy_model` 及其每个 `overrides` 中同样可用——`.bbmodel` 文件会被转换为该模型，`path` 作为可选的输出路径。见 [Blueprint](models/model.mdx#blueprintblockbench)。
+:::

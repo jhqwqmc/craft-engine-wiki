@@ -202,6 +202,28 @@ transparent: true
 
 </Details>
 
+<Details summary="⑦ blueprint — Blockbench .bbmodel source">
+Point `blueprint` at a Blockbench `.bbmodel` file (relative to the config file — the extension is optional), and CraftEngine converts it into a vanilla model JSON at pack generation, exporting embedded textures as PNGs.
+
+```yaml
+state:
+  auto_state: note_block
+  blueprint: "models/rocket"                     # <config dir>/models/rocket.bbmodel
+  model: "minecraft:block/custom/rocket"         # Optional: output path of the generated model
+```
+
+Leave `model` out, and the output path falls back to the bbmodel's file name under `block/`. The nested map form works the same way:
+
+```yaml
+model:
+  path: "minecraft:block/custom/rocket"
+  blueprint: "models/rocket"
+```
+
+Embedded textures are exported as PNGs alongside the model; textures referencing existing files keep their original reference.
+
+</Details>
+
 **All sub-keys of `model`:**
 
 | Key | Type | Description |
@@ -209,6 +231,7 @@ transparent: true
 | `path` | string | Model file path. **Required** when using `textures` (2+ entries) or `generation`, to specify where the generated model is saved |
 | `textures` / `texture` | list or string | Simplified texture config; infers model structure from texture count (mutually exclusive with `generation`). Both key names are equivalent; a single texture can use string shorthand |
 | `generation` | object | Auto-generate the model; requires `parent` and `textures` (mutually exclusive with `textures` list) |
+| `blueprint` | string | Blockbench `.bbmodel` source file — converted into the model JSON at pack generation (may also be set at the appearance level, as a sibling of `model`) |
 | `x` / `y` / `z` | integer | Rotation angle around axis, must be a multiple of 90 (`z` requires 1.21.11+) |
 | `uvlock` | boolean | Lock texture direction, default `false` |
 | `weight` | integer | Only used in `models` lists; selection weight, default `1` |

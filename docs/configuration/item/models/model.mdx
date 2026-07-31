@@ -22,10 +22,38 @@ items:
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | `type` | string | No | `minecraft:model` | Model type identifier |
-| `path` | asset path | Yes | — | Namespaced path to the model JSON (e.g. `demo:item/sword`) |
+| `path` | asset path | Yes* | — | Namespaced path to the model JSON (e.g. `demo:item/sword`). *Optional when `blueprint` is set — then used as the output path for the generated model |
 | `generation` | object | No | — | Auto-generate the model JSON from a parent template |
+| `blueprint` | string | No | — | Blockbench `.bbmodel` file converted into the model JSON |
 | `tints` | list | No | — | Tint sources, indexed by `tintindex` in the model geometry |
 | `transformation` | object | No | — | Display transform overlay (26.1+) |
+
+## Blueprint (Blockbench)
+
+Point `blueprint` at a Blockbench `.bbmodel` file (relative to the config file — the extension is optional), and CraftEngine converts it into a vanilla model JSON at pack generation: geometry, display transforms, GUI lighting and all. No more exporting from Blockbench by hand.
+
+```yaml
+items:
+  demo:rocket:
+    material: paper
+    model:
+      blueprint: models/rocket          # <config dir>/models/rocket.bbmodel
+```
+
+Set `path` to choose where the generated model JSON (and its exported textures) goes. Leave it out, and the path falls back to the bbmodel's file name under `item/`:
+
+```yaml
+items:
+  demo:rocket:
+    material: paper
+    model:
+      path: demo:furniture/rocket_v2    # → assets/demo/models/furniture/rocket_v2.json
+      blueprint: models/rocket
+```
+
+**Textures:** any texture embedded in the bbmodel (i.e. painted in Blockbench) is exported as a PNG alongside the model — `demo:furniture/rocket_v2.png`, or `rocket_v2_1.png`, `rocket_v2_2.png`… when there are several. Textures linked from existing files keep their original `namespace:folder/name` reference and are left untouched.
+
+`tints` and `transformation` can be combined with `blueprint`; `generation` cannot.
 
 ## Generation
 
