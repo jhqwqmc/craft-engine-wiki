@@ -48,8 +48,6 @@ import PluginFileTree from '@site/src/components/PluginFileTree';
 
 进游戏打 `/ce`，弹出物品浏览器说明安装成功。
 
-> ⚠️ 没弹出来？看控制台有没有报错。最常见的原因：JDK 版本不够、用了非 Paper 分支（Spigot 不行）、Minecraft 版本太老。
-
 ## 资源包托管
 
 CraftEngine 把你 `resources/` 下的内容生成成一个资源包，通过 HTTP 发给玩家。
@@ -101,7 +99,3 @@ resource-pack:
 > ⚠️ 改完 `config.yml` 的托管配置后，跑 `/ce reload all`。单跑 `config` 不会重建资源包。
 
 > ⚠️ 需要 API 密钥的托管（如 S3），用**环境变量**传密钥，不要把密钥直接写在 `config.yml` 里。**不要**把含密钥的配置文件发给你不信任的人。
-
-### 预期表现
-
-托管生效后，`/ce reload all` 应该：包重新生成 → 在线玩家弹出下载提示 → 接受后正常应用 → 没有紫黑方块。新玩家进服自动弹提示。
