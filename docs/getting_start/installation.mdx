@@ -48,8 +48,6 @@ Drop the `.jar` into `plugins/` and start the server. First boot generates:
 
 Run `/ce` in-game. The item browser opens — you're good.
 
-> ⚠️ Nothing happened? Check the console. Common causes: wrong JDK version, not a Paper fork (Spigot won't work), Minecraft version too old.
-
 ## Resource pack hosting
 
 CraftEngine compiles your `resources/` into a resource pack and serves it over HTTP to players.
@@ -101,7 +99,3 @@ If self hosting doesn't work, try one of these:
 > ⚠️ After changing the host config, run `/ce reload all`. `config` alone won't rebuild the pack.
 
 > ⚠️ For hosts requiring API keys, pass secrets via **environment variables** — don't write them directly in `config.yml`. Never share a config file containing real keys.
-
-### Expected behavior
-
-With hosting working, `/ce reload all` should: regenerate the pack → online players get a download prompt → they accept and it applies → no purple-black textures. Players receive the pack prompt automatically when they join.

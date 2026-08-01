@@ -3,7 +3,7 @@ title: 🌴 树苗方块
 id: sapling_block
 ---
 
-**树苗方块**会随时间生长。每次随机刻，若光照条件满足，则以 `grow_speed` 的概率使 `stage` 增加 1。当 `stage` 达到最大值时，会调用配置的 `feature` 生成完整的树木。
+**树苗方块**会随时间生长。每次随机刻，若光照条件满足，则以 `grow_speed` 的概率使 `stage` 增加 1。当 `stage` 达到最大值时，会通过配置的**地物（feature）**或**结构（structure）**生成完整的树木。
 仅当方块上方位置的亮度位于 `light_requirement`（下限，默认为 9）与 `max_light_requirement`（上限，默认为 15）之间时才会生长。
 
 骨粉可以无视光照和生长概率，立即将 `stage` 增加 1，若已达最大值则直接尝试生成树木。`bone_meal_success_chance` 仅决定骨粉使用时是否播放绿色粒子效果——无论粒子是否出现，`stage` 的增加始终生效。
@@ -19,15 +19,20 @@ blocks:
   default:palm_sapling:
     behavior:
       type: sapling_block
-      feature: default:palm_tree                # 完全成熟时生成的已配置的地物（必需）
+      feature: default:palm_tree                # 完全成熟时生成的已配置的地物（未设置 structure 时必需）
+      # structure: default:palm_grove           # 备选：改为生成一个已注册的结构
       light_requirement: 9                      # 生长所需最低光照（默认为 9）
       max_light_requirement: 15                 # 生长所需最高光照（默认为 15）
       grow_speed: 0.7                           # 每随机刻增加 stage 的概率（默认约 0.143）
       bone_meal_success_chance: 0.45            # 骨粉产生成功粒子的概率（默认为 0.45）
 ```
 
+![](/img/sapling_block.png)
+
+:::info[feature 与 structure 的区别]
+两者互斥，只设置其中一个。`feature` 填已配置地物的 id（单个地物放置，例如一棵树）。`structure` 填 `minecraft:structure` 注册表中的结构 id（原版、数据包或插件注册的均可），会在树苗所在位置放置整个结构——适合树林等由结构模板组装的多方块建筑。设置了 `structure` 时，`feature` 会被忽略。
+:::
+
 :::tip
 `stage` 增加到最大值的次数越多，树苗完全生长的平均时间就越长——因为每个随机刻**不是必定生长**，只有 `grow_speed` 的概率会让 `stage` 增加一次，所以需要增加的次数越多，等待的时间也就越长。
 :::
-
-![](/img/sapling_block.png)

@@ -142,7 +142,7 @@ items:
 | `item.always-generate-model-overrides` | `false` | 即使仅面向 1.21.4+ 的资源包也强制生成 legacy overrides（对基岩版转换器有用）。 |
 | `item.custom-model-data-starting-value.default` | `10000` | 自动分配的第一个 CMD 编号。 |
 | `item.custom-model-data-starting-value.overrides.<material>` | — | 按材质覆盖，如 `paper: 20000`。 |
-| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">Premium</Highlight> 将 CMD 和 item_model 保留在客户端，允许在不影响已有物品的情况下动态更新。 |
+| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">付费版专属</Highlight> 将 CMD 和 item_model 保留在客户端，允许在不影响已有物品的情况下动态更新。 |
 
 :::tip
 绝大多数物品无需手动设置这两项。配置好 `model` 或 `texture`，其余交给 CraftEngine。
@@ -202,6 +202,43 @@ demo:bow:
     - minecraft:item/custom/my_bow_pulling_1
     - minecraft:item/custom/my_bow_pulling_2
 ```
+
+</Details>
+
+<Details summary="blueprint（Blockbench）" defaultOpen={false}>
+
+<Highlight color="#CC7A00">**实验性**</Highlight>
+
+如果你更习惯在 Blockbench 里建模而不想手写 JSON，可以用 `blueprint` 为**每个模型槽位**指定一个 `.bbmodel` 文件——CraftEngine 会把每个文件转换成原版模型 JSON（含贴图），并组装出与纹理写法完全相同的模型树。
+
+```yaml
+demo:bow:
+  material: bow
+  blueprint:
+    - bow                   # 待机 —— <资源文件夹>/blueprint/bow.bbmodel
+    - bow_pulling_0         # 拉弓 0
+    - bow_pulling_1         # 拉弓 1
+    - bow_pulling_2         # 拉弓 2
+```
+
+`.bbmodel` 后缀可省略，路径相对于 `blueprint` 文件夹（与 `configuration`、`resourcepack` 同级）。生成模型的路径默认为 `item/` 加上各文件相对 `blueprint` 文件夹的路径；也可以用 `models` 列表（槽位顺序一致）自行指定输出路径：
+
+```yaml
+demo:bow:
+  material: bow
+  blueprint:
+    - bow
+    - bow_pulling_0
+    - bow_pulling_1
+    - bow_pulling_2
+  models:
+    - demo:item/bow
+    - demo:item/bow_pulling_0
+    - demo:item/bow_pulling_1
+    - demo:item/bow_pulling_2
+```
+
+单槽位材质（`paper`、`diamond_sword`……）只需一个文件：`blueprint: rocket`。内嵌贴图会导出为 PNG 并保存在模型同路径下；引用已有文件的贴图保持原引用。详见 [Blueprint](models/model.mdx#blueprintblockbench)。
 
 </Details>
 
@@ -369,3 +406,7 @@ items:
           predicate:
             cast: 1
 ```
+
+:::tip
+`blueprint` 在 `legacy_model` 及其每个 `overrides` 中同样可用——`.bbmodel` 文件会被转换为该模型，`path` 作为可选的输出路径。见 [Blueprint](models/model.mdx#blueprintblockbench)。
+:::

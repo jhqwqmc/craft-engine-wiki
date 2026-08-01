@@ -4,6 +4,7 @@ id: states
 ---
 
 import Details from '@site/src/components/Details';
+import Highlight from '@site/src/components/Highlight';
 
 ## 简介
 
@@ -209,6 +210,30 @@ transparent: true
 
 </Details>
 
+<Details summary="⑦ blueprint — Blockbench .bbmodel 源文件">
+<Highlight color="#CC7A00">**实验性**</Highlight>
+
+用 `blueprint` 指定 `blueprint` 文件夹中的一个 Blockbench `.bbmodel` 文件（与 `configuration`、`resourcepack` 同级；路径相对于该文件夹，后缀可省略）。生成资源包时，CraftEngine 会把它转换成原版模型 JSON，并将内嵌贴图导出为 PNG。
+
+```yaml
+state:
+  auto_state: note_block
+  blueprint: "rocket"                     # <资源文件夹>/blueprint/rocket.bbmodel
+  model: "minecraft:block/custom/rocket"         # 可选：生成模型的输出路径
+```
+
+不写 `model` 时，输出路径按 bbmodel 相对 `blueprint` 文件夹的路径生成到 `block/` 目录下。嵌套写法同样支持：
+
+```yaml
+model:
+  path: "minecraft:block/custom/rocket"
+  blueprint: "rocket"
+```
+
+内嵌贴图会导出为 PNG 并保存在模型同路径下；引用已有文件的贴图保持原引用。
+
+</Details>
+
 **`model` 其他的子选项：**
 
 | 子选项                  | 类型     | 说明                                                               |
@@ -216,6 +241,7 @@ transparent: true
 | `path`               | 字符串    | 模型文件路径。当使用 2 张及以上 `textures` 或 `generation` 时，**必须**指定生成的模型的存放位置 |
 | `textures`、`texture` | 列表或字符串 | 简化纹理配置，根据数量自动推断模型结构（与 `generation` 冲突）。两个键名效果相同，单张纹理可用字符串简写      |
 | `generation`         | 配置部分   | 自动生成模型，需指定 `parent` 和 `textures`（与 `textures` 列表冲突）              |
+| `blueprint`          | 字符串    | Blockbench `.bbmodel` 源文件，生成资源包时转换为模型 JSON（也可写在外观层级，与 `model` 同级） |
 | `x`、`y`、`z`          | 整数     | 绕轴旋转角度，必须为 90 的倍数（`z` 需要 1.21.11+）                               |
 | `uvlock`             | 布尔     | 是否锁定纹理方向，默认为 `false`                                             |
 | `weight`             | 整数     | 仅在 `models` 列表中使用，被选用的权重，默认为 `1`                                 |
