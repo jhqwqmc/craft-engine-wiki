@@ -106,6 +106,16 @@ Determines if the item can be renamed in anvil. (Default: true)
 renameable: false
 ```
 
+### prevent_break
+
+Determines whether the item is prevented from breaking when its durability runs out. (Default: false)
+
+The item keeps its last point of durability instead of being destroyed. An item in this "broken" state can no longer be used: attacking, mining, shooting bows/crossbows and right-click usages (e.g. stripping logs, hoeing dirt, raising a shield) are all blocked until it is repaired. Worn armor is automatically unequipped when it breaks — moved into the player's inventory, or dropped on the ground if the inventory is full.
+
+```yaml
+prevent_break: true
+```
+
 ### can_place
 
 Determines whether the vanilla block corresponding to this item's material can be placed. Set it to `false` when you use a block-like material (e.g. `note_block`) as the base for a non-block item, so players can't place it as a block. (Default: false)

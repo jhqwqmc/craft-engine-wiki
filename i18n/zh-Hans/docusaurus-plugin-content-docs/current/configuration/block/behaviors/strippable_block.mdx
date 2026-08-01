@@ -14,12 +14,27 @@ blocks:
       type: strippable_block
       stripped: default:stripped_palm_log   # 剥离后转化成的方块（必需）
       excluded_properties: []               # 转化时不继承的属性（默认空列表）
+      tools:                                # 可以剥离此方块的工具（默认 ["#minecraft:axes"]）
+        - "#minecraft:axes"                 # 以 # 开头的条目匹配物品标签
+        - default:palm_knife                # 普通条目匹配物品 id（支持自定义物品）
+      sound: minecraft:item.axe.strip       # 剥离时播放的音效（默认 minecraft:item.axe.strip）
 ```
 
 :::info
 
 默认情况下，会将原方块与目标方块中同名的属性一并保留。若某个属性不应在剥离后继承，可将其加入 `excluded_properties`。被排除的属性将使用目标方块对应属性的默认值。
 
+:::
+
+:::info
+你可以这样配置来精确控制剥离音效的音量与音高
+
+```yaml
+sound:
+  id: minecraft:item.axe.strip
+  pitch: 0.9~1 # 也支持范围值
+  volume: 1
+```
 :::
 
 ![](/img/strippable_block.png)

@@ -14,6 +14,10 @@ blocks:
       type: strippable_block
       stripped: default:stripped_palm_log   # the block to transform into when stripped (required)
       excluded_properties: []               # properties to skip copying from the original (default empty)
+      tools:                                # tools that can strip this block (default ["#minecraft:axes"])
+        - "#minecraft:axes"                 # entries starting with # match item tags
+        - default:palm_knife                # plain entries match item ids (custom items included)
+      sound: minecraft:item.axe.strip       # the sound played when stripped (default minecraft:item.axe.strip)
 ```
 
 ![](/img/strippable_block.png)
@@ -22,4 +26,15 @@ blocks:
 
 The original block's properties are carried over, except for those listed in `excluded_properties` — these stay at the target block's defaults.
 
+:::
+
+:::info
+You can configure like this to precisely control the volume and pitch of the strip sound
+
+```yaml
+sound:
+  id: minecraft:item.axe.strip
+  pitch: 0.9~1 # ranged value is also supported
+  volume: 1
+```
 :::
