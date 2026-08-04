@@ -98,6 +98,27 @@ anvil_repair_item:
     percent: 0.25  # 0.25 = 25%, restores n% total durability
 ```
 
+### drag_repair_item
+
+Determines how much durability this item provides when dragged onto another item to repair it. Pick up this item with your cursor and drop it onto a damaged item in your inventory to repair it. Left-click repairs as much as possible (consuming as many materials as needed), while right-click consumes only one material at a time. If the target item is fully repaired or not a valid target, the vanilla swap behavior is kept.
+
+```yaml
+drag_repair_item:
+  - target: "#topaz_tools" # use tags
+    amount: 20  # restores fixed durability
+  - target:
+      - "minecraft:iron_pickaxe"
+      - "minecraft:shears"
+    percent: 0.25  # 0.25 = 25%, restores n% total durability
+    sound: minecraft:item.armor.equip_iron # optional; or use the map form below
+#   sound:
+#     id: minecraft:item.armor.equip_iron
+#     volume: 1
+#     pitch: 0.9~1
+```
+
+`amount` and `percent` can be combined: each material restores `amount + percent × max durability` points of durability.
+
 ### renameable
 
 Determines if the item can be renamed in anvil. (Default: true)

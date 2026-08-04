@@ -105,6 +105,27 @@ anvil_repair_item:
     percent: 0.25  # 0.25 = 25%, 恢复 n% 总耐久度
 ```
 
+### drag_repair_item（拖拽修复）
+
+控制此物品被拖拽到其他物品上时提供的耐久度。用光标拿起此物品并放到背包中受损的物品上即可修复。左键会尽可能修复（按需消耗多个材料），右键一次只消耗一个材料。若目标物品已修满或不在修复目标列表中，则保持原版的物品交换行为。
+
+```yaml
+drag_repair_item:
+  - target: "#topaz_tools" # 使用标签
+    amount: 20  # 指定恢复耐久度
+  - target:
+      - "minecraft:iron_pickaxe"
+      - "minecraft:shears"
+    percent: 0.25  # 0.25 = 25%, 恢复 n% 总耐久度
+    sound: minecraft:item.armor.equip_iron # 可选；也可使用下面的完整格式
+#   sound:
+#     id: minecraft:item.armor.equip_iron
+#     volume: 1
+#     pitch: 0.9~1
+```
+
+`amount` 与 `percent` 可同时使用：每个材料恢复 `amount + percent × 最大耐久` 点耐久度。
+
 ### renameable（可重命名）
 
 控制物品是否可以在铁砧中重命名。（默认值: true）
