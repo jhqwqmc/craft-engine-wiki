@@ -892,6 +892,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: "compatibility/denizen",
+          label: '📜 Denizen',
+        },
+        {
+          type: 'doc',
           id: "compatibility/quickshop_hikari",
           label: '📦 QuickShop-Hikari',
         },

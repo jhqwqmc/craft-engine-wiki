@@ -1,0 +1,593 @@
+---
+title: 📜 Denizen
+id: denizen
+---
+
+import SkriptCard from '@site/src/components/SkriptCard';
+
+# 📜 Denizen
+
+:::tip
+如果您在使用 CraftEngine 提供的 Denizen 功能时遇到问题，请及时向我们[反馈](https://github.com/Xiao-MoMi/craft-engine/issues/new)。如果您想要请求新的 Denizen 功能并且您了解 Java，请考虑通过拉取请求贡献您的代码！
+:::
+
+:::warning
+你需要安装 [Denizen](https://ci.citizensnpcs.co/job/Denizen/)。
+:::
+
+在所有事件行中，`ce` 也可以写成 `craftengine`，例如 `on player breaks craftengine block block:` 与 `on player breaks ce block block:` 效果相同。
+
+CraftEngine 的 id（如 `default:wooden_chair`）可以直接写在事件行和命令参数中——插件会自动向 Denizen 注册所有已加载的命名空间，无需额外转义。
+
+
+## 事件
+
+<SkriptCard
+  title="破坏 CraftEngine 方块事件"
+  type="Event"
+  description="当玩家破坏 CraftEngine 自定义方块时触发。可取消"
+  syntax={[
+    'on player breaks ce block <\'block\'>'
+  ]}
+  values={[
+    '<context.location> - 方块被破坏的位置',
+    '<context.id> - CraftEngine 方块 id，如 "default:togglable_light_block"',
+    '<context.should_drop_items> - 事件是否会掉落物品',
+    '开关: with:<item> - 仅当使用指定物品破坏时触发',
+    'Determine: "NOTHING" - 不掉落物品；ListTag(ItemTag) - 改为掉落指定物品'
+  ]}
+  examples={[
+    `on player breaks ce block block:
+  - narrate "你破坏了一个 <context.id>！"`,
+    `on player breaks ce block default:togglable_light_block with:diamond_pickaxe:
+  - narrate "没有掉落物！"
+  - determine NOTHING`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="破坏 CraftEngine 家具事件"
+  type="Event"
+  description="当玩家破坏 CraftEngine 家具时触发。可取消"
+  syntax={[
+    'on player breaks ce furniture <\'furniture\'>'
+  ]}
+  values={[
+    '<context.location> - 家具被破坏的位置',
+    '<context.id> - CraftEngine 家具 id，如 "default:wooden_chair"',
+    '<context.entity> - 家具基础实体的 EntityTag',
+    '<context.should_drop_items> - 事件是否会掉落物品',
+    '开关: with:<item> - 仅当使用指定物品破坏时触发',
+    'Determine: "NOTHING" - 不掉落物品；ListTag(ItemTag) - 改为掉落指定物品'
+  ]}
+  examples={[
+    `on player breaks ce furniture default:wooden_chair:
+  - narrate "你破坏了一把木椅！"
+  - determine NOTHING`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="放置 CraftEngine 方块事件"
+  type="Event"
+  description="当玩家放置 CraftEngine 自定义方块时触发。可取消"
+  syntax={[
+    'on player places ce block <\'block\'>'
+  ]}
+  values={[
+    '<context.location> - 方块被放置的位置',
+    '<context.id> - CraftEngine 方块 id',
+    '<context.hand> - 使用的手',
+    '开关: with:<item> - 仅当使用指定物品放置时触发'
+  ]}
+  examples={[
+    `on player places ce block block:
+  - narrate "你放置了一个 <context.id>！"`,
+    `on player places ce block default:safe_block in:my_base:
+  - determine cancelled`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="放置 CraftEngine 家具事件"
+  type="Event"
+  description="当玩家放置 CraftEngine 家具时触发。可取消"
+  syntax={[
+    'on player places ce furniture <\'furniture\'>'
+  ]}
+  values={[
+    '<context.location> - 家具被放置的位置',
+    '<context.id> - CraftEngine 家具 id',
+    '<context.entity> - 家具基础实体的 EntityTag',
+    '<context.hand> - 使用的手',
+    '开关: with:<item> - 仅当使用指定物品放置时触发'
+  ]}
+  examples={[
+    `on player places ce furniture furniture:
+  - narrate "你放置了一个 <context.id>！"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="尝试放置 CraftEngine 方块事件"
+  type="Event"
+  description="当玩家即将放置 CraftEngine 自定义方块时触发（放置发生之前）。取消事件可阻止放置"
+  syntax={[
+    'on player attempts to place ce block <\'block\'>'
+  ]}
+  values={[
+    '<context.location> - 方块将被放置的位置',
+    '<context.id> - CraftEngine 方块 id',
+    '<context.clicked_block> - 触发放置时被点击的方块',
+    '<context.hand> - 使用的手',
+    '开关: with:<item> - 仅当使用指定物品放置时触发'
+  ]}
+  examples={[
+    `on player attempts to place ce block block in:no_build_zone:
+  - narrate "你不能在这里放置！"
+  - determine cancelled`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="尝试放置 CraftEngine 家具事件"
+  type="Event"
+  description="当玩家即将放置 CraftEngine 家具时触发（放置发生之前）。取消事件可阻止放置"
+  syntax={[
+    'on player attempts to place ce furniture <\'furniture\'>'
+  ]}
+  values={[
+    '<context.location> - 家具将被放置的位置',
+    '<context.id> - CraftEngine 家具 id',
+    '<context.variant> - 正在放置的家具变体名称',
+    '<context.clicked_block> - 触发放置时被点击的方块',
+    '<context.hand> - 使用的手',
+    '开关: with:<item> - 仅当使用指定物品放置时触发'
+  ]}
+  examples={[
+    `on player attempts to place ce furniture furniture in:no_build_zone:
+  - narrate "你不能在这里放置！"
+  - determine cancelled`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="点击 CraftEngine 方块事件"
+  type="Event"
+  description="当玩家点击 CraftEngine 自定义方块时触发。可取消。注意：CraftEngine 在创造模式下将左键视为破坏，因此 LEFT_CLICK 仅在生存/冒险模式下触发"
+  syntax={[
+    'on player (right|left) clicks ce block (<\'block\'>)'
+  ]}
+  values={[
+    '<context.item> - 玩家点击时使用的 ItemTag',
+    '<context.location> - 玩家点击的位置',
+    '<context.id> - CraftEngine 方块 id',
+    '<context.relative> - 被点击方块前方的空气方块',
+    '<context.click_type> - LEFT_CLICK 或 RIGHT_CLICK',
+    '<context.hand> - 使用的手',
+    '开关: with:<item> - 仅当使用指定物品点击时触发'
+  ]}
+  examples={[
+    `on player right clicks ce block:
+  - narrate "你右键了一个 <context.id>！"`,
+    `on player right clicks ce block default:safe_block with:diamond_sword:
+  - narrate "不许用那把剑！"
+  - determine cancelled`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="点击 CraftEngine 家具事件"
+  type="Event"
+  description="当玩家点击 CraftEngine 家具时触发。可取消"
+  syntax={[
+    'on player (right|left) clicks ce furniture (<\'furniture\'>)'
+  ]}
+  values={[
+    '<context.item> - 玩家点击时使用的 ItemTag',
+    '<context.location> - 被点击家具的位置',
+    '<context.id> - CraftEngine 家具 id',
+    '<context.entity> - 家具基础实体的 EntityTag',
+    '<context.click_type> - LEFT_CLICK 或 RIGHT_CLICK',
+    '<context.hand> - 使用的手',
+    '开关: with:<item> - 仅当使用指定物品点击时触发'
+  ]}
+  examples={[
+    `on player right clicks ce furniture:
+  - narrate "你右键了一个 <context.id>！"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="CraftEngine 重载事件"
+  type="Event"
+  description="当 CraftEngine 插件完成重载时触发。无关联玩家"
+  syntax={[
+    'on ce reloaded'
+  ]}
+  examples={[
+    `on ce reloaded:
+  - announce "CraftEngine 重载完成！"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "事件",
+    syntax: "语法格式:",
+    field: "事件字段:",
+    example: "示例:",
+  }}
+/>
+
+
+## 标签
+
+<SkriptCard
+  title="物品：是否 CraftEngine 物品 / 物品 id"
+  type="Tag"
+  description="检查物品是否为 CraftEngine 自定义物品，并获取其 CraftEngine 物品 id"
+  syntax={[
+    '<ItemTag.is_ce_item> - 返回 ElementTag(Boolean)',
+    '<ItemTag.ce_id> - 返回 ElementTag，如 "default:topaz_rod"；非自定义物品则无返回'
+  ]}
+  examples={[
+    `- if <player.item_in_hand.is_ce_item>:
+    - narrate "你正拿着 <player.item_in_hand.ce_id>！"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "标签",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="位置：是否 CraftEngine 方块 / 方块 id"
+  type="Tag"
+  description="检查该位置的方块是否为 CraftEngine 自定义方块，并获取其 CraftEngine 方块 id"
+  syntax={[
+    '<LocationTag.is_ce_block> - 返回 ElementTag(Boolean)',
+    '<LocationTag.ce_id> - 返回 ElementTag，如 "default:togglable_light_block"；非自定义方块则无返回'
+  ]}
+  examples={[
+    `- if <player.cursor_on.is_ce_block>:
+    - narrate "你正看着 <player.cursor_on.ce_id>！"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "标签",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="位置：CraftEngine 方块状态"
+  type="Tag"
+  description="返回该位置 CraftEngine 自定义方块全部方块状态属性的 MapTag。非自定义方块则无返回"
+  syntax={[
+    '<LocationTag.ce_block_states> - 返回 MapTag'
+  ]}
+  examples={[
+    `- narrate "你看着的方块亮度为 <player.cursor_on.ce_block_states.get[light]>。"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "标签",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="实体：是否 CraftEngine 家具 / 家具 id"
+  type="Tag"
+  description="检查实体是否属于 CraftEngine 家具（基础实体、座位或碰撞体），并获取其 CraftEngine 家具 id"
+  syntax={[
+    '<EntityTag.is_ce_furniture> - 返回 ElementTag(Boolean)',
+    '<EntityTag.ce_id> - 返回 ElementTag，如 "default:wooden_chair"；非家具则无返回'
+  ]}
+  examples={[
+    `- if <player.precise_target.is_ce_furniture.if_null[false]>:
+    - narrate "你正看着 <player.precise_target.ce_id>！"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "标签",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="实体：是否家具座位 / 碰撞体"
+  type="Tag"
+  description="检查实体是否为 CraftEngine 家具的座位或碰撞实体"
+  syntax={[
+    '<EntityTag.is_ce_furniture_seat> - 返回 ElementTag(Boolean)',
+    '<EntityTag.is_ce_furniture_collider> - 返回 ElementTag(Boolean)'
+  ]}
+  examples={[
+    `- if <player.precise_target.is_ce_furniture_seat.if_null[false]>:
+    - narrate "这是一个座位！"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "标签",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="实体：家具变体 / 变体列表"
+  type="Tag"
+  description="获取 CraftEngine 家具的当前变体名称，或其全部变体名称列表"
+  syntax={[
+    '<EntityTag.ce_furniture_variant> - 返回 ElementTag',
+    '<EntityTag.ce_furniture_variants> - 返回 ListTag'
+  ]}
+  examples={[
+    `- narrate "椅子的变体是 <player.precise_target.ce_furniture_variant>，全部: <player.precise_target.ce_furniture_variants>"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "标签",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="服务器：CraftEngine id 列表"
+  type="Tag"
+  description="返回所有已加载的 CraftEngine 方块、物品和家具 id 列表"
+  syntax={[
+    '<server.ce_block_ids> - 返回 ListTag',
+    '<server.ce_item_ids> - 返回 ListTag',
+    '<server.ce_furniture_ids> - 返回 ListTag'
+  ]}
+  examples={[
+    `- narrate "已加载 <server.ce_block_ids.size> 个自定义方块！"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "标签",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="CraftEngine 物品"
+  type="Tag"
+  description="根据输入的 id 构造一个 CraftEngine 自定义物品对象"
+  syntax={[
+    '<ce_item[<item_id>]> - 返回 ItemTag'
+  ]}
+  examples={[
+    `- give <ce_item[default:topaz_rod]>`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "标签",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="CraftEngine 可能状态"
+  type="Tag"
+  description="返回某个 CraftEngine 方块 id 的全部可能方块状态，格式可直接用于 placeceblock 命令"
+  syntax={[
+    '<ce_possible_states[<block_id>]> - 返回 ListTag，如 "default:togglable_light_block[light=15]"'
+  ]}
+  examples={[
+    `- foreach <ce_possible_states[default:togglable_light_block]> as:state:
+    - narrate "<[state]>"`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "标签",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+
+## 机制（Mechanism）
+
+<SkriptCard
+  title="位置：设置 CraftEngine 方块状态"
+  type="Mechanism"
+  description="设置该位置 CraftEngine 自定义方块的一个方块状态属性，配合 adjust 命令使用"
+  syntax={[
+    '- adjust <location> ce_block_state:<key=value>'
+  ]}
+  examples={[
+    `- adjust <player.cursor_on> ce_block_state:light=10`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "机制",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="实体：设置 CraftEngine 家具变体"
+  type="Mechanism"
+  description="设置 CraftEngine 家具的变体，配合 adjust 命令使用。变体不存在或被阻挡时不生效"
+  syntax={[
+    '- adjust <entity> ce_furniture_variant:<variant_name>'
+  ]}
+  examples={[
+    `- adjust <player.precise_target> ce_furniture_variant:oak`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "机制",
+    syntax: "语法格式:",
+    field: "字段:",
+    example: "示例:",
+  }}
+/>
+
+
+## 命令
+
+<SkriptCard
+  title="PlaceCEBlock"
+  type="Command"
+  description="在世界中放置 CraftEngine 自定义方块。方块用 id 指定，可带方块状态属性。支持 ~waitable"
+  syntax={[
+    'placeceblock [<location>|.../<ellipsoid>/<cuboid>] [<craftengine_block>|...] (no_physics) (<percent chance>|...)'
+  ]}
+  values={[
+    'no_physics - 放置时不让物理更新影响被修改的方块',
+    '(<percent chance>|...) - 每个位置按顺序掷骰，直到某个方块命中为止；全部未命中则该位置保持不变。"50|50" 表示 50% 第一种、25% 第二种、25% 不变'
+  ]}
+  examples={[
+    `- placeceblock <player.cursor_on> default:sugar_block`,
+    `- ~placeceblock <player.cursor_on> default:togglable_light_block[light=15] no_physics`,
+    `- placeceblock <player.location.to_cuboid[<player.cursor_on>]> default:sugar_block|default:cloud_block 50|50`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "命令",
+    syntax: "语法格式:",
+    field: "参数说明:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="SpawnCEFurniture"
+  type="Command"
+  description="在世界中生成 CraftEngine 家具。支持 ~waitable"
+  syntax={[
+    'spawncefurniture [<location>|.../<ellipsoid>/<cuboid>] [<craftengine_furniture>|...] (direction:north/east/south/west) (<percent chance>|...)'
+  ]}
+  values={[
+    'direction: - 控制家具朝向',
+    '(<percent chance>|...) - 每个位置按顺序掷骰，直到某个家具命中为止；全部未命中则该位置不生成'
+  ]}
+  examples={[
+    `- spawncefurniture <player.cursor_on> default:wooden_chair`,
+    `- ~spawncefurniture <player.cursor_on> default:oak_lamp direction:west`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "命令",
+    syntax: "语法格式:",
+    field: "参数说明:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="RemoveCEFurniture"
+  type="Command"
+  description="移除世界中的 CraftEngine 家具，不掉落战利品、不播放效果。非家具实体会被忽略。支持 ~waitable"
+  syntax={[
+    'removecefurniture [<entity>|...]'
+  ]}
+  examples={[
+    `- removecefurniture <player.precise_target>`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "命令",
+    syntax: "语法格式:",
+    field: "参数说明:",
+    example: "示例:",
+  }}
+/>
+
+<SkriptCard
+  title="RemoveCEBlock"
+  type="Command"
+  description="移除世界中的 CraftEngine 自定义方块，不掉落战利品、不播放效果。非自定义方块的位置会被静默跳过。支持 ~waitable"
+  syntax={[
+    'removeceblock [<location>|.../<ellipsoid>/<cuboid>]'
+  ]}
+  examples={[
+    `- removeceblock <player.cursor_on>`,
+    `- removeceblock <player.location.to_cuboid[<player.cursor_on>]>`
+  ]}
+  defaultOpen={false}
+  i18n={{
+    label: "命令",
+    syntax: "语法格式:",
+    field: "参数说明:",
+    example: "示例:",
+  }}
+/>

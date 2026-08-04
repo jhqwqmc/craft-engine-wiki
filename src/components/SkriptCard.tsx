@@ -10,7 +10,7 @@ interface I18N {
 
 interface SkriptCardProps {
   title: string;
-  type: 'Event' | 'Expression' | 'Effect' | 'Condition';
+  type: 'Event' | 'Expression' | 'Effect' | 'Condition' | 'Tag' | 'Command' | 'Mechanism';
   syntax?: string[];
   description?: string;
   examples?: string[];
@@ -48,6 +48,12 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
         return '⚡';
       case 'Condition':
         return '❓';
+      case 'Tag':
+        return '🏷️';
+      case 'Command':
+        return '💻';
+      case 'Mechanism':
+        return '⚙️';
       default:
         return '📋';
     }
@@ -63,6 +69,12 @@ const SkriptCard: React.FC<SkriptCardProps> = ({
         return '#f59e0b'; // amber
       case 'Condition':
         return '#10b981'; // emerald
+      case 'Tag':
+        return '#ec4899'; // pink
+      case 'Command':
+        return '#6366f1'; // indigo
+      case 'Mechanism':
+        return '#f97316'; // orange
       default:
         return '#6b7280'; // gray
     }
