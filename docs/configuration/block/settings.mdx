@@ -40,6 +40,7 @@ blocks:
       correct_tools:
         - minecraft:wooden_pickaxe
       incorrect_tool_dig_speed: 0.3
+      required_break_power: 2
       tags:
         - minecraft:mineable/pickaxe
       instrument: BASEDRUM
@@ -238,6 +239,18 @@ Slows down the dig speed if the tool is incorrect (Default: 0.3)
 ```yaml
 incorrect_tool_dig_speed: 0.3 # 0~1
 ```
+
+### required_break_power
+
+Determines the minimum break power a tool must have to effectively mine this block (Default: 0 = no requirement)
+
+```yaml
+required_break_power: 2
+```
+
+:::info
+Tools define their break power with the [`break_power`](../item/settings.mdx#break_power) item setting; a tool without it inherits the break power of its vanilla material. The break power of vanilla tools is hardcoded: wood/gold = 1, stone/copper = 2, iron = 3, diamond = 4, netherite = 5, other items = 0. You can override them via `item.break-power` in config.yml.
+:::
 
 ### tags
 

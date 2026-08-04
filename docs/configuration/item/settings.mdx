@@ -21,6 +21,18 @@ fuel_time: 100
 
 ![](/img/item_settings_1.png)
 
+### break_power
+
+Determines the break power of this item when used as a tool. A block with [`required_break_power`](../block/settings.mdx#required_break_power) can only be effectively mined by tools whose break power is greater than or equal to the required value. (Default: inherit from the item's vanilla material)
+
+```yaml
+break_power: 3
+```
+
+:::info
+The break power of vanilla tools is hardcoded: wood/gold = 1, stone/copper = 2, iron = 3, diamond = 4, netherite = 5, other items = 0. You can override them via `item.break-power` in config.yml.
+:::
+
 ### tags
 
 Tags used in recipes.

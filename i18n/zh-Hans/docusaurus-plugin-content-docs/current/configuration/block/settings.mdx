@@ -38,6 +38,7 @@ blocks:
       correct_tools:
         - minecraft:wooden_pickaxe
       incorrect_tool_dig_speed: 0.3
+      required_break_power: 2
       tags:
         - minecraft:mineable/pickaxe
       instrument: basedrum
@@ -238,6 +239,18 @@ correct_tools:
 ```yaml
 incorrect_tool_dig_speed: 0.3 # 0~1
 ```
+
+### 所需破坏力
+
+决定了工具有效挖掘此方块所需的最低破坏力（默认值：0 = 无要求）
+
+```yaml
+required_break_power: 2
+```
+
+:::info
+工具通过物品设置 [`break_power`](../item/settings.mdx#break_power破坏力) 定义自己的破坏力；未设置时继承其原版材质的破坏力。原版工具的破坏力是写死的：木/金 = 1、石/铜 = 2、铁 = 3、钻石 = 4、下界合金 = 5，其余物品 = 0。你可以在 config.yml 中通过 `item.break-power` 覆写。
+:::
 
 ### 标签
 

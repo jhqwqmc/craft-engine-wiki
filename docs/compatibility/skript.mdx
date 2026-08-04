@@ -12,10 +12,23 @@ For advanced skript users, please use reflection to achieve more advanced functi
 :::
 
 :::warning
-Please note that if you get an error when loading the server, it is probably because the skript script is loaded before the craftengine. This cannot be fixed at this time and can only be solved by reloading.
-
 You need to install [Skript](https://modrinth.com/plugin/skript) 2.15.0+.
 :::
+
+
+## Types
+
+CraftEngine registers two extra types that can be stored in variables. Parse them from strings with `parsed as`:
+
+```applescript
+# A full immutable block state (id + properties)
+set {_state} to "default:table_lamp[lit=true,facing=east]" parsed as custom block state
+
+# A block state matcher, mostly used in event filters
+set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state matcher
+```
+
+Unquoted literals also work in effects and event filters, e.g. `place custom block default:table_lamp[lit=true] at player`.
 
 
 ## Events
@@ -100,26 +113,50 @@ You need to install [Skript](https://modrinth.com/plugin/skript) 2.15.0+.
   defaultOpen={false}
 />
 
-
-
-## Conditions
-
 <SkriptCard
-  title="CraftEngine has been loaded"
-  type="Condition"
-  description="Checks CraftEngine has been loaded"
+  title="Hit CraftEngine Furniture Event"
+  type="Event"
+  description="Triggers when a player hits CraftEngine furniture. Cancellable"
   syntax={[
-    '(ce|craft[-]engine) (has been|is) load[ed]',
-    '(ce|craft[-]engine) (has not been|is not) load[ed] [yet]',
-    '(ce|craft[-]engine) (hasn\'t been|isn\'t) load[ed] [yet]'
+    '[on] hit[ting] [of] [(custom|ce|craft-engine)] furniture[s] [[of] %-strings%]'
+  ]}
+  values={[
+    'event-entity',
+    'event-location',
+    'event-player',
+    'event-world'
   ]}
   examples={[
-    `on script load:
-      stop if craft-engine has not been loaded yet
-      send "script init something!" to console`
+    `on hit of furniture "default:wooden_chair":
+      cancel event`
   ]}
   defaultOpen={false}
 />
+
+<SkriptCard
+  title="Attempt Place CraftEngine Block/Furniture Event"
+  type="Event"
+  description="Triggers when a player attempts to place a custom block or furniture, before it is actually placed. Cancellable"
+  syntax={[
+    '[on] attempt[ing] to place (custom|ce|craft-engine) block[s] [[of] %-unsafeblockstatematchers%]',
+    '[on] attempt[ing] to place [(custom|ce|craft-engine)] furniture[s] [[of] %-strings%]'
+  ]}
+  values={[
+    'event-block',
+    'event-location',
+    'event-player',
+    'event-world'
+  ]}
+  examples={[
+    `on attempt to place custom block:
+      cancel event`
+  ]}
+  defaultOpen={false}
+/>
+
+
+
+## Conditions
 
 <SkriptCard
   title="Is Custom Item"
@@ -166,6 +203,38 @@ You need to install [Skript](https://modrinth.com/plugin/skript) 2.15.0+.
       set {_entity} to nearest pig
       if {_entity} is a ce furniture:
         send "What am I doing?" to event-player`
+  ]}
+  defaultOpen={false}
+/>
+
+
+
+<SkriptCard
+  title="Is Furniture Seat"
+  type="Condition"
+  description="Checks entity is a seat of a CraftEngine furniture"
+  syntax={[
+    '%entities% (is|are) [a[n]] [(custom|ce|craft-engine)] furniture seat[s]',
+    '%entities% (is|are) (n\'t| not) [a[n]] [(custom|ce|craft-engine)] furniture seat[s]'
+  ]}
+  examples={[
+    `if target entity is a furniture seat:
+      send "This is a seat!" to event-player`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Is Furniture Collider"
+  type="Condition"
+  description="Checks entity is a collision entity of a CraftEngine furniture"
+  syntax={[
+    '%entities% (is|are) [a[n]] [(custom|ce|craft-engine)] furniture (collider|collision entit(y|ies))',
+    '%entities% (is|are) (n\'t| not) [a[n]] [(custom|ce|craft-engine)] furniture (collider|collision entit(y|ies))'
+  ]}
+  examples={[
+    `if target entity is a furniture collider:
+      send "This is a collider!" to event-player`
   ]}
   defaultOpen={false}
 />
@@ -245,6 +314,64 @@ You need to install [Skript](https://modrinth.com/plugin/skript) 2.15.0+.
   defaultOpen={false}
 />
 
+<SkriptCard
+  title="Custom Block State Property"
+  type="Expression"
+  description="Get or set a single property of a custom block state. Block states are immutable: setting a property replaces the state stored in the variable"
+  syntax={[
+    '(custom|ce|craft-engine) block [state] propert(y|ies) %strings% of %customblockstates%',
+    '%customblockstates%\'[s] (custom|ce|craft-engine) block [state] propert(y|ies) %strings%'
+  ]}
+  examples={[
+    `set {_s} to "default:table_lamp[lit=true]" parsed as custom block state
+      set custom block property "facing" of {_s} to "south"
+      place custom block {_s} at target block`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="All Custom Block States"
+  type="Expression"
+  description="Get all possible states of custom blocks"
+  syntax={[
+    '[(all|the)] [possible] [block] states of (custom|ce|craft-engine) block[s] %strings%',
+  ]}
+  examples={[
+    `loop all states of custom block "default:table_lamp":
+      send "%loop-value%"`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Furniture Variant"
+  type="Expression"
+  description="Get, set or reset the variant of a furniture entity. Resetting restores the default variant"
+  syntax={[
+    '(custom|ce|craft-engine) furniture variant of %entities%',
+    '%entities%\'[s] (custom|ce|craft-engine) furniture variant'
+  ]}
+  examples={[
+    `set furniture variant of target entity to "wall"`,
+    `reset furniture variant of target entity`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Furniture Variants"
+  type="Expression"
+  description="Get all variant names of furniture definitions"
+  syntax={[
+    '[(all|the)] variants of [(custom|ce|craft-engine)] furniture %strings%',
+  ]}
+  examples={[
+    `send variants of furniture "default:flower_basket" to player`
+  ]}
+  defaultOpen={false}
+/>
+
 
 # Effect
 
@@ -264,12 +391,26 @@ You need to install [Skript](https://modrinth.com/plugin/skript) 2.15.0+.
 <SkriptCard
   title="Place Furniture"
   type="Effect"
-  description="Place a furniture"
+  description="Place a furniture, optionally with a specific variant"
   syntax={[
-    'place [(custom|ce|craft-engine)] furniture[s] %strings% [at] [%directions% %locations%]',
+    'place [(custom|ce|craft-engine)] furniture[s] %strings% [with variant %-strings%] [at] [%directions% %locations%]',
   ]}
   examples={[
-    `place furniture "default:bench" at location of player`
+    `place furniture "default:bench" at location of player`,
+    `place furniture "default:flower_basket" with variant "wall" at location of player`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Remove Custom Block"
+  type="Effect"
+  description="Remove custom blocks at the given locations. Non-custom blocks are ignored"
+  syntax={[
+    '(remove|break) (custom|ce|craft-engine) block[s] [at] [%directions% %locations%]',
+  ]}
+  examples={[
+    `remove custom block at target block`
   ]}
   defaultOpen={false}
 />
@@ -283,6 +424,19 @@ You need to install [Skript](https://modrinth.com/plugin/skript) 2.15.0+.
   ]}
   examples={[
     `remove craft-engine furniture target entity`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Force Set Furniture Variant"
+  type="Effect"
+  description="Forcefully set the variant of furniture entities, skipping the collision check. Compare with 'set furniture variant of ... to ...' which respects collision checks"
+  syntax={[
+    'force[fully] set [(custom|ce|craft-engine)] furniture variant of %entities% to %strings%',
+  ]}
+  examples={[
+    `force set furniture variant of target entity to "ceiling"`
   ]}
   defaultOpen={false}
 />

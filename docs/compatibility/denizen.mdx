@@ -1,0 +1,449 @@
+---
+title: 📜 Denizen
+id: denizen
+---
+
+import SkriptCard from '@site/src/components/SkriptCard';
+
+# 📜 Denizen
+
+:::tip
+If you encounter problems when using the Denizen features provided by CraftEngine, please [give us feedback](https://github.com/Xiao-MoMi/craft-engine/issues/new) in time. If you'd like to request a new Denizen feature and you know Java, consider contributing your code via a pull request!
+:::
+
+:::warning
+You need to install [Denizen](https://ci.citizensnpcs.co/job/Denizen/).
+:::
+
+In all event lines, the word `ce` can also be written as `craftengine`, e.g. `on player breaks craftengine block block:` works the same as `on player breaks ce block block:`.
+
+CraftEngine ids (like `default:wooden_chair`) can be used directly in event lines and command arguments — the plugin registers all loaded namespaces with Denizen automatically, no extra escaping needed.
+
+
+## Events
+
+<SkriptCard
+  title="Break CraftEngine Block Event"
+  type="Event"
+  description="Triggers when a player breaks a CraftEngine custom block. Cancellable"
+  syntax={[
+    'on player breaks ce block <\'block\'>'
+  ]}
+  values={[
+    '<context.location> - the location the block was broken at',
+    '<context.id> - the CraftEngine block id, like "default:togglable_light_block"',
+    '<context.should_drop_items> - whether the event will drop items',
+    'Switch: with:<item> - only when breaking with a specified item',
+    'Determine: "NOTHING" - drop no items; ListTag(ItemTag) - drop the specified items'
+  ]}
+  examples={[
+    `on player breaks ce block block:
+  - narrate "You just broke a <context.id>!"`,
+    `on player breaks ce block default:togglable_light_block with:diamond_pickaxe:
+  - narrate "No drops for you!"
+  - determine NOTHING`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Break CraftEngine Furniture Event"
+  type="Event"
+  description="Triggers when a player breaks a CraftEngine furniture. Cancellable"
+  syntax={[
+    'on player breaks ce furniture <\'furniture\'>'
+  ]}
+  values={[
+    '<context.location> - the location the furniture was broken at',
+    '<context.id> - the CraftEngine furniture id, like "default:wooden_chair"',
+    '<context.entity> - the EntityTag of the furniture\'s base entity',
+    '<context.should_drop_items> - whether the event will drop items',
+    'Switch: with:<item> - only when breaking with a specified item',
+    'Determine: "NOTHING" - drop no items; ListTag(ItemTag) - drop the specified items'
+  ]}
+  examples={[
+    `on player breaks ce furniture default:wooden_chair:
+  - narrate "You just broke a wooden chair!"
+  - determine NOTHING`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Place CraftEngine Block Event"
+  type="Event"
+  description="Triggers when a player places a CraftEngine custom block. Cancellable"
+  syntax={[
+    'on player places ce block <\'block\'>'
+  ]}
+  values={[
+    '<context.location> - the location the block was placed at',
+    '<context.id> - the CraftEngine block id',
+    '<context.hand> - the used hand',
+    'Switch: with:<item> - only when placing with a specified item'
+  ]}
+  examples={[
+    `on player places ce block block:
+  - narrate "You just placed a <context.id>!"`,
+    `on player places ce block default:safe_block in:my_base:
+  - determine cancelled`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Place CraftEngine Furniture Event"
+  type="Event"
+  description="Triggers when a player places a CraftEngine furniture. Cancellable"
+  syntax={[
+    'on player places ce furniture <\'furniture\'>'
+  ]}
+  values={[
+    '<context.location> - the location the furniture was placed at',
+    '<context.id> - the CraftEngine furniture id',
+    '<context.entity> - the EntityTag of the furniture\'s base entity',
+    '<context.hand> - the used hand',
+    'Switch: with:<item> - only when placing with a specified item'
+  ]}
+  examples={[
+    `on player places ce furniture furniture:
+  - narrate "You just placed a <context.id>!"`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Attempt Place CraftEngine Block Event"
+  type="Event"
+  description="Triggers when a player is about to place a CraftEngine custom block, before the placement happens. Cancelling prevents the placement"
+  syntax={[
+    'on player attempts to place ce block <\'block\'>'
+  ]}
+  values={[
+    '<context.location> - the location the block would be placed at',
+    '<context.id> - the CraftEngine block id',
+    '<context.clicked_block> - the block that was clicked to trigger the placement',
+    '<context.hand> - the used hand',
+    'Switch: with:<item> - only when placing with a specified item'
+  ]}
+  examples={[
+    `on player attempts to place ce block block in:no_build_zone:
+  - narrate "You can't place that here!"
+  - determine cancelled`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Attempt Place CraftEngine Furniture Event"
+  type="Event"
+  description="Triggers when a player is about to place a CraftEngine furniture, before the placement happens. Cancelling prevents the placement"
+  syntax={[
+    'on player attempts to place ce furniture <\'furniture\'>'
+  ]}
+  values={[
+    '<context.location> - the location the furniture would be placed at',
+    '<context.id> - the CraftEngine furniture id',
+    '<context.variant> - the name of the furniture variant being placed',
+    '<context.clicked_block> - the block that was clicked to trigger the placement',
+    '<context.hand> - the used hand',
+    'Switch: with:<item> - only when placing with a specified item'
+  ]}
+  examples={[
+    `on player attempts to place ce furniture furniture in:no_build_zone:
+  - narrate "You can't place that here!"
+  - determine cancelled`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Click CraftEngine Block Event"
+  type="Event"
+  description="Triggers when a player clicks on a CraftEngine custom block. Cancellable. Note that CraftEngine treats left clicks in creative mode as block breaking, so LEFT_CLICK only fires in survival/adventure mode"
+  syntax={[
+    'on player (right|left) clicks ce block (<\'block\'>)'
+  ]}
+  values={[
+    '<context.item> - the ItemTag the player is clicking with',
+    '<context.location> - the location the player is clicking on',
+    '<context.id> - the CraftEngine block id',
+    '<context.relative> - the air block in front of the clicked block',
+    '<context.click_type> - LEFT_CLICK or RIGHT_CLICK',
+    '<context.hand> - the used hand',
+    'Switch: with:<item> - only when clicking with a specified item'
+  ]}
+  examples={[
+    `on player right clicks ce block:
+  - narrate "You just right-clicked a <context.id>!"`,
+    `on player right clicks ce block default:safe_block with:diamond_sword:
+  - narrate "Not with that sword!"
+  - determine cancelled`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Click CraftEngine Furniture Event"
+  type="Event"
+  description="Triggers when a player clicks on a CraftEngine furniture. Cancellable"
+  syntax={[
+    'on player (right|left) clicks ce furniture (<\'furniture\'>)'
+  ]}
+  values={[
+    '<context.item> - the ItemTag the player is clicking with',
+    '<context.location> - the location of the clicked furniture',
+    '<context.id> - the CraftEngine furniture id',
+    '<context.entity> - the EntityTag of the furniture\'s base entity',
+    '<context.click_type> - LEFT_CLICK or RIGHT_CLICK',
+    '<context.hand> - the used hand',
+    'Switch: with:<item> - only when clicking with a specified item'
+  ]}
+  examples={[
+    `on player right clicks ce furniture:
+  - narrate "You just right-clicked a <context.id>!"`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="CraftEngine Reloaded Event"
+  type="Event"
+  description="Triggers when the CraftEngine plugin finishes reloading. Has no linked player"
+  syntax={[
+    'on ce reloaded'
+  ]}
+  examples={[
+    `on ce reloaded:
+  - announce "CraftEngine has been reloaded!"`
+  ]}
+  defaultOpen={false}
+/>
+
+
+## Tags
+
+<SkriptCard
+  title="Item: Is CraftEngine Item / Item Id"
+  type="Tag"
+  description="Checks whether the item is a CraftEngine custom item, and gets its CraftEngine item id"
+  syntax={[
+    '<ItemTag.is_ce_item> - returns ElementTag(Boolean)',
+    '<ItemTag.ce_id> - returns ElementTag like "default:topaz_rod", nothing if not a custom item'
+  ]}
+  examples={[
+    `- if <player.item_in_hand.is_ce_item>:
+    - narrate "You are holding <player.item_in_hand.ce_id>!"`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Location: Is CraftEngine Block / Block Id"
+  type="Tag"
+  description="Checks whether the block at the location is a CraftEngine custom block, and gets its CraftEngine block id"
+  syntax={[
+    '<LocationTag.is_ce_block> - returns ElementTag(Boolean)',
+    '<LocationTag.ce_id> - returns ElementTag like "default:togglable_light_block", nothing if not a custom block'
+  ]}
+  examples={[
+    `- if <player.cursor_on.is_ce_block>:
+    - narrate "You are looking at <player.cursor_on.ce_id>!"`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Location: CraftEngine Block States"
+  type="Tag"
+  description="Returns a MapTag of all block state properties of the CraftEngine custom block at the location. Returns nothing if not a custom block"
+  syntax={[
+    '<LocationTag.ce_block_states> - returns MapTag'
+  ]}
+  examples={[
+    `- narrate "The block you are looking at has light level <player.cursor_on.ce_block_states.get[light]>."`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Entity: Is CraftEngine Furniture / Furniture Id"
+  type="Tag"
+  description="Checks whether the entity is part of a CraftEngine furniture (base entity, seat, or collider), and gets its CraftEngine furniture id"
+  syntax={[
+    '<EntityTag.is_ce_furniture> - returns ElementTag(Boolean)',
+    '<EntityTag.ce_id> - returns ElementTag like "default:wooden_chair", nothing if not a furniture'
+  ]}
+  examples={[
+    `- if <player.precise_target.is_ce_furniture.if_null[false]>:
+    - narrate "You are looking at <player.precise_target.ce_id>!"`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Entity: Is Furniture Seat / Collider"
+  type="Tag"
+  description="Checks whether the entity is a seat or a collision entity of a CraftEngine furniture"
+  syntax={[
+    '<EntityTag.is_ce_furniture_seat> - returns ElementTag(Boolean)',
+    '<EntityTag.is_ce_furniture_collider> - returns ElementTag(Boolean)'
+  ]}
+  examples={[
+    `- if <player.precise_target.is_ce_furniture_seat.if_null[false]>:
+    - narrate "This is a seat!"`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Entity: Furniture Variant / Variants"
+  type="Tag"
+  description="Gets the current variant name of a CraftEngine furniture, or a list of all its variant names"
+  syntax={[
+    '<EntityTag.ce_furniture_variant> - returns ElementTag',
+    '<EntityTag.ce_furniture_variants> - returns ListTag'
+  ]}
+  examples={[
+    `- narrate "The chair variant is <player.precise_target.ce_furniture_variant>, all: <player.precise_target.ce_furniture_variants>"`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Server: CraftEngine Id Lists"
+  type="Tag"
+  description="Returns lists of all loaded CraftEngine block, item and furniture ids"
+  syntax={[
+    '<server.ce_block_ids> - returns ListTag',
+    '<server.ce_item_ids> - returns ListTag',
+    '<server.ce_furniture_ids> - returns ListTag'
+  ]}
+  examples={[
+    `- narrate "Loaded <server.ce_block_ids.size> custom blocks!"`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="CraftEngine Item"
+  type="Tag"
+  description="Returns a CraftEngine custom item object constructed from the input id"
+  syntax={[
+    '<ce_item[<item_id>]> - returns ItemTag'
+  ]}
+  examples={[
+    `- give <ce_item[default:topaz_rod]>`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="CraftEngine Possible States"
+  type="Tag"
+  description="Returns a list of all possible block states of a CraftEngine block id, in the form directly usable by the placeceblock command"
+  syntax={[
+    '<ce_possible_states[<block_id>]> - returns ListTag like "default:togglable_light_block[light=15]"'
+  ]}
+  examples={[
+    `- foreach <ce_possible_states[default:togglable_light_block]> as:state:
+    - narrate "<[state]>"`
+  ]}
+  defaultOpen={false}
+/>
+
+
+## Mechanisms
+
+<SkriptCard
+  title="Location: Set CraftEngine Block State"
+  type="Mechanism"
+  description="Sets a block state property of the CraftEngine custom block at the location, used with the adjust command"
+  syntax={[
+    '- adjust <location> ce_block_state:<key=value>'
+  ]}
+  examples={[
+    `- adjust <player.cursor_on> ce_block_state:light=10`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="Entity: Set CraftEngine Furniture Variant"
+  type="Mechanism"
+  description="Sets the variant of a CraftEngine furniture, used with the adjust command. Does nothing if the variant doesn't exist or is blocked"
+  syntax={[
+    '- adjust <entity> ce_furniture_variant:<variant_name>'
+  ]}
+  examples={[
+    `- adjust <player.precise_target> ce_furniture_variant:oak`
+  ]}
+  defaultOpen={false}
+/>
+
+
+## Commands
+
+<SkriptCard
+  title="PlaceCEBlock"
+  type="Command"
+  description="Places CraftEngine custom blocks in the world. Blocks are specified as CraftEngine block ids, optionally with block state properties. ~waitable"
+  syntax={[
+    'placeceblock [<location>|.../<ellipsoid>/<cuboid>] [<craftengine_block>|...] (no_physics) (<percent chance>|...)'
+  ]}
+  values={[
+    'no_physics - place without physics taking over the modified blocks',
+    '(<percent chance>|...) - chances are rolled in order per location until one succeeds; if no roll succeeds, the location is left unchanged. "50|50" means 50% the first block, 25% the second, 25% unchanged'
+  ]}
+  examples={[
+    `- placeceblock <player.cursor_on> default:sugar_block`,
+    `- ~placeceblock <player.cursor_on> default:togglable_light_block[light=15] no_physics`,
+    `- placeceblock <player.location.to_cuboid[<player.cursor_on>]> default:sugar_block|default:cloud_block 50|50`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="SpawnCEFurniture"
+  type="Command"
+  description="Spawns CraftEngine furniture in the world. ~waitable"
+  syntax={[
+    'spawncefurniture [<location>|.../<ellipsoid>/<cuboid>] [<craftengine_furniture>|...] (direction:north/east/south/west) (<percent chance>|...)'
+  ]}
+  values={[
+    'direction: - controls the direction the furniture faces',
+    '(<percent chance>|...) - chances are rolled in order per location until one succeeds; if no roll succeeds, nothing is spawned at that location'
+  ]}
+  examples={[
+    `- spawncefurniture <player.cursor_on> default:wooden_chair`,
+    `- ~spawncefurniture <player.cursor_on> default:oak_lamp direction:west`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="RemoveCEFurniture"
+  type="Command"
+  description="Removes CraftEngine furniture from the world, without dropping loot or playing effects. Entities that are not part of a CraftEngine furniture are ignored. ~waitable"
+  syntax={[
+    'removecefurniture [<entity>|...]'
+  ]}
+  examples={[
+    `- removecefurniture <player.precise_target>`
+  ]}
+  defaultOpen={false}
+/>
+
+<SkriptCard
+  title="RemoveCEBlock"
+  type="Command"
+  description="Removes CraftEngine custom blocks from the world, without dropping loot or playing effects. Locations without a custom block are silently skipped. ~waitable"
+  syntax={[
+    'removeceblock [<location>|.../<ellipsoid>/<cuboid>]'
+  ]}
+  examples={[
+    `- removeceblock <player.cursor_on>`,
+    `- removeceblock <player.location.to_cuboid[<player.cursor_on>]>`
+  ]}
+  defaultOpen={false}
+/>
