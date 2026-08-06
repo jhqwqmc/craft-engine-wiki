@@ -709,6 +709,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: "configuration/atlas",
+          label: '🗂️ 图集',
+        },
+        {
+          type: 'doc',
           id: "configuration/image",
           label: '🖼️ 图像',
         },

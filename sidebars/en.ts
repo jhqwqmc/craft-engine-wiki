@@ -709,6 +709,11 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'doc',
+          id: "configuration/atlas",
+          label: '🗂️ Atlas',
+        },
+        {
+          type: 'doc',
           id: "configuration/image",
           label: '🖼️ Image',
         },

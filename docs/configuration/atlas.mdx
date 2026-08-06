@@ -1,0 +1,103 @@
+---
+title: 🗂️ Atlas
+id: atlas
+---
+
+:::info
+
+Most packs do **not** need an atlas configuration. CraftEngine validates and can repair the common block/item atlas cases automatically. Only configure an atlas when you have a special resource-pack requirement, such as adding textures to a vanilla atlas, creating a custom sprite atlas, or using an advanced vanilla sprite source.
+
+:::
+
+An atlas tells Minecraft which textures are available as sprites in a particular atlas. CraftEngine reads `atlases:` from files under a pack's `configuration/` directory, then writes the result to:
+
+```
+assets/<namespace>/atlases/<atlas-id>.json
+```
+
+Entries for the same atlas ID may be placed in multiple configuration files; CraftEngine merges their sources in load order.
+
+## Basic Example
+
+This mirrors Minecraft's default `minecraft:blocks` atlas. Texture paths do not include `textures/` or the `.png` extension.
+
+```yaml
+atlases:
+  minecraft:blocks:
+    sources:
+      - type: directory
+        source: block
+        prefix: block/
+      - type: single
+        resource: minecraft:entity/bell/bell_body
+```
+
+The example above generates or extends `assets/minecraft/atlases/blocks.json`.
+
+## Source Types
+
+Each example below is one entry in an atlas's `sources:` list. For Minecraft's complete vanilla behavior, see the [Minecraft Wiki Atlas reference](https://minecraft.wiki/w/Atlas).
+
+### `directory`
+
+Adds every PNG in a texture directory, including its subdirectories.
+
+```yaml
+- type: directory
+  source: block
+  prefix: block/
+```
+
+`source` is the directory below `assets/<atlas namespace>/textures/`. `prefix` is prepended to the sprite ID produced for every texture. Use it when a whole texture folder belongs to the atlas.
+
+### `single`
+
+Adds one texture. `resource` is the texture ID. `sprite` is optional; if present, it becomes the generated sprite ID instead of using `resource`.
+
+```yaml
+- type: single
+  resource: my_pack:entity/custom_machine
+  sprite: my_pack:machine
+```
+
+### `filter`
+
+Removes sprites whose namespace or path matches the supplied regular-expression pattern. Both `namespace` and `path` are optional, but provide at least one of them.
+
+```yaml
+- type: filter
+  pattern:
+    namespace: my_pack
+    path: gui/.*
+```
+
+### `unstitch`
+
+Splits regions from one texture into separately named sprites. `resource` is the source texture. `divisor_x` and `divisor_y` scale the region coordinates against that texture; both default to `1`. Every `regions` entry defines one output sprite with its `sprite` ID and `x`, `y`, `width`, and `height` rectangle.
+
+```yaml
+- type: unstitch
+  resource: my_pack:gui/sprites
+  divisor_x: 256
+  divisor_y: 256
+  regions:
+    - sprite: my_pack:gui/button
+      x: 0
+      y: 0
+      width: 20
+      height: 20
+```
+
+### `paletted_permutations`
+
+Creates recoloured texture variants from palette textures. `textures` lists the base textures, `palette_key` is the key palette, and `permutations` maps each output suffix to a replacement palette. `separator` joins the base texture name and suffix, and defaults to `_`.
+
+```yaml
+- type: paletted_permutations
+  textures:
+    - my_pack:trims/items/helmet_trim
+  palette_key: minecraft:trims/color_palettes/trim_palette
+  separator: _
+  permutations:
+    ruby: my_pack:trims/color_palettes/ruby
+```
