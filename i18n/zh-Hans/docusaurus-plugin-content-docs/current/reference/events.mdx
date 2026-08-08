@@ -697,6 +697,23 @@ time: "5s" # 必填; 字符串; 支持 t(刻),s(秒),m(分),h(时),d(天),w(周)
 add: false # 可选; 布尔; 默认值: false
 ```
 
+### transfer
+
+将玩家转移到另一个服务器。支持代理插件消息（BungeeCord / Velocity）和 Minecraft 原生 transfer 两种方式。
+
+```yaml
+# 代理插件消息 — 按服务器名称（BungeeCord / Velocity）
+type: transfer
+server: "lobby" # 必填（若未设置 host）；字符串
+```
+
+```yaml
+# 转移到另一个服务器 — 按主机 + 端口
+type: transfer
+host: "lobby.example.com" # 必填（若未设置 server）；字符串
+port: 25566               # 可选；数字；默认值: 25565
+```
+
 ### js
 
 调用一个 JavaScript 函数。完整的脚本使用指南见 [<u>📜 脚本</u>](script.mdx)。

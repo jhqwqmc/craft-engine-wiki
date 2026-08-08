@@ -138,6 +138,33 @@ type: enchantment
 predicate: minecraft:silk_touch>=1 # > >= = < <=
 ```
 
+### equipment
+
+Check if the item in a specific equipment slot matches the configured item ID or tag. The slot aliases and the ID/tag check use OR logic.
+
+```yaml
+type: equipment
+slot: head # required; enum[mainhand, offhand, head, chest, legs, feet, body, saddle]
+id: "minecraft:diamond_helmet" # optional; string/string list; item ID to match
+tag: ["my_pack:custom_tag"] # optional; string list; tag to match (OR logic with id)
+regex: false # optional; boolean; default: false; whether id uses regex matching
+```
+
+```yaml
+# Example: match by item ID with regex
+type: equipment
+slot: chest
+id: ["minecraft:.*_chestplate"]
+regex: true
+```
+
+```yaml
+# Example: match by tag only
+type: equipment
+slot: feet
+tag: ["my_pack:fire_resistant"]
+```
+
 ### table\_bonus
 
 Provide different success probabilities at various enchantment levels.

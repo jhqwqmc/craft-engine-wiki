@@ -82,16 +82,17 @@ equipment:
 
 ### repairable
 
-Decides if the item can be repaired through crafting table/anvil. (Default: true)
+Decides if the item can be repaired through crafting table/anvil/grindstone. (Default: true)
 
 ```yaml
 repairable: true
 
 # Detailed repair configuration (overrides the simple boolean above)
 repairable:
-  crafting_table: true
-  anvil_repair: false
-  anvil_combine: true
+  crafting_table: true    # combine two of the same item in a crafting table
+  anvil_repair: false     # repair with materials in an anvil
+  anvil_combine: true     # combine two of the same item in an anvil
+  grindstone_repair: true # combine two of the same item in a grindstone
 ```
 
 ![](/img/item_settings_3.png)

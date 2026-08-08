@@ -695,6 +695,23 @@ time: "5s"                  # required; string; supports unit combinations: t(ti
 add: false                  # optional; boolean; default: false
 ```
 
+### transfer
+
+Transfer a player to another server. Supports both proxy plugin messaging (BungeeCord / Velocity) and Minecraft native transfer.
+
+```yaml
+# Proxy plugin message — by server name (BungeeCord / Velocity)
+type: transfer
+server: "lobby" # required if host not set; string
+```
+
+```yaml
+# Direct transfer — by host + port
+type: transfer
+host: "lobby.example.com" # required if server not set; string
+port: 25566               # optional; number; default: 25565
+```
+
 ### js
 
 Invokes a JavaScript function. See [<u>📜 Scripting</u>](script.mdx) for the full scripting guide.

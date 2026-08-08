@@ -138,6 +138,33 @@ type: enchantment
 predicate: minecraft:silk_touch>=1 # > >= = < <=
 ```
 
+### equipment
+
+检查指定装备槽位的物品是否匹配配置的物品 ID 或 tag。槽位别名以及 ID/tag 之间采用 OR 逻辑。
+
+```yaml
+type: equipment
+slot: head # 必填; 枚举[mainhand, offhand, head, chest, legs, feet, body, saddle]
+id: "minecraft:diamond_helmet" # 可选; 字符串/字符串列表; 匹配物品 ID
+tag: ["my_pack:custom_tag"] # 可选; 字符串列表; 匹配 tag（与 id 为 OR 逻辑）
+regex: false # 可选; 布尔; 默认值: false; id 是否使用正则匹配
+```
+
+```yaml
+# 示例：通过 ID 正则匹配
+type: equipment
+slot: chest
+id: ["minecraft:.*_chestplate"]
+regex: true
+```
+
+```yaml
+# 示例：仅通过 tag 匹配
+type: equipment
+slot: feet
+tag: ["my_pack:fire_resistant"]
+```
+
 ### table\_bonus
 
 以魔咒等级为索引，从列表中挑选概率通过。
