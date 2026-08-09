@@ -1,0 +1,37 @@
+---
+title: 🪸 Seagrass-like Block
+id: seagrass_like_block
+---
+
+**Seagrass-like Block** is permanently waterlogged, like vanilla seagrass. It has no `waterlogged` property — the block is always filled with water.
+
+- Can only be **placed in water** (a full water block); placement anywhere else is denied.
+- A bucket can neither take water out of it nor pour water into it.
+- Water re-flows from its position whenever a neighbor changes.
+
+:::warning
+Pair this behavior with `fluid_state: water`, otherwise the block is not treated as a water source: water will not flow from it, entities inside it are not considered to be in water, and breaking it leaves air instead of water.
+:::
+
+Whether water actually flows **out** of the block depends on its collision shape: thin plants (e.g. `auto_state: kelp`) let water through, while a full-block collision seals the water inside — the same rule vanilla uses for waterlogged leaves.
+
+## Example
+
+```yaml
+blocks:
+  default:water_grass:
+    behavior:
+      type: seagrass_like_block
+    settings:
+      fluid_state: water      # treat this block as a water source
+    states:
+      appearances:
+        default:
+          auto_state: kelp    # thin collision shape — water can flow out
+          model:
+            path: "minecraft:block/custom/water_grass"
+```
+
+:::tip
+For a toggleable waterlogged block (like a slab or stairs, which can also exist in a dry state), define a `waterlogged` boolean property instead — the waterlogged behavior is applied automatically. Set `fluid_state: water` on the `waterlogged=true` variant via [variant settings](../states.mdx#variant-matching-rules).
+:::

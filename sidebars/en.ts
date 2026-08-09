@@ -549,6 +549,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   "type": "doc",
+                  "id": "configuration/block/behaviors/seagrass_like_block",
+                  "label": "🪸 Seagrass-like Block"
+                },
+                {
+                  "type": "doc",
                   "id": "configuration/block/behaviors/seat_block",
                   "label": "💺 Seat Block"
                 },
