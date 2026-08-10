@@ -151,9 +151,20 @@ CraftEngine 的大部分命令以 `/craftengine`（缩写 `/ce`）开头，少�
 
 ### feature migrate-world-storage
 
-`/ce feature migrate-world-storage [世界] [类型]`
+`/ce feature migrate-world-storage [世界] [方向] [类型]`
 
-迁移世界区块存储格式。`类型` 为 `mca` 或 `pdc`，将从该类型迁移至配置文件中当前启用的存储类型；请先在配置中切换目标存储类型，再从旧类型迁移。
+迁移世界区块存储格式。`类型` 为 `mca`、`pdc` 或 `linear`，且不能是配置文件中当前启用的存储类型。`方向` 为 `from` 或 `to`：
+
+- `from`：从指定类型迁移**到**当前启用的存储类型——请先在配置中切换目标存储类型，再从旧类型迁移。
+- `to`：从当前启用的类型迁移**到**指定类型，完成后会提示你在配置中更新存储类型并重启服务器。
+
+仅支持 Paper，同一时间只能运行一个迁移任务。
+
+### feature clear-world-storage
+
+`/ce feature clear-world-storage [世界] [类型]`
+
+删除指定世界中某种存储类型的区块数据。`类型` 为 `mca`、`pdc` 或 `linear`，且不能是配置文件中当前启用的存储类型。用于切换存储格式后清理遗留数据（例如在执行 `migrate-world-storage` 之后）。仅支持 Paper，同一时间只能运行一个清理任务。
 
 ### feature world-settings
 
@@ -194,6 +205,12 @@ CraftEngine 的大部分命令以 `/craftengine`（缩写 `/ce`）开头，少�
 `/ce resource save-default [路径]`
 
 重新生成内置默认资源。可用路径：`/default_assets`、`/default_feature_populator`、`/default_templates`、`/internal`、`/legacy_armor`、`/remove_shulker_head`。
+
+### resource search
+
+`/ce resource search [类型] [资源]`
+
+查找某个资源配置定义在哪个文件中。`类型` 为资源的配置类型（如 `craftengine:item`、`craftengine:block`）——Tab 补全会列出所有可搜索的类型，选定类型后会列出其已注册的标识符。输出相对于 `resources` 文件夹的文件路径，点击即可复制绝对路径到剪贴板。
 
 ## 调试命令
 

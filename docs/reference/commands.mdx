@@ -151,9 +151,20 @@ Place a vanilla configured feature at the given location (player only). Defaults
 
 ### feature migrate-world-storage
 
-`/ce feature migrate-world-storage [world] [type]`
+`/ce feature migrate-world-storage [world] [direction] [type]`
 
-Migrate a world's chunk storage format. `type` is `mca` or `pdc`, migrating from that type to the storage type currently enabled in the config; switch the target storage type in the config first, then migrate from the old type.
+Migrate a world's chunk storage format. `type` is `mca`, `pdc`, or `linear`, and cannot be the storage type currently enabled in the config. `direction` is `from` or `to`:
+
+- `from` migrates **from** the specified type **to** the currently enabled storage type — switch the target storage type in the config first, then migrate from the old type.
+- `to` migrates **from** the currently enabled type **to** the specified type, and reminds you to update the config and restart when it finishes.
+
+Paper only, and only one migration can run at a time.
+
+### feature clear-world-storage
+
+`/ce feature clear-world-storage [world] [type]`
+
+Delete a world's stored chunk data of the given storage type. `type` is `mca`, `pdc`, or `linear`, and cannot be the storage type currently enabled in the config. This is used to clean up leftover data after switching storage types (e.g., following `migrate-world-storage`). Paper only, and only one cleanup task can run at a time.
 
 ### feature world-settings
 
@@ -194,6 +205,12 @@ Create a new resource pack skeleton. Uses the pack name as the namespace if none
 `/ce resource save-default [path]`
 
 Regenerate built-in default resources. Available paths: `/default_assets`, `/default_feature_populator`, `/default_templates`, `/internal`, `/legacy_armor`, `/remove_shulker_head`.
+
+### resource search
+
+`/ce resource search [type] [resource]`
+
+Find which config file defines a resource. `type` is the resource's config type (e.g., `craftengine:item`, `craftengine:block`) — tab completion lists all searchable types and, after a type is chosen, its registered ids. Prints the file path relative to the `resources` folder; click it to copy the absolute path to the clipboard.
 
 ## Debug Commands
 
