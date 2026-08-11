@@ -313,6 +313,15 @@ Check if player exists in this context
 type: has_player
 ```
 
+### has\_money
+
+Check whether the player has enough money (requires Vault and an economy plugin)
+
+```yaml
+type: has_money
+amount: 100 # required; number/expression
+```
+
 ### inventory\_has\_item
 
 Detect whether the specified item or quantity is present in the current context player's inventory.

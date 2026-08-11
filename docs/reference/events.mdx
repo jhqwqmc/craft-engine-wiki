@@ -659,6 +659,26 @@ amount: 1.0 # optional; number; default: 1.0
 target: "self" # optional; enum[all, self]/player selector; default: self
 ```
 
+### take\_money
+
+Take money from the player (requires Vault and an economy plugin). Nothing happens if the player's balance is insufficient.
+
+```yaml
+type: take_money
+amount: 100 # required; number/expression
+target: "self" # optional; enum[all, self]/player selector; default: self
+```
+
+### give\_money
+
+Give money to the player (requires Vault and an economy plugin)
+
+```yaml
+type: give_money
+amount: 100 # required; number/expression
+target: "self" # optional; enum[all, self]/player selector; default: self
+```
+
 ### spawn\_mythic\_mob
 
 Spawn a mythic mob
