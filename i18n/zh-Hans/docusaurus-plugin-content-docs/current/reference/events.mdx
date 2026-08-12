@@ -661,6 +661,26 @@ amount: 1.0 # 可选; 数字; 默认值: 1.0
 target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
 ```
 
+### 扣除金钱
+
+从玩家账户扣除金钱（需要安装 Vault 和经济插件）。余额不足时不执行任何操作。
+
+```yaml
+type: take_money
+amount: 100 # 必填; 数字/表达式
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### 给予金钱
+
+给予玩家金钱（需要安装 Vault 和经济插件）
+
+```yaml
+type: give_money
+amount: 100 # 必填; 数字/表达式
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
 ### MythicMobs 生物生成
 
 生成指定的 MythicMobs 生物

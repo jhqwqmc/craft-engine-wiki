@@ -504,6 +504,11 @@ const sidebars: SidebarsConfig = {
                 },
                 {
                   type: 'doc',
+                  id: "configuration/block/behaviors/seagrass_like_block",
+                  label: '🪸 类海草方块',
+                },
+                {
+                  type: 'doc',
                   id: "configuration/block/behaviors/near_liquid_block",
                   label: '🤽 邻液方块',
                 },
