@@ -186,6 +186,14 @@ type: random
 value: 0.1 # 10%
 ```
 
+By default every check rolls independently. Specify an `id` to share one roll across multiple checks within the same context:
+
+```yaml
+type: random
+value: 0.1
+id: crit # all random conditions with id "crit" in this context use the same roll
+```
+
 ### permission
 
 Checks if the player has the permission
