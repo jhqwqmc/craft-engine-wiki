@@ -265,6 +265,26 @@ loot_sources:
               item: "minecraft:carved_pumpkin"
 ```
 
+## entity_shear
+
+当玩家用剪刀修剪实体时触发，例如羊、哞菇或雪傀儡。
+
+- **target**：实体 id
+
+```yaml
+loot_sources:
+  minecraft:shear_sheep:
+    type: entity_shear
+    target: "minecraft:sheep"
+    overwrite: items
+    loot:
+      pools:
+        - rolls: 1
+          entries:
+            - type: item
+              item: "default:rainbow_wool"
+```
+
 ## vault
 
 当宝库喷出奖励时触发。

@@ -139,6 +139,12 @@ item_name: "<!i><#FF8C00><expr:0.##:'70 / 8'>"
 item_name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
 ```
 
+Use `bool` as the format to output the result as `true` / `false` (non-zero is `true`):
+
+```yaml
+- "<expr:bool:'<papi:farming_level> >= 10'>"
+```
+
 ![](/img/text_format_5.png)
 
 :::tip
@@ -148,6 +154,40 @@ item_name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
 [https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html)
 
 [https://ezylang.github.io/EvalEx/references/references.html](https://ezylang.github.io/EvalEx/references/references.html)
+
+:::
+
+### \<random:\_id\_>
+
+### \<random:\_id\_:\_type\_:\[args...\_]>
+
+Generates a random number. Within the same context, the same `id` always returns the value of its first roll; different ids roll independently.
+
+```yaml
+lore:
+  - "<!i>Attack: <random:atk:5~10>"
+  - "<!i>Crit Chance: <random:crit:triangle:0:100:80>%"
+```
+
+Supported distribution types (arguments are positional, `[...]` can be omitted):
+
+| type                 | arguments                                                    |
+|----------------------|--------------------------------------------------------------|
+| `uniform`            | `min`, `max`                                                 |
+| `triangle`           | `min`, `max`, `[mode]` (defaults to the midpoint)            |
+| `normal` / `gaussian` | `min`, `max`, `[mean]`, `[std_dev]`, `[max_attempts]`       |
+| `log_normal`         | `min`, `max`, `[location]`, `[scale]`, `[max_attempts]`      |
+| `skew_normal`        | `min`, `max`, `skewness`, `[mean]`, `[std_dev]`, `[max_attempts]` |
+| `binomial`           | `trials`, `probability`                                      |
+| `exponential`        | `mean`, `[min]`, `[max]`                                     |
+| `beta`               | `[min]`, `[max]`, `[alpha]`, `[beta]`                        |
+| `fixed` / `constant` | `value`                                                      |
+
+Shorthands: `<random:id:5~10>` is equivalent to `uniform:5:10`, and `<random:id:7>` is a constant. See [Number Format](number_format.mdx) for details of each distribution.
+
+:::caution
+
+The distribution is bound on the first roll. If the same `id` appears with different distributions within one context, only the first one takes effect.
 
 :::
 
@@ -170,9 +210,10 @@ internal.cooking_info.1: "Experience: <arg:cooking_experience>"
 
 2. **Common arguments**
 
+Named random values rolled by the `<random:xxx>` tag (or a `random` condition with an `id`) can be read back through chain arguments within the same context:
+
 ```yaml
-<arg:random>  # generates a random number between 0 and 1
-<arg:last_random>  # gets the last random number
+<arg:random.xxx>  # reads the named random value rolled in this context
 ```
 
 3. **Context subjects** – If the context subject (e.g., a player) provides parameters. Check this page for more:

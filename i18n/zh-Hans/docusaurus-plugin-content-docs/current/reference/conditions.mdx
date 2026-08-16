@@ -186,6 +186,14 @@ type: random
 value: 0.1 # 10%
 ```
 
+默认每次判定都独立 roll。指定 `id` 可让同一上下文内的多次判定共享同一次 roll：
+
+```yaml
+type: random
+value: 0.1
+id: crit # 此上下文中所有 id 为 crit 的 random 条件使用同一次 roll
+```
+
 ### permission
 
 检查玩家是否拥有权限

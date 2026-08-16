@@ -484,6 +484,25 @@ items:
 
 `title` also accepts the `raw` / `filtered` map form. Text supports MiniMessage formatting, and `<arg:...>` placeholders are resolved against the build context (e.g. the player viewing the item).
 
+### random_values
+
+Rolls random values when the item is built and persists them on the item. Values that already exist on the item are kept, so rebuilding or updating the item never re-rolls them. Each entry accepts any [Number Format](../../reference/number_format.mdx) value.
+
+```yaml
+items:
+  demo:sword:
+    data:
+      random_values:
+        attack: 5~10
+        crit:
+          type: triangle
+          min: 0
+          max: 100
+          mode: 80
+```
+
+Rolled values can be read through chain arguments wherever the item is available as a context parameter, e.g. `<arg:item_in_hand.random.attack>`, and can drive dynamic attribute modifiers via `item.random.attack` in number expressions.
+
 ## 📦 External Data
 
 Inherit data from another plugin's item.

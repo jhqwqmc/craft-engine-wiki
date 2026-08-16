@@ -161,6 +161,12 @@ item_name: "<!i><#FF8C00><expr:0.##:'70 / 8'>"
 item_name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
 ```
 
+将格式写为 `bool` 可把结果输出为 `true` / `false`（非零即为 `true`）：
+
+```yaml
+- "<expr:bool:'<papi:farming_level> >= 10'>"
+```
+
 ![](/img/text_format_5.png)
 
 :::tip
@@ -170,6 +176,40 @@ item_name: "<!i><#FF8C00><expr:0.##:'<papi:player_x> / 8'>"
 [https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/text/DecimalFormat.html)
 
 [https://ezylang.github.io/EvalEx/references/references.html](https://ezylang.github.io/EvalEx/references/references.html)
+
+:::
+
+### \<random:\_标识符\_>
+
+### \<random:\_标识符\_:\_类型\_:\[参数...\_]>
+
+生成一个随机数。同一上下文内，相同 `id` 始终返回第一次 roll 出的值；不同 `id` 各自独立 roll。
+
+```yaml
+lore:
+  - "<!i>攻击力: <random:atk:5~10>"
+  - "<!i>暴击率: <random:crit:triangle:0:100:80>%"
+```
+
+支持的分布类型（参数为位置参数，`[...]` 可省略）：
+
+| 类型                 | 参数                                                     |
+|----------------------|----------------------------------------------------------|
+| `uniform`            | `min`, `max`                                             |
+| `triangle`           | `min`, `max`, `[mode]`（默认为中点）                      |
+| `normal` / `gaussian` | `min`, `max`, `[mean]`, `[std_dev]`, `[max_attempts]`   |
+| `log_normal`         | `min`, `max`, `[location]`, `[scale]`, `[max_attempts]`  |
+| `skew_normal`        | `min`, `max`, `skewness`, `[mean]`, `[std_dev]`, `[max_attempts]` |
+| `binomial`           | `trials`, `probability`                                  |
+| `exponential`        | `mean`, `[min]`, `[max]`                                 |
+| `beta`               | `[min]`, `[max]`, `[alpha]`, `[beta]`                    |
+| `fixed` / `constant` | `value`                                                  |
+
+简写：`<random:id:5~10>` 等同于 `uniform:5:10`；`<random:id:7>` 为常量。各分布的详细说明见[数字格式](number_format.mdx)。
+
+:::caution
+
+分布在首次 roll 时绑定。同一上下文内如果同一个 `id` 以不同分布出现，只有第一次生效。
 
 :::
 
@@ -192,9 +232,10 @@ internal.cooking_info.1: "经验：<arg:cooking_experience>"
 
 2. **通用参数**
 
+由 `<random:xxx>` 标签（或带 `id` 的 `random` 条件）roll 出的命名随机值，可以在同一上下文内通过链式参数读取：
+
 ```yaml
-<arg:random>  # 生成一个 0 到 1 之间的随机数
-<arg:last_random>  # 获取上一个随机数
+<arg:random.xxx>  # 读取此上下文中已 roll 出的命名随机值
 ```
 
 3. **上下文主体** – 如果上下文主体（例如，一个玩家）提供了参数。查看此页面了解更多：

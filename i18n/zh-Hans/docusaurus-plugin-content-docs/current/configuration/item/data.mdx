@@ -484,6 +484,25 @@ items:
 
 `title` 同样支持 `raw` / `filtered` 对象形式。文本支持 MiniMessage 格式，`<arg:...>` 占位符会基于构建上下文（如查看物品的玩家）解析。
 
+### random_values（随机值）
+
+在物品构建时 roll 随机值并持久化到物品上。物品上已存在的值会被保留，重新构建或更新物品不会重新 roll。每个条目支持任意[数字格式](../../reference/number_format.mdx)的写法。
+
+```yaml
+items:
+  demo:sword:
+    data:
+      random_values:
+        attack: 5~10
+        crit:
+          type: triangle
+          min: 0
+          max: 100
+          mode: 80
+```
+
+roll 出的值可以在物品作为上下文参数的任何地方通过链式参数读取，例如 `<arg:item_in_hand.random.attack>`；也可以在动态属性修饰符的数值表达式里用 `item.random.attack` 引用。
+
 ## 📦 外部数据
 
 继承其他插件物品的数据。
