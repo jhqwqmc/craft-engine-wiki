@@ -86,6 +86,42 @@ equipment:
   equip_on_interact: true
 ```
 
+### equipment_potion_effects（装备药水效果）
+
+物品装备在匹配的槽位时，为实体提供药水效果。
+
+```yaml
+equipment_potion_effects:
+  - slot: head                     # 必填，装备槽位或槽位组
+    type: minecraft:strength       # 药水效果 ID
+    amplifier: 2                   # 力量 III
+    ambient: true                  # 默认 false
+    particles: false               # 默认 true
+    show_icon: true                 # 默认 true
+    conditions:                    # 可选条件
+      - type: expression
+        expression: "<arg:player.x> > 1000"
+    update_interval: 20             # 条件检查间隔，单位为刻，默认 20
+```
+
+- 同类型药水效果只生效最高等级；被覆盖的外部效果会按剩余时间还原。
+- 内置槽位包括 `mainhand`、`offhand`、`head`、`chest`、`legs`、`feet`、`body` 和 `saddle`。也可以通过 API 注册自定义槽位，让饰品插件等提供效果。
+- 实体类型必须在 `config.yml` 的 `entity.tracking` 中启用。
+
+### equipment_set_part（装备套装部件）
+
+物品装备在指定槽位时，将其计为对应套装的一个部件。
+
+```yaml
+equipment_set_part:
+  - slots:                  # 物品在哪些槽位计入套装件数
+      - head
+    sets:                   # 套装 ID
+      - example:potion_test
+```
+
+一个物品可以属于多个套装。套装档位不累加，只生效已满足的最高档位。
+
 ### repairable（可修复）
 
 控制物品是否可以通过工作台、铁砧或砂轮修复。（默认值：true）

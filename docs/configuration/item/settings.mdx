@@ -80,6 +80,42 @@ equipment:
   equip_on_interact: true
 ```
 
+### equipment_potion_effects
+
+Grants potion effects while the item is equipped in a matching slot.
+
+```yaml
+equipment_potion_effects:
+  - slot: head                     # Required equipment slot or slot group
+    type: minecraft:strength       # Potion effect ID
+    amplifier: 2                   # Strength III
+    ambient: true                  # Default: false
+    particles: false               # Default: true
+    show_icon: true                 # Default: true
+    conditions:                    # Optional
+      - type: expression
+        expression: "<arg:player.x> > 1000"
+    update_interval: 20             # Condition check interval in ticks; default: 20
+```
+
+- For the same potion effect type, only the highest level applies. Any replaced external effect is restored with its remaining duration afterward.
+- Built-in slots include `mainhand`, `offhand`, `head`, `chest`, `legs`, `feet`, `body`, and `saddle`. Custom slots can also be registered through the API, allowing accessory plugins to provide these effects.
+- The entity type must be enabled in `entity.tracking` in `config.yml`.
+
+### equipment_set_part
+
+Marks an item as part of an equipment set while it is equipped in one of the specified slots.
+
+```yaml
+equipment_set_part:
+  - slots:                  # Slots in which this item counts as a set piece
+      - head
+    sets:                   # Equipment set IDs
+      - example:potion_test
+```
+
+An item can belong to multiple sets. Set tiers do not accumulate; only the highest satisfied tier applies.
+
 ### repairable
 
 Decides if the item can be repaired through crafting table/anvil/grindstone. (Default: true)
