@@ -1,0 +1,219 @@
+---
+title: 🧩 Attribute Definition
+id: definition
+---
+
+## Starting with a base attribute
+
+Each child of `attributes` is a namespaced attribute ID. The following example defines Strength with a base value of `5` and an effective range of `0` to `200`:
+
+```yaml
+attributes:
+  demo:might:
+    base: 5
+    constraint:
+      min: 0
+      max: 200
+```
+
+The basic calculation flow for a regular attribute is: read `base` → apply modifiers according to the operations in `operations` → limit the result with `constraint`. A derived attribute is calculated directly from other attributes, as described below.
+
+## base: Base value source
+
+### Fixed value: `constant`
+
+The most common form is a plain number:
+
+```yaml
+base: 10
+```
+
+It is equivalent to:
+
+```yaml
+base:
+  # Base value provider type. Required
+  type: constant
+  # Fixed base value. Default: 0
+  value: 10
+```
+
+### Entity's current vanilla attribute: `vanilla`
+
+`vanilla` reads the vanilla attribute on the entity itself. Tracked entities periodically check whether the vanilla base value has changed, making this useful for mapping vanilla health, armor, or movement speed into the custom attribute system.
+
+```yaml
+attributes:
+  demo:native_armor:
+    base:
+      # Base value provider type. Required
+      type: vanilla
+      # Vanilla attribute ID to read. Required
+      attribute: minecraft:armor
+      # Value used when the entity does not have that vanilla attribute. Default: 0
+      fallback: 0
+      # Transformation applied after reading; value is the only variable. No transformation by default
+      transform: "value * 0.5"
+      # Interval for checking base value changes. Default: 20 ticks; only positive values are polled
+      update_interval: 20
+```
+
+`transform` can also use the expanded form. Currently, `expression` is the only available type:
+
+```yaml
+transform:
+  # Transformer type. Default: expression
+  type: expression
+  # Transformation expression. Default: value
+  expression: "value / 2"
+```
+
+### Vanilla default for the entity type: `by_entity_type`
+
+`by_entity_type` reads the vanilla default base value for the entity type rather than the entity's current attribute instance. It is a static source, useful when creatures such as iron golems and zombies should start with different values based on their innate attributes.
+
+```yaml
+attributes:
+  demo:ward:
+    base:
+      # Base value provider type. Required
+      type: by_entity_type
+      # Vanilla attribute ID whose default value should be queried. Required
+      attribute: minecraft:armor
+      # Value used when no default exists. Default: 0
+      fallback: 0
+      # Same as vanilla; value is the only variable. No transformation by default
+      transform: "value * 0.25"
+```
+
+If a CraftEngine entity definition overrides that vanilla attribute, `by_entity_type` uses the value from the entity definition first.
+
+## derived: Derived attributes
+
+A derived attribute does not store an independent value. Whenever it is read, its result is calculated from the current effective values of other attributes. This is useful for aggregate attributes such as Combat Power, Final Critical Damage, or Damage Taken Multiplier.
+
+The following example defines Strength and Critical Chance, then makes Combat Power update automatically with both:
+
+```yaml
+attributes:
+  demo:might:
+    base: 10
+
+  demo:critical_chance:
+    base: 0.2
+
+  demo:combat_power:
+    derived: "demo:might * (1 + demo:critical_chance)"
+    constraint:
+      min: 0
+      max: 10000
+```
+
+Here, `demo:combat_power` evaluates to `10 × (1 + 0.2) = 12`. If equipment changes Strength to `20`, Combat Power does not need a separate update; the next read automatically returns `24`.
+
+The shorthand form of `derived` uses the expression type by default. You can also expand it:
+
+```yaml
+derived:
+  # Derived value type. Default: expression; currently expression is the only type
+  type: expression
+  # Calculation expression. Required; variables are the full IDs of referenced attributes
+  expression: "demo:might * (1 + demo:critical_chance)"
+```
+
+Referenced attributes may be declared in the same file or another configuration file, and declaration order does not affect resolution. An expression may reference another derived attribute, but direct or indirect circular references are not allowed:
+
+```yaml
+attributes:
+  # Invalid: the two attributes depend on each other
+  demo:a:
+    derived: "demo:b + 1"
+  demo:b:
+    derived: "demo:a + 1"
+```
+
+:::caution
+
+A derived attribute has no independent base value or modifier instance. Do not configure `base`, `operations`, or `sync` for it, and do not let item or equipment-set modifiers modify it directly; none of these settings contribute to the derived result. Modify the source attributes referenced by the expression instead, then aggregate them through the derived expression. `constraint` and `entities` still apply, and `constraint` limits the final result after the expression is evaluated.
+
+:::
+
+When an attacker's derived attribute is read in a damage formula, its source attributes include the current weapon's `weapon` contribution according to the usual rules. Reads from the victim use the victim's own effective attributes. PlaceholderAPI also recursively calculates the corresponding source attributes when reading a derived attribute in `value`, `weapon`, or `value+weapon` mode.
+
+## constraint: Limiting the final value
+
+```yaml
+constraint:
+  # Inclusive lower bound for the final value
+  min: 0
+  # Inclusive upper bound for the final value
+  max: 1
+```
+
+The inclusive bounds are applied after all operations have been calculated. Omitting `constraint` entirely means that the value is unrestricted.
+
+:::caution
+
+Once `constraint` is present, the current implementation uses Java's `Double.MIN_VALUE` (the smallest positive value) for an omitted `min`, and `Double.MAX_VALUE` for an omitted `max`. Do not treat `constraint` as a one-sided configuration. It is best to always specify both `min` and `max`, especially for attributes that allow negative values.
+
+:::
+
+## entities: Restricting applicable entities
+
+```yaml
+# Accepts entity IDs or entity tags prefixed with #. Unrestricted by default
+entities:
+  - minecraft:player
+  - minecraft:zombie
+  - "#minecraft:skeletons"
+```
+
+Each entry can be an entity ID or an entity tag prefixed with `#`. If the option is omitted or the list is empty, the attribute applies to every entity. This determines which entity types have the attribute; whether those entities are maintained in real time is still controlled by `entity.tracking` in `config.yml`.
+
+## sync: Synchronizing with vanilla attributes
+
+Custom attributes do not automatically change vanilla Minecraft health, speed, or attack damage. Configure `sync` when you need to affect vanilla behavior:
+
+```yaml
+attributes:
+  demo:vitality:
+    base: 0
+    sync:
+      # Target vanilla attribute ID. Required; skipped if the entity does not have it
+      - target: minecraft:max_health
+        # Vanilla modifier operation. Required
+        # Available: add_value, add_multiplied_base, add_multiplied_total
+        operation: add_value
+        # Amount written to the target modifier. Default: value
+        value: value
+
+  demo:momentum:
+    base: 0
+    sync:
+      - target: minecraft:movement_speed
+        operation: add_multiplied_total
+        value: value
+```
+
+`value` may be an expression using these variables:
+
+| Variable | Meaning |
+|---|---|
+| `value` | Effective custom attribute value after modifiers and constraints |
+| `base` | Base value used for this custom attribute calculation |
+
+```yaml
+value: "(value - base) * 0.5"
+```
+
+You can also use a structured provider: `expression` evaluates its required `expression` option, `delta` returns `value - base`, and `ratio` returns `value / base`.
+
+```yaml
+value:
+  # Available: expression, delta, ratio. This example returns value - base
+  type: delta
+```
+
+When synchronizing `minecraft:max_health`, CraftEngine adjusts current health in proportion to the old and new maximum health. This prevents equipping or removing gear from restoring full health or killing the entity outright. When using `ratio`, make sure `base` is not `0`.
+
+Next, read [Operations](./operation.mdx) to learn how multiple amounts from items become the final attribute value.

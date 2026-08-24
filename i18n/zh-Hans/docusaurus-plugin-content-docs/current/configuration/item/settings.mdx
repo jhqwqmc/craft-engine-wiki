@@ -86,6 +86,32 @@ equipment:
   equip_on_interact: true
 ```
 
+### attribute_modifiers（自定义属性修饰符）
+
+物品位于匹配槽位时，为持有者提供 CraftEngine 自定义属性修饰符。它与 `data.attribute_modifiers` 对应的原版属性组件不是同一套系统。
+
+```yaml
+attribute_modifiers:
+  # type：要修改的自定义属性 ID，必填
+  - type: demo:might
+    # id：修饰符唯一 ID，必填；用于更新、覆盖和移除
+    id: demo:item/war_blade/might
+    # amount：修饰量，必填；支持固定数字、范围、表达式和数字提供器
+    amount: 8
+    # operation：运算方式 ID，必填
+    operation: minecraft:add_value
+    # scope：entity 会加入持有者面板，weapon 只参与武器结算；默认 entity
+    scope: entity
+    # slot：生效槽位或槽位组，必填
+    slot: mainhand
+    # conditions / condition：可选条件列表；全部满足时才生效
+    # conditions: []
+    # update_interval：动态数值或条件的检查周期，单位为刻；默认 20
+    # update_interval: 20
+```
+
+完整的槽位、作用域、动态数值及随机武器示例见[属性 → 物品修饰符](../attribute/modifier.mdx)。
+
 ### equipment_potion_effects（装备药水效果）
 
 物品装备在匹配的槽位时，为实体提供药水效果。
@@ -110,17 +136,19 @@ equipment_potion_effects:
 
 ### equipment_set_part（装备套装部件）
 
-物品装备在指定槽位时，将其计为对应套装的一个部件。
+物品装备在指定槽位时，将其计为对应套装的一个部件。套装奖励需另外在 `equipment_sets` 中定义。
 
 ```yaml
 equipment_set_part:
-  - slots:                  # 物品在哪些槽位计入套装件数
+  # slots：计入套装件数的实际槽位列表，必填
+  - slots:
       - head
-    sets:                   # 套装 ID
+    # sets：物品在该槽位归属的套装 ID 列表，必填
+    sets:
       - example:potion_test
 ```
 
-一个物品可以属于多个套装。套装档位不累加，只生效已满足的最高档位。
+一个物品可以属于多个套装。`slots` 只接受 `mainhand`、`offhand`、`head`、`chest`、`legs`、`feet`、`body` 和 `saddle`，不接受槽位组。套装档位不累加，只生效已满足的最高档位。完整配置见[属性 → 装备套装](../attribute/equipment-set.mdx)。
 
 ### repairable（可修复）
 
@@ -398,7 +426,7 @@ compost_probability: 0.5
 
 ### respect_repairable_component（尊重 repairable 组件）
 
-控制物品在铁砧界面中是否允许被 repairable 组件中指定的物品修复。（默认值：false）
+控制物品在铁砧界面中是否允许被 `repairable` 组件中指定的物品修复。自定义物品的默认值为 `false`，原版物品的默认值为 `true`。
 
 ```yaml
 respect_repairable_component: false

@@ -1,0 +1,117 @@
+---
+title: 🧮 Operations
+id: operation
+---
+
+## What operations determine
+
+An item's `amount` is only a modifier value; its `operation` determines how that value changes the attribute. CraftEngine processes the attribute's `operations` list from top to bottom in stages. A modifier participates only when its operation ID matches the current stage.
+
+If `operations` is not configured explicitly, the default order is:
+
+```yaml
+operations:
+  - minecraft:add_value
+  - minecraft:add_multiplied_base
+  - minecraft:add_multiplied_total
+```
+
+## The three built-in operations
+
+Assume the value at the start of the current stage is `base`, the value before applying a modifier is `current`, and the modifier provides `amount`:
+
+| ID | Calculation for one modifier | Typical use |
+|---|---|---|
+| `minecraft:add_value` | `current + amount` | Fixed additions or subtractions, such as `+8 Strength` |
+| `minecraft:add_multiplied_base` | `current + base × amount` | A percentage of the value at the start of this stage |
+| `minecraft:add_multiplied_total` | `current × (1 + amount)` | Multiplying the current total |
+
+Here, `base` is the value **when the current operation stage begins**, not necessarily the original `base` field of the attribute.
+
+### Complete calculation example
+
+Suppose an attribute has a base value of `10` and the equipment provides these modifiers:
+
+```yaml
+- amount: 5
+  operation: minecraft:add_value
+- amount: 0.2
+  operation: minecraft:add_multiplied_base
+- amount: 0.1
+  operation: minecraft:add_multiplied_total
+- amount: 0.2
+  operation: minecraft:add_multiplied_total
+```
+
+The calculation proceeds as follows:
+
+1. `add_value`: `10 + 5 = 15`;
+2. The `add_multiplied_base` stage begins with `base = 15`, so `15 + 15 × 0.2 = 18`;
+3. `add_multiplied_total`: the two modifiers multiply in sequence, giving `18 × 1.1 × 1.2 = 23.76`;
+4. The attribute's `constraint` is applied last.
+
+Multiple modifiers in the same `add_multiplied_base` stage all share the `base` captured at the start of that stage. Multiple modifiers in the same `add_multiplied_total` stage multiply one after another.
+
+:::tip
+
+Percentage amounts use decimals: `0.15` means `+15%`, while `-0.2` means `-20%`. An `add_multiplied_total` amount of `-1` reduces the result to `0`; values below `-1` may make the result negative, so they should normally be paired with a `constraint`.
+
+:::
+
+## Changing the calculation order
+
+Declare `operations` explicitly in an attribute definition to change the order or disable an operation:
+
+```yaml
+attributes:
+  demo:might:
+    base: 10
+    operations:
+      - minecraft:add_value
+      - minecraft:add_multiplied_total
+    constraint:
+      min: 0
+      max: 200
+```
+
+Operations not listed here are not calculated. In this example, an item modifier using `minecraft:add_multiplied_base` does not affect `demo:might`.
+
+## Custom operations
+
+Assign an ID under `attribute_operations` and provide an `expression`:
+
+```yaml
+attribute_operations:
+  demo:add_capped:
+    # Evaluated once for each modifier using this operation. Required
+    expression: "MIN(current + amount, base * 2)"
+
+attributes:
+  demo:might:
+    base: 10
+    operations:
+      - minecraft:add_value
+      - demo:add_capped
+```
+
+### Expression variables
+
+| Variable | Meaning |
+|---|---|
+| `base` | Value at the start of the current operation stage; unchanged throughout the stage |
+| `current` | Value before applying the current modifier |
+| `amount` | Amount provided by the current modifier |
+
+The expression's result becomes the new `current`. If evaluation fails, that modifier leaves `current` unchanged and a warning is written to the console. See [Number Format → expression](../../reference/number_format.mdx#expression) for expression syntax and common functions.
+
+:::caution
+
+Do not rely on the iteration order of modifiers within the same operation as a stable configuration interface. A custom expression should ideally produce the same result regardless of modifier order. If the calculation requires a strict sequence, define multiple operations and arrange them explicitly in the attribute's `operations` list.
+
+:::
+
+## Difference from synchronization operations
+
+An attribute's `sync` entries also contain an `operation`, but that option controls which vanilla modifier operation is used when writing the result to a vanilla attribute. The `attribute_operations` section and the attribute's `operations` list on this page control CraftEngine's custom attribute calculation pipeline. Do not mix up the two.
+
+Next, read [Item Attribute Modifiers](./modifier.mdx) to apply these operations to actual weapons and equipment.

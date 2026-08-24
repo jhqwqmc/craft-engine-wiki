@@ -1,0 +1,223 @@
+---
+title: 💥 伤害公式
+id: damage-formula
+---
+
+import Details from '@site/src/components/Details';
+
+## 伤害规则的结构
+
+`damage_rules` 先按**伤害类型**选择规则，再按**受击实体类型**选择公式。每个伤害类型的值必须是规则列表：
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    # target：可选的实体 ID 或实体标签列表；不写时匹配所有受击实体
+    - target:
+        - minecraft:zombie
+        - "#minecraft:skeletons"
+      # formula：返回新事件基础伤害的公式，必填
+      formula: "damage * 1.25"
+    # 无 target 的规则可作为此伤害类型的默认公式
+    - formula: "damage"
+
+  minecraft:arrow:
+    - formula: "damage"
+```
+
+上例中，玩家近战攻击僵尸和骷髅标签内实体时造成 `1.25` 倍伤害，攻击其他实体时使用不带 `target` 的默认公式；箭矢则保持原伤害。
+
+:::caution
+
+当前伤害规则应集中写在同一个 `damage_rules` 区块中，不要分散到多个文件或多个 `damage_rules#...` 区块。该区块每次解析都会替换整张伤害规则表，拆开写可能导致前面的规则被覆盖。
+
+:::
+
+顶层键是 Minecraft 伤害类型 ID，不是 Bukkit 的伤害原因名称。常用值包括 `minecraft:player_attack`、`minecraft:mob_attack`、`minecraft:arrow`、`minecraft:magic`、`minecraft:fall` 等。没有匹配伤害类型或没有可用默认公式时，CraftEngine 不改写该次伤害。
+
+<Details summary="最新版本可用的伤害类型">
+
+```text
+minecraft:arrow
+minecraft:bad_respawn_point
+minecraft:cactus
+minecraft:campfire
+minecraft:cramming
+minecraft:dragon_breath
+minecraft:drown
+minecraft:dry_out
+minecraft:ender_pearl
+minecraft:explosion
+minecraft:fall
+minecraft:falling_anvil
+minecraft:falling_block
+minecraft:falling_stalactite
+minecraft:fireball
+minecraft:fireworks
+minecraft:fly_into_wall
+minecraft:freeze
+minecraft:generic
+minecraft:generic_kill
+minecraft:hot_floor
+minecraft:in_fire
+minecraft:in_wall
+minecraft:indirect_magic
+minecraft:lava
+minecraft:lightning_bolt
+minecraft:mace_smash
+minecraft:magic
+minecraft:mob_attack
+minecraft:mob_attack_no_aggro
+minecraft:mob_projectile
+minecraft:on_fire
+minecraft:out_of_world
+minecraft:outside_border
+minecraft:player_attack
+minecraft:player_explosion
+minecraft:sonic_boom
+minecraft:spear
+minecraft:spit
+minecraft:stalagmite
+minecraft:starve
+minecraft:sting
+minecraft:sulfur_cube_hot
+minecraft:sweet_berry_bush
+minecraft:thorns
+minecraft:thrown
+minecraft:trident
+minecraft:unattributed_fireball
+minecraft:wind_charge
+minecraft:wither
+minecraft:wither_skull
+```
+
+</Details>
+
+同一伤害类型下可以有多个定向规则和一个无 `target` 的默认规则。不要为同一个目标重复写多条规则；重复项的覆盖顺序不适合作为业务逻辑使用。
+
+## expression：表达式公式
+
+字符串公式默认就是 `expression`：
+
+```yaml
+formula: "damage + <attacker_attr:demo:might>"
+```
+
+完整写法为：
+
+```yaml
+formula:
+  # 公式类型，默认 expression
+  type: expression
+  # 返回新伤害的表达式，必填
+  expression: "damage + <attacker_attr:demo:might>"
+```
+
+### 内置变量
+
+| 变量 | 值 |
+|---|---|
+| `damage` | 进入公式时的事件基础伤害 |
+| `is_critical` | 原版暴击为 `1`，否则为 `0` |
+| `is_sweep` | 横扫攻击为 `1`，否则为 `0` |
+| `attack_strength` | 攻击冷却强度，通常在 `0～1` 之间 |
+| `is_attack_ready` | `attack_strength > 0.9` 时为 `1`，否则为 `0` |
+
+命名随机数的所有分布与参数见[文本格式](../../reference/text_format.mdx)，表达式运算符和函数见[数字格式 → 表达式](../../reference/number_format.mdx#表达式)。
+
+:::tip
+
+暴击判定务必复用同一个随机 ID。例如伤害公式和多个分项都使用 `<random:critical>`，本次命中只 roll 一次；改成不同 ID 就会独立判定。
+
+:::
+
+## 教程：攻击、暴击与减伤
+
+先定义三项属性：
+
+```yaml
+attributes:
+  demo:might:
+    base: 0
+    constraint: {min: 0, max: 200}
+  demo:critical_chance:
+    base: 0.05
+    constraint: {min: 0, max: 1}
+  demo:ward:
+    base: 0
+    constraint: {min: 0, max: 500}
+```
+
+再让玩家近战和箭矢使用同一条结算思路：
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    - formula: >-
+        (damage + <attacker_attr:demo:might>)
+        * IF(<random:critical> < <attacker_attr:demo:critical_chance>, 1.5, 1)
+        * 100 / (100 + MAX(0, <victim_attr:demo:ward>))
+
+  minecraft:arrow:
+    - formula: >-
+        (damage + <attacker_attr:demo:might>)
+        * IF(<random:critical> < <attacker_attr:demo:critical_chance>, 1.5, 1)
+        * 100 / (100 + MAX(0, <victim_attr:demo:ward>))
+```
+
+这里先把力量加到原始伤害，再以暴击率决定是否乘 `1.5`，最后用 `100 / (100 + 守御)` 做平滑减伤。用 `MAX(0, ward)` 可避免负守御让分母异常。
+
+## composition：分项公式
+
+`composition` 把伤害拆成命名分项，逐项求值后相加。每个分项本身都可以是字符串、`expression`、嵌套 `composition` 或 `js`。
+
+```yaml
+formula:
+  # 公式类型，必填
+  type: composition
+  # 分项 ID 到子公式的映射，必填；按配置顺序计算
+  parts:
+    physical: >-
+      (damage + <attacker_attr:demo:might>)
+      * 100 / (100 + MAX(0, <victim_attr:demo:ward>))
+    critical_bonus: >-
+      IF(<random:critical> < <attacker_attr:demo:critical_chance>,
+        (damage + <attacker_attr:demo:might>) * 0.5,
+        0)
+```
+
+最终结果是所有分项之和。每算完一个分项，系统会把它记录为上下文参数 `damage_<分项ID>`；后面的分项可以用 `<arg:damage_physical>` 读取。
+
+:::note
+
+各分项中的 `damage` 都是公式开始时的事件基础伤害，不会自动变成上一分项的结果。需要串联时，请显式读取 `damage_<分项ID>`。
+
+:::
+
+## js：JavaScript 公式
+
+复杂结算可以交给包内脚本：
+
+```yaml
+formula:
+  # 公式类型，必填
+  type: js
+  # 包内脚本 ID，必填；末尾 .js 可省略
+  script: demo:combat/damage
+  # 要调用的函数名，默认 main
+  function: calculate
+  # 注入脚本的参数，默认空映射
+  # 映射按键注入同名变量；列表会整体作为 args 注入
+  args:
+    damage_multiplier: 1.25
+```
+
+脚本会收到扁平化伤害上下文以及 `event`（CraftEngine 的 DamageEvent）。函数返回数字时用作新伤害；返回其他类型、脚本系统不可用时保留进入公式时的伤害。脚本系统的开关、文件位置与绑定见[脚本](../../reference/script.mdx)。
+
+```js
+function calculate() {
+  return event.damage() * damage_multiplier
+}
+```
+
+上例可在 `args` 中配置 `damage_multiplier`。实际项目中可通过 `event`、`ctx`、注入参数或自建脚本工具函数封装属性查询，不必把所有逻辑堆在一个函数里。

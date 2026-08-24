@@ -1,0 +1,192 @@
+---
+title: 🗡️ Item Attribute Modifiers
+id: modifier
+---
+
+## Basic configuration
+
+CraftEngine custom attribute modifiers belong under an item's `settings.attribute_modifiers`:
+
+```yaml
+items:
+  demo:war_blade:
+    material: diamond_sword
+    settings:
+      attribute_modifiers:
+        # Each entry is one custom attribute modifier
+        # type: attribute ID to modify. Required
+        - type: demo:might
+          # id: unique modifier ID. Required; used for updates, replacement, and removal
+          id: demo:item/war_blade/might
+          # amount: modifier value passed to the operation. Required; accepts a number provider
+          amount: 8
+          # operation: operation ID. Required
+          operation: minecraft:add_value
+          # scope: entity or weapon. Default: entity
+          scope: entity
+          # slot: effective slot or slot group. Required
+          slot: mainhand
+          # conditions / condition: optional condition list. Empty by default; all conditions must pass
+          # conditions: []
+          # update_interval: check interval for a dynamic amount or conditions. Default: 20 ticks
+          # update_interval: 20
+```
+
+`data.attribute_modifiers` is the vanilla Minecraft item data component. It does not modify the custom attributes defined in this chapter.
+
+`amount` accepts a fixed number, a `5~10` range, an expression, or a complete number provider. See [Number Format](../../reference/number_format.mdx) for every type and option, and [Conditions](../../reference/conditions.mdx) for condition types.
+
+:::caution
+
+A modifier's `id` must be stable and unique within an attribute. CraftEngine uses this ID to find the old modifier when an item is equipped or removed. Do not generate a random ID for an ordinary static item.
+
+:::
+
+## slot: Effective slots
+
+:::tip
+
+Besides the built-in slots and slot groups below, custom slot types can be registered through the API. Once registered, their names can be used in `slot`, allowing integrations such as accessory slots.
+
+:::
+
+| Value | Physical slots included |
+|---|---|
+| `any` | Any supported slot |
+| `mainhand` | Main hand |
+| `offhand` | Off hand |
+| `hand` | Main hand or off hand |
+| `head` | Head |
+| `chest` | Chest |
+| `legs` | Legs |
+| `feet` | Feet |
+| `armor` | Head, chest, legs, and feet |
+| `body` | Animal body equipment slot |
+| `saddle` | Saddle slot |
+
+With `scope: entity`, `slot` checks the physical slot occupied by the item, not the item's material. For example, if the server allows a piece of paper to be worn on the head, a modifier with `slot: head` can still apply. The `weapon` scope still requires `slot`, but its actual contribution is determined by which weapon was used for the current attack; normally, use `mainhand`.
+
+## scope: Entity stats or weapon damage
+
+### `entity`: Applied to the entity while equipped
+
+This is the default scope. While the item occupies a matching slot, its modifier is added to the holder's attribute instance and can affect vanilla synchronization and victim attributes.
+
+```yaml
+- type: demo:vitality
+  id: demo:item/helmet/vitality
+  amount: 4
+  operation: minecraft:add_value
+  scope: entity
+  slot: head
+```
+
+### `weapon`: Applied only to the current attack
+
+`weapon` does not enter the holder's stat panel. When a damage formula reads an attacker attribute, CraftEngine additionally merges the `weapon` modifiers from the weapon used for that attack. PlaceholderAPI merges them only in a mode containing `+weapon`.
+
+```yaml
+- type: demo:might
+  id: demo:item/bow/might
+  amount: 6
+  operation: minecraft:add_value
+  scope: weapon
+  slot: mainhand
+```
+
+Melee attacks read the attacker's main hand. Arrows read the weapon recorded when they were fired. Damage modifiers on bows should therefore use `weapon`, so switching items after firing does not mix stat-panel modifiers with the arrow's source weapon.
+
+:::note
+
+Each weapon's `weapon` contribution starts from `0` and independently runs through the attribute's operation pipeline before being added to the attacker's stat-panel value. An isolated `add_multiplied_base` or `add_multiplied_total` modifier therefore normally remains `0`; weapon modifiers should establish a value with `add_value` before applying percentage operations.
+
+:::
+
+## Dynamic amounts and conditions
+
+A modifier is treated as dynamic whenever `amount` is not constant or conditions are configured:
+
+```yaml
+- type: demo:might
+  id: demo:item/night_blade/might
+  amount: "5 + <arg:item.random.bonus:0>"
+  operation: minecraft:add_value
+  scope: entity
+  slot: mainhand
+  update_interval: 10
+  conditions:
+    - type: expression
+      expression: "<arg:entity.health:0> <= 10"
+```
+
+`update_interval` matters only for dynamic modifiers. The default is to recalculate every `20` ticks. Smaller values react faster, but cost more when many equipped items use them. The item modifier evaluation context provides `item`, so it can read random values stored on the item itself.
+
+Writing `amount: 5~10` directly rerolls on dynamic refresh, so it is unsuitable for an equipment modifier that should remain fixed after generation. Use `data.random_values`, as shown in the next section, for persistent random values.
+
+## Tutorial: A random weapon using 0–1 rolls
+
+The easiest way to tune values is to store a separate random number in `[0, 1)` for each modifier, then convert all rolls with the same pattern:
+
+```text
+Final value = base value + range × roll
+Score       = Σ(weight × roll)
+```
+
+The sword below has two independent rolls. Their weights add up to `100`, so the score satisfies `0 ≤ score < 100`; rounding for display may show `100`.
+
+```yaml
+items:
+  demo:variable_blade:
+    material: netherite_sword
+    settings:
+      attribute_modifiers:
+        - type: demo:might
+          id: demo:item/variable_blade/might
+          amount: "4 + <arg:item.random.might_roll:0> * 8"
+          operation: minecraft:add_value
+          scope: weapon
+          slot: mainhand
+        - type: demo:critical_chance
+          id: demo:item/variable_blade/critical_chance
+          amount: "0.05 + <arg:item.random.crit_roll:0> * 0.20"
+          operation: minecraft:add_value
+          scope: weapon
+          slot: mainhand
+    data:
+      random_values:
+        might_roll:
+          type: uniform
+          min: 0.0
+          max: 1.0
+        crit_roll:
+          type: uniform
+          min: 0.0
+          max: 1.0
+    client_bound_data:
+      item_name: "<!i><gradient:#8BE9FD:#BD93F9>Blade of Variance</gradient>"
+      lore:
+        - content:
+            - "<!i><light_purple>◆ Epic Quality <dark_gray>[<expr:#0:'<arg:item.random.might_roll:0> * 60 + <arg:item.random.crit_roll:0> * 40'> points]"
+          conditions:
+            - type: expression
+              expression: "<arg:item.random.might_roll:0> * 60 + <arg:item.random.crit_roll:0> * 40 >= 75"
+        - content:
+            - "<!i><gray>• Refined Quality <dark_gray>[<expr:#0:'<arg:item.random.might_roll:0> * 60 + <arg:item.random.crit_roll:0> * 40'> points]"
+          conditions:
+            - type: expression
+              expression: "<arg:item.random.might_roll:0> * 60 + <arg:item.random.crit_roll:0> * 40 < 75"
+        - content:
+            - ""
+            - "<!i><aqua>+<expr:#.#:'4 + <arg:item.random.might_roll:0> * 8'> Strength"
+            - "<!i><yellow>+<expr:#.#:'(0.05 + <arg:item.random.crit_roll:0> * 0.20) * 100'>% Critical Chance"
+```
+
+`data.random_values` rolls once when the item is generated and persists the result. `client_bound_data` generates the name and lore only when the item is sent to a client, without writing display-only components back to the server item. The server-side modifiers and client-side description therefore read the same rolls, avoiding cases where the lore says `8` while the actual value is `10`. See [random_values](../item/data.mdx#random_values) and [Client Bound Data](../item/data.mdx#-client-bound-data) for their complete configurations.
+
+:::tip
+
+For templated random equipment, put base values, ranges, weights, and quality thresholds in the template's `arguments`, while keeping the shared formulas in the template body. Balance changes then require editing only the parameters instead of copying the entire set of lore conditions.
+
+:::
+
+Continue to [Equipment Sets](./equipment-set.mdx) when you need extra bonuses based on the number of equipped pieces.

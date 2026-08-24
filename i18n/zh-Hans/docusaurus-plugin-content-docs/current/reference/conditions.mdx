@@ -165,6 +165,25 @@ slot: feet
 tag: ["my_pack:fire_resistant"]
 ```
 
+### equipment\_set
+
+检查上下文中的玩家或实体当前穿戴了多少件指定[装备套装](../configuration/attribute/equipment-set.mdx)。
+
+```yaml
+# type：固定为 equipment_set，必填
+type: equipment_set
+# set / id：要统计的套装 ID，必填
+set: demo:guardian
+# count / amount：可选，精确匹配件数；填写后忽略 min 和 max
+# count: 2
+# min / min_count / min-count：范围下限，默认 1，包含边界
+min: 2
+# max / max_count / max-count：范围上限，默认无上限，包含边界
+# max: 4
+```
+
+条件上下文中找不到玩家或实体、实体未被跟踪时，结果为 `false`。要匹配 0 件必须显式写 `count: 0`；只写 `set` 等价于“至少 1 件”。
+
 ### table\_bonus
 
 以魔咒等级为索引，从列表中挑选概率通过。

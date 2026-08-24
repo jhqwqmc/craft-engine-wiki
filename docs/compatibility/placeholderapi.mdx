@@ -87,6 +87,86 @@ Items slot number \
 
 :::
 
+## %ceexpr\_%
+
+`ceexpr` evaluates CraftEngine expressions and can replace PlaceholderAPI's Math expansion (1000× faster). Its syntax is:
+
+### %ceexpr\_\<format\>\_\<expression\>%
+
+The first argument is the output format, and the second is the expression. CraftEngine splits the arguments only at the first underscore after the format, so the expression itself may contain more underscores.
+
+```text
+%ceexpr_#.#_1+2*3%
+```
+
+This returns `7`. The number format is the same as the MiniMessage `<expr>` tag and supports patterns made from `#`, `0`, `.`, and `,`:
+
+```text
+%ceexpr_#,##0.00_1234.5%
+```
+
+This returns `1,234.50`. Use `bool` as the format to evaluate the expression as a boolean and return `true` or `false`:
+
+```text
+%ceexpr_bool_1+2*3==7%
+```
+
+Because PlaceholderAPI treats `%` as the end of a placeholder, use `{mod}` instead of `%` for the modulo operator:
+
+```text
+%ceexpr_#_10{mod}3%
+```
+
+This is equivalent to the expression `10 % 3` and returns `1`.
+
+To read another PlaceholderAPI variable inside the expression, use `<papi:placeholder>` instead of nesting a `%placeholder%` inside the outer placeholder:
+
+```text
+%ceexpr_#.#_<papi:player_level>*1.5%
+```
+
+## %ceattr\_%
+
+The `ceattr` placeholders read a player's [custom attributes](../configuration/attribute.mdx). The attribute ID must include its full namespace, such as `demo:might`.
+
+### %ceattr\_base\_\<namespace\>:\<path\>%
+
+Returns the attribute's base value resolved for the current player. Attribute modifiers and the final constraint have not yet been applied.
+
+```text
+%ceattr_base_demo:might%
+```
+
+### %ceattr\_value\_\<namespace\>:\<path\>%
+
+Returns the player's current effective attribute value. This includes equipment modifiers with `scope: entity`, but does not additionally calculate `weapon` modifiers from the main-hand item.
+
+```text
+%ceattr_value_demo:might%
+```
+
+### %ceattr\_weapon\_\<namespace\>:\<path\>%
+
+Returns only the `weapon` contribution provided by the player's main-hand item, without the player's existing attribute value.
+
+```text
+%ceattr_weapon_demo:might%
+```
+
+### %ceattr\_value+weapon\_\<namespace\>:\<path\>%
+
+Adds the main-hand item's `weapon` contribution to the player's current effective value. This is useful for previewing the value that a held weapon contributes to a damage formula in weapon lore, stat panels, or scoreboards.
+
+```text
+%ceattr_value+weapon_demo:might%
+```
+
+:::note
+
+`+weapon` is supported only with `value`, not `base`. These placeholders require player context. They do not return a number if the player is unavailable, the attribute ID is invalid, or the attribute has not been registered.
+
+:::
+
 <h2 id="cejs">%cejs\_%</h2>
 
 Placeholders registered by JavaScript scripts via the `//@Placeholder` annotation. See [<u>📜 Scripting</u>](../reference/script.mdx#annotations) for the full guide.

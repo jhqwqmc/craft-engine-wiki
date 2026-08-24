@@ -708,6 +708,42 @@ const sidebars: SidebarsConfig = {
           label: '⚔️ 装备',
         },
         {
+          type: 'category',
+          label: '📈 属性',
+          collapsed: true,
+          link: {
+            type: 'doc',
+            id: "configuration/attribute",
+          },
+          items: [
+            {
+              type: 'doc',
+              id: "configuration/attribute/definition",
+              label: '🧩 属性定义',
+            },
+            {
+              type: 'doc',
+              id: "configuration/attribute/operation",
+              label: '🧮 运算方式',
+            },
+            {
+              type: 'doc',
+              id: "configuration/attribute/modifier",
+              label: '🗡️ 物品修饰符',
+            },
+            {
+              type: 'doc',
+              id: "configuration/attribute/equipment-set",
+              label: '🛡️ 装备套装',
+            },
+            {
+              type: 'doc',
+              id: "configuration/attribute/damage-formula",
+              label: '💥 伤害公式',
+            },
+          ],
+        },
+        {
           type: 'doc',
           id: "configuration/font",
           label: '㊙️ 字体',

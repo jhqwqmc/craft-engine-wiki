@@ -1,0 +1,91 @@
+---
+title: 📈 Attribute
+id: attribute
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+## What the attribute system does
+
+CraftEngine's custom attributes are a server-side numeric system. You can define attributes such as Strength, Critical Chance, and Armor Penetration, then use them in items, equipment sets, and damage formulas. This system is separate from the **vanilla attribute component** under an item's `data.attribute_modifiers`; add custom attributes to items through `settings.attribute_modifiers` instead.
+
+A typical combat setup follows these steps:
+
+1. Define each attribute's base value and limits;
+2. Use operations to determine the order in which modifiers are calculated;
+3. Add attribute modifiers to items or equipment sets;
+4. Read attacker and victim attributes in damage formulas.
+
+## Enabling the feature
+
+First edit `config.yml` in the plugin's root directory. `attribute.enable` is read only when the server starts. After changing it, you must **fully restart the server**; `/ce reload` alone cannot enable the feature.
+
+```yaml
+entity:
+  tracking:
+    # Whether to track entity equipment, equipment sets, potion effects, and dynamic attributes. Default: true
+    enable: true
+    # whitelist tracks entities in list; blacklist tracks entities outside list. Default: whitelist
+    mode: whitelist
+    # Entity IDs considered by the tracking filter. Default: minecraft:player only
+    list:
+      - minecraft:player
+
+attribute:
+  # Master switch for custom attributes. Default in the generated config: false; restart after changing it
+  enable: true
+  health-scaling:
+    # Whether to scale the health bar shown to players. Default: false
+    enable: false
+    # Scale only when the real maximum health exceeds this value. Default: 20
+    threshold: 20
+    # Maximum health shown on the client after scaling. Default: 20
+    visual-max-health: 20
+```
+
+:::tip
+
+If your attribute system is only for players, keeping the default player whitelist is the most resource-efficient choice. If attributes or sets must update on mobs in real time, add the relevant entity IDs to `entity.tracking.list`, or switch to blacklist mode.
+
+:::
+
+## Minimal working example
+
+Create a YAML file in any pack's `configuration/` directory. The file name does not affect loading; this example assumes `attributes.yml`.
+
+```yaml
+attributes:
+  demo:might:
+    base: 0
+    constraint:
+      min: 0
+      max: 100
+items:
+  demo:might_sword:
+    material: diamond_sword
+    settings:
+      attribute_modifiers:
+        - type: demo:might
+          id: demo:item/might_sword
+          amount: 8
+          operation: minecraft:add_value
+          scope: entity
+          slot: mainhand
+    data:
+      item_name: "<!i><aqua>Sword of Might"
+      lore:
+        - "<!i><gray>While held in the main hand: <aqua>+8 Strength"
+```
+
+Run `/ce reload`, then obtain the item with `/ce item get demo:might_sword`. While it is held in the main hand, the player's `demo:might` changes from `0` to `8`; switching away from the item restores it to `0`.
+
+## Chapters
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard url="attribute/definition" title="🧩 Attribute Definition" subtitle="Base values, derived calculations, entity restrictions, constraints, and vanilla attribute synchronization" />
+<UrlCard url="attribute/operation" title="🧮 Operations" subtitle="Three built-in operations, calculation order, and custom expressions" />
+<UrlCard url="attribute/modifier" title="🗡️ Item Modifiers" subtitle="Add fixed or dynamic modifiers to weapons and equipment" />
+<UrlCard url="attribute/equipment-set" title="🛡️ Equipment Sets" subtitle="Piece counts, tiered bonuses, potion effects, and dynamic descriptions" />
+<UrlCard url="attribute/damage-formula" title="💥 Damage Formulas" subtitle="Rewrite combat calculations by damage type and victim entity" />
+</div>

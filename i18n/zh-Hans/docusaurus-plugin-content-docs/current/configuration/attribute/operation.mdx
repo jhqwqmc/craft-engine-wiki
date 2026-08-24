@@ -1,0 +1,117 @@
+---
+title: 🧮 运算方式
+id: operation
+---
+
+## 运算方式决定什么
+
+物品上的 `amount` 只是一个修饰量，`operation` 才决定它如何改变属性。这里把 Operation 称为**运算方式**。CraftEngine 会按属性 `operations` 列表从前到后分阶段计算；每个修饰符只在 ID 与当前阶段相同时参与。
+
+没有显式配置 `operations` 时，默认顺序是：
+
+```yaml
+operations:
+  - minecraft:add_value
+  - minecraft:add_multiplied_base
+  - minecraft:add_multiplied_total
+```
+
+## 三种内置运算方式
+
+假设当前阶段开始时的值为 `base`，应用某条修饰符前的值为 `current`，该修饰符配置的是 `amount`：
+
+| ID | 单条修饰符的计算 | 适合表达 |
+|---|---|---|
+| `minecraft:add_value` | `current + amount` | 固定加减值，如 `+8 力量` |
+| `minecraft:add_multiplied_base` | `current + base × amount` | 同一阶段基准值的百分比加成 |
+| `minecraft:add_multiplied_total` | `current × (1 + amount)` | 对当前总值继续乘算 |
+
+这里的 `base` 是**进入当前运算阶段时的值**，不是永远指属性最初的 `base` 字段。
+
+### 完整计算示例
+
+假设属性基础值是 `10`，装备提供以下修饰符：
+
+```yaml
+- amount: 5
+  operation: minecraft:add_value
+- amount: 0.2
+  operation: minecraft:add_multiplied_base
+- amount: 0.1
+  operation: minecraft:add_multiplied_total
+- amount: 0.2
+  operation: minecraft:add_multiplied_total
+```
+
+计算过程如下：
+
+1. `add_value`：`10 + 5 = 15`；
+2. 进入 `add_multiplied_base` 阶段，此阶段 `base = 15`，所以 `15 + 15 × 0.2 = 18`；
+3. `add_multiplied_total`：两条修饰符依次乘算，`18 × 1.1 × 1.2 = 23.76`；
+4. 最后再应用属性的 `constraint`。
+
+同一 `add_multiplied_base` 阶段有多条修饰符时，所有修饰符共享阶段开始时的 `base`；同一 `add_multiplied_total` 阶段的多条修饰符则会连续相乘。
+
+:::tip
+
+百分比 amount 使用小数：`0.15` 表示 `+15%`，`-0.2` 表示 `-20%`。`add_multiplied_total` 的 amount 为 `-1` 会把结果变成 `0`，小于 `-1` 还可能把结果翻成负数，通常应配合 `constraint`。
+
+:::
+
+## 改变计算顺序
+
+在属性定义中显式写 `operations` 即可调整顺序或禁用某种运算：
+
+```yaml
+attributes:
+  demo:might:
+    base: 10
+    operations:
+      - minecraft:add_value
+      - minecraft:add_multiplied_total
+    constraint:
+      min: 0
+      max: 200
+```
+
+未出现在列表里的运算方式不会计算。上例中，即使物品带有 `minecraft:add_multiplied_base` 修饰符，它也不会影响 `demo:might`。
+
+## 自定义运算方式
+
+在 `attribute_operations` 下为运算方式分配 ID，并提供一个 `expression`：
+
+```yaml
+attribute_operations:
+  demo:add_capped:
+    # 每应用一条同类修饰符时执行的表达式，必填
+    expression: "MIN(current + amount, base * 2)"
+
+attributes:
+  demo:might:
+    base: 10
+    operations:
+      - minecraft:add_value
+      - demo:add_capped
+```
+
+### 表达式变量
+
+| 变量 | 说明 |
+|---|---|
+| `base` | 进入当前运算阶段时的值；本阶段内保持不变 |
+| `current` | 应用当前修饰符前的值 |
+| `amount` | 当前修饰符提供的 amount |
+
+表达式的返回值就是新的 `current`。表达式求值失败时，该条修饰符会保留原 `current`，并在控制台输出警告。表达式语法与常用函数见[数字格式 → 表达式](../../reference/number_format.mdx#表达式)。
+
+:::caution
+
+同一运算方式下修饰符的遍历顺序不应被当成稳定配置接口。自定义表达式最好满足交换顺序后结果不变；若运算必须严格分先后，请定义多个运算方式，并在属性的 `operations` 中明确排列。
+
+:::
+
+## 与原版同步运算的区别
+
+属性 `sync` 中也有一个 `operation`，但它控制的是“把结果写入原版属性时使用哪种原版修饰符”。本页的 `attribute_operations` 和属性 `operations` 控制的则是 CraftEngine 自定义属性本身的计算管线，两者不要混用。
+
+下一步阅读[物品修饰符](./modifier.mdx)，把这些运算方式用到实际武器和装备上。

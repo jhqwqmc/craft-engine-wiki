@@ -165,6 +165,25 @@ slot: feet
 tag: ["my_pack:fire_resistant"]
 ```
 
+### equipment\_set
+
+Checks how many pieces of a specified [equipment set](../configuration/attribute/equipment-set.mdx) the player or entity in the current context is wearing.
+
+```yaml
+# type: always equipment_set. Required
+type: equipment_set
+# set / id: set ID to count. Required
+set: demo:guardian
+# count / amount: optional exact piece count; when present, min and max are ignored
+# count: 2
+# min / min_count / min-count: inclusive lower bound. Default: 1
+min: 2
+# max / max_count / max-count: inclusive upper bound. No upper limit by default
+# max: 4
+```
+
+The result is `false` if no player or entity is available in the condition context, or if the entity is not tracked. To match zero pieces, explicitly use `count: 0`. Specifying only `set` means “at least one piece.”
+
 ### table\_bonus
 
 Provide different success probabilities at various enchantment levels.

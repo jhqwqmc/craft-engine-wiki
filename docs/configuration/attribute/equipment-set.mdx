@@ -1,0 +1,183 @@
+---
+title: 🛡️ Equipment Sets
+id: equipment-set
+---
+
+## The two parts of an equipment set
+
+A working equipment set needs both of these configurations:
+
+- `equipment_sets`: defines which bonuses are granted at each piece count;
+- The item's `settings.equipment_set_part`: declares which sets the item belongs to and which slots it can occupy for counting.
+
+The following example creates a minimal two-piece set.
+
+```yaml
+equipment_sets:
+  demo:guardian:
+    pieces:
+      2:
+        attribute:
+          - type: demo:ward
+            id: demo:set/guardian/ward
+            amount: 5
+            operation: minecraft:add_value
+
+items:
+  demo:guardian_helmet:
+    material: diamond_helmet
+    settings:
+      equipment_set_part:
+        - slots: [head]
+          sets: [demo:guardian]
+
+  demo:guardian_chestplate:
+    material: diamond_chestplate
+    settings:
+      equipment_set_part:
+        - slots: [chest]
+          sets: [demo:guardian]
+```
+
+When the player wears both the helmet and chestplate, `demo:ward` increases by `5`.
+
+## equipment_sets options
+
+```yaml
+equipment_sets:
+  demo:guardian:
+    # Maps piece counts to bonus tiers. Required; tier keys must be positive integers
+    pieces:
+      2:
+        # Attribute modifiers provided by this tier. Empty by default
+        attribute: []
+        # Potion effects maintained by this tier. Empty by default; potion_effect is also accepted
+        potion_effects: []
+        events:
+          # Runs once when entering this tier. Empty action by default
+          activate: []
+          # Runs once when leaving this tier. Empty action by default
+          deactivate: []
+```
+
+`activate` and `deactivate` accept CraftEngine's general functions, including messages, commands, sounds, and groups of `run` functions. See [Events → Functions](../../reference/events.mdx#-functions) for every type.
+
+### Tiers do not accumulate automatically
+
+The system selects the highest configured tier that does not exceed the current piece count. For example, if only the 2-piece and 4-piece tiers are configured, wearing 2 or 3 pieces uses the 2-piece tier, while wearing 4 pieces uses the 4-piece tier.
+
+When the tier changes, the old tier is removed completely before the new tier is applied completely. The 2-piece, 3-piece, and 4-piece bonuses are not added together automatically. A higher tier must therefore declare **all bonuses** it should have:
+
+```yaml
+equipment_sets:
+  demo:guardian:
+    pieces:
+      2:
+        attribute:
+          - type: demo:ward
+            id: demo:set/guardian/ward
+            amount: 5
+            operation: minecraft:add_value
+      4:
+        attribute:
+          # Write the total +12 here, not only the additional +7
+          - type: demo:ward
+            id: demo:set/guardian/ward
+            amount: 12
+            operation: minecraft:add_value
+```
+
+## Set attribute modifiers
+
+The set's `attribute` configuration is almost identical to [item attribute modifiers](./modifier.mdx), except that it has no `slot`: the set's piece count already determines when it applies.
+
+```yaml
+attribute:
+  # type: attribute ID to modify. Required
+  - type: demo:ward
+    # id: unique modifier ID. Required
+    id: demo:set/guardian/ward
+    # amount: fixed value, expression, or random number provider. Required
+    amount: 5
+    # operation: operation ID. Required
+    operation: minecraft:add_value
+    # scope: entity by default; do not use weapon for a set bonus because it will not apply
+    scope: entity
+    # conditions / condition: participates only when all conditions pass. Empty by default
+    # conditions: []
+    # update_interval / update-interval: check interval for dynamic bonuses. Default: 20 ticks
+    # update_interval: 20
+```
+
+## Set potion effects
+
+```yaml
+potion_effects:
+  # type: potion effect ID. Required
+  - type: minecraft:night_vision
+    # amplifier: effect amplifier. Default: 0; 0 is level I, 1 is level II
+    amplifier: 0
+    # ambient: whether to use the ambient-effect appearance. Default: false
+    ambient: true
+    # particles: whether to show particles. Default: true
+    particles: false
+    # show_icon / show-icon: whether to show the HUD icon. Default: true
+    show_icon: true
+    # conditions / condition: maintain the effect only while all conditions pass. Empty by default
+    # conditions: []
+    # update_interval / update-interval: check interval when conditions exist. Default: 20 ticks
+    # update_interval: 20
+```
+
+If an entity receives the same effect type from several equipment pieces or sets, the system selects the highest `amplifier`. When the set deactivates, CraftEngine removes the effect it was maintaining while attempting to preserve effects supplied by external plugins or potions.
+
+## Adding an item to a set
+
+`equipment_set_part` is a list, so one item can join multiple sets through different slots:
+
+```yaml
+settings:
+  equipment_set_part:
+    # slots: physical slots in which the item counts toward the set. Required
+    - slots:
+        - head
+      # sets: set IDs to which this entry contributes one piece in a matching slot. Required
+      sets:
+        - demo:guardian
+        - demo:ancient
+```
+
+`slots` accepts physical slots only: `mainhand`, `offhand`, `head`, `chest`, `legs`, `feet`, `body`, and `saddle`. Slot groups such as `hand`, `armor`, and `any` are not accepted. An item in one physical slot can contribute at most one piece to the same set.
+
+## Changing the client-side description by piece count
+
+The `equipment_set` condition can be used in `client_bound_data.lore`, allowing each viewer to see their current set progress:
+
+```yaml
+client_bound_data:
+  lore:
+    - content:
+        - "<!i><gray>Guardian Set"
+    - content:
+        - "<!i><dark_gray>Not active [0/2]"
+      conditions:
+        - type: equipment_set
+          set: demo:guardian
+          count: 0
+    - content:
+        - "<!i><yellow>One piece missing [1/2]"
+      conditions:
+        - type: equipment_set
+          set: demo:guardian
+          count: 1
+    - content:
+        - "<!i><green>Set active: +5 Ward [2/2]"
+      conditions:
+        - type: equipment_set
+          set: demo:guardian
+          min: 2
+```
+
+See [Conditions → equipment_set](../../reference/conditions.mdx#equipment_set) for all options and boundary behavior.
+
+Next, use [Damage Formulas](./damage-formula.mdx) to make these attributes participate in combat calculations.
