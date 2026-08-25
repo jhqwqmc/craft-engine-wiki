@@ -245,16 +245,16 @@ loot_sources:
               item: "default:juicy_berry"
 ```
 
-## shear_block
+## block_shear
 
-当玩家用剪刀修剪方块时触发，例如蜂巢或南瓜。此类型依赖 Paper 的 `PlayerShearBlockEvent`。
+当玩家用剪刀修剪方块时触发，例如蜂巢或南瓜。
 
 - **target**：方块 id
 
 ```yaml
 loot_sources:
   minecraft:shear_pumpkin:
-    type: shear_block
+    type: block_shear
     target: "minecraft:pumpkin"
     overwrite: items
     loot:

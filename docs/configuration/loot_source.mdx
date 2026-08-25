@@ -245,16 +245,16 @@ loot_sources:
               item: "default:juicy_berry"
 ```
 
-## shear_block
+## block_shear
 
-Triggered when a player shears a block, such as a beehive or a pumpkin. This type relies on Paper's `PlayerShearBlockEvent`.
+Triggered when a player shears a block, such as a beehive or a pumpkin.
 
 - **target**: block id(s)
 
 ```yaml
 loot_sources:
   minecraft:shear_pumpkin:
-    type: shear_block
+    type: block_shear
     target: "minecraft:pumpkin"
     overwrite: items
     loot:
