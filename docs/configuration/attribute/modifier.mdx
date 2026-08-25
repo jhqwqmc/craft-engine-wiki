@@ -32,13 +32,9 @@ items:
           # update_interval: 20
 ```
 
-`data.attribute_modifiers` is the vanilla Minecraft item data component. It does not modify the custom attributes defined in this chapter.
-
-`amount` accepts a fixed number, a `5~10` range, an expression, or a complete number provider. See [Number Format](../../reference/number_format.mdx) for every type and option, and [Conditions](../../reference/conditions.mdx) for condition types.
-
 :::caution
 
-A modifier's `id` must be stable and unique within an attribute. CraftEngine uses this ID to find the old modifier when an item is equipped or removed. Do not generate a random ID for an ordinary static item.
+A modifier's `id` must be stable and unique within an attribute. CraftEngine uses this ID to find the old modifier when an item is equipped or removed.
 
 :::
 
@@ -63,8 +59,6 @@ Besides the built-in slots and slot groups below, custom slot types can be regis
 | `armor` | Head, chest, legs, and feet |
 | `body` | Animal body equipment slot |
 | `saddle` | Saddle slot |
-
-With `scope: entity`, `slot` checks the physical slot occupied by the item, not the item's material. For example, if the server allows a piece of paper to be worn on the head, a modifier with `slot: head` can still apply. The `weapon` scope still requires `slot`, but its actual contribution is determined by which weapon was used for the current attack; normally, use `mainhand`.
 
 ## scope: Entity stats or weapon damage
 

@@ -103,16 +103,6 @@ A string formula uses `expression` by default:
 formula: "damage + <attacker_attr:demo:might>"
 ```
 
-The expanded form is:
-
-```yaml
-formula:
-  # Formula type. Default: expression
-  type: expression
-  # Expression returning the new damage. Required
-  expression: "damage + <attacker_attr:demo:might>"
-```
-
 ### Built-in variables
 
 | Variable | Value |
@@ -169,7 +159,7 @@ Strength is added to the original damage first, Critical Chance then determines 
 
 ## composition: Formula parts
 
-`composition` divides damage into named parts and adds their evaluated results together. Each part may itself be a string, an `expression`, a nested `composition`, or `js`.
+`composition` divides damage into named parts and adds their evaluated results together.
 
 ```yaml
 formula:

@@ -28,16 +28,6 @@ The most common form is a plain number:
 base: 10
 ```
 
-It is equivalent to:
-
-```yaml
-base:
-  # Base value provider type. Required
-  type: constant
-  # Fixed base value. Default: 0
-  value: 10
-```
-
 ### Entity's current vanilla attribute: `vanilla`
 
 `vanilla` reads the vanilla attribute on the entity itself. Tracked entities periodically check whether the vanilla base value has changed, making this useful for mapping vanilla health, armor, or movement speed into the custom attribute system.
@@ -58,16 +48,6 @@ attributes:
       update_interval: 20
 ```
 
-`transform` can also use the expanded form. Currently, `expression` is the only available type:
-
-```yaml
-transform:
-  # Transformer type. Default: expression
-  type: expression
-  # Transformation expression. Default: value
-  expression: "value / 2"
-```
-
 ### Vanilla default for the entity type: `by_entity_type`
 
 `by_entity_type` reads the vanilla default base value for the entity type rather than the entity's current attribute instance. It is a static source, useful when creatures such as iron golems and zombies should start with different values based on their innate attributes.
@@ -85,8 +65,6 @@ attributes:
       # Same as vanilla; value is the only variable. No transformation by default
       transform: "value * 0.25"
 ```
-
-If a CraftEngine entity definition overrides that vanilla attribute, `by_entity_type` uses the value from the entity definition first.
 
 ## derived: Derived attributes
 
@@ -111,16 +89,6 @@ attributes:
 
 Here, `demo:combat_power` evaluates to `10 × (1 + 0.2) = 12`. If equipment changes Strength to `20`, Combat Power does not need a separate update; the next read automatically returns `24`.
 
-The shorthand form of `derived` uses the expression type by default. You can also expand it:
-
-```yaml
-derived:
-  # Derived value type. Default: expression; currently expression is the only type
-  type: expression
-  # Calculation expression. Required; variables are the full IDs of referenced attributes
-  expression: "demo:might * (1 + demo:critical_chance)"
-```
-
 Referenced attributes may be declared in the same file or another configuration file, and declaration order does not affect resolution. An expression may reference another derived attribute, but direct or indirect circular references are not allowed:
 
 ```yaml
@@ -137,8 +105,6 @@ attributes:
 A derived attribute has no independent base value or modifier instance. Do not configure `base`, `operations`, or `sync` for it, and do not let item or equipment-set modifiers modify it directly; none of these settings contribute to the derived result. Modify the source attributes referenced by the expression instead, then aggregate them through the derived expression. `constraint` and `entities` still apply, and `constraint` limits the final result after the expression is evaluated.
 
 :::
-
-When an attacker's derived attribute is read in a damage formula, its source attributes include the current weapon's `weapon` contribution according to the usual rules. Reads from the victim use the victim's own effective attributes. PlaceholderAPI also recursively calculates the corresponding source attributes when reading a derived attribute in `value`, `weapon`, or `value+weapon` mode.
 
 ## constraint: Limiting the final value
 
@@ -195,7 +161,7 @@ attributes:
         value: value
 ```
 
-`value` may be an expression using these variables:
+`value` determines the amount passed to the configured vanilla modifier `operation`. It may be an expression using these variables:
 
 | Variable | Meaning |
 |---|---|
@@ -206,14 +172,21 @@ attributes:
 value: "(value - base) * 0.5"
 ```
 
-You can also use a structured provider: `expression` evaluates its required `expression` option, `delta` returns `value - base`, and `ratio` returns `value / base`.
+This example synchronizes half of the difference between the effective value and the base value. Use an expression when the conversion needs custom scaling, an offset, or a combination of both variables.
+
+For two common conversions, use `delta` or `ratio` instead of repeating the formula:
+
+- `delta` returns `value - base`. Use it when the vanilla target already retains its own base and only the custom attribute's increase or decrease should be synchronized. For example, a base of `20` and an effective value of `28` produce `8`.
+- `ratio` returns `value / base`. Use it when the next operation needs the effective value expressed as a multiple of its base. For example, a base of `20` and an effective value of `30` produce `1.5`. Because this calculation divides by `base`, its base must not be `0`.
 
 ```yaml
 value:
-  # Available: expression, delta, ratio. This example returns value - base
+  # Synchronize only the increase or decrease from the base value
   type: delta
 ```
 
-When synchronizing `minecraft:max_health`, CraftEngine adjusts current health in proportion to the old and new maximum health. This prevents equipping or removing gear from restoring full health or killing the entity outright. When using `ratio`, make sure `base` is not `0`.
+The number returned by `value` becomes the vanilla modifier's amount; `operation` still determines how that amount affects the target attribute.
+
+When synchronizing `minecraft:max_health`, CraftEngine preserves the entity's current health percentage as its maximum health changes. For example, `10/20` health becomes `15/30`. This prevents equipping or removing gear from unexpectedly restoring the entity to full health or killing it.
 
 Next, read [Operations](./operation.mdx) to learn how multiple amounts from items become the final attribute value.

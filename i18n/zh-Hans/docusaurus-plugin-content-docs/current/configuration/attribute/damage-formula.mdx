@@ -103,16 +103,6 @@ minecraft:wither_skull
 formula: "damage + <attacker_attr:demo:might>"
 ```
 
-完整写法为：
-
-```yaml
-formula:
-  # 公式类型，默认 expression
-  type: expression
-  # 返回新伤害的表达式，必填
-  expression: "damage + <attacker_attr:demo:might>"
-```
-
 ### 内置变量
 
 | 变量 | 值 |
@@ -169,7 +159,7 @@ damage_rules:
 
 ## composition：分项公式
 
-`composition` 把伤害拆成命名分项，逐项求值后相加。每个分项本身都可以是字符串、`expression`、嵌套 `composition` 或 `js`。
+`composition` 把伤害拆成命名分项，逐项求值后相加。
 
 ```yaml
 formula:

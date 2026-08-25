@@ -31,30 +31,6 @@ data:
 
 :::
 
-## 🌐 覆写原版物品数据（1.20.5+）
-
-`override_data` 的格式和处理器与 `data` 完全相同，但处理结果会写入原版物品的默认原型。此选项仅对原版物品 ID 生效。
-
-```yaml
-items:
-  minecraft:carrot:
-    override_data:
-      food:
-        nutrition: 20
-        saturation: 20
-        can_always_eat: false
-```
-
-之后创建的胡萝卜都会使用这份食物数据。要移除组件，使用 `remove_components`：
-
-```yaml
-items:
-  minecraft:carrot:
-    override_data:
-      remove_components:
-        - minecraft:food
-```
-
 ## 🎨 外观
 
 ### item_name（物品名称）
@@ -771,3 +747,40 @@ overwritable_custom_model_data: 10001
 - **Paper 混淆。** 若使用 Paper 的 `enable-item-obfuscation`，需在 `paper-global.yml` 中将 `minecraft:custom_data` 添加到 `dont-obfuscate`。
 
 :::
+
+## 🌐 覆写原版物品数据（1.20.5+）
+
+`override_data` 的格式和处理器与 `data` 完全相同，但处理结果会写入原版物品的默认原型。此选项仅对原版物品 ID 生效。
+
+这个功能适合移除会干扰自定义系统的原版组件。例如，移除钻石胸甲自带的属性修饰符后，原版护甲值与盔甲韧性便不会再影响自定义属性系统：
+
+```yaml
+items:
+  minecraft:diamond_chestplate:
+    override_data:
+      remove_components:
+        - minecraft:attribute_modifiers
+
+    # 建议：发给客户端时也移除同一组件
+    client_bound_data:
+      remove_components:
+        - minecraft:attribute_modifiers
+```
+
+:::warning
+
+`override_data` 对原版物品默认原型的修改只发生在服务端，不会同步到客户端。不配合 [`client_bound_data`](#-客户端绑定数据) 时，服务端可能已经移除组件，客户端却仍显示原版属性或提示文本。条件允许时，建议用 `client_bound_data` 同步处理客户端可见的数据。
+
+:::
+
+除了移除组件，也可以覆写组件内容。下面修改胡萝卜的默认食物数据：
+
+```yaml
+items:
+  minecraft:carrot:
+    override_data:
+      food:
+        nutrition: 20
+        saturation: 20
+        can_always_eat: false
+```
