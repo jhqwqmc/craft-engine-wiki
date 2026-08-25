@@ -810,11 +810,6 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         {
-          type: 'doc',
-          id: "reference/block_tags",
-          label: '🏷️ 方块标签',
-        },
-        {
           type: 'category',
           label: '✏️ 文本格式',
           collapsed: true,
@@ -849,6 +844,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "reference/events",
           label: '🪇 事件',
+        },
+        {
+          type: 'doc',
+          id: "reference/functions",
+          label: '🔧 函数',
         },
         {
           type: 'doc',

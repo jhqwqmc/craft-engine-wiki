@@ -74,7 +74,7 @@ items:
 - `<!i>` — 关掉斜体。Minecraft 默认把所有 lore 文字显示成紫色斜体，加上 `<!i>` 它就变回正常字体了。几乎所有 lore 行开头都要加它
 - `<gray>` — 灰色文字
 
-这些 `<blue>`、`<gray>` 叫做 **MiniMessage**，是 Paper 系服务端统一的文字格式。它用尖括号标签来控制颜色和样式。
+这些 `<blue>`、`<gray>` 叫做 **MiniMessage**。它用尖括号标签来控制颜色和样式。
 
 ### MiniMessage 常用标签
 
@@ -129,23 +129,6 @@ recipes:
 - `ingredients.A: minecraft:diamond_block` — 图案里的 `A` 对应原版钻石块
 - `result` — 合成结果。`id: tutorial:diamond` 是产物 ID，`count: 9` 是产出 9 个
 
-### 常见的配方类型
-
-| 类型 | 什么时候用 |
-|:---|:---|
-| `shaped` | 有序合成——材料必须按图案摆放 |
-| `shapeless` | 无序合成——材料放哪都行，凑齐即可 |
-| `smelting` | 熔炉烧制——放一个材料烧出来 |
-
 > ⚠️ 配方里的材料可以用**标签**代替具体物品。比如 `#minecraft:planks` 匹配任意木板。用标签比用具体物品更灵活。
 
 > ⚠️ 修改配方后需要跑 `/ce reload recipe`，不是 `config`。另外如果你的服务器装了别的数据包插件、或者手动跑了 `/minecraft:reload`，之后要**再跑一次** `/ce reload recipe`，否则配方可能失效。
-
-## 回顾：你学会了什么
-
-1. 用 3 行 YAML 定义一个物品
-2. 用 `data` 给物品加名字和描述
-3. 用 `recipes` 给物品加合成配方
-4. 改完物品配置跑 `/ce reload config`，改完配方跑 `/ce reload recipe`
-
-物品现在能用了——但它**长得还是和原版钻石一模一样**。下一章给它换上完全不同的外观。

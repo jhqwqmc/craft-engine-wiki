@@ -14,7 +14,11 @@ By chaining property accessors like:
 * `player.world` → Gets the player's current world
 * `world.name` → Gets the name of that world
 
-We can combine them into a parameter tag format like `<arg:player.world.name>`. This tag will dynamically return the name of the world the player is currently in.
+We can combine them into a parameter tag format like `<arg:player.world.name>`. This tag dynamically returns the name of the world the player is currently in.
+
+Both `<arg:path>` and `<viewer_arg:path>` support chain arguments. The first segment is a context key, so the available roots depend on where the text is evaluated. For example, an item may be exposed as `item`, `item_in_hand`, `furniture_item`, `player.main_hand_item`, `player.off_hand_item`, or `entity.item`.
+
+If a value may be unavailable, provide a default with `<arg:path:default>`, such as `<arg:entity.item.id:none>`. A missing value without a default causes an error.
 
 ## Objects
 
@@ -25,8 +29,8 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 | x                | double                 | the x coordinate of the player   |
 | y                | double                 | the y coordinate of the player   |
 | z                | double                 | the z coordinate of the player   |
-| pitch            | double                 | the pitch of the player          |
-| yaw              | double                 | the yaw of the player            |
+| pitch            | float                  | the pitch of the player          |
+| yaw              | float                  | the yaw of the player            |
 | position         | [#position](#position) | the position of the player       |
 | block\_x         | int                    | the x coordinate of the player   |
 | block\_y         | int                    | the y coordinate of the player   |
@@ -48,16 +52,18 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 
 ### block
 
-| parameter    | type                   | description                     |
-|--------------|------------------------|---------------------------------|
-| x            | double                 | the x coordinate of the block   |
-| y            | double                 | the y coordinate of the block   |
-| z            | double                 | the z coordinate of the block   |
-| block\_x     | int                    | the x coordinate of the block   |
-| block\_y     | int                    | the y coordinate of the block   |
-| block\_z     | int                    | the z coordinate of the block   |
-| world        | [#world](#world)       | the world where the block is in |
-| position     | [#position](#position) | the position of the block       |
+| parameter           | type                   | description                                                |
+|---------------------|------------------------|------------------------------------------------------------|
+| x                   | int                    | the x coordinate of the block                              |
+| y                   | int                    | the y coordinate of the block                              |
+| z                   | int                    | the z coordinate of the block                              |
+| block\_x            | int                    | the x coordinate of the block                              |
+| block\_y            | int                    | the y coordinate of the block                              |
+| block\_z            | int                    | the z coordinate of the block                              |
+| custom\_block       | block definition       | the custom block definition; absent for a vanilla block    |
+| custom\_block\_state | block state            | the complete custom block state; absent for a vanilla block |
+| world               | [#world](#world)       | the world where the block is in                            |
+| position            | [#position](#position) | the position of the block                                  |
 
 ### world
 
@@ -74,8 +80,8 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 | x                | double                 | the x coordinate of the entity   |
 | y                | double                 | the y coordinate of the entity   |
 | z                | double                 | the z coordinate of the entity   |
-| pitch            | double                 | the pitch of the entity          |
-| yaw              | double                 | the yaw of the entity            |
+| pitch            | float                  | the entity's `yRot` value (yaw)  |
+| yaw              | float                  | the entity's `xRot` value (pitch) |
 | block\_x         | int                    | the x coordinate of the entity   |
 | block\_y         | int                    | the y coordinate of the entity   |
 | block\_z         | int                    | the z coordinate of the entity   |
@@ -83,21 +89,26 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 | uuid             | uuid                   | the uuid of the entity           |
 | world            | [#world](#world)       | the world where the entity is in |
 | position         | [#position](#position) | the position of the entity       |
-| item             | [#item](#item)         | the item of dropped item entity  |
+| fire\_ticks      | int                    | the entity's remaining fire ticks |
+| health           | double                 | the health of a living entity; `0` for other entities |
+| item             | [#item](#item)         | the item of a dropped-item entity; absent otherwise |
 
 ### position
 
-| parameter | type             | description      |
-|-----------|------------------|------------------|
-| world     | [#world](#world) | the world        |
-| x         | double           | the x coordinate |
-| y         | double           | the y coordinate |
-| z         | double           | the z coordinate |
-| yaw       | float            | the yaw          |
-| pitch     | float            | the pitch        |
-| block\_x  | int              | the x coordinate |
-| block\_y  | int              | the y coordinate |
-| block\_z  | int              | the z coordinate |
+| parameter  | type                   | description                                  |
+|------------|------------------------|----------------------------------------------|
+| world      | [#world](#world)       | the world                                    |
+| coordinate | [#position](#position) | the same coordinate-bearing position object  |
+| x          | double                 | the x coordinate                             |
+| y          | double                 | the y coordinate                             |
+| z          | double                 | the z coordinate                             |
+| yaw        | float                  | the position's `xRot` value (pitch)          |
+| pitch      | float                  | the position's `yRot` value (yaw)            |
+| block\_x   | int                    | the floored x coordinate                     |
+| block\_y   | int                    | the floored y coordinate                     |
+| block\_z   | int                    | the floored z coordinate                     |
+| biome      | string                 | the namespaced id of the biome               |
+| block      | [#block](#block)       | the block at the floored coordinates         |
 
 ### item
 
@@ -109,6 +120,12 @@ We can combine them into a parameter tag format like `<arg:player.world.name>`. 
 | count               | int     | the count of the item                                |
 | is\_block\_item     | boolean | checks if the item is vanilla block item             |
 | random.\<id\>       | double  | the item's rolled random value (see `random_values`) |
+
+### random
+
+| parameter | type   | description                                                                 |
+|-----------|--------|-----------------------------------------------------------------------------|
+| \<id\>    | double | a named random value in the current context; missing ids roll and cache a value from `0` to `1` |
 
 ### furniture
 

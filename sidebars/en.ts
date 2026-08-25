@@ -810,11 +810,6 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         {
-          type: 'doc',
-          id: "reference/block_tags",
-          label: '🏷️ Block Tags',
-        },
-        {
           type: 'category',
           label: '✏️ Text Format',
           collapsed: true,
@@ -849,6 +844,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "reference/events",
           label: '🪇 Events',
+        },
+        {
+          type: 'doc',
+          id: "reference/functions",
+          label: '🔧 Functions',
         },
         {
           type: 'doc',

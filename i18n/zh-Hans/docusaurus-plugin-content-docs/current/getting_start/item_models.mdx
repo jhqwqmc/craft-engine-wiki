@@ -47,7 +47,7 @@ CraftEngine 提供了三种配置模型的方式，从简到繁：
 
 > ⚠️ 贴图必须放在 `textures/item/` 或 `textures/block/` 下。Minecraft 的贴图图集只加载这两个目录。放在别处（比如 `textures/custom/`）不会加载，显示为紫黑方格。
 
-> ⚠️ 模型贴图尺寸必须是 2 的幂：16×16、32×32、64×64……不满足的不渲染。
+> ⚠️ 模型贴图尺寸必须是 2 的幂：例如16×16、32×48、64×64……不满足此条件的会导致客户端mipmap降级。
 
 ## 准备贴图
 
@@ -59,7 +59,7 @@ resourcepack/assets/tutorial/textures/item/toxic_sword.png
 
 ## 方式一：`texture` 一行搞定
 
-最简写法。CraftEngine 根据 `material` 自动选择 parent、自动生成模型文件、自动分配 CMD。
+最简写法。CraftEngine 根据 `material` 自动选择 parent、自动生成模型文件、自动分配 CustomModelData。
 
 ```yaml
 items:
@@ -72,13 +72,13 @@ items:
 
 `/ce reload all`，`/ce item get tutorial:toxic_sword`。剑有了新贴图。
 
-CraftEngine 根据 `material` 判断物品类型并自动选 parent：`golden_sword` → `handheld`（手持工具），`paper` → `generated`（平面图标），方块物品 → `cube_all`。**你不需要指定 parent、不需要写 model 段、不需要管 CMD。**
+CraftEngine 根据 `material` 判断物品类型并自动选 parent：`golden_sword` → `handheld`（手持工具），`paper` → `generated`（平面图标），方块物品 → `cube_all`。**你不需要指定 parent、不需要写 model 段、不需要管 CustomModelData。**
 
 `texture:` 是单数，用于只有一个状态的物品（大多数物品）。多状态物品（弓、弩、钓鱼竿）需要用 `textures:`（复数），见方式二的简化写法。
 
 ## 方式二：`generation` 精确控制
 
-当 `texture:` 一行不够用时——比如想自己选 parent、加发光层、设置 display 变换——用 `generation` 格式。
+当 `texture:` 一行不够用时——比如想自己选 parent、设置 display 变换——用 `generation` 格式。
 
 ### 基本写法
 
@@ -114,18 +114,6 @@ items:
 | `minecraft:block/cube_all` | 方块 | 六面立方体 |
 
 > ⚠️ **`textures` 下的参数名由 `parent` 决定，不能自己随便写。** `handheld` 和 `generated` 用 `layer0`，`cube_all` 用 `all`。写错名字模型就坏了。选定 parent 后先去 [misode.github.io/assets/model](https://misode.github.io/assets/model/) 搜它的 JSON，看 `textures` 下定义了哪些变量，照着写。
-
-### 加发光层
-
-`layer0` 是底图，`layer1` 是叠加在上面的发光层：
-
-```yaml
-generation:
-  parent: minecraft:item/handheld
-  textures:
-    layer0: tutorial:item/toxic_sword        # 底图
-    layer1: tutorial:item/toxic_sword_glow   # 发光层
-```
 
 ### `texture` 和 `generation` 的关系
 

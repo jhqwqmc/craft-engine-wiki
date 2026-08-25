@@ -56,23 +56,9 @@ CraftEngine 把你 `resources/` 下的内容生成成一个资源包，通过 HT
 
 如果下载失败，看下一节。
 
-### 默认：自托管
-
-```yaml
-# config.yml 默认配置，不需要改
-resource-pack:
-  delivery:
-    hosting:
-      - type: "self"
-        ip: "auto"
-        port: "auto"
-```
-
-`type: "self"` = 服务器自己开一个 HTTP 服务。`ip: "auto"` 和 `port: "auto"` = 自动检测地址和端口。大多数情况直接就能用。
-
 ### 换托管方式
 
-默认 self 不行的话，试试这些：
+如果默认配置下无法完成资源包的发送，或是你想试试其他方式，可以考虑以下托管方案。如果你想弄明白自托管到底出了什么问题，请进入[自托管页面](set_up_host/self)查看详细配置教程。
 
 <div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
 
@@ -87,14 +73,6 @@ resource-pack:
 <UrlCard title="🚫 None" subtitle="只生成 zip，不上传"/>
 
 </div>
-
-### 快速选型
-
-| 你在干嘛 | 推荐 |
-|:---|:---|
-| 一个人开发测试 | Lobfile 或自托管 |
-| 公开服务器 | S3（Cloudflare R2 免费） |
-| 在 Velocity / BungeeCord 上分发资源包 | None |
 
 > ⚠️ 改完 `config.yml` 的托管配置后，跑 `/ce reload all`。单跑 `config` 不会重建资源包。
 

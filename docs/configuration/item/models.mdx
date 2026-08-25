@@ -86,7 +86,7 @@ items:
 
 | Scenario | What to set |
 |----------|------------|
-| You need a **specific** CMD number (e.g. another plugin references it) | `custom_model_data: <number>` |
+| You need a **specific** CustomModelData number (e.g. another plugin references it) | `custom_model_data: <number>` |
 | You want a **custom** item_model path (instead of auto-generated from ID) | `item_model: <namespace:path>` |
 
 ### config.yml settings
@@ -94,11 +94,11 @@ items:
 | Setting | Default | Effect |
 |---------|---------|--------|
 | `item.always-use-item-model` | `true` | Generate `item_model` even when `custom_model_data` is present. Recommended. |
-| `item.always-use-custom-model-data` | `false` | Force CMD allocation even for 1.21.2+-only packs. |
+| `item.always-use-custom-model-data` | `false` | Force CustomModelData allocation even for 1.21.2+-only packs. |
 | `item.always-generate-model-overrides` | `false` | Force legacy overrides even for 1.21.4+-only packs (useful for Bedrock converters). |
-| `item.custom-model-data-starting-value.default` | `10000` | First auto-allocated CMD number. |
+| `item.custom-model-data-starting-value.default` | `10000` | First auto-allocated CustomModelData number. |
 | `item.custom-model-data-starting-value.overrides.<material>` | — | Per-material override, e.g. `paper: 20000`. |
-| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">Premium</Highlight> Keep CMD and item_model client-side, enabling dynamic updates without affecting existing items. |
+| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">Premium</Highlight> Keep CustomModelData and item_model client-side, enabling dynamic updates without affecting existing items. |
 
 :::tip
 For nearly all items, you don't need to set either field. Configure `model` or `texture` and CraftEngine handles the rest.
@@ -413,4 +413,3 @@ items:
 :::tip
 `blueprint` also works in `legacy_model` and each of its `overrides` — a `.bbmodel` file is converted and used as that model, with `path` as the optional output location. See [Blueprint](models/model.mdx#blueprint-blockbench-experimental).
 :::
-

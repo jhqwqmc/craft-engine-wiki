@@ -130,7 +130,7 @@ items:
 
 | 场景 | 设置 |
 |----------|------------|
-| 需要**特定** CMD 编号（如其他插件引用） | `custom_model_data: <number>` |
+| 需要**特定** CustomModelData 编号（如其他插件引用） | `custom_model_data: <number>` |
 | 需要**自定义** item_model 路径（不使用从 ID 自动生成的） | `item_model: <namespace:path>` |
 
 ### config.yml 设置
@@ -138,11 +138,11 @@ items:
 | 设置 | 默认值 | 作用 |
 |---------|---------|--------|
 | `item.always-use-item-model` | `true` | 即使 custom_model_data 存在也生成 item_model。推荐。 |
-| `item.always-use-custom-model-data` | `false` | 即使仅面向 1.21.2+ 的资源包也强制分配 CMD。 |
+| `item.always-use-custom-model-data` | `false` | 即使仅面向 1.21.2+ 的资源包也强制分配 CustomModelData。 |
 | `item.always-generate-model-overrides` | `false` | 即使仅面向 1.21.4+ 的资源包也强制生成 legacy overrides（对基岩版转换器有用）。 |
-| `item.custom-model-data-starting-value.default` | `10000` | 自动分配的第一个 CMD 编号。 |
+| `item.custom-model-data-starting-value.default` | `10000` | 自动分配的第一个 CustomModelData 编号。 |
 | `item.custom-model-data-starting-value.overrides.<material>` | — | 按材质覆盖，如 `paper: 20000`。 |
-| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">付费版专属</Highlight> 将 CMD 和 item_model 保留在客户端，允许在不影响已有物品的情况下动态更新。 |
+| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">付费版专属</Highlight> 将 CustomModelData 和 item_model 保留在客户端，允许在不影响已有物品的情况下动态更新。 |
 
 :::tip
 绝大多数物品无需手动设置这两项。配置好 `model` 或 `texture`，其余交给 CraftEngine。
