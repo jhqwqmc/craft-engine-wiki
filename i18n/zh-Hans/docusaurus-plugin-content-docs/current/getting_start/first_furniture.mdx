@@ -3,13 +3,13 @@ title: 🪑 第一件家具
 id: first_furniture
 ---
 
-方块锁网格，家具不锁。家具是 CraftEngine 基于展示实体的装饰系统，位置精确到像素。
+方块只能对齐网格，家具则可以自由摆放。CraftEngine 的家具系统基于展示实体，能够以像素级精度控制位置。
 
 ## 第 1 步：给家具准备一个物品模型
 
-家具本身不直接指定贴图——它通过引用一个物品来显示模型。所以先做一个物品。
+家具不直接指定贴图，而是通过引用物品来显示模型，因此需要先创建一个物品。
 
-在 BlockBench 做一个椅子模型，导出 JSON 放到 `models/item/chair.json`，贴图也放好。然后：
+使用 Blockbench 制作椅子模型，将导出的 JSON 保存为 `models/item/chair.json`，并将贴图放到对应目录。然后添加以下配置：
 
 ```yaml
 items:
@@ -18,7 +18,7 @@ items:
     model: tutorial:item/chair
 ```
 
-`/ce item get tutorial:my_chair`——背包里出现一把椅子。现在它只是个普通物品，右键什么也不发生。
+运行 `/ce item get tutorial:my_chair` 后，背包中会出现一把椅子。此时它仍是普通物品，右键使用不会执行任何操作。
 
 ## 第 2 步：让物品能放置家具
 
@@ -43,16 +43,16 @@ items:
                 type: shulker
 ```
 
-`/ce reload all`，`/ce item get tutorial:my_chair`，右键地面——出现一把椅子。
+依次运行 `/ce reload all` 和 `/ce item get tutorial:my_chair`，然后右键点击地面，即可放置椅子。
 
-- `model: tutorial:item/chair` — 背包里的样子，第 1 步建的椅子模型
-- `type: furniture_item` — 右键放置家具
-- `rules.ground` — 放置规则。`rotation: four` 吸附 4 个方向，`alignment: center` 对齐方块中心。选填
-- `variants` — 家具至少一个变体。默认根据点击面选：顶面 → `ground`
+- `model: tutorial:item/chair` — 指定物品栏中显示的椅子模型
+- `type: furniture_item` — 让物品可以右键放置家具
+- `rules.ground` — 地面放置规则。`rotation: four` 将旋转角度限制为四个方向，`alignment: center` 将家具对齐到方块中心；此项可选
+- `variants` — 家具至少需要一个变体。默认根据点击面选择变体，例如点击顶面时使用 `ground`
 - `elements.item: tutorial:my_chair` — 把这个物品的模型显示出来
-- `hitboxes` — 判定箱。`type: shulker` = 潜影贝判定，实体和玩家无法穿过
+- `hitboxes` — 碰撞箱。`type: shulker` 表示使用潜影贝碰撞，实体和玩家无法穿过
 
-## 第 3 步：给家具属性
+## 第 3 步：设置家具属性
 
 在 `variants` 同级别加上 `settings`：
 
@@ -73,10 +73,10 @@ items:
                 type: shulker
 ```
 
-- `hit_times: 3` — 破坏所需击打次数。默认 0 = 秒破
+- `hit_times: 3` — 破坏家具所需的击打次数。默认值为 `0`，表示可以立即破坏
 - `sounds` — 破坏、放置、敲击音效
 
-## 第 4 步：能坐
+## 第 4 步：添加座位
 
 ```yaml
             hitboxes:
@@ -89,12 +89,12 @@ items:
                   - 0,0.5,0
 ```
 
-- `blocks_building: true` — 阻止在判定箱区域放方块
+- `blocks_building: true` — 阻止玩家在碰撞箱区域内放置方块
 - `interactive: true` — 交互实体是否可交互
 - `interaction_entity: true` — 额外生成交互实体
 - `seats` — 座位坐标
 
-## 第 5 步：挖了掉东西
+## 第 5 步：设置家具掉落物
 
 ```yaml
       furniture:
@@ -122,4 +122,4 @@ items:
             item: tutorial:my_chair
 ```
 
-先用这个模板，不用管它从哪来的。破坏后掉落 `tutorial:my_chair` 物品。
+这里使用 CraftEngine 内置的家具战利品表模板。配置完成后，破坏家具会掉落 `tutorial:my_chair` 物品。

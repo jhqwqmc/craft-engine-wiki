@@ -5,10 +5,8 @@ id: skript
 
 import SkriptCard from '@site/src/components/SkriptCard';
 
-# 🔮 Skript
-
 :::tip
-对于高级 Skript 用户，请使用反射来实现更高级的功能。如果您在使用 CraftEngine 提供的 Skript 功能时遇到问题，请及时向我们[反馈](https://github.com/Xiao-MoMi/craft-engine/issues/new)。如果您想要请求新的 Skript 功能并且您了解 Java，请考虑通过拉取请求贡献您的代码！
+高级 Skript 用户可以通过反射实现更复杂的功能。如果在使用 CraftEngine 提供的 Skript 功能时遇到问题，请[提交反馈](https://github.com/Xiao-MoMi/craft-engine/issues/new)。如果希望添加新的 Skript 功能并熟悉 Java，也欢迎通过拉取请求贡献代码。
 :::
 
 :::warning
@@ -305,7 +303,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 <SkriptCard
   title="CraftEngine 物品"
   type="Expression"
-  description="通过命名空间ID获取自定义物品"
+  description="通过命名空间 ID 获取自定义物品"
   syntax={[
     '[(the|a)] (custom|ce|craft-engine) item [with [namespace] id] %strings%',
   ]}
@@ -324,7 +322,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 <SkriptCard
   title="CraftEngine 物品命名空间 ID"
   type="Expression"
-  description="获取自定义物品的命名空间ID"
+  description="获取自定义物品的命名空间 ID"
   syntax={[
     '(custom|ce|craft-engine) item [namespace] id of %itemstack/itemtype/slot%',
     '%itemstack/itemtype/slot%\'[s] (custom|ce|craft-engine) item [namespace] id'
@@ -344,7 +342,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 <SkriptCard
   title="CraftEngine 方块命名空间 ID"
   type="Expression"
-  description="获取自定义方块的命名空间ID"
+  description="获取自定义方块的命名空间 ID"
   syntax={[
     '%blocks/blockdata/customblockstates%\'s (custom|ce|craft-engine) block [namespace] id',
     '(custom|ce|craft-engine) block [namespace] id of %blocks/blockdata/customblockstates%'
@@ -387,7 +385,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 <SkriptCard
   title="CraftEngine 家具命名空间 ID"
   type="Expression"
-  description="从实体获取家具的命名空间ID"
+  description="从实体获取家具的命名空间 ID"
   syntax={[
     '%entities%\'s [(custom|ce|craft-engine)] furniture [namespace] id',
   ]}

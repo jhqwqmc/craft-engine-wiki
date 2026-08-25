@@ -7,7 +7,7 @@ slug: /
 import ColoredLink from '@site/src/components/ColoredLink';
 import Highlight from '@site/src/components/Highlight';
 
-你好！欢迎来到 CraftEngine 文档！
+欢迎阅读 CraftEngine 文档。
 
 <div style={{ display: 'flex', justifyContent: 'center', maxWidth: '100%', margin: '0 auto' }}>
   <img src={require('/img/craftengine.avif').default} alt="banner" style={{ width: '100%', height: 'auto', maxWidth: '400px', maxHeight: '400px', objectFit: 'contain' }} fetchPriority="high" />
@@ -16,42 +16,42 @@ import Highlight from '@site/src/components/Highlight';
 
 ## 什么是 CraftEngine
 
-CraftEngine 让你无需客户端模组，就能向 Minecraft 服务器添加自定义方块、物品、家具和配方。所有内容通过资源包分发，纯服务端运行。
+CraftEngine 无需客户端模组，即可为 Minecraft 服务器添加自定义方块、物品、家具和配方。所有内容均由服务端运行，并通过资源包分发给玩家。
 
-你只需在 YAML 配置文件中定义内容，其余全部由 CraftEngine 处理：注册方块、生成模型、打包纹理、向玩家推送资源包。
+你只需在 YAML 配置文件中定义内容，方块注册、模型生成、贴图打包和资源包推送等工作均由 CraftEngine 完成。
 
 :::info
 
-CraftEngine 提供了一套完整的方块行为 API，让你像在 Forge/Fabric 中一样注册自定义方块行为。如果你曾是模组开发者，你会感到非常熟悉。我们推荐使用 [PaperWeight](https://github.com/PaperMC/paperweight) 作为开发依赖。
+CraftEngine 提供完整的方块行为 API，可以像在 Forge 或 Fabric 中一样注册自定义方块行为。熟悉模组开发的开发者应该很快就能上手。建议使用 [PaperWeight](https://github.com/PaperMC/paperweight) 作为开发依赖。
 
 :::
 
 ## 快速开始
 
-刚开始用？跟着动手教程走——大约 30 分钟，你就能做出第一个物品、方块和家具。
+第一次使用 CraftEngine？跟随入门教程操作，大约 30 分钟即可完成第一个自定义物品、方块和家具。
 
 <Highlight color="#3CB371"><ColoredLink to="./getting_start/installation" color="#ffffff">**→ 开始教程**</ColoredLink></Highlight>
 
 ## 获取帮助
-- <Highlight color="#FFA500">**付费版**</Highlight> 用户可通过 <Highlight color="#9370DB"><ColoredLink to="https://discord.gg/xiaomomi" color="#ffffff">**Discord**</ColoredLink></Highlight> 机器人验证，进入专属支持频道
-- 中国大陆 <Highlight color="#FFA500">**付费版**</Highlight> 用户可通过 QQ 群 `1039968907` 获得支持
-- 随时使用 <Highlight color="#1785c5ff"><ColoredLink to="https://deepwiki.com/Xiao-MoMi/craft-engine" color="#ffffff">**DeepWiki**</ColoredLink></Highlight> AI 自助获取答案
-- 开发**公开项目**的开发者可在 `#api-help` 频道获取免费开发支持
+- <Highlight color="#FFA500">**付费版**</Highlight>用户可通过 <Highlight color="#9370DB"><ColoredLink to="https://discord.gg/xiaomomi" color="#ffffff">**Discord**</ColoredLink></Highlight> 机器人完成验证，进入专属支持频道。
+- 中国大陆的<Highlight color="#FFA500">**付费版**</Highlight>用户可加入 QQ 群 `1039968907` 获取支持。
+- 可以随时通过 <Highlight color="#1785c5ff"><ColoredLink to="https://deepwiki.com/Xiao-MoMi/craft-engine" color="#ffffff">**DeepWiki**</ColoredLink></Highlight> AI 自助查询答案。
+- **公开项目**的开发者可在 `#api-help` 频道获取免费的开发支持。
 
 ## CraftEngine 是如何工作的
 
-与其他在 Bukkit 限制下修修补补的插件不同，CraftEngine 采用了根本不同的技术路线：
+CraftEngine 没有局限于传统的 Bukkit API 实现，而是采用了不同的技术路线：
 
 - **服务端模组化**——创建突破原版 Minecraft 方块数量上限的全新方块
-- **类 ViaBackwards 转换**——新方块被翻译为玩家可见的旧版方块格式
+- **类似 ViaBackwards 的转换机制**——将新方块转换为玩家客户端能够识别的方块格式
 - **真正的方块注册**——注册的是实际方块，不是虚假占位。数据包、世界生成和原版机制均能正确运作
 
 对技术细节感兴趣？完整源码在 [GitHub](https://github.com/Xiao-MoMi/craft-engine)。
 
 :::tip
 
-浏览 [☄️ 独家功能](intro/exclusive_feature) 看看只有 CraftEngine 能做到的事。
+浏览[☄️ 独家功能](intro/exclusive_feature)，了解 CraftEngine 的特色能力。
 
-查看 [🥕 简而不凡](intro/simply_better) 了解 CraftEngine 做得比别人更好的功能。
+查看[🥕 简而不凡](intro/simply_better)，了解 CraftEngine 对常用功能的改进。
 
 :::

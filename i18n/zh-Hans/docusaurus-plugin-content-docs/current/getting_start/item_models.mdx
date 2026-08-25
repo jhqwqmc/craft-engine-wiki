@@ -5,19 +5,19 @@ id: item_models
 
 import PluginFileTree from '@site/src/components/PluginFileTree';
 
-上一章的物品能用了，但长得和原版一样。这章给它换外观。
+上一章创建的物品已经可以使用，但外观仍与原版相同。本章将为它换上自定义外观。
 
 CraftEngine 提供了三种配置模型的方式，从简到繁：
 
 | 方式 | 写法 | 什么时候用 |
 |:---|:---|:---|
-| 简化纹理 | `texture: 路径` | 只有一张贴图，让插件自动搞定一切 |
+| 简化纹理 | `texture: 路径` | 只有一张贴图，其余内容由插件自动处理 |
 | 自动生成 | `model:` + `generation:` | 需要指定 parent、多个贴图层、display 变换 |
 | 外部模型 | `model: 路径` | 已有现成的模型 JSON 文件 |
 
-> ⚠️ 这章要改资源包文件（贴图/模型）。**改完跑 `/ce reload all`，不是 `config`。** 只跑 `config` 贴图变更不生效——这是整个教程被问最多的问题。
+> ⚠️ 本章会修改资源包文件（贴图或模型）。**修改后请运行 `/ce reload all`，而不是 `/ce reload config`。** 仅重载配置不会让贴图变更生效。
 
-## 模型和贴图放哪
+## 模型和贴图的存放位置
 
 包的 `resourcepack/` 结构和原版资源包一样：
 
@@ -27,15 +27,15 @@ CraftEngine 提供了三种配置模型的方式，从简到繁：
     {
       id: "models", name: "models",
       children: [
-        { id: "models-item", name: "item", hoverText: "物品模型 .json 放这里", children: [] },
-        { id: "models-block", name: "block", hoverText: "方块模型 .json 放这里", children: [] },
+        { id: "models-item", name: "item", hoverText: "存放物品模型（.json）", children: [] },
+        { id: "models-block", name: "block", hoverText: "存放方块模型（.json）", children: [] },
       ]
     },
     {
       id: "textures", name: "textures",
       children: [
-        { id: "textures-item", name: "item", hoverText: "物品贴图 .png 放这里", children: [] },
-        { id: "textures-block", name: "block", hoverText: "方块贴图 .png 放这里", children: [] },
+        { id: "textures-item", name: "item", hoverText: "存放物品贴图（.png）", children: [] },
+        { id: "textures-block", name: "block", hoverText: "存放方块贴图（.png）", children: [] },
       ]
     },
   ]}
@@ -57,9 +57,9 @@ CraftEngine 提供了三种配置模型的方式，从简到繁：
 resourcepack/assets/tutorial/textures/item/toxic_sword.png
 ```
 
-## 方式一：`texture` 一行搞定
+## 方式一：使用 `texture` 快速生成
 
-最简写法。CraftEngine 根据 `material` 自动选择 parent、自动生成模型文件、自动分配 CustomModelData。
+这是最简单的写法。CraftEngine 会根据 `material` 自动选择 parent、生成模型文件并分配 CustomModelData。
 
 ```yaml
 items:
@@ -70,15 +70,15 @@ items:
     texture: tutorial:item/toxic_sword
 ```
 
-`/ce reload all`，`/ce item get tutorial:toxic_sword`。剑有了新贴图。
+依次运行 `/ce reload all` 和 `/ce item get tutorial:toxic_sword`，即可获得使用新贴图的剑。
 
-CraftEngine 根据 `material` 判断物品类型并自动选 parent：`golden_sword` → `handheld`（手持工具），`paper` → `generated`（平面图标），方块物品 → `cube_all`。**你不需要指定 parent、不需要写 model 段、不需要管 CustomModelData。**
+CraftEngine 会根据 `material` 判断物品类型并自动选择 parent：`golden_sword` → `handheld`（手持工具），`paper` → `generated`（平面图标），方块物品 → `cube_all`。**无需手动指定 parent、编写 `model` 配置段或管理 CustomModelData。**
 
 `texture:` 是单数，用于只有一个状态的物品（大多数物品）。多状态物品（弓、弩、钓鱼竿）需要用 `textures:`（复数），见方式二的简化写法。
 
 ## 方式二：`generation` 精确控制
 
-当 `texture:` 一行不够用时——比如想自己选 parent、设置 display 变换——用 `generation` 格式。
+如果需要自行选择 parent 或设置 display 变换，可以使用 `generation` 格式进行精确控制。
 
 ### 基本写法
 
@@ -100,8 +100,8 @@ items:
 
 | 字段 | 必需 | 说明 |
 |:---|:---|:---|
-| `parent` | 是 | 继承的父模型。决定了贴图变量名叫什么 |
-| `textures` | 否 | 给父模型里定义的贴图变量赋值 |
+| `parent` | 是 | 要继承的父模型，同时决定可用的贴图变量名 |
+| `textures` | 否 | 为父模型定义的贴图变量赋值 |
 | `display` | 否 | 各场景的旋转/平移/缩放 |
 | `gui_light` | 否 | GUI 光照：`front`（扁平）或 `side`（3D 光照，默认） |
 
@@ -109,11 +109,11 @@ items:
 
 | parent | 适合什么 | 效果 |
 |:---|:---|:---|
-| `minecraft:item/handheld` | 剑、镐、斧 | 第三人称斜着拿 |
+| `minecraft:item/handheld` | 剑、镐、斧 | 第三人称视角下倾斜手持 |
 | `minecraft:item/generated` | 食物、材料、锭 | 平面 2D |
 | `minecraft:block/cube_all` | 方块 | 六面立方体 |
 
-> ⚠️ **`textures` 下的参数名由 `parent` 决定，不能自己随便写。** `handheld` 和 `generated` 用 `layer0`，`cube_all` 用 `all`。写错名字模型就坏了。选定 parent 后先去 [misode.github.io/assets/model](https://misode.github.io/assets/model/) 搜它的 JSON，看 `textures` 下定义了哪些变量，照着写。
+> ⚠️ **`textures` 下的参数名由 `parent` 决定，不能随意填写。** `handheld` 和 `generated` 使用 `layer0`，`cube_all` 使用 `all`。变量名错误会导致模型无法正常显示。选定 parent 后，可以在 [misode.github.io/assets/model](https://misode.github.io/assets/model/) 中查找对应 JSON，确认其 `textures` 定义了哪些变量。
 
 ### `texture` 和 `generation` 的关系
 
@@ -128,7 +128,7 @@ model:
       layer0: tutorial:item/toxic_sword
 ```
 
-大多数情况下 `texture:` 就够。需要用 `generation` 的场景：想用不同的 parent、有多个贴图层、需要在模型上加 `display` 变换。
+大多数情况下，使用 `texture:` 即可。需要更换 parent、使用多个贴图层或添加 `display` 变换时，再使用 `generation`。
 
 ### 多状态物品的简化写法
 
@@ -146,7 +146,7 @@ items:
       - tutorial:item/bow_pulling_2    # 完全拉满
 ```
 
-> ⚠️ 槽位**顺序固定**，由 `material` 决定。顺序搞错会导致待机时显示拉满的贴图。
+> ⚠️ 槽位的**顺序固定**，由 `material` 决定。顺序错误可能导致物品在待机时显示拉满弓弦等错误贴图。
 
 常见 material 的槽位数：
 
@@ -158,11 +158,11 @@ items:
 | `shield` | 2 | 待机 + 格挡中 |
 | `elytra` | 2 | 完好 + 破损 |
 
-多状态物品通常用 `textures:` 简化写法就够了。如果需要对每个状态用不同的 parent 或 display，才需要完整的 `model:` + `generation:` 写法，见[简化模型参考](../configuration/item/models.mdx#简化模型)。
+多状态物品通常使用 `textures:` 简化写法即可。只有在各状态需要使用不同的 parent 或 display 时，才需要完整的 `model:` + `generation:` 写法，详见[简化模型参考](../configuration/item/models.mdx#简化模型)。
 
 ## 方式三：外部模型文件
 
-从网上下载的、BlockBench 做的、买来的模型包——它们是现成的 `.json` 模型文件，直接用：
+对于从网上下载、使用 Blockbench 制作或购买的现成 `.json` 模型文件，可以直接引用：
 
 ```yaml
 items:
@@ -173,7 +173,7 @@ items:
     model: tutorial:item/toxic_sword
 ```
 
-`model:` 后面直接跟模型路径，CraftEngine 使用已有的 JSON 文件，不做任何生成。贴图路径在模型 JSON 里已经写好了。
+在 `model:` 后直接填写模型路径，CraftEngine 会使用已有的 JSON 文件，不再生成模型。贴图路径则由模型 JSON 定义。
 
 多状态物品（弓、盾牌等）需要不同状态用不同模型文件时，用 `models:`（复数），槽位顺序和 `textures:` 一致：
 
@@ -186,7 +186,7 @@ items:
       - tutorial:item/shield_blocking   # 格挡中
 ```
 
-> 💡 CraftEngine 的 `resourcepack/` 就是一个完整的 Minecraft 资源包。你可以直接用 BlockBench 打开里面的模型 JSON——文件结构和原版一样，BlockBench 能正确解析贴图路径，方便校验贴图是否正常。
+> 💡 CraftEngine 的 `resourcepack/` 就是一个完整的 Minecraft 资源包。可以直接用 Blockbench 打开其中的模型 JSON。文件结构与原版资源包一致，Blockbench 能正确解析贴图路径，便于检查贴图是否正常。
 
 > ⚠️ 文件名必须满足[命名空间路径规范](./project_structure#什么是命名空间)，只能用小写字母、数字、`-`、`_`、`.`、`/`。大写和特殊字符会导致加载失败。
 
@@ -207,15 +207,15 @@ items:
 
 常见问题：
 
-| 看到的情况 | 原因 | 怎么修 |
+| 现象 | 原因 | 解决方法 |
 |:---|:---|:---|
-| 贴图路径有 `C:\Users\...` 这种本地路径 | BlockBench 保存位置错了 | 把 `textures` 里的路径全改成 `命名空间:item/文件名`，PNG 放到 `textures/item/` 下 |
+| 贴图路径包含 `C:\Users\...` 之类的本地路径 | Blockbench 中的贴图路径设置错误 | 将 `textures` 中的路径改为 `命名空间:item/文件名`，并把 PNG 放到 `textures/item/` 下 |
 | 贴图路径写的是 `minecraft:item/xxx` | 用的是原版贴图 | 改用你自己的命名空间，或确保对应贴图文件存在 |
 | 路径对了但还是紫黑 | 贴图文件不在对应位置或拼写有误 | 检查文件名是否全小写、拼写是否正确 |
 
-### 买来的模型包改命名空间
+### 修改模型包的命名空间
 
-市面上买的资源包通常用作者自己的命名空间（比如 `fantasy_pack`）。想改成你的 `tutorial`：
+购买或下载的资源包通常使用作者自己的命名空间（如 `fantasy_pack`）。如果需要改为本教程使用的 `tutorial`：
 
 1. 用 VS Code 打开模型 JSON 文件
 2. Ctrl+H 查找替换，把 `fantasy_pack:` 全部换成 `tutorial:`

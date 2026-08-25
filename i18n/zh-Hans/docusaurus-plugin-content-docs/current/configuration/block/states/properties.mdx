@@ -7,7 +7,7 @@ id: properties
 
 :::tip
 
-`default` 选项是可选的。
+所有属性类型都可以通过可选的 `default` 指定默认值。
 
 :::
 
@@ -207,13 +207,13 @@ properties:
 
 :::info
 
-除了下面提到的名称外，一些名称由方块的行为决定。例如，树苗行为需要一个名为 `stage` 的属性。
+除下列硬编码名称外，部分属性名由方块行为决定。例如，树苗行为要求存在名为 `stage` 的属性。
 
 :::
 
 ### axis
 
-根据放置时候点击的面决定方块的轴向
+根据放置时点击的方块面自动确定轴向。
 
 ```yaml
 properties:
@@ -228,10 +228,10 @@ properties:
 
 ### waterlogged
 
-`waterlogged` 决定该方块是否可以包含水。
+`waterlogged` 决定方块能否含水。
 
 :::warning
-注意：当使用 `waterlogged` 状态时，请确保对应的视觉方块状态也包含水，否则客户端将无法正确渲染水。
+使用 `waterlogged` 时，请确保对应的视觉方块状态也处于含水状态，否则客户端无法正确渲染水体。
 :::
 
 ```yaml
@@ -243,7 +243,7 @@ properties:
 
 ### facing
 
-当方块具有此硬编码属性名称时，其放置方向将自动适应。
+使用此属性名后，方块会在放置时自动匹配朝向。
 
 ```yaml
 properties:
@@ -261,7 +261,7 @@ properties:
 
 ### facing\_clockwise
 
-与上述不同的是，方块放置时将旋转 90 度。
+与 `facing` 相比，此属性会让放置朝向额外旋转 90 度。
 
 ```yaml
 properties:
@@ -277,7 +277,7 @@ properties:
 
 ### rotation
 
-提供精度更高的旋转
+提供更精细的旋转角度。
 
 ```yaml
 properties:

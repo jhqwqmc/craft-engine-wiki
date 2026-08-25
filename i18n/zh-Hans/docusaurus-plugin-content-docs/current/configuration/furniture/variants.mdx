@@ -13,9 +13,9 @@ import Highlight from '@site/src/components/Highlight';
 
 :::info
 
-变体名称可以随便起，插件本身不做限制。你常见的 \[`ground`、`ceiling`、`wall`\] 只是默认[🪑 家具物品](../item/behaviors/furniture_item)行为的约定：它根据点击方块的面选变体——顶面 → `ground`，底面 → `ceiling`，侧面 → `wall`。
+变体名称可以自定义，插件本身不作限制。常见的 \[`ground`、`ceiling`、`wall`\] 只是默认[🪑 家具物品](../item/behaviors/furniture_item)行为使用的约定：该行为会根据玩家点击的方块表面选择变体——顶面对应 `ground`，底面对应 `ceiling`，侧面对应 `wall`。
 
-你完全可以用其他名称。比如给电池家具定义 `charged`、`half_charged`、`empty` 三个变体，通过 API 在电量变化时切换。或者光传感器也可以在放置时根据当前时间选择是 `day` 或 `night` 变体。
+也可以使用其他名称。例如，为电池家具定义 `charged`、`half_charged` 和 `empty` 三个变体，再通过 API 根据电量切换；光传感器则可以在放置时根据当前时间选择 `day` 或 `night` 变体。
 
 :::
 
@@ -40,7 +40,7 @@ furniture:
           - type: item_display
             item: default:standing_lamp
 
-        # 家具判定箱——家具占用多少空间以及如何与玩家交互
+        # 家具碰撞箱——家具占用多少空间以及如何与玩家交互
         hitboxes:
           - type: interaction
             width: 1
@@ -51,7 +51,7 @@ furniture:
 
 ## 元素
 
-**元素**是组成家具的各个独立渲染部件。大多数家具一个元素就够了。需要复杂设计时，可以组合多个元素。比如一个全息投影仪可以拆成底座和投影两个元素：底座固定朝向，投影始终面朝玩家。
+**元素**是组成家具的独立渲染部件。大多数家具只需一个元素；设计较复杂时，可以组合多个元素。例如，全息投影仪可以拆分为底座和投影两个元素：底座保持固定朝向，投影则始终面向玩家。
 
 ## 展示实体通用参数
 
@@ -264,21 +264,21 @@ yaw: 0
 pitch: 0
 ```
 
-## 判定箱
+## 碰撞箱
 
-判定箱决定了家具的交互范围——玩家能不能穿过去、点哪里。插件内置了几种类型，按需选用即可。
+碰撞箱决定家具占用的空间和交互范围，例如玩家能否穿过以及可以点击的位置。插件内置了多种类型，可按需选用。
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/furniture_variants_1.png').default} alt="" style={{maxWidth: '100%', width: '375px', height: 'auto'}} />
 </div>
 
-<Details summary="在游戏中预览判定箱">
+<Details summary="在游戏中预览碰撞箱">
 
-输入 `/ce debug furniture` 开启家具调试模式，所有判定箱会以线框形式显示，方便检查位置和大小。错位或穿模的判定箱会被高亮标记。
+输入 `/ce debug furniture` 开启家具调试模式。所有碰撞箱都会以线框显示，便于检查位置和大小；错位或穿模的碰撞箱会被高亮标记。
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/commands_19.png').default} alt="" />
-    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>调试模式下判定箱可见</p>
+    <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>调试模式下可见碰撞箱</p>
 </div>
 
 <div style={{textAlign: 'center'}}>
@@ -333,7 +333,7 @@ seats:
 
 ### 快乐恶魂
 
-更大的判定箱（scale=1 时占用 4×4x4 格）。实体和玩家无法穿过。
+更大的碰撞箱（`scale=1` 时占用 4×4×4 格）。实体和玩家无法穿过。
 
 ```yaml
 type: happy_ghast
@@ -365,7 +365,7 @@ seats:
 :::info
 座位格式为 `x,y,z`，后面可接空格和水平旋转角度角度。有水平旋转角度时身体旋转受限，不能 360° 转。不写则自由旋转。
 
-一个判定箱可以添加多个座位。如果不同判定箱的座位位置重叠，只有一个会生效。
+一个碰撞箱可以添加多个座位。如果不同碰撞箱的座位位置重叠，只有一个会生效。
 
 ```
 0,0,0 0    # 身体旋转受限

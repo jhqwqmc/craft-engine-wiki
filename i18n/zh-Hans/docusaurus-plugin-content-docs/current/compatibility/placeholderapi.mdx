@@ -11,7 +11,7 @@ import Highlight from '@site/src/components/Highlight';
 
 ## %image\_%
 
-`image` 占位符用于根据给定的标识符返回对应图像的原始 Unicode 字符及其关联字体。
+`image` 占位符根据给定标识符返回对应图片的原始 Unicode 字符及其关联字体。
 
 :::caution
 `row` 和 `column` 都是可选的，但如果使用其中一个，就必须同时使用另一个。
@@ -19,19 +19,19 @@ import Highlight from '@site/src/components/Highlight';
 
 ### %image\_mm\_\<命名空间\>:\<路径\>\:\[行]:\[列]%
 
-返回 `minimessage` 格式的图像。
+返回 MiniMessage 格式的图片。
 
 ![](/img/placeholderapi_1.png)
 
 ### %image\_md\_\<命名空间\>:\<路径\>\:\[行]:\[列]%
 
-返回 `minedown` 格式的图像。
+返回 MineDown 格式的图片。
 
 ![](/img/placeholderapi_2.png)
 
 ### %image\_raw\_\<命名空间\>:\<路径\>\:\[行]:\[列]%
 
-返回原始图像字符
+返回原始图片字符
 
 ![](/img/placeholderapi_3.png)
 
@@ -75,7 +75,7 @@ import Highlight from '@site/src/components/Highlight';
 ### %checkceitem_id_\[槽位\]%
 
 槽位可写不小于 0 的数字，或者 `main_hand` 和 `off_hand` 用于分别指定主手和副手槽位。 \
-返回玩家物品栏中指定槽位物品的命名空间ID。
+返回玩家物品栏中指定槽位物品的命名空间 ID。
 
 ![](/img/placeholderapi_4.png)
 

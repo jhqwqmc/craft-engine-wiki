@@ -344,7 +344,7 @@ play_sound: true # 默认值: true
 
 ### 旋转家具
 
-旋转一个家具，家具有时候会因为碰撞体积无法旋转，这时候就会触发 on_failure
+旋转家具。若碰撞体积导致旋转失败，则执行 `on_failure`。
 
 ```yaml
 type: rotate_furniture
@@ -442,8 +442,7 @@ type: remove_entity
 
 ### 条件判断
 
-运行首个满足指定条件的函数。
-译者注：只要满足了某个条件，执行完该条件内的函数，就会结束条件判断函数的运行，即使后面有可以满足的条件，也不会执行该条件内的函数。
+按顺序检查规则，并执行首个满足条件的函数列表。匹配成功后立即停止检查，后续规则即使也满足条件也不会执行。
 
 ```yaml
 type: if_else
@@ -476,17 +475,17 @@ cases:
   - when: "world"
     functions: 
       - type: message
-        message: "您位于主世界。"
+        message: "你位于主世界。"
   - when: 
       - "world_nether"
       - "world_the_end"
     functions: 
       - type: message
-        message: "您正处于危险维度！"
+        message: "你正处于危险维度！"
 # 可选配置
 fallback:
   - type: message
-    message: "您处于未知世界中。"
+    message: "你处于未知世界中。"
 ```
 
 ### 消耗物品耐久度
@@ -683,5 +682,5 @@ args:
 ```
 
 :::info
-更多函数即将到来...
+更多函数将在后续版本中加入。
 :::

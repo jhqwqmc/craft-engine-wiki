@@ -5,9 +5,9 @@ id: item_model_definition
 
 import UrlCard from '@site/src/components/UrlCard';
 
-入门教程里你一行代码就给物品换上了自定义贴图。现在来理解这行代码背后的系统——以及你真正能用它做什么。
+入门教程通过一行配置为物品换上了自定义贴图。本章将进一步介绍这项简化配置背后的物品模型系统。
 
-## 模型 vs. 物品模型定义
+## 模型与物品模型定义
 
 这两个词听起来相似，但含义不同：
 
@@ -17,7 +17,7 @@ import UrlCard from '@site/src/components/UrlCard';
 | **存放在** | `assets/<ns>/models/` | `assets/<ns>/items/` |
 | **类比** | 一件衣服 | 一个衣柜，根据场合挑衣服 |
 
-**模型**是静态的东西：`block/cube_all`、`item/handheld`、你从 BlockBench 导出的文件。**物品模型定义**是逻辑——决定每种情况下渲染哪个模型：手持 vs. 背包 vs. 掉落在地面、受损时、蓄力时等等。
+**模型**是静态资源，例如 `block/cube_all`、`item/handheld` 或从 Blockbench 导出的文件。**物品模型定义**则负责选择模型，决定物品在手持、物品栏、掉落、受损或蓄力等状态下应如何渲染。
 
 CraftEngine 物品配置中的 `model:` 字段，写的就是物品模型定义。当你写：
 
@@ -28,11 +28,11 @@ items:
     texture: tutorial:item/toxic_sword
 ```
 
-CraftEngine 生成的物品模型定义就是"始终用这一个模型"。这是最简单的情况——但这个系统远比这深。
+CraftEngine 生成的物品模型定义会始终使用同一个模型。这是最简单的用法，物品模型定义还支持更复杂的条件与组合。
 
 ## 六种模型类型
 
-物品模型定义是一棵树。每个节点有一个 `type`。共六种：
+物品模型定义采用树状结构，每个节点都有一个 `type`。共有以下六种类型：
 
 | 类型 | 作用 |
 |:---|:---|
@@ -45,7 +45,7 @@ CraftEngine 生成的物品模型定义就是"始终用这一个模型"。这是
 
 ## 示例 1：静态模型
 
-你已经知道的——始终渲染同一个模型：
+静态模型始终渲染同一个模型文件：
 
 ```yaml
 model:
@@ -87,7 +87,7 @@ model:
 
 ## 示例 3：叠加发光效果
 
-一颗宝石，静态基底 + 脉冲光晕叠加，使用 `composite`：
+要为宝石叠加静态基底和脉冲光晕，可以使用 `composite`：
 
 ```yaml
 model:
@@ -99,11 +99,11 @@ model:
       path: tutorial:item/gem_base
 ```
 
-光晕层可以是带透明的独立模型——渲染在基底之上。配合动画贴图可以实现脉冲发光效果。
+光晕层可以使用带透明区域的独立模型，并渲染在基底之上；配合动画贴图即可形成脉冲效果。
 
 ## 示例 4：快捷栏选中发光
 
-物品在快捷栏被选中时显示不同外观，使用 `condition` + `minecraft:selected`：
+要让物品在快捷栏中被选中时显示不同外观，可以组合使用 `condition` 和 `minecraft:selected`：
 
 ```yaml
 model:
@@ -119,7 +119,7 @@ model:
 
 ## 示例 5：蓄力武器（嵌套）
 
-一把有 3 档蓄力 + 受损裂纹的武器——`range_dispatch` 嵌套在 `composite` 内：
+对于同时具有三档蓄力状态和受损裂纹的武器，可以在 `composite` 中嵌套 `range_dispatch`：
 
 ```yaml
 model:
@@ -150,7 +150,7 @@ model:
             path: tutorial:item/mace_charging_2
 ```
 
-裂纹渲染在蓄力模型**之上**。两者独立变化。这是简单贴图切换做不到的——必须用可组合的树状结构。
+裂纹渲染在蓄力模型**之上**，两者可以独立变化。这类效果需要通过可组合的树状结构实现，无法仅靠简单的贴图切换完成。
 
 ## 示例 6：跨维度变色工具
 
@@ -174,11 +174,11 @@ model:
     path: tutorial:item/pickaxe_overworld
 ```
 
-物品外观随玩家所在维度自动切换。再叠加上耐久度的 `range_dispatch`，你就能拥有一把在不同维度显示不同外观、且会磨损的镐子。
+物品外观会随玩家所在维度自动切换。再嵌套基于耐久度的 `range_dispatch`，即可同时按维度和磨损程度改变镐子的外观。
 
 :::tip[从简单开始]
 
-你不需要手写这些树。CraftEngine 的简化语法——`texture:`、`textures:`、`model:` 直接写路径——覆盖了 90% 的用例。树状语法是为那 10% 需要深度定制的场景准备的。
+大多数场景无需手写完整的模型树。CraftEngine 提供的 `texture:`、`textures:` 和 `model:` 路径简写已能满足常见需求；只有需要深度定制时才需要树状语法。
 
 :::
 

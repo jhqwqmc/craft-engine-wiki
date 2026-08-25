@@ -7,19 +7,19 @@ import Highlight from '@site/src/components/Highlight';
 
 ## 准备工作
 
-在设置新配方之前，你需要了解以下内容。这些提示将使配置更轻松，并揭示额外有用的功能。
+配置新配方前，建议先了解标签、物品来源和配方解锁等基础概念。
 
 ### 标签
 
-CraftEngine 允许你使用标签，你也可以创建自定义标签。要使用标签，只需遵循以下格式：`#namespace:tag`。
+CraftEngine 支持原版标签和自定义标签。引用标签时使用 `#namespace:tag` 格式。
 
 :::tip
 
-大多数合成插件都有一个共同的痛点——它们不支持为物品分配标签，也不允许在配方中使用标签。例如，如果你想让新创建的木板类型与原版木板在合成配方中混合使用，那根本无法实现。
+部分合成插件无法为物品分配标签，也不能在配方中引用标签。例如，新建的木板类型可能无法与原版木板共同参与配方。CraftEngine 的标签支持可以解决这类兼容问题。
 
 :::
 
-在下面的示例中，我为 `palm_planks` 添加了两个原版标签，允许它们参与数据包中包含这两个标签的所有配方。
+以下示例为 `palm_planks` 添加两个原版标签，使其能够参与数据包中引用这些标签的配方。
 
 ```yaml
 items:
@@ -104,7 +104,7 @@ recipes:
       count: 4
 ```
 
-`group` 决定该配方在客户端解锁后所属的分组名称。分组名可自由定义，但请避免使用非法字符。译者注：例如中文
+`group` 指定配方在客户端解锁后所属的分组。分组名可以自定义，但不能包含中文等非法字符。
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/i18n/zh-Hans/recipe_3.png').default} alt="" />
@@ -132,7 +132,7 @@ recipe:
 ```
 
 :::info
-支持的物品来源请查阅[📦️ 外部物品来源](../compatibility/external_item_sources.mdx)，您也可以通过 API 注册自定义物品来源。
+支持的物品来源请参阅[📦️ 外部物品来源](../compatibility/external_item_sources.mdx)。你也可以通过 API 注册自定义物品来源。
 :::
 
 接下来需要将每个外部物品源映射到对应的 CraftEngine 等效物，请参考以下配置示例：
@@ -147,7 +147,7 @@ items:
         id: KingsCrown
     settings:
       tags:
-        - add_tag:if_you_want # 添加标签，如果你想的话
+        - add_tag:if_you_want # 可选：添加标签
 ```
 
 之后，只需像创建其他普通物品一样为该物品创建配方即可。
@@ -170,10 +170,10 @@ recipes:
 
 对于用作原料的任何物品，你必须确保它们在 CraftEngine 中的命名空间是**小写**的插件名称，并且路径也应该是**小写**的。以下是一些示例，以便你了解其工作原理：
 
-* MythicMobs 中名为 'MySword' 的物品 -> `mythicmobs:mysword`
-* CustomFishing 中名为 'star_fish' 的物品 -> `customfishing:star_fish`
-* MMOItems 中名为 'MAGIC_GEM' 且类型为 'MATERIAL' 的物品 -> `mmoitems:material_magic_gem`
-* 某个**随机插件**中具有命名空间ID的物品 -> `random_plugin:namespace_id`
+* MythicMobs 中名为 `MySword` 的物品 → `mythicmobs:mysword`
+* CustomFishing 中名为 `star_fish` 的物品 → `customfishing:star_fish`
+* MMOItems 中名为 `MAGIC_GEM` 且类型为 `MATERIAL` 的物品 → `mmoitems:material_magic_gem`
+* 某个**其他插件**中具有命名空间 ID 的物品 → `random_plugin:namespace_id`
 
 :::
 
@@ -221,7 +221,7 @@ transform_processors:
     components:
       - minecraft:enchantments
 
-  # 保留指定NBT标签（1.20-1.20.4）
+  # 保留指定 NBT 标签（1.20–1.20.4）
   - type: keep_tags
     tags:
       - display.Name

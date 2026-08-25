@@ -54,7 +54,7 @@ type: falling_block
 
 ### survives\_explosion
 
-以 `1/爆炸半径` 的概率返回成功。需要上下文提供参数进行检测，若未提供则总是通过。
+以 `1 / 爆炸半径` 的概率返回成功。该条件需要上下文提供检测参数；若未提供，则始终通过。
 
 ```yaml
 type: survives_explosion
@@ -205,12 +205,12 @@ type: random
 value: 0.1 # 10%
 ```
 
-默认每次判定都独立 roll。指定 `id` 可让同一上下文内的多次判定共享同一次 roll：
+默认情况下，每次判定都会独立生成随机值。指定 `id` 后，同一上下文中的多次判定可以共享同一个随机值：
 
 ```yaml
 type: random
 value: 0.1
-id: crit # 此上下文中所有 id 为 crit 的 random 条件使用同一次 roll
+id: crit # 此上下文中所有 id 为 crit 的 random 条件共享同一个随机值
 ```
 
 ### permission
@@ -239,7 +239,7 @@ expression: "<papi:farming_level> >= 10"
 ```yaml
 type: string_equals
 value1: "<arg:player.name>"
-value2: "玩家A" # 译者注：在正常 Minecraft 服务端是不允许使用中文作为玩家名称的这里仅作为演示
+value2: "玩家A" # 仅作示例；正常 Minecraft 服务器不允许玩家名包含中文
 ```
 
 ### string\_contains
@@ -389,5 +389,5 @@ args:
 ```
 
 :::info
-更多条件即将到来...
+更多条件将在后续版本中加入。
 :::

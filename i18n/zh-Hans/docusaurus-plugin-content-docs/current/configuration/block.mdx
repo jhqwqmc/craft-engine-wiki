@@ -4,30 +4,29 @@ id: block
 ---
 
 import UrlCard from '@site/src/components/UrlCard';
-import Comment from '@site/src/components/Comment';
 
 ## 概览
 
-一个自定义方块就是在[任意配置](../configuration#简介)里的 `block` 或 `blocks` 键下的配置区域的一个子配置。每个子配置以它的键作为方块 id —— <Comment text="译者注：这里的命名空间和路径不能使用中文">`命名空间:路径`</Comment>，如 `default:palm_log`，然后由**不同的配置选项**拼装而成，你只需配置自己需要的部分。
+自定义方块定义在[配置文件](../configuration#简介)的 `block` 或 `blocks` 段中。每个条目都使用 `命名空间:路径` 作为唯一 ID（如 `default:palm_log`）；命名空间和路径不能包含中文。其余配置按需组合即可。
 
-其中只有一个选项是必填的 **`state`** 或 **`states`**，其余的选项都可以按需添加。
+只有 `state` 或 `states` 为必填项，其他部分均可按需添加。
 
 ## 结构速览
 
 每个方块都遵循同样的结构。每个选项回答关于方块的一个问题：
 
 ```yaml
-blocks:                 # 配置区域  ——  通常可以定义在任意配置文件夹中的任意配置文件中
-  default:my_block:     # 方块 id   ——  可以在其他地方通过 default:my_block 引用
-    state:              # 方块状态  ——  必填   → 他看起来是什么（模型、判定箱）
+blocks:                 # 配置段    ——  可以写在 configuration 下的任意配置文件中
+  default:my_block:     # 方块 ID   ——  其他配置可通过 default:my_block 引用
+    state:              # 方块状态  ——  必填   → 外观、模型和碰撞箱
       ...
     settings:           # 方块设置  ——  可选   → 基本属性是什么（硬度、音效、亮度、标签）
       ...
-    behavior:           # 方块行为  ——  可选   → 有什么行为（生长、下落、存储、蔓延...）
+    behavior:           # 方块行为  ——  可选   → 有什么行为（生长、下落、存储、蔓延……）
       ...
     loot:               # 战利品表  ——  可选   → 被破坏时掉落什么
       ...
-    events:             # 事件      ——  可选   → 对玩家交互的反应（放置、破坏...）
+    events:             # 事件      ——  可选   → 对玩家交互的反应（放置、破坏……）
       ...
 ```
 
@@ -82,9 +81,9 @@ blocks:
         texture: "minecraft:block/custom/my_block" # 单张纹理 → cube_all 模型
 ```
 
-### 2. 调整基本属性
+### 2. 设置基本属性
 
-加上 `settings`，让它像[石头](https://zh.minecraft.wiki/w/%E7%9F%B3%E5%A4%B4)一样 —— 音效、硬度、合适挖掘工具等：
+添加 `settings`，为方块设置与[石头](https://zh.minecraft.wiki/w/%E7%9F%B3%E5%A4%B4)相似的音效、硬度和挖掘工具：
 
 ```yaml
 blocks:
@@ -119,7 +118,7 @@ blocks:
 
 ### 3. 指定行为
 
-加上 `behavior`，让它拥有真正的功能。下面让它成为可以用斧剥皮的木头：
+添加 `behavior` 可以赋予方块特定行为。以下示例让它成为可以用斧剥皮的原木：
 
 ```yaml
 blocks:
@@ -138,15 +137,15 @@ blocks:
       stripped: default:stripped_my_block
 ```
 
-就像这样继续添加配置 —— `loot` 管掉落物，`events` 管交互，还可以在 `state` 里添加 [`entity_renderer`](./block/states/entity_renderer) 选项做自定义渲染。每个选项各司其职，可以按需自由组合添加。
+可以继续按需组合其他配置：`loot` 控制掉落物，`events` 处理交互，[`entity_renderer`](./block/states/entity_renderer) 则可以在 `state` 中配置自定义渲染。各部分彼此独立。
 
 ## 将方块和物品绑定到一起
 
-方块是方块，物品是物品，这两者<Comment text="译者注：特别表扬某些姓i和o和n的插件带偏一堆人">**不是同一个东西**</Comment>，你可以同时在方块和物品的配置中将其互相关联起来：
+方块与物品是两个独立的配置对象，需要显式建立关联：
 
-### 方块需要配置的：
+### 方块侧配置
 
-定义这个方块对应哪个物品。主要用于对着方块按下[**鼠标中键**](https://zh.minecraft.wiki/w/%E6%8E%A7%E5%88%B6#%E9%80%89%E5%8F%96%E6%96%B9%E5%9D%97)时选取其对应物品，以及方块→物品的查询。可选，默认为自定义方块的 id。
+在方块配置中指定对应物品，主要用于按[**鼠标中键**](https://zh.minecraft.wiki/w/%E6%8E%A7%E5%88%B6#%E9%80%89%E5%8F%96%E6%96%B9%E5%9D%97)选取方块，以及查询方块对应的物品。此项可选，默认使用自定义方块自身的 ID。
 
 ```yaml
 blocks:
@@ -156,9 +155,9 @@ blocks:
       item: default:my_block    # 该方块映射到的物品 id
 ```
 
-### 物品需要配置的：
+### 物品侧配置
 
-真正让方块能被**右键放置**的就是它。给物品指定一个[🧱 方块物品](item/behaviors/block_item)行为，把它的 `block` 选项指向方块 id：
+要让玩家能够**右键放置**方块，需要为物品添加[🧱 方块物品](item/behaviors/block_item)行为，并让 `block` 指向方块 ID：
 
 ```yaml
 items:
@@ -173,7 +172,7 @@ blocks:
     settings: ...
 ```
 
-同时 `block` 也可以**直接内联整段方块配置**而不仅是 id，当你想把两者放一起时：
+`block` 也可以**直接内联完整的方块配置**，适合将物品与方块写在同一处：
 
 ```yaml
 items:
@@ -189,7 +188,7 @@ items:
 :::tip
 方块物品的变体
 
-普通[🧱 方块物品](item/behaviors/block_item)只会朝你瞄准处放置。
+普通[🧱 方块物品](item/behaviors/block_item)会在玩家点击的位置放置方块。
 当需要特殊放置规则时，CraftEngine 提供了以下变体，它们都接受同样的 `block` 选项：[⬇️ 天花板方块物品](./item/behaviors/ceiling_block_item.mdx)、[🧱 墙面方块物品](./item/behaviors/wall_block_item.mdx)、[⬆️ 地面方块物品](./item/behaviors/ground_block_item.mdx)、[2️⃣ 双层方块物品](./item/behaviors/double_high_block_item.mdx)、[🔢 多层方块物品](./item/behaviors/multi_high_block_item.mdx)、[🌊 液体碰撞方块物品](./item/behaviors/liquid_collision_block_item.mdx)。
 :::
 
@@ -197,15 +196,15 @@ items:
 
 根据你想做的事找到对应页面：
 
-| 你想要...                      | 去看                                                                      |
+| 目标                            | 参考页面                                                                    |
 |:----------------------------|:------------------------------------------------------------------------|
 | 给它模型、纹理或朝向等                 | [🔣 方块状态](./block/states.mdx)                                           |
 | 改硬度、音效、亮度、熔岩可燃性、合适挖掘工具等     | [🔧 方块设置](./block/settings.mdx)                                         |
-| 让它能生长、下落、纯粹、蔓延，或像门等         | [🕹️ 方块行为](./block/behaviors.mdx)                                       |
+| 让它能够生长、下落、被剥皮、蔓延，或具有门等机制 | [🕹️ 方块行为](./block/behaviors.mdx)                                       |
 | 查某个行为需要哪些属性类型               | [ℹ️ 属性](./block/states/properties.mdx)                                  |
 | 控制掉落物                       | [🎲 战利品表](../reference/loot_table.mdx)                                  |
 | 让它掉落经验                      | [💎 掉落经验方块](./block/behaviors/drop_experience_block.mdx)                |
 | 对放置或破坏等做出反应                 | [🪇 事件](../reference/events.mdx) · [⚖️ 条件](../reference/conditions.mdx) |
 | 渲染物品、文字、自定义模型               | [🫑 方块实体渲染器](./block/states/entity_renderer.mdx)                        |
-| 让方块能通过物品放置                  | [↑ 绑定物品](#将方块和物品绑定到一起) · [🧱 方块物品](./item/behaviors/block_item.mdx)     |
-| 通过原版标签数据驱动（加速挖掘、原木、信标基座...） | [🔧 方块设置](./block/settings.mdx#标签)                                    |
+| 为方块绑定可放置物品                  | [↑ 绑定物品](#将方块和物品绑定到一起) · [🧱 方块物品](./item/behaviors/block_item.mdx)     |
+| 通过原版标签驱动机制（加速挖掘、原木、信标基座等） | [🔧 方块设置](./block/settings.mdx#标签)                                    |

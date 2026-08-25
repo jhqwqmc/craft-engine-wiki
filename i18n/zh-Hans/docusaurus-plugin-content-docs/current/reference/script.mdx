@@ -28,7 +28,7 @@ scripting:
 
 ## 脚本文件
 
-脚本放在 pack 的 `script/` 文件夹中（与 `configuration/`、`resourcepack/` 同级）：
+脚本存放在包的 `script/` 文件夹中，与 `configuration/` 和 `resourcepack/` 同级：
 
 ```
 resources/
@@ -42,7 +42,7 @@ resources/
             └── math.js        # id: mypack:utils/math
 ```
 
-脚本 id 为 `<pack命名空间>:<不含 .js 的相对路径>`。
+脚本 ID 的格式为 `<包命名空间>:<不含 .js 的相对路径>`。
 
 脚本随 `/ce reload` 重载。卸载脚本时会自动清理它注册的一切：事件订阅、任务、占位符和卸载回调。
 

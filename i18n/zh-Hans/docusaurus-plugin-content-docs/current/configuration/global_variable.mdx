@@ -5,16 +5,16 @@ id: global_variable
 
 ## 快速入门
 
-全局变量就是一段可复用的文本片段，定义一次就能在任意地方引用——物品名称、描述、消息、GUI、全息图都行。改一处，所有引用同步更新。
+全局变量是一段可复用的文本。定义后可以在物品名称、描述、消息、GUI 和全息图等位置引用；修改变量时，所有引用也会同步更新。
 
-**第一步** — 在 `global_variables` 下定义变量：
+**第一步**：在 `global_variables` 下定义变量：
 
 ```yaml
 global_variables:
   rare_tag: "<!i><bold><#FF8C00>[RARE]</#FF8C00></bold>"
 ```
 
-**第二步** — 用 `<global:id>` 标签引用：
+**第二步**：使用 `<global:id>` 标签引用变量：
 
 ```yaml
 items:
@@ -24,7 +24,7 @@ items:
       item_name: "<global:rare_tag> 黄玉剑"
 ```
 
-就这么简单。`<global:rare_tag>` 标签会被替换成变量的内容。
+解析文本时，`<global:rare_tag>` 会被替换为变量内容。
 
 ---
 

@@ -8,7 +8,7 @@ import Highlight from '@site/src/components/Highlight';
 
 ## 概述
 
-指定游戏使用哪一个物品模型进行渲染，并且指定各个着色索引使用的颜色。`type` 默认为 `minecraft:model`。
+指定要渲染的物品模型，以及各着色索引使用的颜色。`type` 默认为 `minecraft:model`。
 
 ```yaml
 items:
@@ -31,7 +31,7 @@ items:
 
 ## Blueprint（Blockbench） <Highlight color="#CC7A00">**实验性**</Highlight>
 
-`blueprint` 指向 `blueprint` 文件夹中的一个 Blockbench `.bbmodel` 文件（与 `configuration`、`resourcepack` 同级；路径相对于该文件夹，后缀可省略）。生成资源包时，CraftEngine 会把它转换成原版模型 JSON——几何、展示变换、GUI 光照等一并保留，省去手动从 Blockbench 导出的麻烦。
+`blueprint` 指向 `blueprint` 文件夹中的 Blockbench `.bbmodel` 文件。该文件夹与 `configuration`、`resourcepack` 同级；路径相对于 `blueprint`，后缀可以省略。生成资源包时，CraftEngine 会将其转换为原版模型 JSON，并保留几何体、展示变换和 GUI 光照等信息。
 
 ```yaml
 items:
@@ -52,7 +52,7 @@ items:
       blueprint: rocket
 ```
 
-**贴图：** bbmodel 中内嵌的贴图（即在 Blockbench 里绘制的）会导出为 PNG，存放在与模型同路径的 textures 目录（`demo:furniture/rocket_v2.png`；多张时为 `_1`、`_2`……）。引用已有文件的贴图则保留其 `命名空间:文件夹/名称` 引用，不做复制。
+**贴图：** `.bbmodel` 中内嵌的贴图会导出为 PNG，并保存在与模型同路径的 `textures` 目录中（如 `demo:furniture/rocket_v2.png`；多张贴图依次添加 `_1`、`_2` 等后缀）。引用已有文件的贴图则保留原路径，不会复制文件。
 
 `tints` 和 `transformation` 可与 `blueprint` 同用；`generation` 不可与其混用。
 

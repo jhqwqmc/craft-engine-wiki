@@ -18,13 +18,13 @@ id: worldgen_feature
 
 ## 使用数据包生成器
 
-要编写 CraftEngine 世界生成配置，你需要使用数据包生成器。直接手写这些配置通常是不现实的，语法出错的概率非常高。第一步就是打开 [misode 生成器](https://misode.github.io/worldgen/placed-feature/)，然后将输出格式更改为 YAML。
+建议使用数据包生成器编写 CraftEngine 的世界生成配置，以减少手写复杂结构时的语法错误。先打开 [Misode 生成器](https://misode.github.io/worldgen/placed-feature/)，再将输出格式切换为 YAML。
 
 ![将生成器输出切换为 YAML](/img/worldgen_1.png)
 
 ## 理解结构
 
-打开生成器后，第一步就是把它切换到你的服务器所在的 Minecraft 版本。版本不匹配是地物配置无法工作的最常见原因之一。
+打开生成器后，先选择服务器使用的 Minecraft 版本。版本不匹配是地物配置失效的常见原因之一。
 
 ![](/img/worldgen_2.png)
 
@@ -196,4 +196,3 @@ placed_features:
           max_inclusive:
             absolute: 112
 ```
-
