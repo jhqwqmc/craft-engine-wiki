@@ -31,6 +31,30 @@ data:
 
 :::
 
+## 🌐 覆写原版物品数据（1.20.5+）
+
+`override_data` 的格式和处理器与 `data` 完全相同，但处理结果会写入原版物品的默认原型。此选项仅对原版物品 ID 生效。
+
+```yaml
+items:
+  minecraft:carrot:
+    override_data:
+      food:
+        nutrition: 20
+        saturation: 20
+        can_always_eat: false
+```
+
+之后创建的胡萝卜都会使用这份食物数据。要移除组件，使用 `remove_components`：
+
+```yaml
+items:
+  minecraft:carrot:
+    override_data:
+      remove_components:
+        - minecraft:food
+```
+
 ## 🎨 外观
 
 ### item_name（物品名称）

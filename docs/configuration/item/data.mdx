@@ -31,6 +31,30 @@ Works with any data key: `attribute_modifiers#main`, `attribute_modifiers#bonus`
 
 :::
 
+## 🌐 Override Vanilla Item Data (1.20.5+)
+
+`override_data` uses the same format and processors as `data`, but writes the result to the default prototype of a vanilla item. It only works on vanilla item IDs.
+
+```yaml
+items:
+  minecraft:carrot:
+    override_data:
+      food:
+        nutrition: 20
+        saturation: 20
+        can_always_eat: false
+```
+
+All newly created carrots will use this food data. To remove a component, use `remove_components`:
+
+```yaml
+items:
+  minecraft:carrot:
+    override_data:
+      remove_components:
+        - minecraft:food
+```
+
 ## 🎨 Appearance
 
 ### item_name
