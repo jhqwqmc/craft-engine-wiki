@@ -296,6 +296,15 @@ Cast a mythic mobs skill
 type: cast_mythic_skill
 skill: skill_id # required; string
 power: 1.0 # optional; number; default: 1.0
+parameters: # optional; MythicMobs skill parameters, available as <skill.parameter_name>
+  damage: 10
+  element: "<arg:element>"
+variables: # optional; skill-scoped MythicMobs variables, available as <skill.var.variable_name>
+  damage: 10 # scalar values infer INTEGER, FLOAT, DOUBLE, or STRING
+  element: "<arg:element>"
+  multiplier: # use the expanded form to specify a type
+    type: double
+    value: "<arg:multiplier>"
 ```
 
 ### spawn\_furniture

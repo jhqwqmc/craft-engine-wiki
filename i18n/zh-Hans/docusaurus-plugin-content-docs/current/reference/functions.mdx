@@ -297,6 +297,15 @@ source: master # 可选; 枚举[music, master, record, weather, block, hostile, 
 type: cast_mythic_skill
 skill: skill_id # 必填; 字符串
 power: 1.0 # 可选; 数字; 默认值: 1.0
+parameters: # 可选; MythicMobs 技能参数，通过 <skill.参数名> 获取
+  damage: 10
+  element: "<arg:element>"
+variables: # 可选; MythicMobs 技能作用域变量，通过 <skill.var.变量名> 获取
+  damage: 10 # 标量值自动推断 INTEGER、FLOAT、DOUBLE 或 STRING
+  element: "<arg:element>"
+  multiplier: # 使用完整形式指定类型
+    type: double
+    value: "<arg:multiplier>"
 ```
 
 ### 生成家具

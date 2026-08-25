@@ -1,5 +1,5 @@
 ---
-title: 💥 伤害公式
+title: 💥 伤害规则
 id: damage-formula
 ---
 
@@ -7,7 +7,7 @@ import Details from '@site/src/components/Details';
 
 ## 伤害规则的结构
 
-`damage_rules` 先按**伤害类型**选择规则，再按**受击实体类型**选择公式。每个伤害类型的值必须是规则列表：
+`damage_rules` 先按**伤害类型**选择规则，再按**受击实体类型**选择公式和伤害后置效果。每个伤害类型的值必须是规则列表：
 
 ```yaml
 damage_rules:
@@ -16,7 +16,7 @@ damage_rules:
     - target:
         - minecraft:zombie
         - "#minecraft:skeletons"
-      # formula：返回新事件基础伤害的公式，必填
+      # formula：返回新事件基础伤害的公式
       formula: "damage * 1.25"
     # 无 target 的规则可作为此伤害类型的默认公式
     - formula: "damage"
@@ -93,7 +93,7 @@ minecraft:wither_skull
 
 </Details>
 
-同一伤害类型下可以有多个定向规则和一个无 `target` 的默认规则。不要为同一个目标重复写多条规则；重复项的覆盖顺序不适合作为业务逻辑使用。
+同一伤害类型下可以有多个定向规则和一个无 `target` 的默认规则。不要为同一个目标重复写多条规则；重复项的覆盖顺序不适合作为业务逻辑使用。每条规则必须包含 `formula`、`effects`，或同时包含两者。
 
 ## expression：表达式公式
 
@@ -107,11 +107,11 @@ formula: "damage + <attacker_attr:demo:might>"
 
 | 变量 | 值 |
 |---|---|
-| `damage` | 进入公式时的事件基础伤害 |
-| `is_critical` | 原版暴击为 `1`，否则为 `0` |
-| `is_sweep` | 横扫攻击为 `1`，否则为 `0` |
-| `attack_strength` | 攻击冷却强度，通常在 `0～1` 之间 |
-| `is_attack_ready` | `attack_strength > 0.9` 时为 `1`，否则为 `0` |
+| damage | 进入公式时的事件基础伤害 |
+| is_critical | 原版暴击为 1，否则为 0 |
+| is_sweep | 横扫攻击为 1，否则为 0 |
+| attack_strength | 攻击冷却强度，通常在 0～1 之间 |
+| is_attack_ready | attack_strength > 0.9 时为 1，否则为 0 |
 
 命名随机数的所有分布与参数见[文本格式](../../reference/text_format.mdx)，表达式运算符和函数见[数字格式 → 表达式](../../reference/number_format.mdx#表达式)。
 
@@ -211,3 +211,127 @@ function calculate() {
 ```
 
 上例可在 `args` 中配置 `damage_multiplier`。实际项目中可通过 `event`、`ctx`、注入参数或自建脚本工具函数封装属性查询，不必把所有逻辑堆在一个函数里。
+
+## 伤害后置效果
+
+在伤害规则中加入 `effects`，即可在计算并写回伤害公式后，于同一次伤害处理流程中立即执行效果。
+
+效果通常应由属性驱动。例如，先定义默认值为零的吸血比例和中毒触发概率：
+
+```yaml
+attributes:
+  demo:life_steal:
+    base: 0
+    constraint: {min: 0, max: 1}
+  demo:poison_chance:
+    base: 0
+    constraint: {min: 0, max: 1}
+```
+
+物品或其他属性修饰符来源可以提高这些属性。没有相关修饰符的实体会保留零基础值，因此不会获得效果。
+
+伤害规则可以同时包含公式和属性驱动的效果：
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    - target: minecraft:zombie
+      formula: "damage + <attacker_attr:demo:might>"
+      effects:
+        - type: life_steal
+          # 属性值表示将当前结算伤害的多少比例转化为生命值
+          ratio: "<attacker_attr:demo:life_steal>"
+          conditions:
+            - type: expression
+              expression: "<attacker_attr:demo:life_steal> > 0"
+
+        - type: potion_effect
+          target: victim
+          potion_effect: minecraft:poison
+          # duration 的单位是游戏刻；amplifier 从 0 开始
+          duration: 60
+          amplifier: 1
+          ambient: false
+          particles: true
+          show_icon: true
+          conditions:
+            - type: random
+              # 只有物品或其他来源提供此属性时才有触发概率
+              value: "<attacker_attr:demo:poison_chance>"
+          functions:
+            - type: play_sound
+              sound: minecraft:entity.player.levelup
+```
+
+所有数值字段都支持[数字格式](../../reference/number_format.mdx)，包括 `<attacker_attr:...>` 和 `<victim_attr:...>` 属性表达式。执行效果时，`<arg:damage>` 表示公式写回后、当前时刻的 Bukkit 结算伤害快照。
+
+### life_steal
+
+当伤害来源实体是生物时，为其恢复生命值。直接攻击和弹射物的发射者均可触发。
+
+| 字段 | 默认值 | 说明 |
+|---|---:|---|
+| ratio | 0 | 按当前结算伤害比例吸血；0.1 表示 10% |
+| amount | 0 | 在比例吸血结果上额外增加的固定治疗量 |
+
+使用固定值吸血时，省略 `ratio`，只配置 `amount`。固定值本身也可以来自属性：
+
+```yaml
+- type: life_steal
+  amount: "<attacker_attr:demo:fixed_life_steal>"
+  conditions:
+    - type: expression
+      expression: "<attacker_attr:demo:fixed_life_steal> > 0"
+```
+
+同时配置两个字段时，最终治疗量为 `当前结算伤害 × ratio + amount`。
+
+### potion_effect
+
+向一个生物目标施加药水效果。
+
+| 字段 | 默认值 | 说明 |
+|---|---:|---|
+| target | victim | victim、attacker/causing_entity 或 direct_entity |
+| potion_effect | 必填 | 药水效果 ID |
+| duration | 20 | 持续时间，单位为游戏刻 |
+| amplifier | 0 | 从零开始的效果等级 |
+| ambient | false | 是否为环境效果 |
+| particles | true | 是否显示粒子 |
+| show_icon | true | 是否显示客户端 HUD 图标 |
+
+每一种已注册效果都支持通用的 `conditions` 和 `functions` 字段。系统会先判断所有条件；条件全部通过后，先执行伤害效果，再按配置顺序执行函数。函数与效果共享同一个伤害上下文，可以读取其中的实体、位置、伤害数值和属性。
+
+### function
+
+自身不执行任何内置操作，适合只需要通用函数的规则：
+
+```yaml
+effects:
+  - type: function
+    conditions:
+      - type: expression
+        expression: "<attacker_attr:demo:might> > 0"
+    functions:
+      - type: play_sound
+        sound: minecraft:entity.player.levelup
+```
+
+条件通过后，系统会按顺序运行配置的函数。`function` 效果本身不会修改伤害，也不会直接影响攻击者或受害者。
+
+### 通过 API 注册效果
+
+其他插件可以在属性配置加载前注册自己的配置型效果：
+
+```java
+DamageEffects.register(Key.of("my_plugin", "mark_target"), section -> {
+    String mark = section.getNonEmptyString("mark");
+    return event -> {
+        // 在这里执行集成插件自己的效果。
+        // event.finalDamage()、event.victim()、event.source() 和
+        // event.context() 可用于读取伤害结算状态。
+    };
+});
+```
+
+注册后可以通过 `type: my_plugin:mark_target` 使用。注册工厂会收到该效果的完整配置区块，返回的 `DamageEffect` 实例会被所有匹配的攻击复用。因此效果实例应保持不可变，并将每次攻击的临时状态放在 `apply` 内部。

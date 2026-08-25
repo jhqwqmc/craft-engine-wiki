@@ -1,5 +1,5 @@
 ---
-title: 💥 Damage Formulas
+title: 💥 Damage Rules
 id: damage-formula
 ---
 
@@ -7,7 +7,7 @@ import Details from '@site/src/components/Details';
 
 ## Damage rule structure
 
-`damage_rules` first selects rules by **damage type**, then selects a formula by the **victim's entity type**. The value of each damage type must be a list of rules:
+`damage_rules` first selects rules by **damage type**, then selects a formula and post-damage effects by the **victim's entity type**. The value of each damage type must be a list of rules:
 
 ```yaml
 damage_rules:
@@ -16,7 +16,7 @@ damage_rules:
     - target:
         - minecraft:zombie
         - "#minecraft:skeletons"
-      # formula: formula that returns the new base damage for the event. Required
+      # formula: formula that returns the new base damage for the event
       formula: "damage * 1.25"
     # A rule without target can serve as the default formula for this damage type
     - formula: "damage"
@@ -93,7 +93,7 @@ minecraft:wither_skull
 
 </Details>
 
-One damage type may contain multiple targeted rules and one default rule without `target`. Do not write duplicate rules for the same target; their overwrite order is not suitable for use as business logic.
+One damage type may contain multiple targeted rules and one default rule without `target`. Do not write duplicate rules for the same target; their overwrite order is not suitable for use as business logic. A rule must contain `formula`, `effects`, or both.
 
 ## expression: Expression formulas
 
@@ -107,11 +107,11 @@ formula: "damage + <attacker_attr:demo:might>"
 
 | Variable | Value |
 |---|---|
-| `damage` | Event base damage on entry to the formula |
-| `is_critical` | `1` for a vanilla critical hit; otherwise `0` |
-| `is_sweep` | `1` for a sweeping attack; otherwise `0` |
-| `attack_strength` | Attack cooldown strength, normally between `0` and `1` |
-| `is_attack_ready` | `1` when `attack_strength > 0.9`; otherwise `0` |
+| damage | Event base damage on entry to the formula |
+| is_critical | 1 for a vanilla critical hit; otherwise 0 |
+| is_sweep | 1 for a sweeping attack; otherwise 0 |
+| attack_strength | Attack cooldown strength, normally between 0 and 1 |
+| is_attack_ready | 1 when attack_strength > 0.9; otherwise 0 |
 
 See [Text Format](../../reference/text_format.mdx) for all named-random distributions and options, and [Number Format → expression](../../reference/number_format.mdx#expression) for expression operators and functions.
 
@@ -211,3 +211,127 @@ function calculate() {
 ```
 
 This example exposes `damage_multiplier` through `args`. In a real project, you can wrap attribute queries through `event`, `ctx`, injected arguments, or your own script utilities rather than putting all logic into one function.
+
+## Post-damage effects
+
+Add `effects` to a damage rule to run actions immediately after the damage formula has been evaluated and applied in the same damage-processing pass.
+
+Effects are normally driven by attributes. For example, define a zero-based life-steal ratio and poison proc chance:
+
+```yaml
+attributes:
+  demo:life_steal:
+    base: 0
+    constraint: {min: 0, max: 1}
+  demo:poison_chance:
+    base: 0
+    constraint: {min: 0, max: 1}
+```
+
+Items or other attribute modifier sources can then increase those values. An entity with no relevant modifier keeps the zero base value and receives no effect.
+
+The damage rule may contain both a formula and attribute-driven effects:
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    - target: minecraft:zombie
+      formula: "damage + <attacker_attr:demo:might>"
+      effects:
+        - type: life_steal
+          # The attribute value is the fraction of resolved damage converted to health.
+          ratio: "<attacker_attr:demo:life_steal>"
+          conditions:
+            - type: expression
+              expression: "<attacker_attr:demo:life_steal> > 0"
+
+        - type: potion_effect
+          target: victim
+          potion_effect: minecraft:poison
+          # Duration is measured in ticks; amplifier is zero-based
+          duration: 60
+          amplifier: 1
+          ambient: false
+          particles: true
+          show_icon: true
+          conditions:
+            - type: random
+              # Zero chance unless an item or another source grants the attribute.
+              value: "<attacker_attr:demo:poison_chance>"
+          functions:
+            - type: play_sound
+              sound: minecraft:entity.player.levelup
+```
+
+All numeric fields accept a [Number Format](../../reference/number_format.mdx), including `<attacker_attr:...>` and `<victim_attr:...>` expressions. During effect execution, `<arg:damage>` is a snapshot of the currently resolved Bukkit damage immediately after the formula is applied.
+
+### life_steal
+
+Heals the causing entity when it is a living entity. This works for direct attacks and projectile owners.
+
+| Field | Default | Meaning |
+|---|---:|---|
+| ratio | 0 | Resolved damage multiplier converted to healing; 0.1 means 10% |
+| amount | 0 | Flat healing added to the ratio result |
+
+For fixed-value life steal, omit `ratio` and provide only `amount`. The amount may itself come from an attribute:
+
+```yaml
+- type: life_steal
+  amount: "<attacker_attr:demo:fixed_life_steal>"
+  conditions:
+    - type: expression
+      expression: "<attacker_attr:demo:fixed_life_steal> > 0"
+```
+
+When both fields are present, the result is `resolved damage × ratio + amount`.
+
+### potion_effect
+
+Applies a potion effect to a living target.
+
+| Field | Default | Meaning |
+|---|---:|---|
+| target | victim | victim, attacker/causing_entity, or direct_entity |
+| potion_effect | required | Potion effect ID |
+| duration | 20 | Duration in ticks |
+| amplifier | 0 | Zero-based amplifier |
+| ambient | false | Ambient effect flag |
+| particles | true | Show particles |
+| show_icon | true | Show the client HUD icon |
+
+Every registered effect supports the common `conditions` and `functions` fields. Conditions are evaluated first. When all conditions pass, the damage effect runs, followed by the configured functions in order. Functions share the same damage context and can read its entities, position, damage values, and attributes.
+
+### function
+
+Performs no built-in action. Use it when a rule only needs common functions:
+
+```yaml
+effects:
+  - type: function
+    conditions:
+      - type: expression
+        expression: "<attacker_attr:demo:might> > 0"
+    functions:
+      - type: play_sound
+        sound: minecraft:entity.player.levelup
+```
+
+When the conditions pass, the configured functions run in order. The `function` effect itself does not change the damage or either entity.
+
+### Registering an effect through the API
+
+Plugins can register their own configuration-backed effect type before attribute configuration is loaded:
+
+```java
+DamageEffects.register(Key.of("my_plugin", "mark_target"), section -> {
+    String mark = section.getNonEmptyString("mark");
+    return event -> {
+        // Apply the integration-specific effect here.
+        // event.finalDamage(), event.victim(), event.source(), and event.context()
+        // expose the resolved post-damage state.
+    };
+});
+```
+
+It can then be used as `type: my_plugin:mark_target`. The registry factory receives the effect's complete configuration section, and the returned `DamageEffect` instance is reused for matching hits. Registration should therefore build an immutable effect and keep per-hit state inside `apply`.
