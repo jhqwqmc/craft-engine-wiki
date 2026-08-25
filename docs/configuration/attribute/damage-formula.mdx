@@ -134,6 +134,12 @@ Always reuse the same random ID for one critical-hit check. For example, if the 
 
 :::
 
+### Projectile speed
+
+Damage contexts expose the entity that directly caused the hit as `direct_entity`. `<arg:direct_entity.speed:0>` returns its current velocity magnitude in blocks per tick. For an arrow hit, this is the arrow's speed at impact; `causing_entity` remains the shooter.
+
+Vanilla arrow damage uses this same impact-speed magnitude before applying critical-hit randomness: `ceil(clamp(speed × enchantment-adjusted arrow damage, 0, integer maximum))`.
+
 ## Tutorial: Attack, critical hits, and mitigation
 
 First define three attributes:
@@ -229,6 +235,12 @@ This example exposes `damage_multiplier` through `args`. In a real project, you 
 
 Add `effects` to a damage rule to run actions immediately after the damage formula has been evaluated and applied in the same damage-processing pass.
 
+:::tip
+
+Every effect type supports the common `conditions` and `functions` fields. This applies to all built-in effects and effect types registered through the API. The conditions are checked first; when they all pass, the effect itself runs, followed by its functions in configuration order. The effect and its functions share the same damage context, including entities, positions, damage values, and attributes.
+
+:::
+
 Effects are normally driven by attributes. For example, define a zero-based life-steal ratio and poison proc chance:
 
 ```yaml
@@ -257,26 +269,9 @@ damage_rules:
           conditions:
             - type: expression
               expression: "<attacker_attr:demo:life_steal> > 0"
-
-        - type: potion_effect
-          target: victim
-          potion_effect: minecraft:poison
-          # Duration is measured in ticks; amplifier is zero-based
-          duration: 60
-          amplifier: 1
-          ambient: false
-          particles: true
-          show_icon: true
-          conditions:
-            - type: random
-              # Zero chance unless an item or another source grants the attribute.
-              value: "<attacker_attr:demo:poison_chance>"
-          functions:
-            - type: play_sound
-              sound: minecraft:entity.player.levelup
 ```
 
-All numeric fields accept a [Number Format](../../reference/number_format.mdx), including `<attacker_attr:...>` and `<victim_attr:...>` expressions. During effect execution, `<arg:damage>` is a snapshot of the currently resolved Bukkit damage immediately after the formula is applied.
+All numeric fields accept a [Number Format](../../reference/number_format.mdx), including `<attacker_attr:...>` and `<victim_attr:...>` expressions. During effect execution, `<arg:final_damage>` is a snapshot of the currently resolved Bukkit damage immediately after the formula is applied.
 
 ### life_steal
 
@@ -303,17 +298,33 @@ When both fields are present, the result is `resolved damage × ratio + amount`.
 
 Applies a potion effect to a living target.
 
-| Field | Default | Meaning |
-|---|---:|---|
-| target | victim | victim, attacker/causing_entity, or direct_entity |
-| potion_effect | required | Potion effect ID |
-| duration | 20 | Duration in ticks |
-| amplifier | 0 | Zero-based amplifier |
-| ambient | false | Ambient effect flag |
-| particles | true | Show particles |
-| show_icon | true | Show the client HUD icon |
-
-Every registered effect supports the common `conditions` and `functions` fields. Conditions are evaluated first. When all conditions pass, the damage effect runs, followed by the configured functions in order. Functions share the same damage context and can read its entities, position, damage values, and attributes.
+```yaml
+- type: potion_effect
+  # Target entity. Default: victim
+  # Options: victim, attacker/causing_entity, direct_entity
+  target: victim
+  # Potion effect ID. Required
+  potion_effect: minecraft:poison
+  # Duration in ticks. Default: 20
+  duration: 60
+  # Zero-based amplifier. Default: 0
+  amplifier: 1
+  # Whether this is an ambient effect. Default: false
+  ambient: false
+  # Whether particles are shown. Default: true
+  particles: true
+  # Whether the client HUD icon is shown. Default: true
+  show_icon: true
+  # Common conditions are evaluated before the effect runs
+  conditions:
+    - type: random
+      # Zero chance unless an item or another source grants the attribute
+      value: "<attacker_attr:demo:poison_chance>"
+  # Common functions run in order after the effect
+  functions:
+    - type: play_sound
+      sound: minecraft:entity.player.levelup
+```
 
 ### function
 
@@ -348,9 +359,3 @@ DamageEffects.register(Key.of("my_plugin", "mark_target"), section -> {
 ```
 
 It can then be used as `type: my_plugin:mark_target`. The registry factory receives the effect's complete configuration section, and the returned `DamageEffect` instance is reused for matching hits. Registration should therefore build an immutable effect and keep per-hit state inside `apply`.
-
-### Projectile speed
-
-Damage contexts expose the entity that directly caused the hit as `direct_entity`. `<arg:direct_entity.speed:0>` returns its current velocity magnitude in blocks per tick. For an arrow hit, this is the arrow's speed at impact; `causing_entity` remains the shooter.
-
-Vanilla arrow damage uses this same impact-speed magnitude before applying critical-hit randomness: `ceil(clamp(speed × enchantment-adjusted arrow damage, 0, integer maximum))`.

@@ -134,6 +134,12 @@ damage_rules:
 
 :::
 
+### 弹射物速度
+
+伤害上下文通过 `direct_entity` 提供直接造成此次伤害的实体。`<arg:direct_entity.speed:0>` 返回该实体当前速度的模，单位为方块/游戏刻。箭矢命中时得到的是箭矢的命中速度；`causing_entity` 仍然表示射手。
+
+原版箭矢伤害在暴击随机增伤前使用的正是这个命中速度：`ceil(clamp(速度 × 经附魔修正的箭矢伤害, 0, 整数上限))`。
+
 ## 教程：攻击、暴击与减伤
 
 先定义三项属性：
@@ -229,6 +235,12 @@ function calculate() {
 
 在伤害规则中加入 `effects`，即可在计算并写回伤害公式后，于同一次伤害处理流程中立即执行效果。
 
+:::tip
+
+所有 effect 类型都可以配置通用的 `conditions` 和 `functions` 字段，无论是内置效果还是通过 API 注册的自定义效果。系统会先判断 `conditions`；全部通过后，先执行效果本身，再按配置顺序执行 `functions`。效果与函数共享同一个伤害上下文，可以读取其中的实体、位置、伤害数值和属性。
+
+:::
+
 效果通常应由属性驱动。例如，先定义默认值为零的吸血比例和中毒触发概率：
 
 ```yaml
@@ -257,26 +269,9 @@ damage_rules:
           conditions:
             - type: expression
               expression: "<attacker_attr:demo:life_steal> > 0"
-
-        - type: potion_effect
-          target: victim
-          potion_effect: minecraft:poison
-          # duration 的单位是游戏刻；amplifier 从 0 开始
-          duration: 60
-          amplifier: 1
-          ambient: false
-          particles: true
-          show_icon: true
-          conditions:
-            - type: random
-              # 只有物品或其他来源提供此属性时才有触发概率
-              value: "<attacker_attr:demo:poison_chance>"
-          functions:
-            - type: play_sound
-              sound: minecraft:entity.player.levelup
 ```
 
-所有数值字段都支持[数字格式](../../reference/number_format.mdx)，包括 `<attacker_attr:...>` 和 `<victim_attr:...>` 属性表达式。执行效果时，`<arg:damage>` 表示公式写回后、当前时刻的 Bukkit 结算伤害快照。
+所有数值字段都支持[数字格式](../../reference/number_format.mdx)，包括 `<attacker_attr:...>` 和 `<victim_attr:...>` 属性表达式。执行效果时，`<arg:final_damage>` 表示公式写回后、当前时刻的 Bukkit 结算伤害快照。
 
 ### life_steal
 
@@ -303,17 +298,33 @@ damage_rules:
 
 向一个生物目标施加药水效果。
 
-| 字段 | 默认值 | 说明 |
-|---|---:|---|
-| target | victim | victim、attacker/causing_entity 或 direct_entity |
-| potion_effect | 必填 | 药水效果 ID |
-| duration | 20 | 持续时间，单位为游戏刻 |
-| amplifier | 0 | 从零开始的效果等级 |
-| ambient | false | 是否为环境效果 |
-| particles | true | 是否显示粒子 |
-| show_icon | true | 是否显示客户端 HUD 图标 |
-
-每一种已注册效果都支持通用的 `conditions` 和 `functions` 字段。系统会先判断所有条件；条件全部通过后，先执行伤害效果，再按配置顺序执行函数。函数与效果共享同一个伤害上下文，可以读取其中的实体、位置、伤害数值和属性。
+```yaml
+- type: potion_effect
+  # 目标实体，默认为 victim
+  # 可选 victim、attacker/causing_entity、direct_entity
+  target: victim
+  # 药水效果 ID，必填
+  potion_effect: minecraft:poison
+  # 持续时间，单位为游戏刻，默认 20
+  duration: 60
+  # 从 0 开始的效果等级，默认 0
+  amplifier: 1
+  # 是否为环境效果，默认 false
+  ambient: false
+  # 是否显示粒子，默认 true
+  particles: true
+  # 是否显示客户端 HUD 图标，默认 true
+  show_icon: true
+  # 通用条件会在效果执行前判断
+  conditions:
+    - type: random
+      # 只有物品或其他来源提供此属性时才有触发概率
+      value: "<attacker_attr:demo:poison_chance>"
+  # 通用函数会在效果执行后按顺序运行
+  functions:
+    - type: play_sound
+      sound: minecraft:entity.player.levelup
+```
 
 ### function
 
@@ -348,9 +359,3 @@ DamageEffects.register(Key.of("my_plugin", "mark_target"), section -> {
 ```
 
 注册后可以通过 `type: my_plugin:mark_target` 使用。注册工厂会收到该效果的完整配置区块，返回的 `DamageEffect` 实例会被所有匹配的攻击复用。因此效果实例应保持不可变，并将每次攻击的临时状态放在 `apply` 内部。
-
-### 弹射物速度
-
-伤害上下文通过 `direct_entity` 提供直接造成此次伤害的实体。`<arg:direct_entity.speed:0>` 返回该实体当前速度的模，单位为方块/游戏刻。箭矢命中时得到的是箭矢的命中速度；`causing_entity` 仍然表示射手。
-
-原版箭矢伤害在暴击随机增伤前使用的正是这个命中速度：`ceil(clamp(速度 × 经附魔修正的箭矢伤害, 0, 整数上限))`。
