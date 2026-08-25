@@ -5,7 +5,7 @@ id: skript
 
 import SkriptCard from '@site/src/components/SkriptCard';
 
-# ⌨️ Skript
+# 🔮 Skript
 
 :::tip
 对于高级 Skript 用户，请使用反射来实现更高级的功能。如果您在使用 CraftEngine 提供的 Skript 功能时遇到问题，请及时向我们[反馈](https://github.com/Xiao-MoMi/craft-engine/issues/new)。如果您想要请求新的 Skript 功能并且您了解 Java，请考虑通过拉取请求贡献您的代码！
@@ -192,7 +192,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 ## 条件
 
 <SkriptCard
-  title="是自定义物品"
+  title="是 CraftEngine 物品"
   type="Condition"
   description="检查物品是否为来自 CraftEngine 的自定义物品"
   syntax={[
@@ -214,7 +214,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="是自定义方块"
+  title="是 CraftEngine 方块"
   type="Condition"
   description="检查方块是否为来自 CraftEngine 的自定义方块"
   syntax={[
@@ -236,7 +236,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="是自定义家具"
+  title="是 CraftEngine 家具"
   type="Condition"
   description="检查实体是否为来自 CraftEngine 的自定义家具"
   syntax={[
@@ -259,7 +259,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="是家具座位"
+  title="是 CraftEngine 家具座位"
   type="Condition"
   description="检查实体是否为 CraftEngine 家具的座位"
   syntax={[
@@ -280,7 +280,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="是家具碰撞体"
+  title="是 CraftEngine 家具碰撞体"
   type="Condition"
   description="检查实体是否为 CraftEngine 家具的碰撞实体"
   syntax={[
@@ -303,7 +303,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 ## 表达式
 
 <SkriptCard
-  title="自定义物品"
+  title="CraftEngine 物品"
   type="Expression"
   description="通过命名空间ID获取自定义物品"
   syntax={[
@@ -322,7 +322,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="自定义物品命名空间ID"
+  title="CraftEngine 物品命名空间 ID"
   type="Expression"
   description="获取自定义物品的命名空间ID"
   syntax={[
@@ -342,7 +342,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="自定义方块命名空间ID"
+  title="CraftEngine 方块命名空间 ID"
   type="Expression"
   description="获取自定义方块的命名空间ID"
   syntax={[
@@ -364,7 +364,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="自定义方块状态"
+  title="CraftEngine 方块状态"
   type="Expression"
   description="获取自定义方块的方块状态"
   syntax={[
@@ -385,7 +385,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="家具命名空间ID"
+  title="CraftEngine 家具命名空间 ID"
   type="Expression"
   description="从实体获取家具的命名空间ID"
   syntax={[
@@ -404,7 +404,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="自定义方块状态属性"
+  title="CraftEngine 方块状态属性"
   type="Expression"
   description="获取或设置自定义方块状态的单个属性。方块状态是不可变的：设置属性会替换变量中存储的状态"
   syntax={[
@@ -426,7 +426,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="自定义方块全部状态"
+  title="CraftEngine 方块全部状态"
   type="Expression"
   description="获取自定义方块的所有可能状态"
   syntax={[
@@ -446,7 +446,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="家具变体"
+  title="CraftEngine 家具变体"
   type="Expression"
   description="获取、设置或重置家具实体的变体。重置会恢复默认变体"
   syntax={[
@@ -467,7 +467,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="家具全部变体"
+  title="CraftEngine 家具全部变体"
   type="Expression"
   description="获取家具定义的所有变体名称"
   syntax={[
@@ -485,10 +485,10 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
   }}
 />
 
-# 效果
+## 效果
 
 <SkriptCard
-  title="放置自定义方块"
+  title="放置 CraftEngine 方块"
   type="Effect"
   description="放置一个自定义方块"
   syntax={[
@@ -507,7 +507,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="放置家具"
+  title="放置 CraftEngine 家具"
   type="Effect"
   description="放置一个家具，可指定变体"
   syntax={[
@@ -527,7 +527,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="移除自定义方块"
+  title="移除 CraftEngine 方块"
   type="Effect"
   description="移除指定位置的自定义方块，非自定义方块会被忽略"
   syntax={[
@@ -546,7 +546,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="移除家具"
+  title="移除 CraftEngine 家具"
   type="Effect"
   description="移除一个家具"
   syntax={[
@@ -565,7 +565,7 @@ set {_matcher} to "default:table_lamp[lit=true]" parsed as unsafe block state ma
 />
 
 <SkriptCard
-  title="强制设置家具变体"
+  title="强制设置 CraftEngine 家具变体"
   type="Effect"
   description="强制设置家具实体的变体，跳过碰撞检查。与遵循碰撞检查的 'set furniture variant of ... to ...' 相对"
   syntax={[

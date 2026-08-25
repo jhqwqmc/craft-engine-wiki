@@ -5,7 +5,7 @@ id: skript
 
 import SkriptCard from '@site/src/components/SkriptCard';
 
-# ⌨️ Skript
+# 🔮 Skript
 
 :::tip
 For advanced skript users, please use reflection to achieve more advanced functions. If you encounter problems when using the Skript features provided by CraftEngine, please [give us feedback](https://github.com/Xiao-MoMi/craft-engine/issues/new) in time. If you'd like to request a new Skript feature and you know Java, consider contributing your code via a pull request!
@@ -159,7 +159,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 ## Conditions
 
 <SkriptCard
-  title="Is Custom Item"
+  title="Is CraftEngine Item"
   type="Condition"
   description="Checks item is a custom item from CraftEngine"
   syntax={[
@@ -175,7 +175,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Is Custom Block"
+  title="Is CraftEngine Block"
   type="Condition"
   description="Checks block is a custom block from CraftEngine"
   syntax={[
@@ -191,7 +191,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Is Custom Furniture"
+  title="Is CraftEngine Furniture"
   type="Condition"
   description="Checks entity is a custom furniture from CraftEngine"
   syntax={[
@@ -210,7 +210,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 
 
 <SkriptCard
-  title="Is Furniture Seat"
+  title="Is CraftEngine Furniture Seat"
   type="Condition"
   description="Checks entity is a seat of a CraftEngine furniture"
   syntax={[
@@ -225,7 +225,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Is Furniture Collider"
+  title="Is CraftEngine Furniture Collider"
   type="Condition"
   description="Checks entity is a collision entity of a CraftEngine furniture"
   syntax={[
@@ -244,7 +244,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 ## Expressions
 
 <SkriptCard
-  title="Custom Item"
+  title="CraftEngine Item"
   type="Expression"
   description="Get custom item from namespace id"
   syntax={[
@@ -257,7 +257,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Custom Item Id"
+  title="CraftEngine Item Id"
   type="Expression"
   description="Get a namespace id of custom item"
   syntax={[
@@ -271,7 +271,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Custom Block Id"
+  title="CraftEngine Block Id"
   type="Expression"
   description="Get a namespace id of custom block"
   syntax={[
@@ -287,7 +287,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Custom Block State"
+  title="CraftEngine Block State"
   type="Expression"
   description="Get block state of custom block"
   syntax={[
@@ -302,7 +302,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Furniture Id"
+  title="CraftEngine Furniture Id"
   type="Expression"
   description="Get furniture id from entity"
   syntax={[
@@ -315,7 +315,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Custom Block State Property"
+  title="CraftEngine Block State Property"
   type="Expression"
   description="Get or set a single property of a custom block state. Block states are immutable: setting a property replaces the state stored in the variable"
   syntax={[
@@ -331,7 +331,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="All Custom Block States"
+  title="All CraftEngine Block States"
   type="Expression"
   description="Get all possible states of custom blocks"
   syntax={[
@@ -345,7 +345,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Furniture Variant"
+  title="CraftEngine Furniture Variant"
   type="Expression"
   description="Get, set or reset the variant of a furniture entity. Resetting restores the default variant"
   syntax={[
@@ -360,7 +360,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Furniture Variants"
+  title="CraftEngine Furniture Variants"
   type="Expression"
   description="Get all variant names of furniture definitions"
   syntax={[
@@ -373,10 +373,10 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 
-# Effect
+## Effects
 
 <SkriptCard
-  title="Place Custom Block"
+  title="Place CraftEngine Block"
   type="Effect"
   description="Place a custom block"
   syntax={[
@@ -389,7 +389,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Place Furniture"
+  title="Place CraftEngine Furniture"
   type="Effect"
   description="Place a furniture, optionally with a specific variant"
   syntax={[
@@ -403,7 +403,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Remove Custom Block"
+  title="Remove CraftEngine Block"
   type="Effect"
   description="Remove custom blocks at the given locations. Non-custom blocks are ignored"
   syntax={[
@@ -416,7 +416,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Remove Furniture"
+  title="Remove CraftEngine Furniture"
   type="Effect"
   description="Remove a furniture"
   syntax={[
@@ -429,7 +429,7 @@ Unquoted literals also work in effects and event filters, e.g. `place custom blo
 />
 
 <SkriptCard
-  title="Force Set Furniture Variant"
+  title="Force Set CraftEngine Furniture Variant"
   type="Effect"
   description="Forcefully set the variant of furniture entities, skipping the collision check. Compare with 'set furniture variant of ... to ...' which respects collision checks"
   syntax={[
