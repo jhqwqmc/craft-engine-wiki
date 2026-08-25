@@ -5,6 +5,12 @@ id: attribute
 
 import UrlCard from '@site/src/components/UrlCard';
 
+:::danger Experimental feature
+
+The attribute system is experimental. Its configuration format, behavior, APIs, and any other related content may change at any time without backward compatibility.
+
+:::
+
 ## What the attribute system does
 
 CraftEngine's custom attributes are a server-side numeric system. You can define attributes such as Strength, Critical Chance, and Armor Penetration, then use them in items, equipment sets, and damage formulas. This system is separate from the **vanilla attribute component** under an item's `data.attribute_modifiers`; add custom attributes to items through `settings.attribute_modifiers` instead.

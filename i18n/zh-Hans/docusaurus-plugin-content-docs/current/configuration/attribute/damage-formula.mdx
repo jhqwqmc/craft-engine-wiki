@@ -112,6 +112,19 @@ formula: "damage + <attacker_attr:demo:might>"
 | is_sweep | 横扫攻击为 1，否则为 0 |
 | attack_strength | 攻击冷却强度，通常在 0～1 之间 |
 | is_attack_ready | attack_strength > 0.9 时为 1，否则为 0 |
+| shoot_force | 弓或弩发射时的力度，范围为 0～1；无法取得时为 1 |
+
+`shoot_force` 记录拉弓事件提供的发射力度，并跟随弹射物保存。条件、数字格式和函数也可以通过 `<arg:shoot_force>` 读取同一个值。
+
+原版箭矢伤害本身已经会受到发射速度影响。应当在公式通过属性追加或完全替换伤害时使用此变量，不要无条件再次缩放原版 `damage`：
+
+```yaml
+damage_rules:
+  minecraft:arrow:
+    - formula: >-
+        damage
+        + <attacker_attr:demo:arrow_damage> * shoot_force
+```
 
 命名随机数的所有分布与参数见[文本格式](../../reference/text_format.mdx)，表达式运算符和函数见[数字格式 → 表达式](../../reference/number_format.mdx#表达式)。
 
@@ -335,3 +348,9 @@ DamageEffects.register(Key.of("my_plugin", "mark_target"), section -> {
 ```
 
 注册后可以通过 `type: my_plugin:mark_target` 使用。注册工厂会收到该效果的完整配置区块，返回的 `DamageEffect` 实例会被所有匹配的攻击复用。因此效果实例应保持不可变，并将每次攻击的临时状态放在 `apply` 内部。
+
+### 弹射物速度
+
+伤害上下文通过 `direct_entity` 提供直接造成此次伤害的实体。`<arg:direct_entity.speed:0>` 返回该实体当前速度的模，单位为方块/游戏刻。箭矢命中时得到的是箭矢的命中速度；`causing_entity` 仍然表示射手。
+
+原版箭矢伤害在暴击随机增伤前使用的正是这个命中速度：`ceil(clamp(速度 × 经附魔修正的箭矢伤害, 0, 整数上限))`。

@@ -112,6 +112,19 @@ formula: "damage + <attacker_attr:demo:might>"
 | is_sweep | 1 for a sweeping attack; otherwise 0 |
 | attack_strength | Attack cooldown strength, normally between 0 and 1 |
 | is_attack_ready | 1 when attack_strength > 0.9; otherwise 0 |
+| shoot_force | Bow or crossbow launch force between 0 and 1; 1 when unavailable |
+
+`shoot_force` records the launch force from the bow-shoot event and remains attached to the projectile. Conditions, number formats, and functions can read the same value with `<arg:shoot_force>`.
+
+Vanilla arrow damage already responds to launch velocity. Use this variable when a formula adds or replaces damage with attribute values; do not blindly multiply the vanilla `damage` value a second time:
+
+```yaml
+damage_rules:
+  minecraft:arrow:
+    - formula: >-
+        damage
+        + <attacker_attr:demo:arrow_damage> * shoot_force
+```
 
 See [Text Format](../../reference/text_format.mdx) for all named-random distributions and options, and [Number Format → expression](../../reference/number_format.mdx#expression) for expression operators and functions.
 
@@ -335,3 +348,9 @@ DamageEffects.register(Key.of("my_plugin", "mark_target"), section -> {
 ```
 
 It can then be used as `type: my_plugin:mark_target`. The registry factory receives the effect's complete configuration section, and the returned `DamageEffect` instance is reused for matching hits. Registration should therefore build an immutable effect and keep per-hit state inside `apply`.
+
+### Projectile speed
+
+Damage contexts expose the entity that directly caused the hit as `direct_entity`. `<arg:direct_entity.speed:0>` returns its current velocity magnitude in blocks per tick. For an arrow hit, this is the arrow's speed at impact; `causing_entity` remains the shooter.
+
+Vanilla arrow damage uses this same impact-speed magnitude before applying critical-hit randomness: `ceil(clamp(speed × enchantment-adjusted arrow damage, 0, integer maximum))`.
