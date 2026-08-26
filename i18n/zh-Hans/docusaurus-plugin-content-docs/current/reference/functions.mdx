@@ -400,14 +400,36 @@ damage_type: generic # 可选; 字符串; 默认值: generic
 
 ### 设置变量
 
-设置一个变量，可使用 \<arg:var\_\[name\]\> 访问变量（把 \[name\] 替换成实际的变量名）
+在当前执行上下文中设置变量。之后使用同一个上下文执行的函数，可以通过 [`<var:变量名>`](text_format.mdx#var_变量名_) 读取它。
 
 ```yaml
 type: set_variable
 name: my_variable # 必填; 字符串
-number: 1.0 # 可选; 数字
-as_int: false # 可选; 布尔; 默认值: false
-text: "你好" # 可选; 字符串
+value_type: double # 可选; 枚举[int, double, string]
+value: 1.0 # 必填（使用 number/text 别名时除外）；int/double 使用数字，string 使用字符串
+```
+
+`value_type` 决定变量保存的值类型：
+
+| 值类型 | 保存结果 | 可用值 |
+| --- | --- | --- |
+| `int` | 整数；数字结果向下取整 | [数字格式](number_format.mdx) |
+| `double` | 双精度小数 | [数字格式](number_format.mdx) |
+| `string` | 字符串 | 文本；支持 `<arg:...>`、`<var:...>` 等上下文标签 |
+
+`number` 仍可作为数字 `value` 的别名，`text` 仍可作为字符串 `value` 的别名。省略 `value_type` 时，使用 `number` 的配置默认为 `double`，其他配置默认为 `string`。
+
+变量只属于当前上下文，不是全局变量，也不会持久保存。只有后续共享同一上下文的条件、函数和文本渲染才能读取它。
+
+```yaml
+type: run
+functions:
+  - type: set_variable
+    name: reward
+    value_type: int
+    value: "<arg:player.level> / 5"
+  - type: message
+    message: "<green>你获得了 <var:reward> 枚金币。"
 ```
 
 ### 村民交易

@@ -245,6 +245,25 @@ In certain cases, multiple **context subjects** may coexist. By accessing parame
 
 :::
 
+### \<var:\_name\_>
+
+Reads a variable created by the [`set_variable`](functions.mdx#set_variable) function in the current context.
+
+```yaml
+type: run
+functions:
+  - type: set_variable
+    name: multiplier
+    value_type: double
+    value: 1.5
+  - type: message
+    message: "Current multiplier: <var:multiplier>"
+```
+
+Numeric variables remain numeric when used in expressions. For example, `<var:multiplier> * 10` evaluates to `15` in a number field. String variables may contain other context tags, which are resolved when the variable is read.
+
+Variables are scoped to one execution context. A variable must be set before it is read, and reading an unknown variable causes an error. Use [`<global:id>`](#global_id_args) for configuration-defined global text instead.
+
 ### \<global:\_id\_:\[args...]>
 
 global variable defined in configs
