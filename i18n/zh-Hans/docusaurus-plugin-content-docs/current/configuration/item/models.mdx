@@ -9,7 +9,7 @@ import Details from '@site/src/components/Details';
 
 ## 概述
 
-自 1.21.4 起，Minecraft 使用**物品模型映射**控制物品渲染哪个模型。CraftEngine 将其封装为 YAML —— `model` 字段决定了物品的一切外观。模型是一棵树：每个节点有一个 `type`，分支类型（`condition`、`select`、`range_dispatch`、`composite`）可嵌套子模型。
+自 Minecraft 1.21.4 起，游戏通过**物品模型映射**决定物品要渲染的模型。CraftEngine 将这套结构封装为 YAML，物品的 `model` 字段用于定义其外观。模型映射采用树状结构：每个节点都有一个 `type`，`condition`、`select`、`range_dispatch` 和 `composite` 等分支类型还可以嵌套子模型。
 
 <UrlCard
   url="https://zh.minecraft.wiki/w/物品模型映射"
@@ -18,7 +18,7 @@ import Details from '@site/src/components/Details';
 
 ## 根字段
 
-以下字段写在**物品层级** —— 与 `material`、`model`、`data` 同级。它们映射到生成的物品模型映射 JSON 根级。
+以下字段直接写在**物品根级**，与 `material`、`model` 和 `data` 同级，并映射到生成的物品模型 JSON 根级。
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|------|
@@ -130,7 +130,7 @@ items:
 
 | 场景 | 设置 |
 |----------|------------|
-| 需要**特定** CMD 编号（如其他插件引用） | `custom_model_data: <number>` |
+| 需要**特定** CustomModelData 编号（如其他插件引用） | `custom_model_data: <number>` |
 | 需要**自定义** item_model 路径（不使用从 ID 自动生成的） | `item_model: <namespace:path>` |
 
 ### config.yml 设置
@@ -138,11 +138,11 @@ items:
 | 设置 | 默认值 | 作用 |
 |---------|---------|--------|
 | `item.always-use-item-model` | `true` | 即使 custom_model_data 存在也生成 item_model。推荐。 |
-| `item.always-use-custom-model-data` | `false` | 即使仅面向 1.21.2+ 的资源包也强制分配 CMD。 |
+| `item.always-use-custom-model-data` | `false` | 即使仅面向 1.21.2+ 的资源包也强制分配 CustomModelData。 |
 | `item.always-generate-model-overrides` | `false` | 即使仅面向 1.21.4+ 的资源包也强制生成 legacy overrides（对基岩版转换器有用）。 |
-| `item.custom-model-data-starting-value.default` | `10000` | 自动分配的第一个 CMD 编号。 |
+| `item.custom-model-data-starting-value.default` | `10000` | 自动分配的第一个 CustomModelData 编号。 |
 | `item.custom-model-data-starting-value.overrides.<material>` | — | 按材质覆盖，如 `paper: 20000`。 |
-| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">付费版专属</Highlight> 将 CMD 和 item_model 保留在客户端，允许在不影响已有物品的情况下动态更新。 |
+| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">付费版专属</Highlight> 将 CustomModelData 和 item_model 保留在客户端，允许在不影响已有物品的情况下动态更新。 |
 
 :::tip
 绝大多数物品无需手动设置这两项。配置好 `model` 或 `texture`，其余交给 CraftEngine。
@@ -152,13 +152,13 @@ items:
 
 ## 简化模型
 
-亲手写出完整模型定义很繁琐。CraftEngine 可以替你搞定——只需提供纹理并选择正确的基础材质。它会根据你基于的物品自动构建正确的模型结构。
+完整的模型定义较为繁琐。只需提供贴图并选择正确的基础材质，CraftEngine 就能根据物品类型自动生成对应的模型结构。
 
 根据你手中已有的资源，有三种用法：
 
 <Details summary="仅使用纹理" defaultOpen={false}>
 
-你只有纹理 PNG，没有模型 JSON。给 CraftEngine 填入 `texture`（单个）或 `textures`（列表），它会自动生成模型文件并分配路径。这是最常见的场景——没有特殊需求就从这里开始。
+如果只有 PNG 贴图而没有模型 JSON，请填写 `texture`（单个）或 `textures`（列表）。CraftEngine 会自动生成模型文件并分配路径。没有特殊模型需求时，建议从这种写法开始。
 
 ```yaml
 demo:rod:
@@ -172,7 +172,7 @@ demo:rod:
 
 <Details summary="仅使用模型" defaultOpen={false}>
 
-你已经在 BlockBench（或其他工具）中制作好了模型 JSON 文件。填入 `model` 或 `models` 字段，附带你的 JSON 路径。CraftEngine 原样使用，不做生成。位置顺序规则与 `textures` 相同。
+如果已经使用 Blockbench 或其他工具制作好模型 JSON，请在 `model` 或 `models` 中填写文件路径。CraftEngine 会直接使用这些文件，不再生成模型；多模型的槽位顺序与 `textures` 相同。
 
 ```yaml
 demo:shield_3d:
@@ -209,7 +209,7 @@ demo:bow:
 
 <Highlight color="#CC7A00">**实验性**</Highlight>
 
-如果你更习惯在 Blockbench 里建模而不想手写 JSON，可以用 `blueprint` 为**每个模型槽位**指定一个 `.bbmodel` 文件——CraftEngine 会把每个文件转换成原版模型 JSON（含贴图），并组装出与纹理写法完全相同的模型树。
+如果使用 Blockbench 建模，可以通过 `blueprint` 为**每个模型槽位**指定 `.bbmodel` 文件。CraftEngine 会将各文件转换为原版模型 JSON（包括内嵌贴图），并组装出与 `textures` 写法相同的模型树。
 
 ```yaml
 demo:bow:
@@ -244,7 +244,7 @@ demo:bow:
 
 :::tip
 
-**顺序至关重要。** 列表中的每个槽位都有特定含义，且会根据材质而变化。顺序搞错了，你的弓会在待机时显示拉满的纹理。
+**列表顺序非常重要。** 每个槽位都有特定含义，并随材质而变化。顺序错误可能导致弓在待机状态下显示拉满时的贴图。
 
 :::
 
@@ -356,7 +356,7 @@ demo:bow:
 
 ### 弩——6 个槽位
 
-最复杂的一种。三个拉弦阶段类似弓，外加两个额外槽位：装箭和装烟花火箭。
+弩包含与弓类似的三个拉弦阶段，另外还有装箭和装载烟花火箭两个槽位。
 
 <Details summary="弩" defaultOpen={false}>
 
@@ -376,7 +376,7 @@ demo:crossbow:
 
 ## 旧版模型
 
-1.21.4 之前的兼容格式。CraftEngine 会自动将现代模型转换为旧版格式——你通常不需要手动处理。如果只面向 1.21.4+，完全跳过此部分。
+这是用于兼容 Minecraft 1.21.4 之前版本的格式。CraftEngine 会自动将现代模型转换为旧版格式，通常无需手动处理。资源包仅面向 Minecraft 1.21.4+ 时，可以跳过本节。
 
 :::warning
 不推荐日常使用。仅在自动转换产生错误结果时才需要手动指定。

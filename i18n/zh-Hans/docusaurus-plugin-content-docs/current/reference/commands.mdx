@@ -280,6 +280,14 @@ CraftEngine 的大部分命令以 `/craftengine`（缩写 `/ce`）开头，少�
 
 ![](/img/i18n/zh-Hans/commands_8.png)
 
+### debug item-component
+
+`/ce debug item-component [组件] [json/snbt]`
+
+将主手物品的指定数据组件序列化为 JSON 或 SNBT（仅玩家，1.20.5+）。结果包含 CraftEngine 所需的 `(json) ` 或 `(snbt) ` 前缀；点击结果即可将完整字符串复制到剪贴板。
+
+例如，`/ce debug item-component minecraft:custom_name snbt` 返回的值可以直接粘贴到配方的精准匹配谓词或物品的直接组件配置中。
+
 ### debug get-block-internal-id
 
 `/ce debug get-block-internal-id [方块状态]`
@@ -347,7 +355,7 @@ CraftEngine 的大部分命令以 `/craftengine`（缩写 `/ce`）开头，少�
 
 ### debug entity-id
 
-`/ce debug entity-id [世界] [实体ID]`
+`/ce debug entity-id [世界] [实体 ID]`
 
 通过实体 ID 获取实体数据。
 
@@ -382,4 +390,3 @@ CraftEngine 的大部分命令以 `/craftengine`（缩写 `/ce`）开头，少�
 `/ce debug optimize-furniture-structure [世界] [文件] (y轴偏移量)`
 
 优化结构存储文件中的家具：移除其中的碰撞实体，并按偏移量调整家具的 Y 坐标。
-

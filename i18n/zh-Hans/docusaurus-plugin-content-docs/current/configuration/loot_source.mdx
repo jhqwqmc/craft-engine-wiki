@@ -5,14 +5,14 @@ id: loot_source
 
 ## 简介
 
-Minecraft 原生的战利品系统虽然功能强大，但存在一个关键限制：它无法集成插件特有的元素，例如占位符检查、权限控制或其他高级功能。此外，配置原版数据包也较为繁琐，尤其是在覆盖默认战利品表时尤为复杂。
+Minecraft 原版战利品系统无法直接使用占位符检查、权限控制等插件功能，而且通过数据包覆盖默认战利品表也较为繁琐。
 
-**战利品源**将一张 [🎲 战利品表](../reference/loot_table.mdx) 绑定到一个原版战利品事件上——破坏方块、击杀实体、钓鱼、开启宝库等等。当事件触发时，所有类型（及目标）匹配的战利品源都会被评估，并将其战利品应用到事件中。
+**战利品源**用于将[🎲 战利品表](../reference/loot_table.mdx)绑定到原版战利品事件，例如破坏方块、击杀实体、钓鱼或开启宝库。事件触发时，CraftEngine 会检查所有类型和目标匹配的战利品源，并把生成结果应用到该事件。
 
-所有战利品源都声明在 `loot_sources` 节点下。为了获得最佳效果，我们建议先阅读 [🎲 战利品表](../reference/loot_table.mdx)，以全面掌握战利品表的配置方法。
+所有战利品源都定义在 `loot_sources` 节点下。建议先阅读[🎲 战利品表](../reference/loot_table.mdx)，了解战利品表的基本配置。
 
 :::tip
-如果你只想在**不影响**原版战利品的情况下**额外添加**一些新的战利品，请不要设置 `overwrite`（默认为 `none`），并使用 `random` 条件来控制掉落概率：
+如果只想在**保留原版战利品**的同时**追加**新内容，请保持 `overwrite` 为默认值 `none`，并用 `random` 条件控制掉落概率：
 
 ```yaml
 loot_sources:
@@ -44,14 +44,14 @@ loot_sources:
 ```
 
 - **type** — 战利品源类型，见下文各小节。
-- **target / targets** *（可选）* — 单个 id 或 id 列表。其含义取决于类型：方块 id、实体 id、战利品表 id 或进度 id。如果省略，此战利品源将作用于该类型的**所有**对象。`fishing` 和 `piglin_barter` 不接受 target。
+- **target / targets** *（可选）* — 单个 ID 或 ID 列表。具体含义取决于类型，可以是方块、实体、战利品表或进度 ID。省略时，战利品源会作用于该类型的**所有**对象。`fishing` 和 `piglin_barter` 不接受 `target`。
 - **overwrite** *（可选，默认 `none`）* — 从原版结果中移除的内容。可填单个值或列表：
   - `items` — 移除原版掉落的物品
   - `experience` — 移除原版掉落的经验
   - `all` — 以上两者
   - `none` — 不移除任何内容，你的战利品将追加到原版结果之后
 - **conditions** *（可选）* — 生成战利品前检查的附加条件。参见 [⚖️ 条件](../reference/conditions.mdx)。
-- **loot** — 要生成的战利品：可以是内联战利品表，也可以是另一张战利品表的 id。当该 id 不存在对应的 CraftEngine 战利品表时，会回退到同名的数据包战利品表，因此可以直接引用原版战利品表：
+- **loot** — 要生成的战利品。可以内联战利品表，也可以引用另一张战利品表的 ID。如果不存在同 ID 的 CraftEngine 战利品表，系统会回退到数据包中的同名战利品表，因此可以直接引用原版战利品表：
 
 ```yaml
 loot: "minecraft:chests/simple_dungeon"
@@ -63,7 +63,7 @@ loot: "minecraft:chests/simple_dungeon"
 
 ## block_break
 
-当方块被破坏时触发——可以是被玩家破坏，也可以是被其他方块（例如活塞）破坏。
+方块被玩家或其他方块（如活塞）破坏时触发。
 
 - **target**：方块 id
 
@@ -102,7 +102,7 @@ loot_sources:
               item: "default:fancy_wheat"
 ```
 
-这个战利品源会在任何小麦被破坏时触发，但只有在被破坏小麦的 `age` 属性为 `7` 时才会生成战利品。
+该战利品源会在任意小麦被破坏时触发，但只有小麦的 `age` 为 `7` 时才生成战利品。
 
 ## entity_death
 
@@ -128,7 +128,7 @@ loot_sources:
 
 ## fishing
 
-当钓鱼浮漂钓到物品时触发。此类型没有 target。
+钓鱼浮漂钓到物品时触发。此类型不使用 `target`。
 
 ```yaml
 loot_sources:
@@ -147,7 +147,7 @@ loot_sources:
 
 ## piglin_barter
 
-当猪灵完成以物易物时触发。此类型没有 target。
+猪灵完成以物易物时触发。此类型不使用 `target`。
 
 ```yaml
 loot_sources:
@@ -167,7 +167,7 @@ loot_sources:
 
 ## container
 
-当战利品容器生成内容物时触发——箱子、木桶、运输矿车等等。
+箱子、木桶或运输矿车等战利品容器生成内容时触发。
 
 - **target**：原版战利品表 id，例如 `minecraft:chests/simple_dungeon`
 
@@ -205,7 +205,7 @@ loot_sources:
 
 ## entity_drop
 
-当非玩家实体丢出物品时触发——例如鸡下蛋。
+非玩家实体生成掉落物时触发，例如鸡下蛋。
 
 - **target**：实体 id
 
@@ -245,16 +245,16 @@ loot_sources:
               item: "default:juicy_berry"
 ```
 
-## shear_block
+## block_shear
 
-当玩家用剪刀修剪方块时触发，例如蜂巢或南瓜。此类型依赖 Paper 的 `PlayerShearBlockEvent`。
+当玩家用剪刀修剪方块时触发，例如蜂巢或南瓜。
 
 - **target**：方块 id
 
 ```yaml
 loot_sources:
   minecraft:shear_pumpkin:
-    type: shear_block
+    type: block_shear
     target: "minecraft:pumpkin"
     overwrite: items
     loot:

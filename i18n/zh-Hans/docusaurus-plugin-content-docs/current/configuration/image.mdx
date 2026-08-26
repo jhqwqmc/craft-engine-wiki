@@ -1,5 +1,5 @@
 ---
-title: 🖼️ 图像
+title: 🖼️ 图片
 id: image
 ---
 
@@ -7,9 +7,9 @@ import PluginFileTree from '@site/src/components/PluginFileTree';
 
 ## 快速入门
 
-图像系统的本质就是把 PNG 图片变成字符，让你可以在任意文本中使用它们。下面是最短的上手路径——从零到在游戏里看到效果：
+图片系统会将 PNG 映射为字体字符，使其能够出现在各种文本中。最简配置分为两步：
 
-**第一步** — 在任意包的 `configuration/` 目录下创建图像配置：
+**第一步**：在任意包的 `configuration/` 目录中创建图片配置：
 
 ```yaml
 images:
@@ -20,7 +20,7 @@ images:
     file: my_pack:font/ui/star.png
 ```
 
-**第二步** — 在物品名称中使用它：
+**第二步**：在物品名称中引用图片：
 
 ```yaml
 items:
@@ -30,17 +30,17 @@ items:
       item_name: "<!i><white><image:my_pack:star> 星剑"
 ```
 
-就这么简单。`<image:命名空间:id>` 标签会把你图像对应的字符插入到文本中，该字符绑定了你指定的字体，Minecraft 渲染时就会显示为你的图片。
+`<image:命名空间:id>` 标签会在文本中插入图片对应的字符。该字符绑定到指定字体，因此 Minecraft 渲染文本时会显示为图片。
 
 ---
 
-接下来的内容逐一拆解：怎么配置图像、怎么在不同场景中使用、以及怎么把多个图像组合成复杂的 UI。
+接下来将分别介绍如何配置图片、在不同场景中使用图片，以及组合多张图片来构建复杂的 UI。
 
-## 图像配置
+## 图片配置
 
 ### 基本字段
 
-图像配置写在任意包的 `images:` 节点下，每个图像以 `命名空间:id` 作为唯一标识。
+图片配置写在任意包的 `images:` 节点下，每张图片以 `命名空间:id` 作为唯一标识。
 
 ```yaml
 images:
@@ -56,9 +56,9 @@ images:
 |-------|----------|------|
 | `file` | **是** | PNG 文件路径。`.png` 后缀会自动补全。 |
 | `height` | 自动检测 | 每个字形的高度。不填则自动读取 PNG 实际高度。 |
-| `ascent` | 默认 `height - 1` | 基线偏移量。增大该值会让图像在屏幕上往上移。 |
-| `font` | 默认 `命名空间:default` | 图像所属的字体。 |
-| `char` | 自动分配 | 映射到此图像的码位。 |
+| `ascent` | 默认 `height - 1` | 基线偏移量。增大该值会让图片在屏幕上往上移。 |
+| `font` | 默认 `命名空间:default` | 图片所属的字体。 |
+| `char` | 自动分配 | 映射到此图片的码位。 |
 
 :::caution
 - `height` 必须 **≥** `ascent`，这是 Minecraft 的硬性限制。
@@ -84,9 +84,9 @@ char: '我'
 
 ### 垂直定位
 
-`ascent` 控制字形相对于文本基线的位置。值越大，图像越靠上。
+`ascent` 控制字形相对于文本基线的位置。值越大，图片越靠上。
 
-如果图像需要往上移但 `ascent` 已经等于 `height` 无法再加（受限于 `ascent ≤ height` 规则），可以在 PNG 图片的**底部**增加透明像素来拉高图片尺寸，这样 `height` 变大后就能设置更大的 `ascent` 了。
+如果图片需要继续上移，但 `ascent` 已等于 `height`，无法再增加（受 `ascent ≤ height` 规则限制），可以在 PNG 图片**底部**增加透明像素。这样既能增大 `height`，也能为 `ascent` 留出更多调整空间。
 
 ## 精灵图
 
@@ -108,7 +108,7 @@ images:
 
 ### 用 grid_size 自动排列
 
-不想手动管字符分配的话，直接用 `grid_size` 让插件全自动处理：
+如果不想手动分配字符，可以使用 `grid_size` 让插件自动处理：
 
 ```yaml
 images:
@@ -139,7 +139,7 @@ images:
 
 引用不需要 `file`、`height` 或 `font`——它只是指向已有位图的某个格子。
 
-## 使用图像
+## 使用图片
 
 ### MiniMessage 标签
 
@@ -159,11 +159,11 @@ item_name: "<!i><white><image:default:icons> 黄玉钓竿"
 # 指定格子
 item_name: "<!i><white><image:default:icons:0:1> 黄玉钓竿"
 
-# 给字形本身添加格式
+# 为字形添加格式
 item_name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> 黄玉钓竿"
 ```
 
-可选的 `format` 参数会在图像字符前面追加 MiniMessage 样式——一般用于消除阴影或调整颜色。
+可选的 `format` 参数会在图片字符前添加 MiniMessage 样式，通常用于消除阴影或调整颜色。
 
 ### 预览调试
 
@@ -196,7 +196,7 @@ title: "<white><shift:-11><image:internal:cooking_recipe><shift:-136><image:inte
 3. `<shift:-136>` — 再次左移，为第二个图标腾位置
 4. `<image:internal:blasting>` — 第二个图标紧挨在右边
 
-每个 shift 值背后都是一个精心调整了 `height`/`ascent` 的预配置图像，用来产生精确的像素位移：
+每个 shift 值都对应一张预先调整好 `height` 和 `ascent` 的图片，用于产生精确的像素位移：
 
 ```yaml
 # config.yml
@@ -238,7 +238,7 @@ image:
 
 **该用什么字体？** 除了 `minecraft:default` 以外的自定义字体天然安全——玩家只能在 `minecraft:default` 字体下输入字符，无法直接打出属于其他字体的字形。
 
-只有在必要场景（如原版语言文件）才使用 `minecraft:default`，此时务必保持 `illegal-characters-filter` 开启。
+仅在必要场景（如原版语言文件）使用 `minecraft:default`，此时务必保持 `illegal-characters-filter` 开启。
 :::
 
 ## 兼容性
@@ -275,7 +275,7 @@ network:
 
 ## 语言文件
 
-原版语言文件（`assets/minecraft/lang/*.json`）始终使用 `minecraft:default` 渲染，因此用在其中的图像必须使用该字体：
+原版语言文件（`assets/minecraft/lang/*.json`）始终使用 `minecraft:default` 渲染，因此其中的图片必须使用该字体：
 
 ```yaml
 images:

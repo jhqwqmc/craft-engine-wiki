@@ -486,7 +486,7 @@ items:
 
 ### random_values（随机值）
 
-在物品构建时 roll 随机值并持久化到物品上。物品上已存在的值会被保留，重新构建或更新物品不会重新 roll。每个条目支持任意[数字格式](../../reference/number_format.mdx)的写法。
+在构建物品时生成随机值，并将其持久化到物品上。已有的随机值会被保留，重新构建或更新物品时不会再次生成。每个条目都支持任意[数字格式](../../reference/number_format.mdx)写法。
 
 ```yaml
 items:
@@ -501,7 +501,7 @@ items:
           mode: 80
 ```
 
-roll 出的值可以在物品作为上下文参数的任何地方通过链式参数读取，例如 `<arg:item_in_hand.random.attack>`；也可以在动态属性修饰符的数值表达式里用 `item.random.attack` 引用。
+随机生成的值可以在物品作为上下文参数的任何位置通过链式参数读取，例如 `<arg:item_in_hand.random.attack>`；也可以在动态属性修饰符的数值表达式中使用 `item.random.attack` 引用。
 
 ## 📦 外部数据
 
@@ -523,6 +523,12 @@ items:
 你自己的组件——不由 CraftEngine 维护或进行版本检查。格式可能随 Minecraft 更新而变动。完整组件参考见 Minecraft Wiki 上的[数据组件](https://zh.minecraft.wiki/w/数据组件)。
 
 ### 组件
+
+:::tip[从现有物品复制组件]
+
+手持源物品并运行 [`/ce debug item-component [组件] [json/snbt]`](../../reference/commands.mdx#debug-item-component)。点击结果将其复制，然后把完整的 `(json) ...` 或 `(snbt) ...` 字符串直接作为该组件的值。请保留格式前缀。
+
+:::
 
 <Details summary="按难度排序的示例" defaultOpen={false}>
 
@@ -690,13 +696,13 @@ items:
 
 ### 为什么要用
 
-**不同玩家，不同画面。** 不用 `client_bound_data`，同一件物品谁拿手里看的都一样。用了它，解锁状态、个人属性、倒计时这些都能做到千人千面——每个客户端渲染的时候各算各的。
+**按玩家动态显示。** 未使用 `client_bound_data` 时，同一物品对所有玩家显示相同内容；启用后，可以根据解锁状态、个人属性或倒计时，为每名玩家生成不同的客户端显示。
 
 **性能更好。** 服务端的物品不再扛着大段大段的描述文本。好处有三：
 
-- **`getItemMeta` 更快。** 别的插件读物品信息时，不用反序列化那些留在客户端的显示组件。
-- **内存更省。** 生存服箱子里屯几千件物品，服务端的物品轻飘飘，花哨的描述全在渲染层。
-- **区块加载更快。** lore 这些东西只有在拿给玩家看的时候才在 netty 线程上序列化。平时加载区块，物品上就一点点数据。
+- **加快 `getItemMeta` 调用。** 其他插件读取物品信息时，无需反序列化仅用于客户端显示的组件。
+- **降低内存占用。** 即使容器中存有大量物品，服务端也只需保留精简数据，复杂的描述内容由渲染层处理。
+- **降低区块加载开销。** lore 等展示数据仅在发送给玩家时于 Netty 线程序列化；区块加载阶段只需读取少量物品数据。
 
 ### client_bound_material（客户端绑定材质）
 
@@ -728,7 +734,7 @@ overwritable_item_name: "<!i><#FF8C00>默认名称"
 # item_model（1.21.2+）——仅在没有模型时设置
 overwritable_item_model: default:sword
 
-# custom_model_data——仅在没有 CMD 时设置
+# custom_model_data——仅在没有 CustomModelData 时设置
 overwritable_custom_model_data: 10001
 ```
 
@@ -741,3 +747,40 @@ overwritable_custom_model_data: 10001
 - **Paper 混淆。** 若使用 Paper 的 `enable-item-obfuscation`，需在 `paper-global.yml` 中将 `minecraft:custom_data` 添加到 `dont-obfuscate`。
 
 :::
+
+## 🌐 覆写原版物品数据（1.20.5+）
+
+`override_data` 的格式和处理器与 `data` 完全相同，但处理结果会写入原版物品的默认原型。此选项仅对原版物品 ID 生效。
+
+这个功能适合移除会干扰自定义系统的原版组件。例如，移除钻石胸甲自带的属性修饰符后，原版护甲值与盔甲韧性便不会再影响自定义属性系统：
+
+```yaml
+items:
+  minecraft:diamond_chestplate:
+    override_data:
+      remove_components:
+        - minecraft:attribute_modifiers
+
+    # 建议：发给客户端时也移除同一组件
+    client_bound_data:
+      remove_components:
+        - minecraft:attribute_modifiers
+```
+
+:::warning
+
+`override_data` 对原版物品默认原型的修改只发生在服务端，不会同步到客户端。不配合 [`client_bound_data`](#-客户端绑定数据) 时，服务端可能已经移除组件，客户端却仍显示原版属性或提示文本。条件允许时，建议用 `client_bound_data` 同步处理客户端可见的数据。
+
+:::
+
+除了移除组件，也可以覆写组件内容。下面修改胡萝卜的默认食物数据：
+
+```yaml
+items:
+  minecraft:carrot:
+    override_data:
+      food:
+        nutrition: 20
+        saturation: 20
+        can_always_eat: false
+```

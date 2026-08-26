@@ -3,7 +3,7 @@ title: 📦 简单存储家具
 id: simple_storage_furniture
 ---
 
-**简单存储家具**为家具添加一个类似箱子的功能。右键打开容器，玩家可以放入或者取出物品。
+**简单存储家具**会为家具添加类似箱子的容器。玩家可以右键打开并存取物品。
 
 ## 示例
 
@@ -22,12 +22,12 @@ furniture:
 
 ## 按变体配置交互碰撞箱
 
-你可以通过 `variants.<变体名>.hitboxes` 把交互碰撞箱直接挂在 `simple_storage_furniture` behavior 上。这些碰撞箱属于该 behavior 自己，而不是家具的默认碰撞箱，并且只触发这个 behavior 的储物 GUI。
+可以通过 `variants.<变体名>.hitboxes` 为 `simple_storage_furniture` 行为单独配置交互碰撞箱。这些碰撞箱不属于家具的默认碰撞箱，只会触发当前行为的储物 GUI。
 
 常见用途：
 
-- 家具默认不设置碰撞箱（`hitboxes: []`），由每个 behavior 自己定义可点击区域。
-- 在同一家具上挂载多个 `simple_storage_furniture` behavior，每个使用不同 `data_key`，实现独立的多个储物槽位。
+- 家具默认不设置碰撞箱（`hitboxes: []`），由各个行为分别定义可点击区域。
+- 在同一家具上添加多个 `simple_storage_furniture` 行为，并为每个行为设置不同的 `data_key`，从而实现多个独立储物槽位。
 
 ```yaml
 furniture:
@@ -65,4 +65,3 @@ furniture:
                 height: 1
                 interactive: true
 ```
-

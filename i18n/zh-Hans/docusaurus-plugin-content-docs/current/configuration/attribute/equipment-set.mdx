@@ -1,0 +1,183 @@
+---
+title: 🛡️ 装备套装
+id: equipment-set
+---
+
+## 套装由两部分组成
+
+一套装备要正常工作，需要同时配置：
+
+- `equipment_sets`：定义穿到几件时获得什么奖励；
+- 物品的 `settings.equipment_set_part`：声明这件物品属于哪些套装、能占哪些槽位。
+
+下面先做一套最小的两件套。
+
+```yaml
+equipment_sets:
+  demo:guardian:
+    pieces:
+      2:
+        attribute:
+          - type: demo:ward
+            id: demo:set/guardian/ward
+            amount: 5
+            operation: minecraft:add_value
+
+items:
+  demo:guardian_helmet:
+    material: diamond_helmet
+    settings:
+      equipment_set_part:
+        - slots: [head]
+          sets: [demo:guardian]
+
+  demo:guardian_chestplate:
+    material: diamond_chestplate
+    settings:
+      equipment_set_part:
+        - slots: [chest]
+          sets: [demo:guardian]
+```
+
+玩家同时穿上头盔和胸甲后，`demo:ward` 增加 `5`。
+
+## equipment_sets 参数
+
+```yaml
+equipment_sets:
+  demo:guardian:
+    # 件数到奖励档位的映射，必填；档位键必须是正整数
+    pieces:
+      2:
+        # 当前档位提供的属性修饰符，默认空列表
+        attribute: []
+        # 当前档位维持的药水效果，默认空列表；也可写 potion_effect
+        potion_effects: []
+        events:
+          # 进入此档位时执行一次，默认为空操作
+          activate: []
+          # 离开此档位时执行一次，默认为空操作
+          deactivate: []
+```
+
+`activate` 和 `deactivate` 接受 CraftEngine 通用函数，例如消息、命令、音效或一组 `run` 函数，完整类型见[函数](../../reference/functions.mdx)。
+
+### 档位不会自动累加
+
+系统会选择“不高于当前件数的最高已配置档位”。例如只配置 `2` 和 `4` 件档时：穿 2 或 3 件使用 2 件档，穿 4 件使用 4 件档。
+
+切换档位时，旧档位会完整移除，再完整应用新档位；配置不会把 2 件、3 件、4 件奖励自动相加。因此更高档位必须写出它应拥有的**全部奖励**：
+
+```yaml
+equipment_sets:
+  demo:guardian:
+    pieces:
+      2:
+        attribute:
+          - type: demo:ward
+            id: demo:set/guardian/ward
+            amount: 5
+            operation: minecraft:add_value
+      4:
+        attribute:
+          # 这里写总计 +12，而不是只写新增的 +7
+          - type: demo:ward
+            id: demo:set/guardian/ward
+            amount: 12
+            operation: minecraft:add_value
+```
+
+## 套装属性修饰符
+
+套装 `attribute` 的配置与[物品修饰符](./modifier.mdx)基本相同，但没有 `slot`：套装件数已经决定它何时生效。
+
+```yaml
+attribute:
+  # type：要修改的属性 ID，必填
+  - type: demo:ward
+    # id：修饰符唯一 ID，必填
+    id: demo:set/guardian/ward
+    # amount：固定数值、表达式或随机数字提供器，必填
+    amount: 5
+    # operation：运算方式 ID，必填
+    operation: minecraft:add_value
+    # scope：默认 entity；套装奖励不要使用不会生效的 weapon
+    scope: entity
+    # conditions / condition：全部满足时才参与，默认为空列表
+    # conditions: []
+    # update_interval / update-interval：动态奖励检查周期，默认 20 tick
+    # update_interval: 20
+```
+
+## 套装药水效果
+
+```yaml
+potion_effects:
+  # type：药水效果 ID，必填
+  - type: minecraft:night_vision
+    # amplifier：效果倍率，默认 0；0 是 I 级，1 是 II 级
+    amplifier: 0
+    # ambient：是否使用环境效果样式，默认 false
+    ambient: true
+    # particles：是否显示粒子，默认 true
+    particles: false
+    # show_icon / show-icon：是否显示 HUD 图标，默认 true
+    show_icon: true
+    # conditions / condition：全部满足时维持效果，默认为空列表
+    # conditions: []
+    # update_interval / update-interval：有条件时的检查周期，默认 20 tick
+    # update_interval: 20
+```
+
+如果同一实体同时从多件装备或多个套装获得同类效果，系统会选择最高 `amplifier`。套装失效后，CraftEngine 会撤掉自己维持的效果，并尽量保留外部插件或药水提供的状态。
+
+## 把物品加入套装
+
+`equipment_set_part` 是一个列表，因此同一件物品可以按不同槽位加入多套套装：
+
+```yaml
+settings:
+  equipment_set_part:
+    # slots：能为套装计数的实际槽位列表，必填
+    - slots:
+        - head
+      # sets：匹配槽位时各贡献 1 件的套装 ID 列表，必填
+      sets:
+        - demo:guardian
+        - demo:ancient
+```
+
+这里的 `slots` 只接受实际槽位：`mainhand`、`offhand`、`head`、`chest`、`legs`、`feet`、`body`、`saddle`，不接受 `hand`、`armor`、`any` 这类槽位组。一件物品在一个实际槽位中，对同一套装最多贡献一次。
+
+## 根据套装件数切换客户端描述
+
+`equipment_set` 条件可用于 `client_bound_data.lore`，让查看者看到自己当前的套装进度：
+
+```yaml
+client_bound_data:
+  lore:
+    - content:
+        - "<!i><gray>守卫套装"
+    - content:
+        - "<!i><dark_gray>尚未激活 [0/2]"
+      conditions:
+        - type: equipment_set
+          set: demo:guardian
+          count: 0
+    - content:
+        - "<!i><yellow>还差一件 [1/2]"
+      conditions:
+        - type: equipment_set
+          set: demo:guardian
+          count: 1
+    - content:
+        - "<!i><green>套装已激活：+5 守御 [2/2]"
+      conditions:
+        - type: equipment_set
+          set: demo:guardian
+          min: 2
+```
+
+完整参数与边界行为见[条件 → equipment_set](../../reference/conditions.mdx#equipment_set)。
+
+接下来可以用[伤害公式](./damage-formula.mdx)让这些属性真正参与战斗结算。

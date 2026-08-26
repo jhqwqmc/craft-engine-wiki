@@ -35,7 +35,7 @@ break_power: 3
 
 ### tags（标签）
 
-标签可以在用命令测试物品时以 `#<命名空间ID>` 的形式调用。也可以在配方中用 `#<命名空间ID>` 的格式使用。只要物品满足了该标签中定义的任何一个物品，测试就会通过。
+使用命令测试物品时，可以通过 `#<命名空间ID>` 引用标签；配方中也支持相同写法。只要物品匹配标签中的任意条目，测试就会通过。
 
 ```yaml
 tags:
@@ -71,9 +71,9 @@ equipment:
   # 当此项存在且物品被玩家穿戴时，玩家第一人称视角将渲染指定的纹理遮罩。
   # 此遮罩可以使用多个设置此标签的物品互相叠加，每个物品指定的遮罩都会被渲染，
   # 且渲染顺序按照主手、副手、头盔、胸甲、护腿、靴子、身体、鞍的顺序依次叠加渲染。
-  # 当遮罩纹理渲染时，遮罩纹理被视为独立纹理，即无法作为动态纹理或GUI纹理渲染，但可以指定纹理过滤方式。
+  # 遮罩贴图会作为独立贴图渲染，不能用作动态贴图或 GUI 贴图，但可以指定贴图过滤方式。
   # 此处的目录指的是 assets/<命名空间>/textures/<路径>
-  # 译者注：这里不允许使用中文作为命名空间ID
+  # 命名空间 ID 不能包含中文
   camera_overlay: 命名空间:路径
   # 是否可以使用发射器使生物穿戴此物品。如果物品本身有特殊的发射器行为则此项无效。
   dispensable: true
@@ -85,6 +85,70 @@ equipment:
   # 对生物使用此物品时，是否可以让被交互的生物在允许的空槽位上穿戴此物品。
   equip_on_interact: true
 ```
+
+### attribute_modifiers（自定义属性修饰符）
+
+物品位于匹配槽位时，为持有者提供 CraftEngine 自定义属性修饰符。它与 `data.attribute_modifiers` 对应的原版属性组件不是同一套系统。
+
+```yaml
+attribute_modifiers:
+  # type：要修改的自定义属性 ID，必填
+  - type: demo:might
+    # id：修饰符唯一 ID，必填；用于更新、覆盖和移除
+    id: demo:item/war_blade/might
+    # amount：修饰量，必填；支持固定数字、范围、表达式和数字提供器
+    amount: 8
+    # operation：运算方式 ID，必填
+    operation: minecraft:add_value
+    # scope：entity 会加入持有者面板，weapon 只参与武器结算；默认 entity
+    scope: entity
+    # slot：生效槽位或槽位组，必填
+    slot: mainhand
+    # conditions / condition：可选条件列表；全部满足时才生效
+    # conditions: []
+    # update_interval：动态数值或条件的检查周期，单位为刻；默认 20
+    # update_interval: 20
+```
+
+完整的槽位、作用域、动态数值及随机武器示例见[属性 → 物品修饰符](../attribute/modifier.mdx)。
+
+### equipment_potion_effects（装备药水效果）
+
+物品装备在匹配的槽位时，为实体提供药水效果。
+
+```yaml
+equipment_potion_effects:
+  - slot: head                     # 必填，装备槽位或槽位组
+    type: minecraft:strength       # 药水效果 ID
+    amplifier: 2                   # 力量 III
+    ambient: true                  # 默认 false
+    particles: false               # 默认 true
+    show_icon: true                 # 默认 true
+    conditions:                    # 可选条件
+      - type: expression
+        expression: "<arg:player.x> > 1000"
+    update_interval: 20             # 条件检查间隔，单位为刻，默认 20
+```
+
+- 同类型药水效果只生效最高等级；被覆盖的外部效果会按剩余时间还原。
+- 内置槽位包括 `mainhand`、`offhand`、`head`、`chest`、`legs`、`feet`、`body` 和 `saddle`。也可以通过 API 注册自定义槽位，让饰品插件等提供效果。
+- 实体类型必须在 `config.yml` 的 `entity.tracking` 中启用。
+
+### equipment_set_part（装备套装部件）
+
+物品装备在指定槽位时，将其计为对应套装的一个部件。套装奖励需另外在 `equipment_sets` 中定义。
+
+```yaml
+equipment_set_part:
+  # slots：计入套装件数的实际槽位列表，必填
+  - slots:
+      - head
+    # sets：物品在该槽位归属的套装 ID 列表，必填
+    sets:
+      - example:potion_test
+```
+
+一个物品可以属于多个套装。`slots` 只接受 `mainhand`、`offhand`、`head`、`chest`、`legs`、`feet`、`body` 和 `saddle`，不接受槽位组。套装档位不累加，只生效已满足的最高档位。完整配置见[属性 → 装备套装](../attribute/equipment-set.mdx)。
 
 ### repairable（可修复）
 
@@ -151,7 +215,7 @@ renameable: false
 
 控制物品耐久耗尽时是否阻止其损毁。（默认值: false）
 
-物品会保留最后 1 点耐久而不会被销毁。处于这种"损坏"状态的物品将无法使用：攻击、挖掘、弓/弩射击以及右键使用（如斧削皮、锄地、举盾）都会被阻止，直到修复为止。穿在身上的护甲在损坏时会自动脱下——优先放入玩家背包，背包已满则掉落在地上。
+物品会保留最后 1 点耐久而不会被销毁。处于这种“损坏”状态的物品将无法使用：攻击、挖掘、弓弩射击以及右键使用（如斧削皮、锄地、举盾）都会被阻止，直到修复为止。已装备的护甲损坏时会自动卸下：优先放入玩家背包，背包已满则掉落在地上。
 
 ```yaml
 prevent_break: true
@@ -328,7 +392,7 @@ fuel_remainder: paper
 
 ### invulnerable（不被指定伤害类型摧毁）
 
-译者注：与数据组件 damage_resistant 不同，此设置的实现方法是通过取消事件实现
+与 `damage_resistant` 数据组件不同，此设置通过取消对应伤害事件实现。
 
 ```yaml
 invulnerable:
@@ -345,8 +409,7 @@ invulnerable:
 
 ### enchantable（可附魔）
 
-控制物品是否可在附魔台上被附魔。提示：将此项设置为 true 并不会神奇地让原本不可附魔的物品变得可附魔。（默认值：true）\
-译者注：如果你想让不可附魔的物品可以附魔应该使用 enchantable 数据组件以及对应的物品标签。
+控制物品能否在附魔台上附魔（默认值：`true`）。此项不会让原本不可附魔的物品自动获得附魔能力；这类物品还需要配置 `enchantable` 数据组件和对应的物品标签。
 
 ```yaml
 enchantable: false
@@ -362,7 +425,7 @@ compost_probability: 0.5
 
 ### respect_repairable_component（尊重 repairable 组件）
 
-控制物品在铁砧界面中是否允许被 repairable 组件中指定的物品修复。（默认值：false）
+控制物品在铁砧界面中是否允许被 `repairable` 组件中指定的物品修复。自定义物品的默认值为 `false`，原版物品的默认值为 `true`。
 
 ```yaml
 respect_repairable_component: false

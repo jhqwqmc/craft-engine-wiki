@@ -14,7 +14,11 @@ id: chain_arguments
 * `player.world` → 获取玩家当前所在的世界
 * `world.name` → 获取该世界的名称
 
-我们可以将它们组合成一个参数标签格式，如 `<arg:player.world.name>`。这个标签将动态返回玩家当前所在世界的名称。
+我们可以将它们组合成参数标签，如 `<arg:player.world.name>`。这个标签会动态返回玩家当前所在世界的名称。
+
+`<arg:路径>` 和 `<viewer_arg:路径>` 都支持链式参数。第一段是上下文键，因此可用的根参数取决于文本的执行位置。例如，同一种物品对象可能以 `item`、`item_in_hand`、`furniture_item`、`player.main_hand_item`、`player.off_hand_item` 或 `entity.item` 提供。
+
+如果参数可能不存在，可以用 `<arg:路径:默认值>` 提供默认值，例如 `<arg:entity.item.id:none>`。参数不存在且未提供默认值时会报错。
 
 ## 对象
 
@@ -25,8 +29,8 @@ id: chain_arguments
 | x                | 双精度浮点数                 | 玩家的 x 坐标   |
 | y                | 双精度浮点数                 | 玩家的 y 坐标   |
 | z                | 双精度浮点数                 | 玩家的 z 坐标   |
-| pitch            | 双精度浮点数                 | 玩家的水平旋转角度  |
-| yaw              | 双精度浮点数                 | 玩家的垂直旋转角度  |
+| pitch            | 单精度浮点数                 | 玩家的俯仰角      |
+| yaw              | 单精度浮点数                 | 玩家的偏航角      |
 | position         | [#position](#position) | 玩家的位置      |
 | block\_x         | 整数                     | 玩家的 x 坐标   |
 | block\_y         | 整数                     | 玩家的 y 坐标   |
@@ -48,16 +52,18 @@ id: chain_arguments
 
 ### block
 
-| 参数           | 类型                     | 描述       |
-|--------------|------------------------|----------|
-| x            | 双精度浮点数                 | 方块的 x 坐标 |
-| y            | 双精度浮点数                 | 方块的 y 坐标 |
-| z            | 双精度浮点数                 | 方块的 z 坐标 |
-| block\_x     | 整数                     | 方块的 x 坐标 |
-| block\_y     | 整数                     | 方块的 y 坐标 |
-| block\_z     | 整数                     | 方块的 z 坐标 |
-| world        | [#world](#world)       | 方块所在的世界  |
-| position     | [#position](#position) | 方块的位置    |
+| 参数                  | 类型                     | 描述                   |
+|---------------------|------------------------|----------------------|
+| x                   | 整数                     | 方块的 x 坐标             |
+| y                   | 整数                     | 方块的 y 坐标             |
+| z                   | 整数                     | 方块的 z 坐标             |
+| block\_x            | 整数                     | 方块的 x 坐标             |
+| block\_y            | 整数                     | 方块的 y 坐标             |
+| block\_z            | 整数                     | 方块的 z 坐标             |
+| custom\_block       | 方块定义                   | 自定义方块定义；原版方块不存在此值   |
+| custom\_block\_state | 方块状态                   | 完整的自定义方块状态；原版方块不存在此值 |
+| world               | [#world](#world)       | 方块所在的世界              |
+| position            | [#position](#position) | 方块的位置                |
 
 ### world
 
@@ -74,8 +80,8 @@ id: chain_arguments
 | x        | 双精度浮点数                 | 实体的 x 坐标   |
 | y        | 双精度浮点数                 | 实体的 y 坐标   |
 | z        | 双精度浮点数                 | 实体的 z 坐标   |
-| pitch    | 双精度浮点数                 | 实体的水平旋转角度  |
-| yaw      | 双精度浮点数                 | 实体的垂直旋转角度  |
+| pitch    | 单精度浮点数                 | 实体的 `yRot` 值（偏航角） |
+| yaw      | 单精度浮点数                 | 实体的 `xRot` 值（俯仰角） |
 | block\_x | 整数                     | 实体的 x 坐标   |
 | block\_y | 整数                     | 实体的 y 坐标   |
 | block\_z | 整数                     | 实体的 z 坐标   |
@@ -83,21 +89,27 @@ id: chain_arguments
 | uuid     | 通用唯一识别码                | 实体的通用唯一识别码 |
 | world    | [#world](#world)       | 实体所在的世界    |
 | position | [#position](#position) | 实体的位置      |
-| item     | [#item](#item)         | 掉落物实体的物品   |
+| fire\_ticks | 整数                   | 实体剩余的着火游戏刻  |
+| speed     | 双精度浮点数                 | 实体当前速度的模，单位为方块/游戏刻 |
+| health   | 双精度浮点数                 | 生物的生命值；其他实体返回 `0` |
+| item     | [#item](#item)         | 掉落物实体中的物品；其他实体不存在此值 |
 
 ### position
 
-| 参数       | 类型               | 描述     |
-|----------|------------------|--------|
-| world    | [#world](#world) | 世界     |
-| x        | 双精度浮点数           | x 坐标   |
-| y        | 双精度浮点数           | y 坐标   |
-| z        | 双精度浮点数           | z 坐标   |
-| yaw      | 单精度浮点数           | 水平旋转角度 |
-| pitch    | 单精度浮点数           | 垂直旋转角度 |
-| block\_x | 整数               | x 坐标   |
-| block\_y | 整数               | y 坐标   |
-| block\_z | 整数               | z 坐标   |
+| 参数         | 类型                     | 描述           |
+|------------|------------------------|--------------|
+| world      | [#world](#world)       | 世界           |
+| coordinate | [#position](#position) | 同一个带世界信息的坐标对象 |
+| x          | 双精度浮点数                 | x 坐标         |
+| y          | 双精度浮点数                 | y 坐标         |
+| z          | 双精度浮点数                 | z 坐标         |
+| yaw        | 单精度浮点数                 | 位置的 `xRot` 值（俯仰角） |
+| pitch      | 单精度浮点数                 | 位置的 `yRot` 值（偏航角） |
+| block\_x   | 整数                     | 向下取整后的 x 坐标  |
+| block\_y   | 整数                     | 向下取整后的 y 坐标  |
+| block\_z   | 整数                     | 向下取整后的 z 坐标  |
+| biome      | 字符串                    | 生物群系的命名空间 id |
+| block      | [#block](#block)       | 向下取整坐标处的方块   |
 
 ### item
 
@@ -108,7 +120,13 @@ id: chain_arguments
 | is\_custom          | 布尔  | 检查物品是否为自定义物品  |
 | count               | 整数  | 物品的数量         |
 | is\_block\_item     | 布尔  | 检查物品是否为原版方块物品 |
-| random.\<id\>       | 双精度小数 | 物品上已 roll 的随机值（见 `random_values`） |
+| random.\<id\>       | 双精度小数 | 物品上已生成的随机值（见 `random_values`） |
+
+### random
+
+| 参数     | 类型    | 描述                                      |
+|--------|-------|-----------------------------------------|
+| \<id\> | 双精度小数 | 当前上下文中的命名随机值；缺少的 id 会在 `0` 到 `1` 间生成并缓存 |
 
 ### furniture
 

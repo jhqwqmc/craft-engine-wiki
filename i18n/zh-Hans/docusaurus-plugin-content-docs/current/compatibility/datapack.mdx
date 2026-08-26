@@ -6,16 +6,14 @@ id: datapack
 import Details from '@site/src/components/Details';
 
 :::info
-访问 https://misode.github.io/ 获取最佳数据包开发体验。
-
-译者注：网站的右上角的地球图案点击拉到最下面可以切换为简体中文。
+推荐使用 [Misode 数据包生成器](https://misode.github.io/)辅助编写配置。点击网站右上角的语言图标，并在列表底部选择简体中文即可切换语言。
 :::
 
 ## 方块状态提供器
 
-CraftEngine 允许你在数据包里使用自定义方块，这样就能使用数据包生成地形、树木，矿脉等。
+CraftEngine 支持在数据包中使用自定义方块，因此可以通过数据包生成地形、树木和矿脉等内容。
 
-下面是一个基于 Minecraft 1.21.4 的树配置示例:
+下面是一个适用于 Minecraft 1.21.4 的树木配置示例：
 
 ```json
 {
@@ -80,19 +78,19 @@ CraftEngine 允许你在数据包里使用自定义方块，这样就能使用�
 ![](/img/palm_tree.png)
 
 :::tip
-与 Minecraft 原版数据包相比，主要区别在于命名空间ID由 `minecraft` 变更为 `craftengine`，其余配置格式保持一致。目前，CraftEngine 支持以下方块状态类型：
+与 Minecraft 原版数据包相比，主要区别是命名空间 ID 从 `minecraft` 改为 `craftengine`，其余配置格式保持一致。目前，CraftEngine 支持以下方块状态类型：
 
 - `craftengine:simple_state_provider`
 - `craftengine:weighted_state_provider`
 - `craftengine:rotated_block_provider`
 - `craftengine:randomized_int_state_provider`
 
-上述类型的用法及效果均与Minecraft原版数据包中同名类型相同。
+上述类型的用法和效果与 Minecraft 原版数据包中的同名类型一致。
 :::
 
-<Details summary="译者注">
+<Details summary="方块状态的简写形式">
 :::tip
-以上使用的是这种写法来指定方块状态
+上面的示例使用完整结构指定方块状态：
 ```json
 "state": {
   "Name": "default:palm_wood",
@@ -101,7 +99,7 @@ CraftEngine 允许你在数据包里使用自定义方块，这样就能使用�
   }
 }
 ```
-但是如果你想要简单点可以用下面的写法
+也可以改用以下简写：
 ```json
 "state": "default:palm_wood[axis=z]"
 ```
@@ -149,15 +147,15 @@ CraftEngine 允许你在数据包里使用自定义方块，这样就能使用�
 
 :::caution
 
-尽管 CraftEngine 功能强大，但其原生机制并未在所有场景下都适配自定义ID。目前，仅有通过 CraftEngine 直接注册的特性类型能自动解析自定义ID。若您遇到因硬编码限制而不支持直接使用 CraftEngine 的命名空间ID的情况，请改用其内部对应的真实方块的命名空间ID，例如 `craftengine:custom_0`。
+CraftEngine 并未在所有场景中适配自定义 ID。目前，只有由 CraftEngine 直接注册的地物类型能够自动解析自定义 ID。如果某项功能因硬编码限制而无法使用 CraftEngine 的命名空间 ID，请改用内部对应的真实方块 ID，例如 `craftengine:custom_0`。
 
-点击[**这里**](../reference/commands.mdx#debug-get-block-internal-id)了解如何获取自定义方块的真实方块命名空间ID。
+参阅[获取方块内部 ID](../reference/commands.mdx#debug-get-block-internal-id)，了解如何查询自定义方块对应的真实方块 ID。
 
 :::
 
 ## 战利品
 
-当你想要使用 CraftEngine 的物品作为战利品时候，只需要按照如下方式配置。这个方法适用于自然生成的容器，破坏方块时的掉落物，钓鱼时可以钓上的物品等。
+要在原版战利品表中使用 CraftEngine 物品，请按以下格式配置。这种写法适用于自然生成的容器、方块掉落物和钓鱼战利品等场景。
 
 ```json
 {

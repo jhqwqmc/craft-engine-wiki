@@ -56,23 +56,9 @@ CraftEngine compiles your `resources/` into a resource pack and serves it over H
 
 If the download fails, keep reading.
 
-### Default: self hosting
-
-```yaml
-# config.yml — the default. You don't need to change anything.
-resource-pack:
-  delivery:
-    hosting:
-      - type: "self"
-        ip: "auto"
-        port: "auto"
-```
-
-`type: "self"` starts a built-in HTTP server on your Minecraft server. `ip: "auto"` and `port: "auto"` detect your address automatically. Works out of the box in most cases.
-
 ### Alternative hosts
 
-If self hosting doesn't work, try one of these:
+If the default configuration cannot deliver the resource pack, or you want to try another method, consider one of the hosting options below. To understand what went wrong with self hosting, see the [Self Hosting](set_up_host/self) page for the detailed configuration guide.
 
 <div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
 
@@ -87,14 +73,6 @@ If self hosting doesn't work, try one of these:
 <UrlCard title="🚫 None" subtitle="Generate the zip, don't upload"/>
 
 </div>
-
-### Quick pick
-
-| Your situation | Recommendation |
-|:---|:---|
-| Solo development / testing | Lobfile or self hosting |
-| Public server | S3 (Cloudflare R2 is free) |
-| Distributing via Velocity / BungeeCord | None |
 
 > ⚠️ After changing the host config, run `/ce reload all`. `config` alone won't rebuild the pack.
 

@@ -5,15 +5,15 @@ id: first_image
 
 import PluginFileTree from '@site/src/components/PluginFileTree';
 
-把 PNG 图标嵌进物品名、聊天、GUI——用 `<image:tutorial:star>` 标签就能引用。
+使用 `<image:tutorial:star>` 标签，可以在物品名、聊天消息和 GUI 中插入 PNG 图标。
 
 ## 原理
 
-CraftEngine 把 PNG 注册成某个字体里的字符，你用 `<image:命名空间:ID>` 标签把它"打"出来。玩家看到的是图标，游戏以为它是文字。
+CraftEngine 会将 PNG 注册为字体中的一个字符，再通过 `<image:命名空间:ID>` 标签显示。玩家看到的是图标，而游戏会将其作为文字处理。
 
-## 第 1 步：放 PNG
+## 第 1 步：存放 PNG 文件
 
-[⬇ 下载星星图标](/img/star.png)，放到 `textures/font/` 下。和模型贴图不同，字体图片不限尺寸、不需要 2 的幂：
+[⬇ 下载星星图标](/img/star.png)，并将其放入 `textures/font/`。与模型贴图不同，字体图片不限尺寸，也不要求边长为 2 的幂：
 
 ```
 resourcepack/assets/tutorial/textures/font/star.png
@@ -39,7 +39,7 @@ resourcepack/assets/tutorial/textures/font/star.png
 
 <div style={{ marginBottom: "32px" }}></div>
 
-> ⚠️ **不要把字体图片放进 `textures/item/` 或 `textures/block/`。** 那些目录受贴图图集管理，会被纳入图集导致意外的 mipmap 降级。
+> ⚠️ **不要将字体图片放入 `textures/item/` 或 `textures/block/`。** 这些目录由贴图图集管理，字体图片被纳入图集后可能导致 mipmap 意外降级。
 
 ## 第 2 步：定义图片
 
@@ -62,15 +62,15 @@ images:
 | `height` | 否 | 字形高度（像素）。省略则自动读取 PNG 高度 |
 | `ascent` | 否 | 基线偏移。越大越靠上。默认 `height - 1` |
 | `font` | 否 | 所属字体。默认 `命名空间:default` |
-| `char` | 否 | 映射到的码点。**推荐留空**让 CraftEngine 自动分配空闲码点，没有冲突风险 |
+| `char` | 否 | 映射到的码点。**建议留空**，由 CraftEngine 自动分配空闲码点，避免冲突 |
 
-> ⚠️ `height` 必须 ≥ `ascent`，Minecraft 硬性限制。如果 `ascent` 不够大，在 PNG 底部加透明像素把 `height` 撑大。
+> ⚠️ 受 Minecraft 限制，`height` 必须大于或等于 `ascent`。如果需要提高 `ascent`，可以在 PNG 底部添加透明像素来增大 `height`。
 
 > ⚠️ 单个字形不超过 256×256 像素。
 
-> 💡 **为什么用自定义字体？** 用 `minecraft:default` 的话，玩家能在聊天框直接打出图标的原始字符。用自定义字体（如 `tutorial:ui`）则只有你的资源包能渲染这些字符，更安全。
+> 💡 **为什么使用自定义字体？** 使用 `minecraft:default` 时，玩家可以在聊天框中直接输入图标对应的原始字符。改用自定义字体（如 `tutorial:ui`）后，只有加载了资源包的客户端才能将这些字符渲染为图标，能避免玩家直接输入。
 
-## 第 3 步：用进物品名
+## 第 3 步：在物品名中使用图片
 
 ```yaml
 items:
@@ -80,7 +80,7 @@ items:
       item_name: "<!i><white><image:tutorial:star> 星之剑"
 ```
 
-`/ce reload all`，`/ce item get tutorial:star_sword`。剑名前出现星标。
+依次运行 `/ce reload all` 和 `/ce item get tutorial:star_sword`，剑的名称前便会出现星星图标。
 
 ![带星标的剑](/img/star_sword.png)
 
@@ -92,5 +92,5 @@ items:
 /ce debug image tutorial:star
 ```
 
-打印 MiniMessage、MineDown、RAW JSON 三种格式的可点击按钮，点一下即可复制。
+该命令会输出 MiniMessage、MineDown 和原始 JSON 三种格式，并提供可点击复制的按钮。
 

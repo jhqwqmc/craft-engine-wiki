@@ -8,11 +8,11 @@ import ColoredLink from '@site/src/components/ColoredLink';
 import UrlCard from '@site/src/components/UrlCard';
 import PluginFileTree from '@site/src/components/PluginFileTree';
 
-把插件跑起来，让资源包能发给玩家。
+本章将完成插件安装，并配置资源包分发。
 
 ## 要求
 
-- Paper 系服务端，已验证以下：
+CraftEngine 支持以下 Paper 系服务端：
 
 **Paper 及其下游**：Paper、Purpur、Pufferfish、Leaf、Leaves、UniverseSpigot
 
@@ -30,14 +30,14 @@ import PluginFileTree from '@site/src/components/PluginFileTree';
 
 ## 安装
 
-把 `.jar` 放进 `plugins/`，启动服务器。首次启动会生成：
+将 `.jar` 文件放入 `plugins/`，然后启动服务器。首次启动后会生成以下内容：
 
 <PluginFileTree
   title="CraftEngine"
   initialTreeData={[
-    { id: "generated", name: "generated", hoverText: "生成好的 resource_pack.zip 生成在这里", children: [] },
-    { id: "libs", name: "libs", hoverText: "运行时依赖，按需加载，不用管", children: [] },
-    { id: "resources", name: "resources", hoverText: "★ 你的所有创作放在这里。每个子文件夹是一个包。", children: [] },
+    { id: "generated", name: "generated", hoverText: "生成的 resource_pack.zip 保存在这里", children: [] },
+    { id: "libs", name: "libs", hoverText: "按需加载的运行时依赖，无需手动管理", children: [] },
+    { id: "resources", name: "resources", hoverText: "★ 所有自定义内容都放在这里，每个子文件夹对应一个包", children: [] },
     { id: "translations", name: "translations", hoverText: "命令反馈与警告的多语言文本", children: [] },
     { id: "commands.yml", name: "commands.yml", isLeaf: true, hoverText: "命令的启用、权限、别名" },
     { id: "config.yml", name: "config.yml", isLeaf: true, hoverText: "主配置：托管方式、性能、功能开关" },
@@ -46,33 +46,19 @@ import PluginFileTree from '@site/src/components/PluginFileTree';
 
 <div style={{ marginBottom: "32px" }}></div>
 
-进游戏打 `/ce`，弹出物品浏览器说明安装成功。
+进入游戏并执行 `/ce`。如果能正常打开物品浏览器，就说明插件安装成功。
 
 ## 资源包托管
 
-CraftEngine 把你 `resources/` 下的内容生成成一个资源包，通过 HTTP 发给玩家。
+CraftEngine 会将 `resources/` 中的内容打包成资源包，再通过 HTTP 分发给玩家。
 
-**现在先试试能不能用**：进游戏打 `/ce reload all`。如果资源包下载成功、没有紫黑贴图——说明托管已经生效。这是因为默认配置就是 `self` 模式，服务器自带 HTTP 分发功能，不需要额外设置。
+**先测试默认配置**：进入游戏并执行 `/ce reload all`。如果资源包能够正常下载，且没有出现紫黑贴图，就说明托管已经生效。默认配置使用 `self` 模式，由服务器直接通过 HTTP 分发资源包，无需额外设置。
 
 如果下载失败，看下一节。
 
-### 默认：自托管
+### 更换托管方式
 
-```yaml
-# config.yml 默认配置，不需要改
-resource-pack:
-  delivery:
-    hosting:
-      - type: "self"
-        ip: "auto"
-        port: "auto"
-```
-
-`type: "self"` = 服务器自己开一个 HTTP 服务。`ip: "auto"` 和 `port: "auto"` = 自动检测地址和端口。大多数情况直接就能用。
-
-### 换托管方式
-
-默认 self 不行的话，试试这些：
+如果默认配置下无法完成资源包的发送，或是你想试试其他方式，可以考虑以下托管方案。如果你想弄明白自托管到底出了什么问题，请进入[自托管页面](set_up_host/self)查看详细配置教程。
 
 <div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
 
@@ -88,14 +74,6 @@ resource-pack:
 
 </div>
 
-### 快速选型
+> ⚠️ 修改 `config.yml` 中的托管配置后，请运行 `/ce reload all`。仅运行 `config` 不会重建资源包。
 
-| 你在干嘛 | 推荐 |
-|:---|:---|
-| 一个人开发测试 | Lobfile 或自托管 |
-| 公开服务器 | S3（Cloudflare R2 免费） |
-| 在 Velocity / BungeeCord 上分发资源包 | None |
-
-> ⚠️ 改完 `config.yml` 的托管配置后，跑 `/ce reload all`。单跑 `config` 不会重建资源包。
-
-> ⚠️ 需要 API 密钥的托管（如 S3），用**环境变量**传密钥，不要把密钥直接写在 `config.yml` 里。**不要**把含密钥的配置文件发给你不信任的人。
+> ⚠️ 对于需要 API 密钥的托管方式（如 S3），请通过**环境变量**提供密钥，不要将密钥直接写入 `config.yml`，也不要把含有密钥的配置文件发给不信任的人。

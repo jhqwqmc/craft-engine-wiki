@@ -1,0 +1,97 @@
+---
+title: 📈 属性
+id: attribute
+---
+
+import UrlCard from '@site/src/components/UrlCard';
+
+:::danger[实验性功能]
+
+属性系统仍处于实验阶段。配置格式、运行行为、API 以及其他任何相关内容都可能随时修改，且不保证向后兼容。
+
+:::
+
+## 属性系统能做什么
+
+CraftEngine 的自定义属性是一套服务端数值系统。你可以先定义“力量”“暴击率”“护甲穿透”等属性，再让物品、装备套装和伤害公式使用这些数值。它和物品 `data.attribute_modifiers` 中的**原版属性组件**不是同一套系统；自定义属性应通过 `settings.attribute_modifiers` 加到物品上。
+
+一套常见的战斗配置通常经过下面几步：
+
+1. 定义属性的基础值和上下限；
+2. 用运算方式规定修饰符的计算顺序；
+3. 在物品或套装上添加属性修饰符；
+4. 在伤害公式中读取攻击方和受击方属性；
+
+## 开启功能
+
+先修改插件根目录的 `config.yml`。`attribute.enable` 只在服务器启动时读取，改完后必须**完整重启服务器**，只执行 `/ce reload` 不会开启它。
+
+```yaml
+entity:
+  tracking:
+    # 是否跟踪实体的装备、套装、药水效果和动态属性。默认 true
+    enable: true
+    # whitelist 只跟踪 list 内实体；blacklist 跟踪 list 外实体。默认 whitelist
+    mode: whitelist
+    # 要判断是否跟踪的实体 ID。默认只有 minecraft:player
+    list:
+      - minecraft:player
+
+attribute:
+  # 自定义属性总开关。生成配置中默认为 false；修改后需重启服务器
+  enable: true
+  health-scaling:
+    # 是否缩放客户端看到的玩家生命条。默认 false
+    enable: false
+    # 真实最大生命值超过此值时才缩放。默认 20
+    threshold: 20
+    # 缩放后客户端看到的最大生命值。默认 20
+    visual-max-health: 20
+```
+
+:::tip
+
+只给玩家制作属性系统时，保留默认的玩家白名单最省资源。若属性或套装要实时作用于怪物，还要把对应实体 ID 加进 `entity.tracking.list`，或者改用黑名单模式。
+
+:::
+
+## 最小可运行示例
+
+在任意包的 `configuration/` 目录中新建一个 YAML 文件。文件名不影响加载，下面假设它叫 `attributes.yml`。
+
+```yaml
+attributes:
+  demo:might:
+    base: 0
+    constraint:
+      min: 0
+      max: 100
+items:
+  demo:might_sword:
+    material: diamond_sword
+    settings:
+      attribute_modifiers:
+        - type: demo:might
+          id: demo:item/might_sword
+          amount: 8
+          operation: minecraft:add_value
+          scope: entity
+          slot: mainhand
+    data:
+      item_name: "<!i><aqua>力量之剑"
+      lore:
+        - "<!i><gray>主手持有时：<aqua>+8 力量"
+```
+
+执行 `/ce reload` 后，用 `/ce item get demo:might_sword` 获取物品。持在主手时，玩家的 `demo:might` 会从 `0` 变为 `8`；切走物品后恢复为 `0`。
+
+## 章节导航
+
+<div style={{display: 'flex', flexWrap: 'wrap', margin: '-10px -10px 0 -10px'}}>
+
+<UrlCard url="attribute/definition" title="🧩 属性定义" subtitle="基础值、派生计算、实体限制、约束与原版属性同步" />
+<UrlCard url="attribute/operation" title="🧮 运算方式" subtitle="三种内置运算、计算顺序与自定义表达式" />
+<UrlCard url="attribute/modifier" title="🗡️ 物品修饰符" subtitle="把固定或动态词条放到武器与装备上" />
+<UrlCard url="attribute/equipment-set" title="🛡️ 装备套装" subtitle="套装件数、阶梯奖励、药水效果与动态描述" />
+<UrlCard url="attribute/damage-formula" title="💥 伤害公式" subtitle="按伤害类型和受击实体改写战斗结算" />
+</div>

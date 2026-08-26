@@ -1,0 +1,186 @@
+---
+title: 🗡️ 物品修饰符
+id: modifier
+---
+
+## 基础配置
+
+CraftEngine 自定义属性修饰符写在物品的 `settings.attribute_modifiers` 中：
+
+```yaml
+items:
+  demo:war_blade:
+    material: diamond_sword
+    settings:
+      attribute_modifiers:
+        # 每一项都是一条自定义属性修饰符
+        # type：要修改的属性 ID，必填
+        - type: demo:might
+          # id：修饰符唯一 ID，必填；用于更新、覆盖和移除
+          id: demo:item/war_blade/might
+          # amount：交给运算方式的修饰量，必填；支持数字提供器
+          amount: 8
+          # operation：运算方式 ID，必填
+          operation: minecraft:add_value
+          # scope：entity 或 weapon，默认 entity
+          scope: entity
+          # slot：生效槽位或槽位组，必填
+          slot: mainhand
+          # conditions / condition：可选条件列表，默认为空；全部满足时才生效
+          # conditions: []
+          # update_interval：动态 amount 或条件的检查周期，默认 20 tick
+          # update_interval: 20
+```
+
+:::caution
+
+同一属性上的修饰符 `id` 必须稳定且不冲突。穿脱物品时 CraftEngine 正是靠这个 ID 找到旧修饰符。
+
+:::
+
+## slot：生效槽位
+
+:::tip
+
+除了下面列出的内置槽位与槽位组，也可以通过 API 注册自定义槽位类型。注册后即可在 `slot` 中填写对应名称，供饰品栏等扩展槽位使用。
+
+:::
+
+| 值 | 包含的实际槽位 |
+|---|---|
+| `any` | 任意受支持槽位 |
+| `mainhand` | 主手 |
+| `offhand` | 副手 |
+| `hand` | 主手或副手 |
+| `head` | 头部 |
+| `chest` | 胸部 |
+| `legs` | 腿部 |
+| `feet` | 足部 |
+| `armor` | 头、胸、腿、足 |
+| `body` | 动物身体装备槽 |
+| `saddle` | 鞍槽 |
+
+## scope：角色面板还是武器伤害
+
+### `entity`：装备后写入实体
+
+这是默认作用域。只要物品位于匹配槽位，修饰符就加入持有者的属性实例，可用于同步原版属性和受击方属性。
+
+```yaml
+- type: demo:vitality
+  id: demo:item/helmet/vitality
+  amount: 4
+  operation: minecraft:add_value
+  scope: entity
+  slot: head
+```
+
+### `weapon`：只随本次攻击结算
+
+`weapon` 不会进入持有者面板。伤害公式读取攻击方属性时，CraftEngine 会额外合并本次攻击所用武器的 `weapon` 词条；PlaceholderAPI 也只有带 `+weapon` 的模式会合并它。
+
+```yaml
+- type: demo:might
+  id: demo:item/bow/might
+  amount: 6
+  operation: minecraft:add_value
+  scope: weapon
+  slot: mainhand
+```
+
+近战会读取攻击者主手；箭矢会读取发射时记录的武器。因此弓的伤害词条建议使用 `weapon`，避免玩家射箭后切换物品导致面板词条与箭矢来源混在一起。
+
+:::note
+
+每件武器的 `weapon` 贡献从 `0` 开始单独跑一遍属性的运算流程，再加到攻击者面板值上。因此单独配置 `add_multiplied_base` 或 `add_multiplied_total` 通常仍是 `0`；武器词条应先有 `add_value`，再做百分比运算。
+
+:::
+
+## 动态 amount 与条件
+
+只要 `amount` 不是常量，或者配置了条件，这条修饰符就会被视为动态词条：
+
+```yaml
+- type: demo:might
+  id: demo:item/night_blade/might
+  amount: "5 + <arg:item.random.bonus:0>"
+  operation: minecraft:add_value
+  scope: entity
+  slot: mainhand
+  update_interval: 10
+  conditions:
+    - type: expression
+      expression: "<arg:entity.health:0> <= 10"
+```
+
+`update_interval` 只对动态词条有意义。默认每 `20` tick 重新计算一次；调得越小反应越快，但大量装备同时使用时开销也越高。物品词条求值上下文会提供 `item`，因此可以读取物品自身保存的随机值。
+
+直接把 `amount` 写成 `5~10` 会在动态刷新时重新随机，并不适合“生成后固定”的装备词条。需要持久随机值时，应使用下一节的 `data.random_values`。
+
+## 教程：使用 0～1 随机因子生成武器
+
+最容易调数值的做法是让每条词条只保存一个独立的 `[0, 1)` 随机数，再统一换算：
+
+```text
+最终值 = 基础值 + 范围值 × 随机因子
+评分   = Σ(权重 × 随机因子)
+```
+
+下面的剑包含两个相互独立的随机因子。权重之和为 `100`，因此评分满足 `0 ≤ 评分 < 100`；显示时经过四舍五入，结果可能为 `100`。
+
+```yaml
+items:
+  demo:variable_blade:
+    material: netherite_sword
+    settings:
+      attribute_modifiers:
+        - type: demo:might
+          id: demo:item/variable_blade/might
+          amount: "4 + <arg:item.random.might_roll:0> * 8"
+          operation: minecraft:add_value
+          scope: weapon
+          slot: mainhand
+        - type: demo:critical_chance
+          id: demo:item/variable_blade/critical_chance
+          amount: "0.05 + <arg:item.random.crit_roll:0> * 0.20"
+          operation: minecraft:add_value
+          scope: weapon
+          slot: mainhand
+    data:
+      random_values:
+        might_roll:
+          type: uniform
+          min: 0.0
+          max: 1.0
+        crit_roll:
+          type: uniform
+          min: 0.0
+          max: 1.0
+    client_bound_data:
+      item_name: "<!i><gradient:#8BE9FD:#BD93F9>未定之刃</gradient>"
+      lore:
+        - content:
+            - "<!i><light_purple>◆ 史诗品质 <dark_gray>[<expr:#0:'<arg:item.random.might_roll:0> * 60 + <arg:item.random.crit_roll:0> * 40'> 分]"
+          conditions:
+            - type: expression
+              expression: "<arg:item.random.might_roll:0> * 60 + <arg:item.random.crit_roll:0> * 40 >= 75"
+        - content:
+            - "<!i><gray>• 精制品质 <dark_gray>[<expr:#0:'<arg:item.random.might_roll:0> * 60 + <arg:item.random.crit_roll:0> * 40'> 分]"
+          conditions:
+            - type: expression
+              expression: "<arg:item.random.might_roll:0> * 60 + <arg:item.random.crit_roll:0> * 40 < 75"
+        - content:
+            - ""
+            - "<!i><aqua>+<expr:#.#:'4 + <arg:item.random.might_roll:0> * 8'> 力量"
+            - "<!i><yellow>+<expr:#.#:'(0.05 + <arg:item.random.crit_roll:0> * 0.20) * 100'>% 暴击率"
+```
+
+`data.random_values` 会在生成物品时创建一次随机值并将其持久化；`client_bound_data` 仅在向客户端发送数据时生成名称和 Lore，不会把纯展示组件写回服务端物品。这样，服务端修饰符与客户端描述会读取同一组随机值，避免出现“面板显示 8，实际却是 10”的情况。`random_values` 和客户端组件的完整配置见[物品数据](../item/data.mdx#random_values随机值)与[客户端绑定数据](../item/data.mdx#-客户端绑定数据)。
+
+:::tip
+
+模板化随机装备时，把基础值、范围、权重和品质阈值放进模板 `arguments`，把通用公式放进模板本体。以后调平衡只改参数，不必复制整套 Lore 条件。
+
+:::
+
+需要按件数发放额外奖励时，继续阅读[装备套装](./equipment-set.mdx)。

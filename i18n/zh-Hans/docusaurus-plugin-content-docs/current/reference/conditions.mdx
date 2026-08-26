@@ -54,7 +54,7 @@ type: falling_block
 
 ### survives\_explosion
 
-以 `1/爆炸半径` 的概率返回成功。需要上下文提供参数进行检测，若未提供则总是通过。
+以 `1 / 爆炸半径` 的概率返回成功。该条件需要上下文提供检测参数；若未提供，则始终通过。
 
 ```yaml
 type: survives_explosion
@@ -165,6 +165,25 @@ slot: feet
 tag: ["my_pack:fire_resistant"]
 ```
 
+### equipment\_set
+
+检查上下文中的玩家或实体当前穿戴了多少件指定[装备套装](../configuration/attribute/equipment-set.mdx)。
+
+```yaml
+# type：固定为 equipment_set，必填
+type: equipment_set
+# set / id：要统计的套装 ID，必填
+set: demo:guardian
+# count / amount：可选，精确匹配件数；填写后忽略 min 和 max
+# count: 2
+# min / min_count / min-count：范围下限，默认 1，包含边界
+min: 2
+# max / max_count / max-count：范围上限，默认无上限，包含边界
+# max: 4
+```
+
+条件上下文中找不到玩家或实体、实体未被跟踪时，结果为 `false`。要匹配 0 件必须显式写 `count: 0`；只写 `set` 等价于“至少 1 件”。
+
 ### table\_bonus
 
 以魔咒等级为索引，从列表中挑选概率通过。
@@ -186,12 +205,12 @@ type: random
 value: 0.1 # 10%
 ```
 
-默认每次判定都独立 roll。指定 `id` 可让同一上下文内的多次判定共享同一次 roll：
+默认情况下，每次判定都会独立生成随机值。指定 `id` 后，同一上下文中的多次判定可以共享同一个随机值：
 
 ```yaml
 type: random
 value: 0.1
-id: crit # 此上下文中所有 id 为 crit 的 random 条件使用同一次 roll
+id: crit # 此上下文中所有 id 为 crit 的 random 条件共享同一个随机值
 ```
 
 ### permission
@@ -209,7 +228,7 @@ permission: "craftengine.admin"
 
 ```yaml
 type: expression
-# https://ezylang.github.io/EvalEx/references/references.html
+# https://github.com/Xiao-MoMi/sparrow-expression
 expression: "<papi:farming_level> >= 10"
 ```
 
@@ -220,7 +239,7 @@ expression: "<papi:farming_level> >= 10"
 ```yaml
 type: string_equals
 value1: "<arg:player.name>"
-value2: "玩家A" # 译者注：在正常 Minecraft 服务端是不允许使用中文作为玩家名称的这里仅作为演示
+value2: "玩家A" # 仅作示例；正常 Minecraft 服务器不允许玩家名包含中文
 ```
 
 ### string\_contains
@@ -287,6 +306,15 @@ events:
         id: test
 ```
 :::
+
+### on\_item\_cooldown（1.21.2+）
+
+检查玩家是否处于指定物品冷却组的冷却中。可使用 `set_item_cooldown` 函数设置冷却。
+
+```yaml
+type: on_item_cooldown
+id: "minecraft:ender_pearl" # 必填; 字符串; 冷却组
+```
 
 ### worldguard\:region
 
@@ -370,5 +398,5 @@ args:
 ```
 
 :::info
-更多条件即将到来...
+更多条件将在后续版本中加入。
 :::

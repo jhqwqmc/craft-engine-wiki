@@ -30,7 +30,7 @@ items:
       ...
 ```
 
-In addition to the sections above, a handful of **root-level fields** live directly on the item: `custom_model_data`, `item_model`, `hand_animation_on_swap`, `oversized_in_gui`, and `swap_animation_scale`. See [Item Models → Root Fields](./item/models.mdx#root-fields) for details.
+In addition to the sections above, a handful of **root-level fields** live directly on the item: `custom_model_data`, `item_model`, `hand_animation_on_swap`, `oversized_in_gui`, and `swap_animation_scale`. Vanilla item IDs can also use `override_data` to change their default data. See [Item Models → Root Fields](./item/models.mdx#root-fields) and [Item Data → Override Vanilla Item Data](./item/data.mdx#-override-vanilla-item-data-1205) for details.
 
 ## Sections to Configure
 
@@ -155,6 +155,7 @@ items:
 |---|---|
 | Set the item's name, lore, or enchantments | [Item Data](./item/data.mdx) |
 | Make it a food item | [Item Data → food](./item/data.mdx#food-1205) |
+| Change the defaults of a vanilla item type | [Item Data → Override Vanilla Item Data](./item/data.mdx#-override-vanilla-item-data-1205) |
 | Give it a simple 2D or handheld model | [Item Models → Simplified Models](./item/models.mdx#simplified-models) |
 | Make a bow, crossbow, or fishing rod model | [Item Models → Simplified Models](./item/models.mdx#simplified-models) |
 | Build a complex model definition | [Item Models → Model Types](./item/models.mdx#model-types) |

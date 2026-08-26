@@ -10,11 +10,11 @@ id: button_block
 - 射出去的箭和投掷出的三叉戟落在按钮上
 - 风弹命中产生风暴
 
-按钮激活时会[强充能](https://zh.minecraft.wiki/w/%E7%BA%A2%E7%9F%B3%E7%94%B5%E8%B7%AF/%E5%85%85%E8%83%BD%E4%B8%8E%E6%BF%80%E6%B4%BB#%E5%85%85%E8%83%BD%EF%BC%88Charging%EF%BC%89)自身附着的红石导体至充能等级15。
+按钮激活时，会将其附着的红石导体[强充能](https://zh.minecraft.wiki/w/%E7%BA%A2%E7%9F%B3%E7%94%B5%E8%B7%AF/%E5%85%85%E8%83%BD%E4%B8%8E%E6%BF%80%E6%B4%BB#%E5%85%85%E8%83%BD%EF%BC%88Charging%EF%BC%89)至等级 15。
 
 ## 属性
 
-按钮本身只需要一个开或关的状态。**[强充能](https://zh.minecraft.wiki/w/%E7%BA%A2%E7%9F%B3%E7%94%B5%E8%B7%AF/%E5%85%85%E8%83%BD%E4%B8%8E%E6%BF%80%E6%B4%BB#%E5%85%85%E8%83%BD%EF%BC%88Charging%EF%BC%89)自身附着的红石导体依赖于[➡️ 水平面定向附着方块](face_attached_horizontal_directional_block.mdx)行为**——按钮会调用它来获知自身朝向。若方块上没有该行为，按钮仍能切换状态，但不会[强充能](https://zh.minecraft.wiki/w/%E7%BA%A2%E7%9F%B3%E7%94%B5%E8%B7%AF/%E5%85%85%E8%83%BD%E4%B8%8E%E6%BF%80%E6%B4%BB#%E5%85%85%E8%83%BD%EF%BC%88Charging%EF%BC%89)自身附着的红石导体。
+按钮本身只需要开和关两个状态。要[强充能](https://zh.minecraft.wiki/w/%E7%BA%A2%E7%9F%B3%E7%94%B5%E8%B7%AF/%E5%85%85%E8%83%BD%E4%B8%8E%E6%BF%80%E6%B4%BB#%E5%85%85%E8%83%BD%EF%BC%88Charging%EF%BC%89)附着的红石导体，还必须添加[➡️ 水平面定向附着方块](face_attached_horizontal_directional_block.mdx)行为，以便按钮获取自身朝向。缺少该行为时，按钮仍可切换状态，但不会强充能相邻方块。
 
 | 属性名称    | 属性类型                 | 是否必需 | 来源行为                                                        |
 |---------|----------------------|------|-------------------------------------------------------------|

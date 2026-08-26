@@ -6,7 +6,7 @@ id: model_tinting
 import UrlCard from '@site/src/components/UrlCard';
 import Details from '@site/src/components/Details';
 
-着色源在运行时给模型部件重新上色——一张灰度贴图即可产生无限颜色变体。本页重点讲**如何设置模型**来配合着色。
+着色源可以在运行时为模型部件重新上色，让同一张灰度贴图呈现多种颜色。本页重点介绍**如何设置模型**以配合着色源。
 
 ## 着色原理
 
@@ -14,9 +14,9 @@ import Details from '@site/src/components/Details';
 2. 在物品配置中，给每个索引绑定一个**着色源**
 3. 运行时，着色源向所有匹配该索引的面提供颜色
 
-可着色面的贴图应为灰度。白色像素完全呈现着色颜色；黑色像素不变；灰色呈现减弱版。
+可着色面的贴图应使用灰度图：白色像素完整呈现目标颜色，黑色像素保持不变，灰色像素则按亮度混合颜色。
 
-## 在 BlockBench 中设置 tintindex
+## 在 Blockbench 中设置 tintindex
 
 选中你想设为可着色的元素，在 **Elements** 面板中为每个面设置 **Tint Index**。
 
@@ -40,13 +40,13 @@ import Details from '@site/src/components/Details';
 
 ## 在 JSON 中的样子
 
-BlockBench 保存模型后，你设置的 tintindex 会出现在模型 JSON 中。不需要手写，认识一下就行：
+Blockbench 保存模型后，设置的 `tintindex` 会写入模型 JSON。通常无需手动编辑，只需了解其结构：
 
 ```json
 "north": {"uv": [6, 3, 8, 12], "texture": "#layer0", "tintindex": 0}
 ```
 
-在 BlockBench 中设置了 tintindex 的面，导出的 JSON 中就会多一个 `"tintindex"` 字段。没设置的则不出现。
+设置过 `tintindex` 的面会在导出的 JSON 中包含该字段，未设置的面则不会出现。
 
 ## 配置着色源
 
@@ -64,9 +64,9 @@ model:
 
 :::warning[tintindex 映射规则在 1.21.4 中发生了变化]
 
-**1.21.4 之前**，tintindex 的值由**原版硬编码**——而且每个索引的含义完全取决于使用的是哪种物品。每种物品类型有自己固定的映射，无法更改或重新赋予含义。
+**Minecraft 1.21.4 之前**，`tintindex` 的含义由原版硬编码，并取决于具体物品类型。每类物品都有固定映射，无法自行修改。
 
-**从 1.21.4 起**，有了物品模型定义系统，tintindex 仅仅是 **`tints:` 列表中的位置**。第 0 位是什么，tintindex 0 就是什么；第 1 位是什么，tintindex 1 就是什么。不再有硬编码含义。
+**从 Minecraft 1.21.4 起**，`tintindex` 只表示着色源在 **`tints:` 列表中的位置**。`tintindex: 0` 对应第一个着色源，`tintindex: 1` 对应第二个，不再具有硬编码含义。
 
 如果你的资源包要兼容 1.21.4 之前的客户端，请遵循原版硬编码映射。如果只面向 1.21.4+，按任意顺序排列 `tints:` 即可。
 

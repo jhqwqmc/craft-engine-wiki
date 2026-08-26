@@ -5,10 +5,8 @@ id: denizen
 
 import SkriptCard from '@site/src/components/SkriptCard';
 
-# 📜 Denizen
-
 :::tip
-如果您在使用 CraftEngine 提供的 Denizen 功能时遇到问题，请及时向我们[反馈](https://github.com/Xiao-MoMi/craft-engine/issues/new)。如果您想要请求新的 Denizen 功能并且您了解 Java，请考虑通过拉取请求贡献您的代码！
+如果在使用 CraftEngine 提供的 Denizen 功能时遇到问题，请[提交反馈](https://github.com/Xiao-MoMi/craft-engine/issues/new)。如果希望添加新的 Denizen 功能并熟悉 Java，也欢迎通过拉取请求贡献代码。
 :::
 
 :::warning
@@ -17,7 +15,7 @@ import SkriptCard from '@site/src/components/SkriptCard';
 
 在所有事件行中，`ce` 也可以写成 `craftengine`，例如 `on player breaks craftengine block block:` 与 `on player breaks ce block block:` 效果相同。
 
-CraftEngine 的 id（如 `default:wooden_chair`）可以直接写在事件行和命令参数中——插件会自动向 Denizen 注册所有已加载的命名空间，无需额外转义。
+CraftEngine 的 ID（如 `default:wooden_chair`）可以直接写入事件行和命令参数。插件会自动向 Denizen 注册所有已加载的命名空间，无需额外转义。
 
 
 ## 事件
@@ -360,7 +358,7 @@ CraftEngine 的 id（如 `default:wooden_chair`）可以直接写在事件行和
 />
 
 <SkriptCard
-  title="实体：是否家具座位 / 碰撞体"
+  title="实体：是否 CraftEngine 家具座位 / 碰撞体"
   type="Tag"
   description="检查实体是否为 CraftEngine 家具的座位或碰撞实体"
   syntax={[
@@ -381,7 +379,7 @@ CraftEngine 的 id（如 `default:wooden_chair`）可以直接写在事件行和
 />
 
 <SkriptCard
-  title="实体：家具变体 / 变体列表"
+  title="实体：CraftEngine 家具变体 / 变体列表"
   type="Tag"
   description="获取 CraftEngine 家具的当前变体名称，或其全部变体名称列表"
   syntax={[

@@ -280,6 +280,14 @@ Inspect the item data (such as NBT or components) of the held item. Use the `--c
 
 ![](/img/commands_8.png)
 
+### debug item-component
+
+`/ce debug item-component [component] [json/snbt]`
+
+Serializes the specified data component of the held item as JSON or SNBT (player only, 1.20.5+). The result includes the `(json) ` or `(snbt) ` prefix required by CraftEngine; click the result to copy the complete string to your clipboard.
+
+For example, `/ce debug item-component minecraft:custom_name snbt` returns a value ready to paste into an exact recipe predicate or an item's direct component configuration.
+
 ### debug get-block-internal-id
 
 `/ce debug get-block-internal-id [block-state]`
@@ -382,4 +390,3 @@ Toggle the player's furniture debug mode, used to visualize furniture bounds and
 `/ce debug optimize-furniture-structure [world] [file] (y-offset)`
 
 Optimize furniture within a structure file: removes collision entities and adjusts furniture Y coordinates by the given offset.
-

@@ -80,6 +80,70 @@ equipment:
   equip_on_interact: true
 ```
 
+### attribute_modifiers
+
+Provides CraftEngine custom attribute modifiers to the holder while the item occupies a matching slot. This system is separate from the vanilla attribute component represented by `data.attribute_modifiers`.
+
+```yaml
+attribute_modifiers:
+  # type: custom attribute ID to modify. Required
+  - type: demo:might
+    # id: unique modifier ID. Required; used for updates, replacement, and removal
+    id: demo:item/war_blade/might
+    # amount: modifier value. Required; accepts fixed numbers, ranges, expressions, and number providers
+    amount: 8
+    # operation: operation ID. Required
+    operation: minecraft:add_value
+    # scope: entity adds to the holder's stats; weapon participates only in weapon calculations. Default: entity
+    scope: entity
+    # slot: effective slot or slot group. Required
+    slot: mainhand
+    # conditions / condition: optional condition list; applies only when every condition passes
+    # conditions: []
+    # update_interval: check interval for dynamic values or conditions, in ticks. Default: 20
+    # update_interval: 20
+```
+
+See [Attribute → Item Attribute Modifiers](../attribute/modifier.mdx) for all slots, scopes, dynamic values, and the random weapon example.
+
+### equipment_potion_effects
+
+Grants potion effects while the item is equipped in a matching slot.
+
+```yaml
+equipment_potion_effects:
+  - slot: head                     # Required equipment slot or slot group
+    type: minecraft:strength       # Potion effect ID
+    amplifier: 2                   # Strength III
+    ambient: true                  # Default: false
+    particles: false               # Default: true
+    show_icon: true                 # Default: true
+    conditions:                    # Optional
+      - type: expression
+        expression: "<arg:player.x> > 1000"
+    update_interval: 20             # Condition check interval in ticks; default: 20
+```
+
+- For the same potion effect type, only the highest level applies. Any replaced external effect is restored with its remaining duration afterward.
+- Built-in slots include `mainhand`, `offhand`, `head`, `chest`, `legs`, `feet`, `body`, and `saddle`. Custom slots can also be registered through the API, allowing accessory plugins to provide these effects.
+- The entity type must be enabled in `entity.tracking` in `config.yml`.
+
+### equipment_set_part
+
+Marks an item as part of an equipment set while it is equipped in one of the specified slots. Set bonuses must be defined separately under `equipment_sets`.
+
+```yaml
+equipment_set_part:
+  # slots: physical slots in which the item counts toward the set. Required
+  - slots:
+      - head
+    # sets: set IDs to which the item belongs in this slot. Required
+    sets:
+      - example:potion_test
+```
+
+An item can belong to multiple sets. `slots` accepts only `mainhand`, `offhand`, `head`, `chest`, `legs`, `feet`, `body`, and `saddle`; slot groups are not accepted. Set tiers do not accumulate, and only the highest satisfied tier applies. See [Attribute → Equipment Sets](../attribute/equipment-set.mdx) for the complete configuration.
+
 ### repairable
 
 Decides if the item can be repaired through crafting table/anvil/grindstone. (Default: true)
@@ -353,7 +417,7 @@ compost_probability: 0.5
 
 ### respect_repairable_component
 
-This controls if the items listed in repairable component can fix this item in anvil gui. (Default: false)
+Controls whether the items listed in the `repairable` component can repair this item in the anvil interface. The default is `false` for custom items and `true` for vanilla items.
 
 ```yaml
 respect_repairable_component: false

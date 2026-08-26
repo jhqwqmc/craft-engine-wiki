@@ -1,0 +1,361 @@
+---
+title: 💥 伤害规则
+id: damage-formula
+---
+
+import Details from '@site/src/components/Details';
+
+## 伤害规则的结构
+
+`damage_rules` 先按**伤害类型**选择规则，再按**受击实体类型**选择公式和伤害后置效果。每个伤害类型的值必须是规则列表：
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    # target：可选的实体 ID 或实体标签列表；不写时匹配所有受击实体
+    - target:
+        - minecraft:zombie
+        - "#minecraft:skeletons"
+      # formula：返回新事件基础伤害的公式
+      formula: "damage * 1.25"
+    # 无 target 的规则可作为此伤害类型的默认公式
+    - formula: "damage"
+
+  minecraft:arrow:
+    - formula: "damage"
+```
+
+上例中，玩家近战攻击僵尸和骷髅标签内实体时造成 `1.25` 倍伤害，攻击其他实体时使用不带 `target` 的默认公式；箭矢则保持原伤害。
+
+:::caution
+
+当前伤害规则应集中写在同一个 `damage_rules` 区块中，不要分散到多个文件或多个 `damage_rules#...` 区块。该区块每次解析都会替换整张伤害规则表，拆开写可能导致前面的规则被覆盖。
+
+:::
+
+顶层键是 Minecraft 伤害类型 ID，不是 Bukkit 的伤害原因名称。常用值包括 `minecraft:player_attack`、`minecraft:mob_attack`、`minecraft:arrow`、`minecraft:magic`、`minecraft:fall` 等。没有匹配伤害类型或没有可用默认公式时，CraftEngine 不改写该次伤害。
+
+<Details summary="最新版本可用的伤害类型">
+
+```text
+minecraft:arrow
+minecraft:bad_respawn_point
+minecraft:cactus
+minecraft:campfire
+minecraft:cramming
+minecraft:dragon_breath
+minecraft:drown
+minecraft:dry_out
+minecraft:ender_pearl
+minecraft:explosion
+minecraft:fall
+minecraft:falling_anvil
+minecraft:falling_block
+minecraft:falling_stalactite
+minecraft:fireball
+minecraft:fireworks
+minecraft:fly_into_wall
+minecraft:freeze
+minecraft:generic
+minecraft:generic_kill
+minecraft:hot_floor
+minecraft:in_fire
+minecraft:in_wall
+minecraft:indirect_magic
+minecraft:lava
+minecraft:lightning_bolt
+minecraft:mace_smash
+minecraft:magic
+minecraft:mob_attack
+minecraft:mob_attack_no_aggro
+minecraft:mob_projectile
+minecraft:on_fire
+minecraft:out_of_world
+minecraft:outside_border
+minecraft:player_attack
+minecraft:player_explosion
+minecraft:sonic_boom
+minecraft:spear
+minecraft:spit
+minecraft:stalagmite
+minecraft:starve
+minecraft:sting
+minecraft:sulfur_cube_hot
+minecraft:sweet_berry_bush
+minecraft:thorns
+minecraft:thrown
+minecraft:trident
+minecraft:unattributed_fireball
+minecraft:wind_charge
+minecraft:wither
+minecraft:wither_skull
+```
+
+</Details>
+
+同一伤害类型下可以有多个定向规则和一个无 `target` 的默认规则。不要为同一个目标重复写多条规则；重复项的覆盖顺序不适合作为业务逻辑使用。每条规则必须包含 `formula`、`effects`，或同时包含两者。
+
+## expression：表达式公式
+
+字符串公式默认就是 `expression`：
+
+```yaml
+formula: "damage + <attacker_attr:demo:might>"
+```
+
+### 内置变量
+
+| 变量 | 值 |
+|---|---|
+| damage | 进入公式时的事件基础伤害 |
+| is_critical | 原版暴击为 1，否则为 0 |
+| is_sweep | 横扫攻击为 1，否则为 0 |
+| attack_strength | 攻击冷却强度，通常在 0～1 之间 |
+| is_attack_ready | attack_strength > 0.9 时为 1，否则为 0 |
+| shoot_force | 弓或弩发射时的力度，范围为 0～1；无法取得时为 1 |
+
+`shoot_force` 记录拉弓事件提供的发射力度，并跟随弹射物保存。条件、数字格式和函数也可以通过 `<arg:shoot_force>` 读取同一个值。
+
+原版箭矢伤害本身已经会受到发射速度影响。应当在公式通过属性追加或完全替换伤害时使用此变量，不要无条件再次缩放原版 `damage`：
+
+```yaml
+damage_rules:
+  minecraft:arrow:
+    - formula: >-
+        damage
+        + <attacker_attr:demo:arrow_damage> * shoot_force
+```
+
+命名随机数的所有分布与参数见[文本格式](../../reference/text_format.mdx)，表达式运算符和函数见[数字格式 → 表达式](../../reference/number_format.mdx#表达式)。
+
+:::tip
+
+暴击判定务必复用同一个随机 ID。例如，伤害公式和多个分项都使用 `<random:critical>` 时，本次命中只会生成一个随机值；改用不同 ID 则会分别判定。
+
+:::
+
+### 弹射物速度
+
+伤害上下文通过 `direct_entity` 提供直接造成此次伤害的实体。`<arg:direct_entity.speed:0>` 返回该实体当前速度的模，单位为方块/游戏刻。箭矢命中时得到的是箭矢的命中速度；`causing_entity` 仍然表示射手。
+
+原版箭矢伤害在暴击随机增伤前使用的正是这个命中速度：`ceil(clamp(速度 × 经附魔修正的箭矢伤害, 0, 整数上限))`。
+
+## 教程：攻击、暴击与减伤
+
+先定义三项属性：
+
+```yaml
+attributes:
+  demo:might:
+    base: 0
+    constraint: {min: 0, max: 200}
+  demo:critical_chance:
+    base: 0.05
+    constraint: {min: 0, max: 1}
+  demo:ward:
+    base: 0
+    constraint: {min: 0, max: 500}
+```
+
+再让玩家近战和箭矢使用同一条结算思路：
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    - formula: >-
+        (damage + <attacker_attr:demo:might>)
+        * IF(<random:critical> < <attacker_attr:demo:critical_chance>, 1.5, 1)
+        * 100 / (100 + MAX(0, <victim_attr:demo:ward>))
+
+  minecraft:arrow:
+    - formula: >-
+        (damage + <attacker_attr:demo:might>)
+        * IF(<random:critical> < <attacker_attr:demo:critical_chance>, 1.5, 1)
+        * 100 / (100 + MAX(0, <victim_attr:demo:ward>))
+```
+
+这里先把力量加到原始伤害，再以暴击率决定是否乘 `1.5`，最后用 `100 / (100 + 守御)` 做平滑减伤。用 `MAX(0, ward)` 可避免负守御让分母异常。
+
+## composition：分项公式
+
+`composition` 把伤害拆成命名分项，逐项求值后相加。
+
+```yaml
+formula:
+  # 公式类型，必填
+  type: composition
+  # 分项 ID 到子公式的映射，必填；按配置顺序计算
+  parts:
+    physical: >-
+      (damage + <attacker_attr:demo:might>)
+      * 100 / (100 + MAX(0, <victim_attr:demo:ward>))
+    critical_bonus: >-
+      IF(<random:critical> < <attacker_attr:demo:critical_chance>,
+        (damage + <attacker_attr:demo:might>) * 0.5,
+        0)
+```
+
+最终结果是所有分项之和。每完成一个分项，系统都会将结果记录为 `damage_<分项ID>` 上下文参数；后续分项可以通过 `<arg:damage_physical>` 读取。
+
+:::note
+
+各分项中的 `damage` 都指公式开始计算时的事件基础伤害，不会自动继承上一分项的结果。需要串联计算时，请显式读取 `damage_<分项ID>`。
+
+:::
+
+## js：JavaScript 公式
+
+复杂结算可以交给包内脚本：
+
+```yaml
+formula:
+  # 公式类型，必填
+  type: js
+  # 包内脚本 ID，必填；末尾 .js 可省略
+  script: demo:combat/damage
+  # 要调用的函数名，默认 main
+  function: calculate
+  # 注入脚本的参数，默认空映射
+  # 映射按键注入同名变量；列表会整体作为 args 注入
+  args:
+    damage_multiplier: 1.25
+```
+
+脚本会收到扁平化伤害上下文以及 `event`（CraftEngine 的 DamageEvent）。函数返回数字时用作新伤害；返回其他类型、脚本系统不可用时保留进入公式时的伤害。脚本系统的开关、文件位置与绑定见[脚本](../../reference/script.mdx)。
+
+```js
+function calculate() {
+  return event.damage() * damage_multiplier
+}
+```
+
+上例可在 `args` 中配置 `damage_multiplier`。实际项目中可通过 `event`、`ctx`、注入参数或自建脚本工具函数封装属性查询，不必把所有逻辑堆在一个函数里。
+
+## 伤害后置效果
+
+在伤害规则中加入 `effects`，即可在计算并写回伤害公式后，于同一次伤害处理流程中立即执行效果。
+
+:::tip
+
+所有 effect 类型都可以配置通用的 `conditions` 和 `functions` 字段，无论是内置效果还是通过 API 注册的自定义效果。系统会先判断 `conditions`；全部通过后，先执行效果本身，再按配置顺序执行 `functions`。效果与函数共享同一个伤害上下文，可以读取其中的实体、位置、伤害数值和属性。
+
+:::
+
+效果通常应由属性驱动。例如，先定义默认值为零的吸血比例和中毒触发概率：
+
+```yaml
+attributes:
+  demo:life_steal:
+    base: 0
+    constraint: {min: 0, max: 1}
+  demo:poison_chance:
+    base: 0
+    constraint: {min: 0, max: 1}
+```
+
+物品或其他属性修饰符来源可以提高这些属性。没有相关修饰符的实体会保留零基础值，因此不会获得效果。
+
+伤害规则可以同时包含公式和属性驱动的效果：
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    - target: minecraft:zombie
+      formula: "damage + <attacker_attr:demo:might>"
+      effects:
+        - type: life_steal
+          # 属性值表示将当前结算伤害的多少比例转化为生命值
+          ratio: "<attacker_attr:demo:life_steal>"
+          conditions:
+            - type: expression
+              expression: "<attacker_attr:demo:life_steal> > 0"
+```
+
+所有数值字段都支持[数字格式](../../reference/number_format.mdx)，包括 `<attacker_attr:...>` 和 `<victim_attr:...>` 属性表达式。执行效果时，`<arg:final_damage>` 表示公式写回后、当前时刻的 Bukkit 结算伤害快照。
+
+### life_steal
+
+当伤害来源实体是生物时，为其恢复生命值。直接攻击和弹射物的发射者均可触发。
+
+| 字段 | 默认值 | 说明 |
+|---|---:|---|
+| ratio | 0 | 按当前结算伤害比例吸血；0.1 表示 10% |
+| amount | 0 | 在比例吸血结果上额外增加的固定治疗量 |
+
+使用固定值吸血时，省略 `ratio`，只配置 `amount`。固定值本身也可以来自属性：
+
+```yaml
+- type: life_steal
+  amount: "<attacker_attr:demo:fixed_life_steal>"
+  conditions:
+    - type: expression
+      expression: "<attacker_attr:demo:fixed_life_steal> > 0"
+```
+
+同时配置两个字段时，最终治疗量为 `当前结算伤害 × ratio + amount`。
+
+### potion_effect
+
+向一个生物目标施加药水效果。
+
+```yaml
+- type: potion_effect
+  # 目标实体，默认为 victim
+  # 可选 victim、attacker/causing_entity、direct_entity
+  target: victim
+  # 药水效果 ID，必填
+  potion_effect: minecraft:poison
+  # 持续时间，单位为游戏刻，默认 20
+  duration: 60
+  # 从 0 开始的效果等级，默认 0
+  amplifier: 1
+  # 是否为环境效果，默认 false
+  ambient: false
+  # 是否显示粒子，默认 true
+  particles: true
+  # 是否显示客户端 HUD 图标，默认 true
+  show_icon: true
+  # 通用条件会在效果执行前判断
+  conditions:
+    - type: random
+      # 只有物品或其他来源提供此属性时才有触发概率
+      value: "<attacker_attr:demo:poison_chance>"
+  # 通用函数会在效果执行后按顺序运行
+  functions:
+    - type: play_sound
+      sound: minecraft:entity.player.levelup
+```
+
+### function
+
+自身不执行任何内置操作，适合只需要通用函数的规则：
+
+```yaml
+effects:
+  - type: function
+    conditions:
+      - type: expression
+        expression: "<attacker_attr:demo:might> > 0"
+    functions:
+      - type: play_sound
+        sound: minecraft:entity.player.levelup
+```
+
+条件通过后，系统会按顺序运行配置的函数。`function` 效果本身不会修改伤害，也不会直接影响攻击者或受害者。
+
+### 通过 API 注册效果
+
+其他插件可以在属性配置加载前注册自己的配置型效果：
+
+```java
+DamageEffects.register(Key.of("my_plugin", "mark_target"), section -> {
+    String mark = section.getNonEmptyString("mark");
+    return event -> {
+        // 在这里执行集成插件自己的效果。
+        // event.finalDamage()、event.victim()、event.source() 和
+        // event.context() 可用于读取伤害结算状态。
+    };
+});
+```
+
+注册后可以通过 `type: my_plugin:mark_target` 使用。注册工厂会收到该效果的完整配置区块，返回的 `DamageEffect` 实例会被所有匹配的攻击复用。因此效果实例应保持不可变，并将每次攻击的临时状态放在 `apply` 内部。

@@ -210,10 +210,10 @@ transparent: true
 
 </Details>
 
-<Details summary="⑦ blueprint — Blockbench .bbmodel 源文件">
+<Details summary="⑦ blueprint：Blockbench .bbmodel 源文件">
 <Highlight color="#CC7A00">**实验性**</Highlight>
 
-用 `blueprint` 指定 `blueprint` 文件夹中的一个 Blockbench `.bbmodel` 文件（与 `configuration`、`resourcepack` 同级；路径相对于该文件夹，后缀可省略）。生成资源包时，CraftEngine 会把它转换成原版模型 JSON，并将内嵌贴图导出为 PNG。
+`blueprint` 用于指定 `blueprint` 文件夹中的 Blockbench `.bbmodel` 文件。该文件夹与 `configuration`、`resourcepack` 同级，配置路径相对于该目录，后缀可以省略。生成资源包时，CraftEngine 会将文件转换为原版模型 JSON，并导出其中内嵌的 PNG 贴图。
 
 ```yaml
 state:
@@ -357,7 +357,7 @@ state:
 :::tip
 何时需要多状态？
 
-- 方块有**朝向**（原木、柱子、楼梯...）
+- 方块具有**朝向**（原木、柱子、楼梯等）
 - 方块可以**含水**（`waterlogged` 属性）
 - 方块需要**多种变体**（树叶的 `distance` 和 `persistent` 属性）
 - 方块需要**红石交互**（`powered` 和 `open` 属性）
@@ -431,7 +431,7 @@ blocks:
           model:
             x: 90
             path: "minecraft:block/custom/palm_log_horizontal"
-            # generation: # 译者注：虽然不注释掉这一段也能正常使用，但请注意，如果配置中存在多个 path 相同而 generation 不同的配置部分，就会发生冲突
+            # generation: # 可以保留，但多个配置使用相同 path 和不同 generation 时会发生冲突
             #   parent: "minecraft:block/cube_column_horizontal"
             #   textures:
             #     end: "minecraft:block/custom/palm_log_top"
@@ -607,7 +607,7 @@ properties:
 
 `appearances` 定义方块所有可能的**视觉外观**。每个外观的配置规则与单状态方块完全一致：`auto_state`/`state` + `model`/`models`/`textures`/`transparent`/`entity_renderer`。关于 `entity_renderer` 选项，请参考[🫑 方块实体渲染器](states/entity_renderer.mdx)页面。
 
-外观名称可以随便定义，只需同一方块内不重复。**第一个定义的外观是为默认外观**——当某个内部状态未匹配到任何变体的 `appearance` 时，自动使用它。
+外观名称可以自定义，但同一方块内不能重复。**第一个定义的外观将作为默认外观**：当内部状态没有匹配任何变体的 `appearance` 时，系统会自动使用它。
 
 ```yaml
 appearances:

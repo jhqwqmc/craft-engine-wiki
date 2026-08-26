@@ -1,0 +1,192 @@
+---
+title: 🧩 属性定义
+id: definition
+---
+
+## 从一项基础属性开始
+
+每个 `attributes` 子项都是一个有命名空间的属性 ID。下面定义了基础值为 `5`、有效范围为 `0～200` 的力量属性：
+
+```yaml
+attributes:
+  demo:might:
+    base: 5
+    constraint:
+      min: 0
+      max: 200
+```
+
+普通属性最终值的基本流程是：读取 `base` → 按 `operations` 中的运算方式应用修饰符 → 用 `constraint` 限制结果。派生属性则直接根据其他属性计算，配置方法见下文。
+
+## base：基础值来源
+
+### 固定值 `constant`
+
+最常用的写法是直接写数字：
+
+```yaml
+base: 10
+```
+
+### 实体当前的原版属性 `vanilla`
+
+`vanilla` 读取这只实体自身的原版属性。被跟踪的实体会按周期检查原版基础值是否改变，因此适合把原版生命、护甲或移动速度映射进自定义体系。
+
+```yaml
+attributes:
+  demo:native_armor:
+    base:
+      # 基础值提供器类型，必填
+      type: vanilla
+      # 要读取的原版属性 ID，必填
+      attribute: minecraft:armor
+      # 实体没有该原版属性时使用的值。默认 0
+      fallback: 0
+      # 读取后执行的转换表达式；变量只有 value。默认不转换
+      transform: "value * 0.5"
+      # 检查基础值变化的周期。默认 20 tick；正数才会轮询
+      update_interval: 20
+```
+
+### 实体类型的原版默认值 `by_entity_type`
+
+`by_entity_type` 读取该实体类型的原版默认基础值，而不是实体此刻的属性实例。它是静态来源，适合让铁傀儡、僵尸等生物按天生属性获得不同起点。
+
+```yaml
+attributes:
+  demo:ward:
+    base:
+      # 基础值提供器类型，必填
+      type: by_entity_type
+      # 要查询默认值的原版属性 ID，必填
+      attribute: minecraft:armor
+      # 没有默认值时使用的值。默认 0
+      fallback: 0
+      # 与 vanilla 相同，变量只有 value。默认不转换
+      transform: "value * 0.25"
+```
+
+## derived：派生属性
+
+派生属性不保存一份独立数值，而是在被读取时，根据其他属性的当前有效值计算结果。它适合制作“战力”“最终暴击伤害”或“承伤倍率”这类由多项属性共同决定的汇总属性。
+
+下面先定义力量和暴击率，再让战力随它们自动变化：
+
+```yaml
+attributes:
+  demo:might:
+    base: 10
+
+  demo:critical_chance:
+    base: 0.2
+
+  demo:combat_power:
+    derived: "demo:might * (1 + demo:critical_chance)"
+    constraint:
+      min: 0
+      max: 10000
+```
+
+上例中，`demo:combat_power` 的结果为 `10 × (1 + 0.2) = 12`。装备把力量改为 `20` 后，不需要单独更新战力；下次读取时会自动得到 `24`。
+
+被引用的属性可以写在同一文件或其他配置文件中，声明顺序不影响解析。表达式可以继续引用另一项派生属性，但不能形成直接或间接的循环引用：
+
+```yaml
+attributes:
+  # 错误：两项属性互相依赖
+  demo:a:
+    derived: "demo:b + 1"
+  demo:b:
+    derived: "demo:a + 1"
+```
+
+:::caution
+
+派生属性没有独立的基础值和修饰符实例。不要为它配置 `base`、`operations`、`sync`，也不要让物品或套装修饰符直接修改它；这些配置不会参与派生结果。应当修改表达式引用的来源属性，再由派生表达式汇总。`constraint` 与 `entities` 仍然有效，其中 `constraint` 会在表达式计算完成后限制最终结果。
+
+:::
+
+## constraint：限制最终值
+
+```yaml
+constraint:
+  # 最终值下限，包含边界
+  min: 0
+  # 最终值上限，包含边界
+  max: 1
+```
+
+上下限在全部运算方式计算完成后应用，并且包含边界。完全不写 `constraint` 表示不限制。
+
+:::caution
+
+只要写了 `constraint`，当前实现中省略的 `min` 会取 Java 的 `Double.MIN_VALUE`（最小正数），省略的 `max` 会取 `Double.MAX_VALUE`。因此不要把 `constraint` 当成只写一边的配置；建议始终把 `min` 和 `max` 都写清楚，尤其是允许负数的属性。
+
+:::
+
+## entities：限制适用实体
+
+```yaml
+# 可填写实体 ID 或以 # 开头的实体标签；默认不限制实体类型
+entities:
+  - minecraft:player
+  - minecraft:zombie
+  - "#minecraft:skeletons"
+```
+
+列表项可以是实体 ID，也可以是以 `#` 开头的实体标签。不写或写空列表时，属性适用于所有实体。这里决定“这类实体有哪些属性”；实体是否被实时维护，还受 `config.yml` 中 `entity.tracking` 控制。
+
+## sync：同步到原版属性
+
+自定义属性本身不会自动改变 Minecraft 的生命、速度或攻击力。要影响原版行为，需要配置 `sync`：
+
+```yaml
+attributes:
+  demo:vitality:
+    base: 0
+    sync:
+      # 目标原版属性 ID，必填；实体没有该属性时会跳过
+      - target: minecraft:max_health
+        # 原版修饰符运算，必填
+        # 可选 add_value、add_multiplied_base、add_multiplied_total
+        operation: add_value
+        # 写入目标修饰符的 amount。默认 value
+        value: value
+
+  demo:momentum:
+    base: 0
+    sync:
+      - target: minecraft:movement_speed
+        operation: add_multiplied_total
+        value: value
+```
+
+`value` 决定传给原版属性修饰符 `operation` 的 amount。它可以直接写表达式，变量有：
+
+| 变量 | 含义 |
+|---|---|
+| `value` | 自定义属性经过修饰符与约束后的有效值 |
+| `base` | 这项自定义属性本次计算采用的基础值 |
+
+```yaml
+value: "(value - base) * 0.5"
+```
+
+这个公式只同步有效值与基础值之差的一半。当换算过程需要自定义缩放、偏移，或同时组合两个变量时，可以直接编写表达式。
+
+对于两种常见换算，可以用 `delta` 或 `ratio` 代替重复编写公式：
+
+- `delta` 返回 `value - base`。当目标原版属性保留自身基础值，只需同步自定义属性相对基础值的增减时使用。例如基础值为 `20`、有效值为 `28` 时，结果为 `8`。
+- `ratio` 返回 `value / base`。当后续运算需要的是有效值相对基础值的倍数时使用。例如基础值为 `20`、有效值为 `30` 时，结果为 `1.5`。由于计算中需要除以 `base`，基础值不能为 `0`。
+
+```yaml
+value:
+  # 只同步相对基础值的增减
+  type: delta
+```
+
+`value` 返回的数字会作为原版修饰符的 amount，最终如何影响目标属性仍由 `operation` 决定。
+
+同步 `minecraft:max_health` 时，CraftEngine 会在最大生命值改变后保持实体当前的生命百分比。例如，`10/20` 会变为 `15/30`。这样可以避免穿脱装备时意外回满生命或直接死亡。
+
+下一步可阅读[运算方式](./operation.mdx)，了解物品上的多个 amount 如何变成属性最终值。

@@ -524,6 +524,12 @@ Your own components — not maintained or version-checked by CraftEngine. Format
 
 ### Components
 
+:::tip[Copy a component from an existing item]
+
+Hold the source item and run [`/ce debug item-component [component] [json/snbt]`](../../reference/commands.mdx#debug-item-component). Click the result to copy it, then use the complete `(json) ...` or `(snbt) ...` string as that component's value. Keep the format prefix.
+
+:::
+
 <Details summary="Examples by difficulty" defaultOpen={false}>
 
 **★ max_damage**
@@ -728,7 +734,7 @@ overwritable_item_name: "<!i><#FF8C00>Default name"
 # item_model (1.21.2+) — only set if no model is present
 overwritable_item_model: default:sword
 
-# custom_model_data — only set if no CMD is present
+# custom_model_data — only set if no CustomModelData is present
 overwritable_custom_model_data: 10001
 ```
 
@@ -741,4 +747,41 @@ This feature changes how item data flows between server and client. It is intend
 - **Paper obfuscation.** If you use Paper's `enable-item-obfuscation`, add `minecraft:custom_data` to `dont-obfuscate` in `paper-global.yml`.
 
 :::
+
+## 🌐 Override Vanilla Item Data (1.20.5+)
+
+`override_data` uses the same format and processors as `data`, but writes the result to the default prototype of a vanilla item. It only works on vanilla item IDs.
+
+This is useful for removing built-in components that would otherwise interfere with a custom system. For example, remove the vanilla attribute modifiers from a diamond chestplate so its built-in armor and armor toughness do not affect the custom attribute system:
+
+```yaml
+items:
+  minecraft:diamond_chestplate:
+    override_data:
+      remove_components:
+        - minecraft:attribute_modifiers
+
+    # Recommended: mirror the removal in data sent to the client
+    client_bound_data:
+      remove_components:
+        - minecraft:attribute_modifiers
+```
+
+:::warning
+
+Changes made by `override_data` affect only the server-side vanilla item prototype and are not synchronized to clients. Without [`client_bound_data`](#-client-bound-data), the server may have removed a component while the client continues to display its original attributes or tooltip. Mirror client-visible changes with `client_bound_data` when available.
+
+:::
+
+Components may also be replaced rather than removed. This example changes the default food data for carrots:
+
+```yaml
+items:
+  minecraft:carrot:
+    override_data:
+      food:
+        nutrition: 20
+        saturation: 20
+        can_always_eat: false
+```
 

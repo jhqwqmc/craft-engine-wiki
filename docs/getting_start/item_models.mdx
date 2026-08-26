@@ -47,7 +47,7 @@ When referencing files, the `models/` and `textures/` prefixes are implied: `tut
 
 > ⚠️ Textures must go in `textures/item/` or `textures/block/`. Minecraft's texture atlas only loads those two directories. Put textures anywhere else and they won't load — you'll see the purple-black missing-texture pattern.
 
-> ⚠️ Model textures must be powers of two: 16×16, 32×32, 64×64… anything else won't render.
+> ⚠️ Model texture dimensions must be powers of two—for example, 16×16, 32×48, or 64×64. Textures that do not meet this requirement cause the client to downgrade mipmapping.
 
 ## Prepare the texture
 
@@ -59,7 +59,7 @@ resourcepack/assets/tutorial/textures/item/toxic_sword.png
 
 ## Approach 1: just `texture` — one line
 
-The simplest form. CraftEngine picks the parent model automatically based on your `material`, generates the model JSON, and handles CMD allocation.
+The simplest form. CraftEngine picks the parent model automatically based on your `material`, generates the model JSON, and handles CustomModelData allocation.
 
 ```yaml
 items:
@@ -72,13 +72,13 @@ items:
 
 `/ce reload all`, then `/ce item get tutorial:toxic_sword`. Your sword now has the custom texture.
 
-CraftEngine infers the parent from the material: `golden_sword` → `handheld` (tool), `paper` → `generated` (flat icon), block items → `cube_all`. **You don't need to specify a parent, write a model block, or touch CMD.**
+CraftEngine infers the parent from the material: `golden_sword` → `handheld` (tool), `paper` → `generated` (flat icon), block items → `cube_all`. **You don't need to specify a parent, write a model block, or touch CustomModelData.**
 
 `texture:` (singular) is for single-state items — which covers most items. Multi-state items (bows, crossbows, fishing rods) use `textures:` (plural), covered below.
 
 ## Approach 2: `generation` for full control
 
-When `texture:` isn't enough — you want a different parent, a glow layer, or display transforms — use the `generation` format.
+When `texture:` isn't enough — you want a different parent or display transforms — use the `generation` format.
 
 ### Basic syntax
 
@@ -112,16 +112,6 @@ items:
 | `minecraft:block/cube_all` | Blocks |
 
 > ⚠️ **The texture variable names are determined by the parent, not by you.** `handheld` and `generated` use `layer0`. `cube_all` uses `all`. If you write the wrong name, the model breaks. Before picking a parent, look up its JSON on [misode.github.io/assets/model](https://misode.github.io/assets/model/) to see what texture variables it defines.
-
-### Adding a glow layer
-
-```yaml
-generation:
-  parent: minecraft:item/handheld
-  textures:
-    layer0: tutorial:item/toxic_sword        # base
-    layer1: tutorial:item/toxic_sword_glow   # glow overlay
-```
 
 ### How `texture:` and `generation:` relate
 

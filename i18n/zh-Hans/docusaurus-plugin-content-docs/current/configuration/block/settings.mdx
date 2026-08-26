@@ -134,7 +134,7 @@ item: default:xxx_block_item
 
 ### 可替代
 
-决定了方块是否可以被其他方块通过放置被直接替代掉，影响方块物品放置出方块的方式。（默认值：false）
+决定该方块能否在放置其他方块时被直接替换，并影响方块物品的放置行为。（默认值：`false`）
 
 ```yaml
 replaceable: false
@@ -186,7 +186,7 @@ sounds:
 ```
 
 :::info
-您可以像这样配置以精确控制音量和音高
+可以使用以下写法精确控制音量和音高：
 
 ```yaml
 sounds:
@@ -254,7 +254,7 @@ required_break_power: 2
 
 ### 标签
 
-标签决定了许多方块的属性。例如，使用 `minecraft:mineable/axe` 会让你的方块用斧挖掘时更快。（默认值：null）[🏷️ 方块标签](../../reference/block_tags.mdx)
+标签决定了许多方块的属性。例如，使用 `minecraft:mineable/axe` 会让你的方块用斧挖掘时更快。（默认值：null）
 
 ```yaml
 tags:
@@ -279,7 +279,7 @@ client_bound_tags:
 
 决定了方块被放在音符盒下时，音符盒使用的乐器类型。（默认值：harp）
 
-译者注：全部的乐器名称可以在[这里](https://zh.minecraft.wiki/w/音符盒#方块状态)查到
+完整的乐器名称列表请参阅 [Minecraft Wiki：音符盒](https://zh.minecraft.wiki/w/音符盒#方块状态)。
 
 ```yaml
 instrument: basedrum
@@ -289,7 +289,7 @@ instrument: basedrum
 
 ### 流体状态
 
-决定了方块状态的包含的流体状态。（默认值：empty）
+决定方块包含的流体状态。（默认值：`empty`）
 
 ```yaml
 fluid_state: water # empty/water
@@ -343,7 +343,7 @@ destroy_stages:
   billboard: fixed           #      fixed      /  vertical   /  horizontal /         center
                              # 固定垂直和水平轴 /  固定垂直轴  /  固定水平轴  / 按照中心旋转跟随玩家视角
   view_range: 1.0            # 可视距离系数
-  brightness:                # 渲染亮度值，译者注：若需配置该选项则其子选项 `block_light` 和 `sky_light` 必填否则无效
+  brightness:                # 渲染亮度；使用此项时必须同时填写 block_light 和 sky_light
     block_light: 15
     sky_light: 15
 ```

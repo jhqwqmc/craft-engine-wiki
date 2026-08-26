@@ -1,0 +1,695 @@
+---
+title: 🔧 函数
+id: functions
+---
+
+### 取消事件
+
+取消原始事件。
+
+```yaml
+type: cancel_event
+```
+
+### 运行
+
+按顺序运行一系列函数。这对于共享相同条件的函数非常有用。
+
+```yaml
+type: run
+delay: 0 # 可选; 数字; 默认值: 0
+functions: # 必填; 映射列表
+  - type: command
+  - type: message
+```
+
+### 命令
+
+以玩家、控制台或事件的形式运行命令。
+
+```yaml
+type: command
+command: "say 你好 <arg:player.name>" # 必填; 字符串列表/字符串
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+
+# 以玩家身份执行这个指令
+as_player: false # 可选; 布尔; 默认值: false
+# 以op身份执行这个指令，风险自担
+as_op: false # 可选; 布尔; 默认值: false
+# 有些自定义指令插件基于事件驱动，使用此选项可能可以兼容
+as_event: false # 可选; 布尔; 默认值: false
+```
+
+### 消息
+
+发送消息或系统动作栏消息
+
+```yaml
+type: message
+message: "你好 <papi:player_name>" # 必填; 字符串列表/字符串
+target: "self" # 可选; 枚举[all, self]/玩家选择器
+overlay: false # 可选; 默认值: false; false = 聊天框 / true = 动作栏
+```
+
+### 动作栏消息
+
+发送一条动作栏消息
+
+```yaml
+type: actionbar
+actionbar: "这是一个动作栏消息"  # 必填; 字符串
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### 屏幕标题消息
+
+发送一条屏幕标题消息
+
+```yaml
+type: title
+title: "<red>标题</red>"  # 必填; 字符串
+subtitle: "<Yellow>副标题</yellow>" # 必填; 字符串
+fade_in: 20 # 可选; 数字; 默认值: 10
+stay: 10 # 可选; 数字; 默认值: 20
+fade_out: 10 # 可选; 数字; 默认值: 5
+```
+
+### 打开窗口
+
+打开一个图形用户界面窗口
+
+```yaml
+type: open_window #
+gui_type: anvil # 必填; 枚举[anvil, enchantment, grindstone, loom, smithing, crafting, cartography];
+title: "超级铁砧"  # 可选; 字符串
+target: "self" # 可选; 枚举[all, self]/玩家选择器; [默认值: self]
+```
+
+### 破坏方块
+
+破坏一个方块
+
+```yaml
+type: break_block
+x: <arg:position.x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:position.y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:position.z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
+### 放置方块
+
+放置一个方块
+
+```yaml
+type: place_block
+block_state: "default:chinese_lantern" # 必填; 字符串
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
+### 更新方块属性
+
+更新某个方块的方块属性
+
+```yaml
+type: update_block_property
+properties:  # 必填; 键值对
+  axis: x
+  age: 7
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
+### 转换方块
+
+将当前方块转换为另一个方块并保留全部的属性
+
+```yaml
+type: transform_block
+block: default:palm_log # 必填；新方块
+properties:             # 可选; 键值对
+  property_a: b
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
+### 掉落战利品
+
+根据给定的战利品表掉落物品
+
+```yaml
+type: drop_loot
+x: <arg:block.block_x> + 0.5 # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> + 0.5 # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> + 0.5 # 可选; 数字; 默认值: <arg:position.z>
+to_inventory: false
+loot:
+  pools: ...
+```
+
+### 更新交互游戏刻
+
+更新最后一次交互结束时的游戏刻
+
+```yaml
+type: update_interaction_tick
+```
+
+### 设置物品数量
+
+设置此事件中当前物品的数量
+
+```yaml
+type: set_count
+add: true # 默认值: false
+count: -1 # 必填; 数字
+target: "self" # 可选; 枚举[all, self]/玩家选择器
+```
+
+### 设置饥饿值
+
+设置玩家的饥饿值（0~20）
+
+```yaml
+type: set_food
+add: true # 可选; 枚举; 默认值: false
+food: 4 # 必填; 数字
+target: "self" # 可选; 枚举[all, self]/玩家选择器
+```
+
+### 设置饱和度
+
+设置玩家的饱和度（0~10）
+
+```yaml
+type: set_saturation
+add: true
+saturation: 2.5
+target: "self" # 可选; 枚举[all,self]/玩家选择器
+```
+
+### 挥手
+
+挥动此事件中涉及的手，或配置中指定的手
+
+```yaml
+type: swing_hand
+hand: main_hand # 可选; 枚举[main_hand, off_hand]; 不填会从上下文获取需要挥动的手
+```
+
+### 粒子效果
+
+生成一个粒子效果，具体参数见[✨ 粒子效果](./particle_effect)
+
+```yaml
+type: particle
+particle: minecraft:end_rod # 必填; 字符串
+x: "<arg:position.x>" # 可选; 数字; 默认值: <arg:position.x>
+y: "<arg:position.y>" # 可选; 数字; 默认值: <arg:position.y>
+z: "<arg:position.z>" # 可选; 数字; 默认值: <arg:position.z>
+count: 5 # 可选; 数字; 默认值: 1
+offset_x: 0.3 # 可选; 数字; 默认值: 0
+offset_y: 0.3 # 可选; 数字; 默认值: 0
+offset_z: 0.3 # 可选; 数字; 默认值: 0
+speed: 0 # 可选; 数字; 默认值: 0
+```
+
+### 状态效果
+
+添加一个状态效果
+
+```yaml
+type: potion_effect
+potion_effect: minecraft:blindness # 必填; 字符串
+duration: 20  # 可选; 数字; 默认值: 20
+amplifier: 0   # 可选; 数字; 默认值: 0
+ambient: false # 可选; 布尔; 是否来自信标
+particles: true  # 可选; 布尔；是否渲染药水粒子
+show_icon: true  # 可选; 布尔；是否显示效果图标
+```
+
+### 移除状态效果
+
+移除一个状态效果
+
+```yaml
+type: remove_potion_effect
+potion_effect: minecraft:blindness # 如果 'all' 为 true 则为可选; 布尔
+all: false  # 可选; 布尔; 默认值: false
+```
+
+### 等级经验
+
+添加技能/职业经验
+
+```yaml
+type: leveler_exp
+plugin: AuraSkills  # 可选; 字符串
+leveler: fishing  # 可选; 字符串; 职业/技能 ID
+count: 10  # 可选; 数字
+```
+
+### 设置冷却时间
+
+为玩家设置冷却时间
+
+```yaml
+type: set_cooldown
+time: 1m30s
+id: my_cooldown_id # 可选; 字符串
+add: false  # 可选; 布尔; 默认值: false (是否累加冷却时间)
+```
+
+### 移除冷却时间
+
+为玩家移除冷却时间
+
+```yaml
+type: remove_cooldown
+id: my_cooldown_id  # 如果 'all' 为 true 则为可选; 字符串
+all: false  # 可选; 布尔; 默认值: false
+```
+
+### 播放音效
+
+播放一个音效
+
+```yaml
+type: play_sound
+sound: minecraft:xxxx.xxx
+x: <arg:position.x> # 如果使用了 'target' 参数则为可选; 数字
+y: <arg:position.y> # 如果使用了 'target' 参数则为可选; 数字
+z: <arg:position.z> # 如果使用了 'target' 参数则为可选; 数字
+target: "self" # 可选; 枚举[all, self]/玩家选择器
+pitch: 1 # 可选; 数字; 默认值: 1
+volume: 1 # 可选; 数字; 默认值: 1
+source: master # 可选; 枚举[music, master, record, weather, block, hostile, neutral, player, ambient, voice, ui]; 默认值: master
+```
+
+### MythicMobs 技能
+
+释放 MythicMobs 技能
+
+```yaml
+type: cast_mythic_skill
+skill: skill_id # 必填; 字符串
+power: 1.0 # 可选; 数字; 默认值: 1.0
+parameters: # 可选; MythicMobs 技能参数，通过 <skill.参数名> 获取
+  damage: 10
+  element: "<arg:element>"
+variables: # 可选; MythicMobs 技能作用域变量，通过 <skill.var.变量名> 获取
+  damage: 10 # 标量值自动推断 INTEGER、FLOAT、DOUBLE 或 STRING
+  element: "<arg:element>"
+  multiplier: # 使用完整形式指定类型
+    type: double
+    value: "<arg:multiplier>"
+```
+
+### 生成家具
+
+生成一个家具
+
+```yaml
+type: spawn_furniture
+furniture_id: "default:bench" # 可选; 字符串
+x: <arg:position.x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:position.y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:position.z> # 可选; 数字; 默认值: <arg:position.z>
+pitch: <arg:position.pitch> # 可选; 数字; 默认值: <arg:position.pitch>
+yaw: <arg:position.yaw> # 可选; 数字; 默认值: <arg:position.yaw>
+variant: ground # 可选;
+play_sound: true # 可选; 布尔; 默认值: true
+```
+
+### 移除家具
+
+移除一个家具
+
+```yaml
+type: remove_furniture
+drop_loot: true # 可选; 布尔; 默认值: true
+play_sound: true # 可选; 布尔; 默认值: true
+```
+
+### 替换家具
+
+替换一个家具
+
+```yaml
+type: replace_furniture
+furniture_id: "default:bench"
+x: <arg:furniture.x> # 可选; 数字; 默认值: <arg:furniture.x>
+y: <arg:furniture.y> # 可选; 数字; 默认值: <arg:furniture.y>
+z: <arg:furniture.z> # 可选; 数字; 默认值: <arg:furniture.z>
+pitch: <arg:furniture.pitch> # 可选; 数字; 默认值: <arg:furniture.pitch>
+yaw: <arg:furniture.yaw> # 可选; 数字; 默认值: <arg:furniture.yaw>
+variant: ground # 可选; 变体名称
+drop_loot: true # 默认值: true
+play_sound: true # 默认值: true
+```
+
+### 旋转家具
+
+旋转家具。若碰撞体积导致旋转失败，则执行 `on_failure`。
+
+```yaml
+type: rotate_furniture
+degree: 90
+on_success: [] # 函数
+on_failure: [] # 函数
+```
+
+### 传送
+
+传送至指定地点
+
+```yaml
+type: teleport
+x: <arg:position.x> # 必填; 数字
+y: 100 # 必填; 数字
+z: <arg:position.z> + 5 # 必填; 数字
+pitch: <arg:player.pitch> # 可选; 默认值: 0
+yaw: <arg:player.yaw> # 可选; 默认值: 0
+world: world # 可选; 字符串;
+```
+
+### 弹窗
+
+发送一个弹窗
+
+```yaml
+type: toast
+toast: 这是一个弹窗 # 必填; 字符串
+advancement_type: goal # 可选; 枚举[goal,task,challenge]; 默认值: goal
+icon: minecraft:stone # 必填; 字符串
+```
+
+### 伤害
+
+伤害一个玩家
+
+```yaml
+type: damage
+target: self # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+amount: 1.0 # 可选; 数字; 默认值: 1.0
+damage_type: generic # 可选; 字符串; 默认值: generic
+```
+
+### 设置变量
+
+设置一个变量，可使用 \<arg:var\_\[name\]\> 访问变量（把 \[name\] 替换成实际的变量名）
+
+```yaml
+type: set_variable
+name: my_variable # 必填; 字符串
+number: 1.0 # 可选; 数字
+as_int: false # 可选; 布尔; 默认值: false
+text: "你好" # 可选; 字符串
+```
+
+### 村民交易
+
+打开一个自定义村民交易界面
+
+```yaml
+type: merchant_trade
+title: "自定义奸商"
+offers:
+  - cost_1:
+      item: iron_pickaxe
+      # 可选的检查收购物品的额外信息，默认为空
+      components: # 当物品与指定的物品堆叠组件限制相同时检查才能成功
+        minecraft:enchantments: # 检查指定的物品堆叠组件
+          minecraft:unbreaking: 1
+    # 可选的第二个收购物品，默认为空
+    cost_2:
+      item: cobblestone
+      # 收购物品的基础数量，默认为 1
+      count: 8
+    result: 
+      item: default:topaz
+      count: 4
+  # 添加更多的交易选项
+  - cost_1: stone
+    result: default:topaz
+    # 生物从此交易选项中能获得的经验值，默认为 1
+    experience: 3
+```
+
+![](/img/i18n/zh-Hans/merchant_trade.png)
+
+### 移除实体
+
+从当前上下文中移除实体
+
+```yaml
+type: remove_entity
+```
+
+### 条件判断
+
+按顺序检查规则，并执行首个满足条件的函数列表。匹配成功后立即停止检查，后续规则即使也满足条件也不会执行。
+
+```yaml
+type: if_else
+rules:
+  - conditions:
+      - type: permission
+        permission: group.admin
+    functions:
+      - type: command
+        command: say 管理员你好
+  - conditions:
+      - type: permission
+        permission: group.vip
+    functions:
+      - type: command
+        command: say VIP你好
+  - functions:
+      - type: command
+        command: say 玩家你好
+```
+
+### 条件匹配
+
+根据源数值进行匹配，并执行首个匹配案例对应的函数。其功能类似于编程语言中的 switch-case 语句
+
+```yaml
+type: when
+source: <papi:player_world>
+cases:
+  - when: "world"
+    functions: 
+      - type: message
+        message: "你位于主世界。"
+  - when: 
+      - "world_nether"
+      - "world_the_end"
+    functions: 
+      - type: message
+        message: "你正处于危险维度！"
+# 可选配置
+fallback:
+  - type: message
+    message: "你处于未知世界中。"
+```
+
+### 消耗物品耐久度
+
+消耗当前上下文中玩家手持的物品耐久度
+
+```yaml
+type: damage_item
+amount: 1 # 可选; 数字; 默认值: 1
+slot: mainhand # 可选; 枚举[mainhand, offhand, feet, legs, chest, head]
+```
+
+### 循环方块属性
+
+循环某个方块的方块属性
+
+```yaml
+type: cycle_block_property
+property: axis # 必填; 字符串
+inverse: <arg:player.is_sneaking> # 可选; 数字; 默认值: <arg:player.is_sneaking>
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
+```
+
+你也可以使用基于自定义规则的循环
+
+```yaml
+type: cycle_block_property
+property: facing # 必填; 字符串
+x: <arg:block.block_x> # 可选; 数字; 默认值: <arg:position.x>
+y: <arg:block.block_y> # 可选; 数字; 默认值: <arg:position.y>
+z: <arg:block.block_z> # 可选; 数字; 默认值: <arg:position.z>
+rules:
+  north: east
+  east: south
+  south: west
+  west: north
+```
+
+### 设置经验值
+
+设置玩家的经验值
+
+```yaml
+type: set_exp
+count: 1 # 必填; 数字
+add: true # 可选; 布尔; 默认值: false
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### 设置经验等级
+
+设置玩家的经验等级
+
+```yaml
+type: set_level
+count: 1 # 必填; 数字
+add: true # 可选; 布尔; 默认值: false
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### 播放图腾动画
+
+给玩家播放图腾动画
+
+```yaml
+type: play_totem_animation
+item: "default:topaz" # 必填; 字符串
+sound: minecraft:entity.player.levelup # 可选; 字符串
+pitch: 1 # 可选; 数字; 默认值: 1
+volume: 1 # 可选; 数字; 默认值: 1
+silent: false # 可选; 布尔; 默认值: false
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### 关闭容器
+
+关闭当前打开的容器
+
+```yaml
+type: close_inventory
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### 清理物品
+
+清理玩家背包中的物品
+
+```yaml
+type: clear_item
+id: "default:topaz" # 必填; 字符串
+count: 1 # 可选; 数字; 默认值: 1
+```
+
+### 治疗玩家
+
+恢复玩家生命值
+
+```yaml
+type: heal
+amount: 1.0 # 可选; 数字; 默认值: 1.0
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### 扣除金钱
+
+从玩家账户扣除金钱（需要安装 Vault 和经济插件）。余额不足时不执行任何操作。
+
+```yaml
+type: take_money
+amount: 100 # 必填; 数字/表达式
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### 给予金钱
+
+给予玩家金钱（需要安装 Vault 和经济插件）
+
+```yaml
+type: give_money
+amount: 100 # 必填; 数字/表达式
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
+```
+
+### MythicMobs 生物生成
+
+生成指定的 MythicMobs 生物
+
+```yaml
+type: spawn_mythic_mob
+mob: "test_mob" # 必填; 字符串
+level: 1.0 # 可选; 数字; 默认值: 1.0
+world: "world" # 可选; 字符串
+x: "<arg:position.x>" # 可选; 数字; 默认值: <arg:position.x>
+y: "<arg:position.y>" # 可选; 数字; 默认值: <arg:position.y>
+z: "<arg:position.z>" # 可选; 数字; 默认值: <arg:position.z>
+pitch: "<arg:position.pitch>" # 可选; 数字; 默认值: <arg:position.pitch>
+yaw: "<arg:position.yaw>" # 可选; 数字; 默认值: <arg:position.yaw>
+```
+
+### 设置家具变体
+
+设置一个家具的变体
+
+```yaml
+type: set_furniture_variant
+variant: a_variant # 必填; 字符串
+```
+
+### 设置物品冷却（1.21.2+）
+
+设置玩家对某个物品的冷却
+
+```yaml
+type: set_item_cooldown
+id: "minecraft:ender_pearl" # 必填; 字符串; 冷却组
+time: "5s" # 必填; 字符串; 支持 t(刻),s(秒),m(分),h(时),d(天),w(周) 单位组合
+add: false # 可选; 布尔; 默认值: false
+```
+
+### 转移服务器
+
+将玩家转移到另一个服务器。支持代理插件消息（BungeeCord / Velocity）和 Minecraft 原生 transfer 两种方式。
+
+```yaml
+# 代理插件消息 — 按服务器名称（BungeeCord / Velocity）
+type: transfer
+server: "lobby" # 必填（若未设置 host）；字符串
+```
+
+```yaml
+# 转移到另一个服务器 — 按主机 + 端口
+type: transfer
+host: "lobby.example.com" # 必填（若未设置 server）；字符串
+port: 25566               # 可选；数字；默认值: 25565
+```
+
+### js
+
+调用一个 JavaScript 函数。完整的脚本使用指南见 [<u>📜 脚本</u>](script.mdx)。
+
+```yaml
+type: js
+script: "mypack:combo"      # 必填; 字符串; 脚本 id（<命名空间>:<不含 .js 的相对路径>）
+function: "onRightClick"   # 必填; 字符串; 要调用的函数名
+# args - 可选; 列表或 map
+# 列表形式：注入为 args 绑定
+# args: [ "a", "b" ]
+# map 形式：每个键值注入为同名绑定
+args:
+  combo: "combo_a"
+  times: 3
+```
+
+:::info
+更多函数将在后续版本中加入。
+:::

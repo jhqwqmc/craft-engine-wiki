@@ -12,11 +12,11 @@ import Details from '@site/src/components/Details';
   <img src={require('/img/equipment_1.png').default} alt="" />
 </div>
 
-CraftEngine 提供两种创建自定义装备的方式：基于**盔甲纹饰**（适用于 1.20+ 版本）或使用**可装备组件**（1.21.2 新增）。
+CraftEngine 提供两种自定义装备方案：使用**盔甲纹饰**（Minecraft 1.20+），或使用**可装备组件**（Minecraft 1.21.2+）。
 
 :::warning
 
-请注意以下均为装备配置，非物品具体设定。要将这些配置应用到盔甲物品，请参考[此文档](item/settings.mdx#equipment装备)。
+以下内容定义的是装备资源，而不是具体物品。要将装备资源应用到盔甲物品，请参阅[物品设置中的 equipment](item/settings.mdx#equipment装备)。
 
 ```yaml
 items:
@@ -32,18 +32,18 @@ equipments:
 :::
 
 :::tip
-**关于 3D 头盔的说明：**
+**关于 3D 头盔**
 
-3D 头盔的创建方法与**装备**完全无关。由于许多用户在创建 3D 头盔时遇到了困难，我将在此说明正确的创建方法，并澄清一些可能存在的误解。
+3D 头盔并不通过本页介绍的**装备资源**实现。下面说明其渲染原理和正确配置方法。
 
 <Details summary="3D 头盔原理">
-    盔甲类物品天生带有 `equippable` 组件，其中包含一个名为 `asset_id` 的选项。当指定该选项时，Minecraft 会使用**硬编码渲染器**来渲染指定的盔甲纹理。这意味着即使你为基于钻石头盔的物品分配了自定义 3D 物品模型，玩家穿戴时仍会使用默认的**盔甲渲染器**进行渲染。
+    盔甲类物品默认带有 `equippable` 组件，其中的 `asset_id` 会让 Minecraft 使用硬编码的**盔甲渲染器**。因此，即使为钻石头盔材质的物品指定自定义 3D 模型，穿戴后仍会按普通盔甲渲染。
 
     ![](/img/3d_helmet_1.png)
 
-    要解决这个问题，你必须禁用盔甲渲染器，以让头盔改用默认的物品渲染器。
+    要显示自定义 3D 模型，需要禁用盔甲渲染器，让头盔改用普通物品渲染器。
 
-    ### 解决方案1（适用于 1.21.2+ 版本）：
+    ### 方案 1（Minecraft 1.21.2+）
 
     重写 `equippable` 组件并移除 `asset_id` 选项。示例如下：
 
@@ -78,7 +78,7 @@ equipments:
 
 ```yaml
 equipments:
-  # 装备资源命名空间ID
+  # 装备资源命名空间 ID
   default:topaz:
     type: component
     humanoid: "minecraft:entity/equipment/humanoid/topaz"
@@ -162,11 +162,11 @@ equipments:
 ## 基于盔甲纹饰
 <Highlight color="#0d9622ff">**1.20+**</Highlight><Highlight color="#e03f26ff">**盔甲纹饰不可用**</Highlight>
 
-当 CraftEngine 移除原版盔甲基础纹理后，装备时将呈现完全透明状态。通过对其应用自定义纹饰即可实现自定义盔甲纹理。此方法仅存在一个限制——该盔甲后续无法再接受额外纹饰。
+CraftEngine 移除原版盔甲的基础贴图后，盔甲在穿戴时会变为透明。此时应用自定义纹饰即可显示自定义盔甲贴图，但这件盔甲之后无法再叠加其他纹饰。
 
 ```yaml
 equipments:
-  # 装备资源命名空间ID
+  # 装备资源命名空间 ID
   default:topaz:
     type: trim
     humanoid: minecraft:entity/equipment/humanoid/topaz
@@ -176,13 +176,13 @@ equipments:
 <Details summary="修复被“破坏”的原版盔甲">
   <Highlight color="#f2184eff">**付费版专属**</Highlight>
 
-  你可以通过执行指令 `/ce resource enable legacy_armor` 来修复原版锁链甲）—— 我们通过应用特殊纹饰图案来保持原版锁链甲外观，这依托于 CraftEngine 独有的 `client_bound_data` 特性实现。
+  执行 `/ce resource enable legacy_armor` 可以恢复原版锁链甲外观。该资源通过特殊纹饰图案和 CraftEngine 的 `client_bound_data` 功能实现。
 
 </Details>
 
 :::caution
 
-基于纹饰的盔甲仅支持 **humanoid** 和 **humanoid_leggings** 模型类型。如果你遇到**盔甲无法正确应用纹理**或是**被踢出服务器**的问题，请尝试重新进入服务器，如果无法解决则是配置存在问题。
+基于纹饰的盔甲仅支持 `humanoid` 和 `humanoid_leggings` 模型类型。如果出现**盔甲贴图未正确应用**或**玩家被踢出服务器**的情况，请先重新进入服务器；问题仍然存在时，请检查配置。
 
 :::
 

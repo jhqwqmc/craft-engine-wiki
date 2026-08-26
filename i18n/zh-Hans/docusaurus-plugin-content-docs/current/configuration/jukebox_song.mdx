@@ -5,7 +5,7 @@ id: jukebox_song
 
 :::caution
 
-由于 Minecraft 的注册表在注册后不可变，因此你需要重新进入服务器才能应用新的修改。
+Minecraft 注册表在完成注册后不可修改，因此更新唱片机曲目后需要重新进入服务器才能生效。
 
 :::
 
@@ -19,7 +19,7 @@ jukebox_songs:
     range: 32
 ```
 
-只需添加 `minecraft:jukebox_playable` 组件，即可使物品变为可播放的音乐唱片
+为物品添加 `minecraft:jukebox_playable` 组件，即可将其设为可播放的唱片：
 
 ```yaml
 items:
@@ -29,4 +29,4 @@ items:
       jukebox_playable: default:credits_music
 ```
 
-如需了解如何自定义音效，请参考[此页面](sound.mdx)。
+自定义音效的配置方法请参阅[音效](sound.mdx)。

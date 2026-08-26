@@ -74,7 +74,7 @@ Hover over the item — a blue "Shiny Diamond" with a gray description line bene
 - `<!i>` — turns off italics. Minecraft renders all lore text as purple italic by default. Add `<!i>` and it goes back to normal. You'll want it at the start of almost every lore line
 - `<gray>` — gray text
 
-These `<blue>`, `<gray>` tags are called **MiniMessage** — Paper's standard text format. It uses angle-bracket tags to control color and style.
+These `<blue>`, `<gray>` tags are called **MiniMessage**. It uses angle-bracket tags to control color and style.
 
 ### Common MiniMessage tags
 
@@ -129,23 +129,6 @@ Save, then `/ce reload recipe`. Open a crafting table, place one diamond block i
 - `ingredients.A: minecraft:diamond_block` — the `A` in the pattern stands for a vanilla diamond block
 - `result` — what you get. `id: tutorial:diamond` is the product ID, `count: 9` means 9 items per craft
 
-### Common recipe types
-
-| Type | When to use |
-|:---|:---|
-| `shaped` | Shaped crafting — ingredients must match the pattern |
-| `shapeless` | Shapeless crafting — ingredients anywhere, just have the right ones |
-| `smelting` | Furnace — one ingredient gets smelted |
-
 > ⚠️ Ingredients can use **tags** instead of specific items. For example `#minecraft:planks` matches any kind of plank. Tags are more flexible than hardcoding specific items.
 
 > ⚠️ Recipe changes need `/ce reload recipe`, not `config`. Also, if your server has other datapack plugins or you manually run `/minecraft:reload`, you'll need to run `/ce reload recipe` again afterwards or your recipes may stop working.
-
-## What you've learned
-
-1. Define an item with 3 lines of YAML
-2. Add a name and lore with `data`
-3. Add a crafting recipe with `recipes`
-4. Run `/ce reload config` for config changes, `/ce reload recipe` for recipe changes
-
-The item works — but it **still looks exactly like a vanilla diamond**. Next chapter: give it a completely custom appearance.

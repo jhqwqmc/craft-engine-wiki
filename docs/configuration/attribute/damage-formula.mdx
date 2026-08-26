@@ -1,0 +1,361 @@
+---
+title: 💥 Damage Rules
+id: damage-formula
+---
+
+import Details from '@site/src/components/Details';
+
+## Damage rule structure
+
+`damage_rules` first selects rules by **damage type**, then selects a formula and post-damage effects by the **victim's entity type**. The value of each damage type must be a list of rules:
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    # target: optional list of entity IDs or entity tags; omitted to match every victim
+    - target:
+        - minecraft:zombie
+        - "#minecraft:skeletons"
+      # formula: formula that returns the new base damage for the event
+      formula: "damage * 1.25"
+    # A rule without target can serve as the default formula for this damage type
+    - formula: "damage"
+
+  minecraft:arrow:
+    - formula: "damage"
+```
+
+In this example, player melee attacks deal `1.25` times damage to zombies and entities in the skeleton tag. Other victims use the default formula without `target`, while arrows retain their original damage.
+
+:::caution
+
+Keep all current damage rules in a single `damage_rules` section. Do not spread them across multiple files or multiple `damage_rules#...` sections. Each parse of this section replaces the entire damage-rule table, so splitting it may cause earlier rules to be overwritten.
+
+:::
+
+The top-level keys are Minecraft damage type IDs, not Bukkit damage cause names. Common values include `minecraft:player_attack`, `minecraft:mob_attack`, `minecraft:arrow`, `minecraft:magic`, and `minecraft:fall`. If no damage type matches, or no usable default formula exists, CraftEngine leaves that damage unchanged.
+
+<Details summary="Damage types available in the latest version">
+
+```text
+minecraft:arrow
+minecraft:bad_respawn_point
+minecraft:cactus
+minecraft:campfire
+minecraft:cramming
+minecraft:dragon_breath
+minecraft:drown
+minecraft:dry_out
+minecraft:ender_pearl
+minecraft:explosion
+minecraft:fall
+minecraft:falling_anvil
+minecraft:falling_block
+minecraft:falling_stalactite
+minecraft:fireball
+minecraft:fireworks
+minecraft:fly_into_wall
+minecraft:freeze
+minecraft:generic
+minecraft:generic_kill
+minecraft:hot_floor
+minecraft:in_fire
+minecraft:in_wall
+minecraft:indirect_magic
+minecraft:lava
+minecraft:lightning_bolt
+minecraft:mace_smash
+minecraft:magic
+minecraft:mob_attack
+minecraft:mob_attack_no_aggro
+minecraft:mob_projectile
+minecraft:on_fire
+minecraft:out_of_world
+minecraft:outside_border
+minecraft:player_attack
+minecraft:player_explosion
+minecraft:sonic_boom
+minecraft:spear
+minecraft:spit
+minecraft:stalagmite
+minecraft:starve
+minecraft:sting
+minecraft:sulfur_cube_hot
+minecraft:sweet_berry_bush
+minecraft:thorns
+minecraft:thrown
+minecraft:trident
+minecraft:unattributed_fireball
+minecraft:wind_charge
+minecraft:wither
+minecraft:wither_skull
+```
+
+</Details>
+
+One damage type may contain multiple targeted rules and one default rule without `target`. Do not write duplicate rules for the same target; their overwrite order is not suitable for use as business logic. A rule must contain `formula`, `effects`, or both.
+
+## expression: Expression formulas
+
+A string formula uses `expression` by default:
+
+```yaml
+formula: "damage + <attacker_attr:demo:might>"
+```
+
+### Built-in variables
+
+| Variable | Value |
+|---|---|
+| damage | Event base damage on entry to the formula |
+| is_critical | 1 for a vanilla critical hit; otherwise 0 |
+| is_sweep | 1 for a sweeping attack; otherwise 0 |
+| attack_strength | Attack cooldown strength, normally between 0 and 1 |
+| is_attack_ready | 1 when attack_strength > 0.9; otherwise 0 |
+| shoot_force | Bow or crossbow launch force between 0 and 1; 1 when unavailable |
+
+`shoot_force` records the launch force from the bow-shoot event and remains attached to the projectile. Conditions, number formats, and functions can read the same value with `<arg:shoot_force>`.
+
+Vanilla arrow damage already responds to launch velocity. Use this variable when a formula adds or replaces damage with attribute values; do not blindly multiply the vanilla `damage` value a second time:
+
+```yaml
+damage_rules:
+  minecraft:arrow:
+    - formula: >-
+        damage
+        + <attacker_attr:demo:arrow_damage> * shoot_force
+```
+
+See [Text Format](../../reference/text_format.mdx) for all named-random distributions and options, and [Number Format → expression](../../reference/number_format.mdx#expression) for expression operators and functions.
+
+:::tip
+
+Always reuse the same random ID for one critical-hit check. For example, if the damage formula and all of its parts use `<random:critical>`, the hit rolls only once. Different IDs are evaluated independently.
+
+:::
+
+### Projectile speed
+
+Damage contexts expose the entity that directly caused the hit as `direct_entity`. `<arg:direct_entity.speed:0>` returns its current velocity magnitude in blocks per tick. For an arrow hit, this is the arrow's speed at impact; `causing_entity` remains the shooter.
+
+Vanilla arrow damage uses this same impact-speed magnitude before applying critical-hit randomness: `ceil(clamp(speed × enchantment-adjusted arrow damage, 0, integer maximum))`.
+
+## Tutorial: Attack, critical hits, and mitigation
+
+First define three attributes:
+
+```yaml
+attributes:
+  demo:might:
+    base: 0
+    constraint: {min: 0, max: 200}
+  demo:critical_chance:
+    base: 0.05
+    constraint: {min: 0, max: 1}
+  demo:ward:
+    base: 0
+    constraint: {min: 0, max: 500}
+```
+
+Then apply the same calculation to player melee attacks and arrows:
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    - formula: >-
+        (damage + <attacker_attr:demo:might>)
+        * IF(<random:critical> < <attacker_attr:demo:critical_chance>, 1.5, 1)
+        * 100 / (100 + MAX(0, <victim_attr:demo:ward>))
+
+  minecraft:arrow:
+    - formula: >-
+        (damage + <attacker_attr:demo:might>)
+        * IF(<random:critical> < <attacker_attr:demo:critical_chance>, 1.5, 1)
+        * 100 / (100 + MAX(0, <victim_attr:demo:ward>))
+```
+
+Strength is added to the original damage first, Critical Chance then determines whether to multiply it by `1.5`, and finally `100 / (100 + Ward)` applies smooth damage reduction. `MAX(0, ward)` prevents negative Ward from producing an invalid denominator.
+
+## composition: Formula parts
+
+`composition` divides damage into named parts and adds their evaluated results together.
+
+```yaml
+formula:
+  # Formula type. Required
+  type: composition
+  # Mapping from part IDs to child formulas. Required; evaluated in configuration order
+  parts:
+    physical: >-
+      (damage + <attacker_attr:demo:might>)
+      * 100 / (100 + MAX(0, <victim_attr:demo:ward>))
+    critical_bonus: >-
+      IF(<random:critical> < <attacker_attr:demo:critical_chance>,
+        (damage + <attacker_attr:demo:might>) * 0.5,
+        0)
+```
+
+The final result is the sum of all parts. After each part is evaluated, the system records it as the context argument `damage_<part ID>`; later parts can read it with `<arg:damage_physical>`.
+
+:::note
+
+`damage` in every part is the event's base damage from the beginning of the formula. It does not automatically become the result of the previous part. To chain parts, explicitly read `damage_<part ID>`.
+
+:::
+
+## js: JavaScript formulas
+
+Complex calculations can be delegated to a script in the pack:
+
+```yaml
+formula:
+  # Formula type. Required
+  type: js
+  # Script ID inside the pack. Required; the trailing .js may be omitted
+  script: demo:combat/damage
+  # Function to call. Default: main
+  function: calculate
+  # Arguments injected into the script. Empty mapping by default
+  # Mapping entries become variables of the same name; a list is injected as args
+  args:
+    damage_multiplier: 1.25
+```
+
+The script receives the flattened damage context and `event` (CraftEngine's `DamageEvent`). A numeric return value becomes the new damage. If the function returns another type or the scripting system is unavailable, the damage remains at its value on entry to the formula. See [Scripts](../../reference/script.mdx) for the scripting switch, file locations, and bindings.
+
+```js
+function calculate() {
+  return event.damage() * damage_multiplier
+}
+```
+
+This example exposes `damage_multiplier` through `args`. In a real project, you can wrap attribute queries through `event`, `ctx`, injected arguments, or your own script utilities rather than putting all logic into one function.
+
+## Post-damage effects
+
+Add `effects` to a damage rule to run actions immediately after the damage formula has been evaluated and applied in the same damage-processing pass.
+
+:::tip
+
+Every effect type supports the common `conditions` and `functions` fields. This applies to all built-in effects and effect types registered through the API. The conditions are checked first; when they all pass, the effect itself runs, followed by its functions in configuration order. The effect and its functions share the same damage context, including entities, positions, damage values, and attributes.
+
+:::
+
+Effects are normally driven by attributes. For example, define a zero-based life-steal ratio and poison proc chance:
+
+```yaml
+attributes:
+  demo:life_steal:
+    base: 0
+    constraint: {min: 0, max: 1}
+  demo:poison_chance:
+    base: 0
+    constraint: {min: 0, max: 1}
+```
+
+Items or other attribute modifier sources can then increase those values. An entity with no relevant modifier keeps the zero base value and receives no effect.
+
+The damage rule may contain both a formula and attribute-driven effects:
+
+```yaml
+damage_rules:
+  minecraft:player_attack:
+    - target: minecraft:zombie
+      formula: "damage + <attacker_attr:demo:might>"
+      effects:
+        - type: life_steal
+          # The attribute value is the fraction of resolved damage converted to health.
+          ratio: "<attacker_attr:demo:life_steal>"
+          conditions:
+            - type: expression
+              expression: "<attacker_attr:demo:life_steal> > 0"
+```
+
+All numeric fields accept a [Number Format](../../reference/number_format.mdx), including `<attacker_attr:...>` and `<victim_attr:...>` expressions. During effect execution, `<arg:final_damage>` is a snapshot of the currently resolved Bukkit damage immediately after the formula is applied.
+
+### life_steal
+
+Heals the causing entity when it is a living entity. This works for direct attacks and projectile owners.
+
+| Field | Default | Meaning |
+|---|---:|---|
+| ratio | 0 | Resolved damage multiplier converted to healing; 0.1 means 10% |
+| amount | 0 | Flat healing added to the ratio result |
+
+For fixed-value life steal, omit `ratio` and provide only `amount`. The amount may itself come from an attribute:
+
+```yaml
+- type: life_steal
+  amount: "<attacker_attr:demo:fixed_life_steal>"
+  conditions:
+    - type: expression
+      expression: "<attacker_attr:demo:fixed_life_steal> > 0"
+```
+
+When both fields are present, the result is `resolved damage × ratio + amount`.
+
+### potion_effect
+
+Applies a potion effect to a living target.
+
+```yaml
+- type: potion_effect
+  # Target entity. Default: victim
+  # Options: victim, attacker/causing_entity, direct_entity
+  target: victim
+  # Potion effect ID. Required
+  potion_effect: minecraft:poison
+  # Duration in ticks. Default: 20
+  duration: 60
+  # Zero-based amplifier. Default: 0
+  amplifier: 1
+  # Whether this is an ambient effect. Default: false
+  ambient: false
+  # Whether particles are shown. Default: true
+  particles: true
+  # Whether the client HUD icon is shown. Default: true
+  show_icon: true
+  # Common conditions are evaluated before the effect runs
+  conditions:
+    - type: random
+      # Zero chance unless an item or another source grants the attribute
+      value: "<attacker_attr:demo:poison_chance>"
+  # Common functions run in order after the effect
+  functions:
+    - type: play_sound
+      sound: minecraft:entity.player.levelup
+```
+
+### function
+
+Performs no built-in action. Use it when a rule only needs common functions:
+
+```yaml
+effects:
+  - type: function
+    conditions:
+      - type: expression
+        expression: "<attacker_attr:demo:might> > 0"
+    functions:
+      - type: play_sound
+        sound: minecraft:entity.player.levelup
+```
+
+When the conditions pass, the configured functions run in order. The `function` effect itself does not change the damage or either entity.
+
+### Registering an effect through the API
+
+Plugins can register their own configuration-backed effect type before attribute configuration is loaded:
+
+```java
+DamageEffects.register(Key.of("my_plugin", "mark_target"), section -> {
+    String mark = section.getNonEmptyString("mark");
+    return event -> {
+        // Apply the integration-specific effect here.
+        // event.finalDamage(), event.victim(), event.source(), and event.context()
+        // expose the resolved post-damage state.
+    };
+});
+```
+
+It can then be used as `type: my_plugin:mark_target`. The registry factory receives the effect's complete configuration section, and the returned `DamageEffect` instance is reused for matching hits. Registration should therefore build an immutable effect and keep per-hit state inside `apply`.

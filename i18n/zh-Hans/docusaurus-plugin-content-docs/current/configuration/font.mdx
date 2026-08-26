@@ -7,7 +7,7 @@ import UrlCard from '@site/src/components/UrlCard';
 
 :::info
 
-这个过程极其简单，无需插件端配置。只需按照下面的教程操作即可。
+自定义字体无需插件端配置，按照以下步骤修改资源包即可。
 
 :::
 
@@ -15,10 +15,10 @@ import UrlCard from '@site/src/components/UrlCard';
 
 <UrlCard
   url="https://zh.minecraft.wiki/w/自定义字体#ttf"
-  title="TrueType矢量字体"
+  title="TrueType 矢量字体"
 />
 
-对于 TTF 字体，你需要在以下路径中创建一个 `default.json` 文件。如果你已经有一个 `default.json` 文件，只需将你的字体 JSON 追加到现有 JSON 文件的末尾即可。
+使用 TTF 字体时，需要在以下路径创建 `default.json`。如果该文件已存在，请将字体 provider 添加到现有的 `providers` 列表中。
 
 <div style={{textAlign: 'center'}}>
   <img src={require('/img/font_1.png').default} alt="" />

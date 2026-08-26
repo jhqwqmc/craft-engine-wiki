@@ -708,6 +708,42 @@ const sidebars: SidebarsConfig = {
           label: '⚔️ Equipment',
         },
         {
+          type: 'category',
+          label: '📈 Attribute',
+          collapsed: true,
+          link: {
+            type: 'doc',
+            id: "configuration/attribute",
+          },
+          items: [
+            {
+              type: 'doc',
+              id: "configuration/attribute/definition",
+              label: '🧩 Attribute Definition',
+            },
+            {
+              type: 'doc',
+              id: "configuration/attribute/operation",
+              label: '🧮 Operations',
+            },
+            {
+              type: 'doc',
+              id: "configuration/attribute/modifier",
+              label: '🗡️ Item Attribute Modifiers',
+            },
+            {
+              type: 'doc',
+              id: "configuration/attribute/equipment-set",
+              label: '🛡️ Equipment Sets',
+            },
+            {
+              type: 'doc',
+              id: "configuration/attribute/damage-formula",
+              label: '💥 Damage Formulas',
+            },
+          ],
+        },
+        {
           type: 'doc',
           id: "configuration/font",
           label: '㊙️ Font',
@@ -774,11 +810,6 @@ const sidebars: SidebarsConfig = {
       },
       items: [
         {
-          type: 'doc',
-          id: "reference/block_tags",
-          label: '🏷️ Block Tags',
-        },
-        {
           type: 'category',
           label: '✏️ Text Format',
           collapsed: true,
@@ -813,6 +844,11 @@ const sidebars: SidebarsConfig = {
           type: 'doc',
           id: "reference/events",
           label: '🪇 Events',
+        },
+        {
+          type: 'doc',
+          id: "reference/functions",
+          label: '🔧 Functions',
         },
         {
           type: 'doc',

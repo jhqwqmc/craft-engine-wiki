@@ -8,19 +8,19 @@ import Highlight from '@site/src/components/Highlight';
 import ExpandableIframeCard from '@site/src/components/ExpandableIframeCard';
 import Details from '@site/src/components/Details';
 
-## 它是如何工作的？
+## 工作原理
 
-众所周知，单个方块的变体数量是有限的。以绊线为例，其最多只有 128 种变体。这意味着在不破坏绊线原本功能的前提下，最多只能释放 127 种自定义方块状态。然而，通过移除其中一种状态的纹理使其完全透明，并在方块中心放置展示实体，便能实现近乎无限的自定义方块。
+单个原版方块可用的状态数量有限。例如，绊线最多只有 128 种状态；在保留其原版功能的情况下，最多只能腾出 127 种状态用于自定义方块。实体渲染器会将其中一种状态设为透明，再在方块中心显示展示实体，从而突破模型状态数量的限制。
 
 :::warning
 
-需要注意的是，某些原版方块使用了硬编码的渲染器。当方块使用的模型尺寸与完整方块不匹配时，可能会出现透视方块效果，如下图所示。
+某些原版方块使用硬编码渲染器。如果模型尺寸与完整方块不一致，可能出现透视效果，如下图所示。
 
 <img src={require('/img/block_entities_1.png').default} alt="" style={{ width: '100%', height: 'auto', maxWidth: '128px', maxHeight: '128px', objectFit: 'contain' }} />
 
 :::
 
-要配置展示实体，在 `state` 或 `appearances` 的配置部分中添加 `entity_renderer` 选项即可。
+要使用展示实体，请在 `state` 或 `appearances` 配置段中添加 `entity_renderer`。
 
 ## 基本用法
 
@@ -78,7 +78,7 @@ rotation: 0,0,0.707,0.707  # 四元数，见下方旋转工具
 billboard: fixed           #      fixed      /  vertical   /  horizontal /         center
                            # 固定垂直和水平轴 /  固定垂直轴  /  固定水平轴  / 按照中心旋转跟随玩家视角
 glow_color: 255,255,255    # 发光边框颜色 (R,G,B)
-brightness:                # 渲染亮度值，译者注：若需配置该选项则其子选项 `block_light` 和 `sky_light` 必填否则无效
+brightness:                # 渲染亮度；使用此项时必须同时填写 block_light 和 sky_light
   block_light: 15
   sky_light: 15
 view_range: 1.0            # 可视距离系数
@@ -111,7 +111,7 @@ shadow_strength: 1         # 阴影的不透明度
 
 ```yaml
 type: item_display
-item: default:sofa          # 物品命名空间ID
+item: default:sofa          # 物品命名空间 ID
 ```
 
 **可选：**
@@ -240,7 +240,7 @@ entity_renderer:
 
 ```yaml
 type: item
-item: default:sleeper_sofa         # 必填：物品命名空间ID
+item: default:sleeper_sofa         # 必填：物品命名空间 ID
 position: 0.5,0.5,0.5              # 可选：位置 (x,y,z)，默认方块中心
 ```
 
@@ -266,7 +266,7 @@ entity_renderer:
 
 ```yaml
 type: armor_stand
-item: default:bench                 # 必填：物品命名空间ID
+item: default:bench                 # 必填：物品命名空间 ID
 position: 0,0.2,0                   # 可选：位置 (x,y,z)，默认方块中心
 yaw: 0                              # 可选：绕 Y 轴旋转
 pitch: 0                            # 可选：绕 X 轴旋转

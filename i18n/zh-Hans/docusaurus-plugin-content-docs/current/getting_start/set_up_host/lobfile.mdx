@@ -8,12 +8,12 @@ import Details from '@site/src/components/Details';
 
 <Highlight color="#1877F2">**用户友好**</Highlight><Highlight color="#10ae28ff">**免费**</Highlight>
 
-对于初学者来说，Lobfile 实际上是一个非常不错的资源托管解决方案。它在大多数地区运行良好 —— 当然，像中国大陆这样的网络限制较重的地区除外。
+Lobfile 配置简单，适合初次接触资源包托管的用户。它在大多数地区都能稳定使用，但在中国大陆等网络受限地区可能无法正常访问。
 
 <Details summary="获取 API 密钥">
-1️⃣ 访问 **https://lobfile.com/** 并注册一个账号  
-2️⃣ 点击 `Account` -> `Settings`  
-3️⃣ 点击 <Highlight color="#1877F2">**Copy API Key to Clipboard**</Highlight>
+1. 访问 [Lobfile](https://lobfile.com/) 并注册账号。
+2. 依次点击 `Account` → `Settings`。
+3. 点击 <Highlight color="#1877F2">**Copy API Key to Clipboard**</Highlight>。
 
 </Details>
 
@@ -23,7 +23,7 @@ resource-pack:
     hosting:
       - type: "lobfile"
         api_key: "abcdefghijkl"
-        # 可选选项
+        # 可选
         use_environment_variables: false # 是否使用环境变量提供机密信息，默认为 false
 ```
 
