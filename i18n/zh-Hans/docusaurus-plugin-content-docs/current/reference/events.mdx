@@ -31,26 +31,27 @@ events:
 
 ### 物品
 
-* break
-* right\_click
-* left\_click
-* consume
-* pick\_up
-* attack
+* `item_break` — 物品耐久度耗尽并损坏
+* `block_break` — 玩家使用该物品破坏方块
+* `right_click`
+* `left_click`
+* `consume`
+* `pick_up`
+* `attack`
 
 ### 方块
 
-* break
-* place
-* right\_click
-* left\_click
-* step
+* `block_break` — 方块被破坏
+* `place`
+* `right_click`
+* `left_click`
+* `step`
 
 ### 家具
 
-* break
-* place
-* right\_click
+* `furniture_break` — 家具被破坏
+* `place`
+* `right_click`
 
 :::caution
 请注意：事件需配置在正确的区域。例如若需实现家具交互时执行指令，应将 `events` 置于 `furniture` 部分而非物品部分下。
