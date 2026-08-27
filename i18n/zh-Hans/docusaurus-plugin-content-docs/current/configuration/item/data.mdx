@@ -503,6 +503,41 @@ items:
 
 随机生成的值可以在物品作为上下文参数的任何位置通过链式参数读取，例如 `<arg:item_in_hand.random.attack>`；也可以在动态属性修饰符的数值表达式中使用 `item.random.attack` 引用。
 
+### function（执行函数）
+
+在构建物品时执行一个或多个[通用函数](../../reference/functions.mdx)。这个处理器本身不会添加物品组件，主要用于提前准备 context 变量，让后续物品处理器复用。列表推荐使用 `functions`；只有一个函数时，也可以使用别名 `function`。
+
+处理器按照 YAML 中的顺序运行，并共享同一个物品构建上下文。请将 `functions` 放在它需要读取的数据之后、所有使用变量的处理器之前。变量只在本次构建流程中有效：如果读取变量的名称或 lore 位于 `client_bound_data`，对应的 `functions` 也必须放进 `client_bound_data`。
+
+下面的物品会在服务端保存三个相互独立的 `0~1` 属性随机值。物品发送给玩家时，函数处理器根据不同权重计算武器评分，并且只把最终结果提供给客户端侧 lore：
+
+```yaml
+items:
+  demo:rolled_blade:
+    material: iron_sword
+    data:
+      # 随机值存储在服务端物品上，重新构建物品时不会重新生成。
+      random_values:
+        damage_roll: 0~1
+        speed_roll: 0~1
+        durability_roll: 0~1
+
+    client_bound_data:
+      # 伤害占 50%，攻速占 30%，耐久占 20%，最终得到 0~100 分。
+      functions:
+        - type: set_variable
+          name: score
+          value_type: int
+          value: "ROUND(<arg:item.random.damage_roll> * 50 + <arg:item.random.speed_roll> * 30 + <arg:item.random.durability_roll> * 20)"
+
+      insert_lore:
+        position: TAIL
+        lore:
+          - "<!i><gray>武器评分：<gold><var:score>"
+```
+
+三个权重之和为 `100`，因此 `ROUND(...)` 会把加权结果转换为 `0~100` 的整数评分。`client_bound_data` 内部的顺序不可颠倒：`functions` 必须先于 `insert_lore` 执行，而且两者必须位于同一个配置段中，才能共享同一份 context。`position: TAIL` 会把评分拼接到已有 lore 的尾部。支持的变量类型见 [`set_variable`](../../reference/functions.mdx#设置变量)。
+
 ## 📦 外部数据
 
 继承其他插件物品的数据。

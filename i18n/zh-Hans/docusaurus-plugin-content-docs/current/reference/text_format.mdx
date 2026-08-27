@@ -268,6 +268,25 @@ internal.cooking_info.1: "经验：<arg:cooking_experience>"
 
 :::
 
+### \<var:\_变量名\_>
+
+读取当前上下文中由 [`set_variable`](functions.mdx#设置变量) 函数创建的变量。
+
+```yaml
+type: run
+functions:
+  - type: set_variable
+    name: multiplier
+    value_type: double
+    value: 1.5
+  - type: message
+    message: "当前倍率：<var:multiplier>"
+```
+
+数字变量用于表达式时会保持数字类型。例如，在数字字段中，`<var:multiplier> * 10` 的计算结果为 `15`。字符串变量可以包含其他上下文标签，这些标签会在读取变量时解析。
+
+变量的作用域仅限一次执行上下文。变量必须先设置再读取，读取不存在的变量会报错。配置中定义的全局文本请使用 [`<global:id>`](#global_标识符_参数)。
+
 ### \<global:\_标识符\_:\[参数...]>
 
 在配置中定义的全局变量。

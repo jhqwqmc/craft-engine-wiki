@@ -503,6 +503,41 @@ items:
 
 Rolled values can be read through chain arguments wherever the item is available as a context parameter, e.g. `<arg:item_in_hand.random.attack>`, and can drive dynamic attribute modifiers via `item.random.attack` in number expressions.
 
+### function
+
+Executes one or more [common functions](../../reference/functions.mdx) while the item is being built. This processor does not add a component by itself; it is useful for preparing context variables that later item processors can reuse. `functions` is the recommended key for a list, while `function` is an alias that is convenient for a single function.
+
+Processors run in YAML order and share the same item-build context. Put `functions` after the data it reads and before every processor that consumes its variables. Variables only live for that build pass: if the consumers are under `client_bound_data`, put the corresponding `functions` there as well.
+
+The following item stores three independent `0~1` attribute rolls on the server. When it is sent to a player, the function processor calculates a weighted weapon score and exposes only the final result to the client-bound lore:
+
+```yaml
+items:
+  demo:rolled_blade:
+    material: iron_sword
+    data:
+      # Stored on the server-side item and never rerolled when it is rebuilt.
+      random_values:
+        damage_roll: 0~1
+        speed_roll: 0~1
+        durability_roll: 0~1
+
+    client_bound_data:
+      # Damage 50% + speed 30% + durability 20% = a score from 0 to 100.
+      functions:
+        - type: set_variable
+          name: score
+          value_type: int
+          value: "ROUND(<arg:item.random.damage_roll> * 50 + <arg:item.random.speed_roll> * 30 + <arg:item.random.durability_roll> * 20)"
+
+      insert_lore:
+        position: TAIL
+        lore:
+          - "<!i><gray>Weapon Score: <gold><var:score>"
+```
+
+The three weights add up to `100`, so `ROUND(...)` converts the weighted sum into an integer score from `0` to `100`. The order inside `client_bound_data` is significant: `functions` must run before `insert_lore`, and both must be in the same section so they share one context. `position: TAIL` appends the score after the existing lore. See [`set_variable`](../../reference/functions.mdx#set_variable) for supported value types.
+
 ## 📦 External Data
 
 Inherit data from another plugin's item.

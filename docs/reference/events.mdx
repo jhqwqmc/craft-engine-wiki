@@ -31,26 +31,27 @@ events:
 
 ### items
 
-* break
-* right\_click
-* left\_click
-* consume
-* pick\_up
-* attack
+* `item_break` — the item is destroyed after its durability reaches zero
+* `block_break` — the item is being used when the player breaks a block
+* `right_click`
+* `left_click`
+* `consume`
+* `pick_up`
+* `attack`
 
 ### blocks
 
-* break
-* place
-* right\_click
-* left\_click
-* step
+* `block_break` — the block is broken
+* `place`
+* `right_click`
+* `left_click`
+* `step`
 
 ### Furniture
 
-* break
-* place
-* right\_click
+* `furniture_break` — the furniture is broken
+* `place`
+* `right_click`
 
 :::caution
 Please note that the corresponding events should be placed in the appropriate configuration area. For example, if you want to execute a command when interacting with a piece of furniture, the correct approach is to place the `events` under the `furniture` section, not under your item section.

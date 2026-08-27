@@ -399,14 +399,36 @@ damage_type: generic # optional; string; default: generic
 
 ### set\_variable
 
-Set a variable, use \<arg:var_\[name\]\> to access it (replacing \[name\] with the actual variable name)
+Set a variable on the current execution context. Functions that run later with the same context can read it with [`<var:name>`](text_format.mdx#var_name_).
 
 ```yaml
 type: set_variable
 name: my_variable # required; string
-number: 1.0 # optional; number
-as_int: false # optional; boolean; default: false
-text: "hello" # optional; string
+value_type: double # optional; enum[int, double, string]
+value: 1.0 # required unless number/text is used; number for int/double, string for string
+```
+
+`value_type` controls the stored Java value:
+
+| Value type | Result | Accepted value |
+| --- | --- | --- |
+| `int` | Integer; numeric results are floored | [Number Format](number_format.mdx) |
+| `double` | Double | [Number Format](number_format.mdx) |
+| `string` | String | Text; context tags such as `<arg:...>` and `<var:...>` are supported |
+
+`number` remains an alias for a numeric `value`, and `text` remains an alias for a string `value`. If `value_type` is omitted, configurations using `number` default to `double`; all other configurations default to `string`.
+
+Variables belong to the current context. They are not global or persistent, and are available only to later conditions, functions, and text rendering that share that context.
+
+```yaml
+type: run
+functions:
+  - type: set_variable
+    name: reward
+    value_type: int
+    value: "<arg:player.level> / 5"
+  - type: message
+    message: "<green>You received <var:reward> coins."
 ```
 
 ### merchant\_trade
