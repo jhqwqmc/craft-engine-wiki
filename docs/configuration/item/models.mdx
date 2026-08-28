@@ -22,9 +22,9 @@ These go at the **item level** — siblings of `material`, `model`, `data`, etc.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `hand_animation_on_swap` | bool | `true` | Whether the first-person swap animation plays when the held item changes |
-| `oversized_in_gui` | bool | `true` | If `true`, disables GUI slot clipping — the model can render larger than the slot |
-| `swap_animation_scale` | float | `1.0` | Speed multiplier for the swap animation; larger = faster |
+| hand_animation_on_swap | bool | true | Whether the first-person swap animation plays when the held item changes |
+| oversized_in_gui | bool | true | If `true`, disables GUI slot clipping — the model can render larger than the slot |
+| swap_animation_scale | float | 1.0 | Speed multiplier for the swap animation; larger = faster |
 
 ```yaml
 items:
@@ -59,8 +59,8 @@ items:
 
 | Field | Version | Format | How it works |
 |-------|---------|--------|-------------|
-| `custom_model_data` | All | Integer | Attached to the item stack. The resource pack's model JSON `overrides` list matches this number to a model path. |
-| `item_model` | 1.21.2+ | Namespaced ID | Points directly to `assets/<ns>/items/<id>.json`. No override lookup needed. |
+| custom_model_data | All | Integer | Attached to the item stack. The resource pack's model JSON `overrides` list matches this number to a model path. |
+| item_model | 1.21.2+ | Namespaced ID | Points directly to `assets/<ns>/items/<id>.json`. No override lookup needed. |
 
 CraftEngine generates **both** when your resource pack spans the 1.21.4 boundary — modern for 1.21.4+ clients, legacy overrides for older ones.
 
@@ -93,12 +93,12 @@ items:
 
 | Setting | Default | Effect |
 |---------|---------|--------|
-| `item.always-use-item-model` | `true` | Generate `item_model` even when `custom_model_data` is present. Recommended. |
-| `item.always-use-custom-model-data` | `false` | Force CustomModelData allocation even for 1.21.2+-only packs. |
-| `item.always-generate-model-overrides` | `false` | Force legacy overrides even for 1.21.4+-only packs (useful for Bedrock converters). |
-| `item.custom-model-data-starting-value.default` | `10000` | First auto-allocated CustomModelData number. |
+| item.always-use-item-model | true | Generate `item_model` even when `custom_model_data` is present. Recommended. |
+| item.always-use-custom-model-data | false | Force CustomModelData allocation even for 1.21.2+-only packs. |
+| item.always-generate-model-overrides | false | Force legacy overrides even for 1.21.4+-only packs (useful for Bedrock converters). |
+| item.custom-model-data-starting-value.default | 10000 | First auto-allocated CustomModelData number. |
 | `item.custom-model-data-starting-value.overrides.<material>` | — | Per-material override, e.g. `paper: 20000`. |
-| `item.client-bound-model` | `true` | <Highlight color="#f2184eff">Premium</Highlight> Keep CustomModelData and item_model client-side, enabling dynamic updates without affecting existing items. |
+| item.client-bound-model | true | <Highlight color="#f2184eff">Premium</Highlight> Keep CustomModelData and item_model client-side, enabling dynamic updates without affecting existing items. |
 
 :::tip
 For nearly all items, you don't need to set either field. Configure `model` or `texture` and CraftEngine handles the rest.

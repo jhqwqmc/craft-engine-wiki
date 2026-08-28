@@ -34,18 +34,18 @@ items:
 
 | 字段 | 类型 | 必需 | 默认值 | 说明 |
 |-------|------|----------|---------|-------------|
-| `type` | string | 是 | — | `minecraft:select` |
-| `property` | string | 是 | — | 枚举属性类型（见下方） |
-| `cases` | list | 是 | — | `{when, model}` 配对的列表 |
-| `fallback` | model | 否 | 无效模型 | 回落物品模型映射，无匹配时使用 |
-| `transformation` | object | 否 | — | 物品模型变换（26.1+） |
+| type | string | 是 | — | `minecraft:select` |
+| property | string | 是 | — | 枚举属性类型（见下方） |
+| cases | list | 是 | — | `{when, model}` 配对的列表 |
+| fallback | model | 否 | 无效模型 | 回落物品模型映射，无匹配时使用 |
+| transformation | object | 否 | — | 物品模型变换（26.1+） |
 
 每个分支：
 
 | 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `when` | string / list | 要匹配的值（区分大小写） |
-| `model` | model | 属性等于此值时使用的模型 |
+| when | string / list | 要匹配的值（区分大小写） |
+| model | model | 属性等于此值时使用的模型 |
 
 ## 属性
 
@@ -58,11 +58,11 @@ items:
 
 | 属性 | 返回值 | 可能取值 |
 |----------|--------|-----------------|
-| `minecraft:charge_type` | `charged_projectiles` 中的弹射物类型 | `none`、`arrow`、`rocket` |
+| `minecraft:charge_type` | `charged_projectiles` 中的弹射物类型 | none、arrow、rocket |
 | `minecraft:context_dimension` | 上下文实体所在维度的 ID | 任意维度 ID（如 `minecraft:overworld`） |
 | `minecraft:context_entity_type` | 持有物品的实体类型 | 任意实体类型 ID |
-| `minecraft:display_context` | 物品当前渲染位置 | `none`、`thirdperson_lefthand`、`thirdperson_righthand`、`firstperson_lefthand`、`firstperson_righthand`、`head`、`gui`、`ground`、`fixed`、`on_shelf` |
-| `minecraft:main_hand` | 玩家的主手 | `left`、`right` |
+| `minecraft:display_context` | 物品当前渲染位置 | none、thirdperson_lefthand、thirdperson_righthand、firstperson_lefthand、firstperson_righthand、head、gui、ground、fixed、on_shelf |
+| `minecraft:main_hand` | 玩家的主手 | left、right |
 | `minecraft:trim_material` | `minecraft:trim` 组件中的 `material` 字段 | 任意盔甲纹饰材料 ID |
 
 ### minecraft\:block_state
@@ -76,7 +76,7 @@ block_state_property: facing
 
 | 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `block_state_property` | string | 方块状态属性键 |
+| block_state_property | string | 方块状态属性键 |
 
 ### minecraft\:component（1.21.5+）
 
@@ -89,7 +89,7 @@ component: minecraft:unbreakable
 
 | 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `component` | string | 命名空间组件 ID |
+| component | string | 命名空间组件 ID |
 
 ### minecraft\:custom_model_data
 
@@ -102,7 +102,7 @@ index: 0
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `index` | int | `0` | `strings` 数组中的位置 |
+| index | int | 0 | `strings` 数组中的位置 |
 
 ### minecraft\:local_time
 
@@ -117,6 +117,6 @@ time_zone: "GMT+8:00"
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `pattern` | string | — | ICU 日期/时间格式模式 |
-| `locale` | string | `""`（根） | 格式化所用的地区 |
-| `time_zone` | string | 客户端时区 | 时区 ID |
+| pattern | string | — | ICU 日期/时间格式模式 |
+| locale | string | `""`（根） | 格式化所用的地区 |
+| time_zone | string | 客户端时区 | 时区 ID |

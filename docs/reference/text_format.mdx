@@ -173,15 +173,15 @@ Supported distribution types (arguments are positional, `[...]` can be omitted):
 
 | type                 | arguments                                                    |
 |----------------------|--------------------------------------------------------------|
-| `uniform`            | `min`, `max`                                                 |
-| `triangle`           | `min`, `max`, `[mode]` (defaults to the midpoint)            |
-| `normal` / `gaussian` | `min`, `max`, `[mean]`, `[std_dev]`, `[max_attempts]`       |
-| `log_normal`         | `min`, `max`, `[location]`, `[scale]`, `[max_attempts]`      |
-| `skew_normal`        | `min`, `max`, `skewness`, `[mean]`, `[std_dev]`, `[max_attempts]` |
-| `binomial`           | `trials`, `probability`                                      |
-| `exponential`        | `mean`, `[min]`, `[max]`                                     |
-| `beta`               | `[min]`, `[max]`, `[alpha]`, `[beta]`                        |
-| `fixed` / `constant` | `value`                                                      |
+| uniform            | min, max                                                 |
+| triangle           | `min`, `max`, `[mode]` (defaults to the midpoint)            |
+| normal / gaussian | `min`, `max`, `[mean]`, `[std_dev]`, `[max_attempts]`       |
+| log_normal         | `min`, `max`, `[location]`, `[scale]`, `[max_attempts]`      |
+| skew_normal        | `min`, `max`, `skewness`, `[mean]`, `[std_dev]`, `[max_attempts]` |
+| binomial           | trials, probability                                      |
+| exponential        | `mean`, `[min]`, `[max]`                                     |
+| beta               | `[min]`, `[max]`, `[alpha]`, `[beta]`                        |
+| fixed / constant | value                                                      |
 
 Shorthands: `<random:id:5~10>` is equivalent to `uniform:5:10`, and `<random:id:7>` is a constant. See [Number Format](number_format.mdx) for details of each distribution.
 

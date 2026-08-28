@@ -34,17 +34,17 @@ items:
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| `type` | string | Yes | — | `minecraft:select` |
-| `property` | string | Yes | — | Select property type (see below) |
-| `cases` | list | Yes | — | List of `{when, model}` pairs |
-| `fallback` | model | No | empty | Model used when no case matches |
-| `transformation` | object | No | — | Display transform overlay (26.1+) |
+| type | string | Yes | — | `minecraft:select` |
+| property | string | Yes | — | Select property type (see below) |
+| cases | list | Yes | — | List of `{when, model}` pairs |
+| fallback | model | No | empty | Model used when no case matches |
+| transformation | object | No | — | Display transform overlay (26.1+) |
 
 Each case:
 | Field | Type | Description |
 |-------|------|-------------|
-| `when` | string / list | Value(s) to match (case-sensitive) |
-| `model` | model | Model used when the property equals this value |
+| when | string / list | Value(s) to match (case-sensitive) |
+| model | model | Model used when the property equals this value |
 
 ## Properties
 
@@ -57,11 +57,11 @@ Each case:
 
 | Property | Returns | Possible values |
 |----------|--------|-----------------|
-| `minecraft:charge_type` | Type of projectile in `charged_projectiles` | `none`, `arrow`, `rocket` |
+| `minecraft:charge_type` | Type of projectile in `charged_projectiles` | none, arrow, rocket |
 | `minecraft:context_dimension` | Dimension ID of the context entity | Any dimension ID (e.g. `minecraft:overworld`) |
 | `minecraft:context_entity_type` | Entity type holding the item | Any entity type ID |
-| `minecraft:display_context` | Where the item is being rendered | `none`, `thirdperson_lefthand`, `thirdperson_righthand`, `firstperson_lefthand`, `firstperson_righthand`, `head`, `gui`, `ground`, `fixed`, `on_shelf` |
-| `minecraft:main_hand` | Player's main hand | `left`, `right` |
+| `minecraft:display_context` | Where the item is being rendered | none, thirdperson_lefthand, thirdperson_righthand, firstperson_lefthand, firstperson_righthand, head, gui, ground, fixed, on_shelf |
+| `minecraft:main_hand` | Player's main hand | left, right |
 | `minecraft:trim_material` | `material` field from `minecraft:trim` | Any trim material ID |
 
 ### minecraft\:block_state
@@ -75,7 +75,7 @@ block_state_property: facing   # Block state key to read
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `block_state_property` | string | Block state property key |
+| block_state_property | string | Block state property key |
 
 ### minecraft\:component (1.21.5+)
 
@@ -88,7 +88,7 @@ component: minecraft:unbreakable
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `component` | string | Namespaced component ID |
+| component | string | Namespaced component ID |
 
 ### minecraft\:custom_model_data
 
@@ -101,7 +101,7 @@ index: 0
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `index` | int | `0` | Position in the `strings` array |
+| index | int | 0 | Position in the `strings` array |
 
 ### minecraft\:local_time
 
@@ -116,6 +116,6 @@ time_zone: "GMT+8:00"    # Default: client timezone
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `pattern` | string | — | ICU date/time format pattern |
-| `locale` | string | `""` (root) | Locale for formatting |
-| `time_zone` | string | client TZ | Time zone ID |
+| pattern | string | — | ICU date/time format pattern |
+| locale | string | `""` (root) | Locale for formatting |
+| time_zone | string | client TZ | Time zone ID |

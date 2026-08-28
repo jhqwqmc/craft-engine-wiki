@@ -196,15 +196,15 @@ lore:
 
 | 类型                 | 参数                                                     |
 |----------------------|----------------------------------------------------------|
-| `uniform`            | `min`, `max`                                             |
-| `triangle`           | `min`, `max`, `[mode]`（默认为中点）                      |
-| `normal` / `gaussian` | `min`, `max`, `[mean]`, `[std_dev]`, `[max_attempts]`   |
-| `log_normal`         | `min`, `max`, `[location]`, `[scale]`, `[max_attempts]`  |
-| `skew_normal`        | `min`, `max`, `skewness`, `[mean]`, `[std_dev]`, `[max_attempts]` |
-| `binomial`           | `trials`, `probability`                                  |
-| `exponential`        | `mean`, `[min]`, `[max]`                                 |
-| `beta`               | `[min]`, `[max]`, `[alpha]`, `[beta]`                    |
-| `fixed` / `constant` | `value`                                                  |
+| uniform            | min, max                                             |
+| triangle           | `min`, `max`, `[mode]`（默认为中点）                      |
+| normal / gaussian | `min`, `max`, `[mean]`, `[std_dev]`, `[max_attempts]`   |
+| log_normal         | `min`, `max`, `[location]`, `[scale]`, `[max_attempts]`  |
+| skew_normal        | `min`, `max`, `skewness`, `[mean]`, `[std_dev]`, `[max_attempts]` |
+| binomial           | trials, probability                                  |
+| exponential        | `mean`, `[min]`, `[max]`                                 |
+| beta               | `[min]`, `[max]`, `[alpha]`, `[beta]`                    |
+| fixed / constant | value                                                  |
 
 简写：`<random:id:5~10>` 等同于 `uniform:5:10`；`<random:id:7>` 为常量。各分布的详细说明见[数字格式](number_format.mdx)。
 

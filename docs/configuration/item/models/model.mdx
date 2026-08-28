@@ -22,12 +22,12 @@ items:
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| `type` | string | No | `minecraft:model` | Model type identifier |
-| `path` | asset path | Yes* | — | Namespaced path to the model JSON (e.g. `demo:item/sword`). *Optional when `blueprint` is set — then used as the output path for the generated model |
-| `generation` | object | No | — | Auto-generate the model JSON from a parent template |
-| `blueprint` | string | No | — | Blockbench `.bbmodel` file converted into the model JSON |
-| `tints` | list | No | — | Tint sources, indexed by `tintindex` in the model geometry |
-| `transformation` | object | No | — | Display transform overlay (26.1+) |
+| type | string | No | `minecraft:model` | Model type identifier |
+| path | asset path | Yes* | — | Namespaced path to the model JSON (e.g. `demo:item/sword`). *Optional when `blueprint` is set — then used as the output path for the generated model |
+| generation | object | No | — | Auto-generate the model JSON from a parent template |
+| blueprint | string | No | — | Blockbench `.bbmodel` file converted into the model JSON |
+| tints | list | No | — | Tint sources, indexed by `tintindex` in the model geometry |
+| transformation | object | No | — | Display transform overlay (26.1+) |
 
 ## Blueprint (Blockbench) <Highlight color="#FFA500">Experimental</Highlight>
 
@@ -81,10 +81,10 @@ items:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `parent` | asset path | Yes | Parent model to inherit from (e.g. `minecraft:item/generated`) |
-| `textures` | map | No | Texture variable overrides (`layer0`, `layer1`, …) |
-| `display` | object | No | Per-context display transforms (`thirdperson_righthand`, `gui`, `ground`, `fixed`, `head`, `firstperson_righthand`, …) |
-| `gui_light` | string | No | GUI lighting mode: `front` or `side` |
+| parent | asset path | Yes | Parent model to inherit from (e.g. `minecraft:item/generated`) |
+| textures | map | No | Texture variable overrides (`layer0`, `layer1`, …) |
+| display | object | No | Per-context display transforms (`thirdperson_righthand`, `gui`, `ground`, `fixed`, `head`, `firstperson_righthand`, …) |
+| gui_light | string | No | GUI lighting mode: `front` or `side` |
 
 ## Tints
 

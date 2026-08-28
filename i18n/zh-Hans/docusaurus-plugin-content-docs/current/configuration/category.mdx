@@ -3,157 +3,108 @@ title: 📂 分类
 id: category
 ---
 
-import PluginFileTree from '@site/src/components/PluginFileTree';
+分类用于在 `/ce` 物品浏览器中整理物品。
 
-## 快速入门
-
-分类用于在 `/ce` 物品浏览器中整理物品。定义分类并列出其中的物品后，它就会显示在菜单中。
-
-**第一步**：在 `categories` 下创建分类：
+## 基础配置
 
 ```yaml
 categories:
   default:palm_tree:
     name: "<!i><green>棕榈树</green>"
-    icon: default:palm_log
-    list:
-      - default:palm_sapling
-      - default:palm_leaves
-      - default:palm_log
-      - default:palm_planks
-```
-
-**第二步**：在游戏中运行 `/ce menu` 打开物品浏览器。分类会显示为图标，点击后即可浏览其中的物品。
-
----
-
-## 配置
-
-分类配置写在 `categories` 节点下，每个分类使用 `命名空间:ID` 作为唯一标识。
-
-```yaml
-categories:
-  default:palm_tree:
-    name: "<!i><green><l10n:category.palm_tree></green>"
     lore: []
-    hidden: false
-    priority: 1
     icon: default:palm_log
+    priority: 1
+    hidden: false
     conditions:
       - type: permission
         permission: category.default.palm_tree
-    list:
-      - default:palm_sapling
-      - default:palm_leaves
-      - default:palm_log
-    # all_items: true
+    source:
+      type: list
+      list:
+        - default:palm_sapling
+        - default:palm_leaves
+        - default:palm_log
 ```
 
 | 字段 | 默认值 | 说明 |
 |-------|---------|------|
-| `name` | 分类 ID | 分类图标的显示名称。支持 MiniMessage。 |
-| `lore` | 空 | 图标上显示的描述行。支持 MiniMessage。 |
-| `icon` | `minecraft:stone` | 分类图标显示的物品，必须是已注册的物品。 |
-| `priority` | `0` | 主菜单中的显示顺序，数值越小越靠前。 |
-| `hidden` | `false` | 为 `true` 时不显示在主菜单——用于子分类。 |
-| `conditions` | 无 | 控制分类是否显示的条件。见 [⚖️ 条件](../reference/conditions)。 |
-| `list` | 空 | 有序的物品 ID 和子分类引用列表。 |
-| `all_items` | `false` | 为 `true` 时自动包含所有已注册的自定义物品。 |
+| name | 分类 ID | 显示名称，支持 MiniMessage。 |
+| lore | 空 | 分类图标的描述，支持 MiniMessage。 |
+| icon | `minecraft:stone` | 分类图标。 |
+| priority | 0 | 数值越小越靠前。 |
+| hidden | false | 不在主页显示，常用于子分类。 |
+| conditions | 无 | 控制分类是否可见。见 [条件](../reference/conditions)。 |
+| source | 无 | 提供分类成员的单个源或源列表。 |
 
-:::tip
-当两个分类的 `priority` 相同时，按 ID 字母顺序排列。
-:::
+`priority` 相同时，按分类 ID 排序。
 
-## 列出成员
+## 分类源
 
-`list` 字段接受两种条目：
+### list
+
+按顺序添加物品 ID 或子分类引用。子分类 ID 需要以 `#` 开头。
 
 ```yaml
-list:
-  - default:palm_log           # 物品——直接显示该物品
-  - "#default:palm_tree"       # 子分类——以 # 为前缀
+source:
+  type: list
+  list:
+    - default:palm_log
+    - "#default:topaz"
 ```
 
-- **物品 ID**（如 `default:palm_log`）——直接显示该物品。
-- **子分类引用**（如 `#default:palm_tree`）——以 `#` 为前缀，点击后打开该分类的页面。
+### regex
 
-:::caution
-如果引用的子分类或物品不存在，该格子会显示一个红色屏障方块，并以缺失的 ID 作为名称。
-:::
+完整匹配物品 ID，包括原版物品。`regex` 可以是单个表达式或列表。结果先按原版 registry 顺序，再按自定义物品配置顺序排列。
 
-## 子分类
+```yaml
+source:
+  type: regex
+  regex:
+    - "minecraft:.*_sword"
+    - "default:topaz_.*"
+```
 
-要实现分类的嵌套，在子分类上设置 `hidden: true`，再在父分类的 `list` 中用 `#` 引用：
+### all_items
 
-<PluginFileTree
-  title="main_category"
-  initialTreeData={[
-    {
-      id: "main_category",
-      name: "main_category",
-      children: [
-        { id: "sub_category_1", name: "sub_category_1", children: [] },
-        { id: "sub_category_2", name: "sub_category_2", children: [] },
-        { id: "sub_category_3", name: "sub_category_3", children: [] },
-      ]
-    },
-  ]}
-/>
+添加全部原版和自定义物品。设置 `ignore_vanilla: true` 后只保留自定义物品。
+
+```yaml
+source:
+  type: all_items
+  ignore_vanilla: false
+```
+
+### 组合源
+
+`source` 可以是列表。各源结果按声明顺序追加，不会删除重复项。
+
+```yaml
+source:
+  - type: list
+    list:
+      - "#default:topaz"
+      - default:palm_log
+  - type: regex
+    regex: "minecraft:.*_sword"
+```
+
+## 旧版格式
+
+仍支持旧版顶层 `list`：
 
 ```yaml
 categories:
-  # 父分类——显示在主菜单
-  default:default:
-    priority: 1
-    name: "<!i><white>所有物品</white>"
-    icon: default:topaz
+  default:legacy:
+    name: "<!i><gray>旧版示例</gray>"
+    icon: minecraft:stone
     list:
-      - "#default:palm_tree"
-      - "#default:topaz"
-      - "#default:misc"
-
-  # 子分类——隐藏，通过父分类打开
-  default:palm_tree:
-    name: "<!i><green>棕榈树</green>"
-    hidden: true
-    icon: default:palm_log
-    list:
-      - default:palm_sapling
-      - default:palm_leaves
       - default:palm_log
-
-  default:topaz:
-    name: "<!i><#FF8C00>黄玉装备</#FF8C00>"
-    hidden: true
-    icon: default:topaz
-    list:
-      - default:topaz
-      - default:topaz_sword
-      - default:topaz_pickaxe
-
-  default:misc:
-    name: "<!i><gray>杂项</gray>"
-    hidden: true
-    icon: default:chinese_lantern
-    list:
-      - default:chinese_lantern
-      - default:fairy_flower
+      - "#default:topaz"
 ```
 
-这种模式可以任意深度嵌套——子分类的 `list` 里同样可以继续用 `#` 引用更下层的分类。
+## 由物品指定分类
 
-## 在物品上指定分类
-
-除了在分类的 `list` 里列出物品，你也可以直接在物品配置上声明它所属的分类：
-
-```yaml
-items:
-  default:topaz_sword:
-    material: golden_sword
-    category: default:topaz
-```
-
-一个物品可以属于多个分类：
+物品可以将自身追加到一个或多个分类：
 
 ```yaml
 items:
@@ -161,21 +112,7 @@ items:
     material: golden_sword
     category:
       - default:swords
-      - default:topaz_gear
+      - default:topaz
 ```
 
-:::caution
-这种方式声明的物品会被追加到分类末尾——它们在分类内的显示顺序不保证。需要精确控制顺序时，请用分类的 `list`。
-:::
-
-## 界面操作提示
-
-:::tip
-
-跳过配方页面——直接在任意物品图标上使用这些快捷操作：
-
-- **Shift + 左键**——获取单个物品
-- **Shift + 右键**——获取一整组
-- **中键**——立即拾取一组
-
-:::
+这些物品会追加在源结果之后。需要精确顺序时，请使用分类源。

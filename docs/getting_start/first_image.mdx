@@ -56,11 +56,11 @@ images:
 
 | Field | Required | Description |
 |:---|:---|:---|
-| `file` | yes | Path to the PNG. `.png` extension auto-appended. Corresponds to `textures/font/star.png` |
-| `height` | no | Glyph height in pixels. Omit to auto-detect from PNG |
-| `ascent` | no | Baseline offset. Higher = image sits higher. Defaults to `height - 1` |
-| `font` | no | Which font this image belongs to. Defaults to `namespace:default` |
-| `char` | no | The codepoint. **Leave blank** — CraftEngine auto-assigns a free one, no conflicts |
+| file | yes | Path to the PNG. `.png` extension auto-appended. Corresponds to `textures/font/star.png` |
+| height | no | Glyph height in pixels. Omit to auto-detect from PNG |
+| ascent | no | Baseline offset. Higher = image sits higher. Defaults to `height - 1` |
+| font | no | Which font this image belongs to. Defaults to `namespace:default` |
+| char | no | The codepoint. **Leave blank** — CraftEngine auto-assigns a free one, no conflicts |
 
 > ⚠️ `height` must be ≥ `ascent`. If you need a larger `ascent`, add transparent pixels to the bottom of the PNG to increase `height`.
 

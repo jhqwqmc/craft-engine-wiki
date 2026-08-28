@@ -54,11 +54,11 @@ images:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `file` | **Yes** | Path to the PNG. `.png` extension is auto-appended if missing. |
-| `height` | Auto-detected | Glyph height in pixels. If omitted, the plugin reads the PNG height. |
-| `ascent` | Defaults to `height - 1` | Baseline offset. Increasing this moves the image upward on screen. |
-| `font` | Defaults to `namespace:default` | Which font this image belongs to. |
-| `char` | Auto-assigned | The codepoint mapped to this image. |
+| file | **Yes** | Path to the PNG. `.png` extension is auto-appended if missing. |
+| height | Auto-detected | Glyph height in pixels. If omitted, the plugin reads the PNG height. |
+| ascent | Defaults to `height - 1` | Baseline offset. Increasing this moves the image upward on screen. |
+| font | Defaults to `namespace:default` | Which font this image belongs to. |
+| char | Auto-assigned | The codepoint mapped to this image. |
 
 :::caution
 - `height` must be **≥** `ascent`. This is enforced by Minecraft.

@@ -35,18 +35,18 @@ items:
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| `type` | string | Yes | — | `minecraft:range_dispatch` |
-| `property` | string | Yes | — | Numeric property type (see below) |
-| `scale` | float | No | `1.0` | Multiplier applied to the property value before comparing |
-| `entries` | list | Yes | — | List of `{threshold, model}` pairs |
-| `fallback` | model | No | empty | Model used when property < all thresholds |
-| `transformation` | object | No | — | Display transform overlay (26.1+) |
+| type | string | Yes | — | `minecraft:range_dispatch` |
+| property | string | Yes | — | Numeric property type (see below) |
+| scale | float | No | 1.0 | Multiplier applied to the property value before comparing |
+| entries | list | Yes | — | List of `{threshold, model}` pairs |
+| fallback | model | No | empty | Model used when property < all thresholds |
+| transformation | object | No | — | Display transform overlay (26.1+) |
 
 Each entry:
 | Field | Type | Description |
 |-------|------|-------------|
-| `threshold` | float | Minimum property value for this model |
-| `model` | model | Model used when property ≥ this threshold (and < next threshold) |
+| threshold | float | Minimum property value for this model |
+| model | model | Model used when property ≥ this threshold (and < next threshold) |
 
 ## Properties
 
@@ -76,8 +76,8 @@ wobble: true        # Whether pointer oscillates before settling
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `target` | string | — | Target type |
-| `wobble` | bool | `true` | Simulate compass wobble |
+| target | string | — | Target type |
+| wobble | bool | true | Simulate compass wobble |
 
 ### minecraft\:count
 
@@ -90,7 +90,7 @@ normalize: true     # true — count/max_stack_size (0–1); false — raw count
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `normalize` | bool | `true` | Scale to 0.0–1.0 |
+| normalize | bool | true | Scale to 0.0–1.0 |
 
 ### minecraft\:damage
 
@@ -103,7 +103,7 @@ normalize: true     # true — damage/max_damage (0–1); false — raw damage v
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `normalize` | bool | `true` | Scale to 0.0–1.0 |
+| normalize | bool | true | Scale to 0.0–1.0 |
 
 ### minecraft\:time
 
@@ -117,8 +117,8 @@ wobble: true         # Smooth clock-like oscillation
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `source` | string | — | Time source |
-| `wobble` | bool | `true` | Smooth oscillation |
+| source | string | — | Time source |
+| wobble | bool | true | Smooth oscillation |
 
 ### minecraft\:use_duration
 
@@ -131,7 +131,7 @@ remaining: false    # false — elapsed ticks; true — remaining ticks
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `remaining` | bool | `false` | Return remaining ticks instead of elapsed |
+| remaining | bool | false | Return remaining ticks instead of elapsed |
 
 ### minecraft\:custom_model_data
 
@@ -144,4 +144,4 @@ index: 0
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `index` | int | `0` | Position in the `floats` array |
+| index | int | 0 | Position in the `floats` array |

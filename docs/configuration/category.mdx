@@ -3,157 +3,108 @@ title: 📂 Category
 id: category
 ---
 
-import PluginFileTree from '@site/src/components/PluginFileTree';
+Categories organize items in the `/ce` item browser.
 
-## Quick Start
-
-Categories organize items in the `/ce` item browser. Define a category, list its members, and it shows up in the menu.
-
-**Step 1** — Create a category under `categories`:
+## Basic Configuration
 
 ```yaml
 categories:
   default:palm_tree:
     name: "<!i><green>Palm Tree</green>"
-    icon: default:palm_log
-    list:
-      - default:palm_sapling
-      - default:palm_leaves
-      - default:palm_log
-      - default:palm_planks
-```
-
-**Step 2** — Open the browser in-game with `/ce menu`. The category appears as an icon; click it to browse its items.
-
----
-
-## Configuration
-
-A category entry lives under the `categories` section. Each category has a unique ID in `namespace:id` form.
-
-```yaml
-categories:
-  default:palm_tree:
-    name: "<!i><green><l10n:category.palm_tree></green>"
     lore: []
-    hidden: false
-    priority: 1
     icon: default:palm_log
+    priority: 1
+    hidden: false
     conditions:
       - type: permission
         permission: category.default.palm_tree
-    list:
-      - default:palm_sapling
-      - default:palm_leaves
-      - default:palm_log
-    # all_items: true
+    source:
+      type: list
+      list:
+        - default:palm_sapling
+        - default:palm_leaves
+        - default:palm_log
 ```
 
 | Field | Default | Description |
 |-------|---------|-------------|
-| `name` | The category ID | Display name of the category icon. Supports MiniMessage. |
-| `lore` | empty | Lore lines shown on the icon. Supports MiniMessage. |
-| `icon` | `minecraft:stone` | The item shown as the category icon. Must be a registered item. |
-| `priority` | `0` | Display order on the main menu. Lower values appear first. |
-| `hidden` | `false` | If `true`, the category doesn't appear on the main menu — useful for sub-categories. |
-| `conditions` | none | Conditions that control whether the category is shown. See [⚖️ Conditions](../reference/conditions). |
-| `list` | empty | Ordered list of item IDs and sub-category references. |
-| `all_items` | `false` | If `true`, automatically includes all registered custom items. |
+| name | Category ID | Display name. Supports MiniMessage. |
+| lore | empty | Lore shown on the category icon. Supports MiniMessage. |
+| icon | `minecraft:stone` | Category icon. |
+| priority | 0 | Lower values appear first. |
+| hidden | false | Hides the category from the main page. Useful for nested categories. |
+| conditions | none | Conditions controlling visibility. See [Conditions](../reference/conditions). |
+| source | none | One source or a list of sources providing category members. |
 
-:::tip
-When two categories share the same `priority`, they're sorted alphabetically by ID.
-:::
+Categories with the same `priority` are sorted by ID.
 
-## Listing Members
+## Sources
 
-The `list` field accepts two kinds of entries:
+### list
+
+Adds literal item IDs or nested category references in order. Prefix a category ID with `#`.
 
 ```yaml
-list:
-  - default:palm_log           # An item — shows the item itself
-  - "#default:palm_tree"       # A sub-category — prefixed with #
+source:
+  type: list
+  list:
+    - default:palm_log
+    - "#default:topaz"
 ```
 
-- **Item IDs** (e.g., `default:palm_log`) — the item is displayed directly.
-- **Sub-category references** (e.g., `#default:palm_tree`) — prefixed with `#`, clicking opens that category's page.
+### regex
 
-:::caution
-If a referenced sub-category or item doesn't exist, the slot displays a red barrier with the missing ID as its name.
-:::
+Matches complete item IDs, including vanilla items. `regex` accepts one expression or a list. Results follow the item order: vanilla registry order first, then custom item configuration order.
 
-## Sub-Categories
+```yaml
+source:
+  type: regex
+  regex:
+    - "minecraft:.*_sword"
+    - "default:topaz_.*"
+```
 
-To nest categories inside one another, combine `hidden: true` on the child with `#` references in the parent's `list`:
+### all_items
 
-<PluginFileTree
-  title="main_category"
-  initialTreeData={[
-    {
-      id: "main_category",
-      name: "main_category",
-      children: [
-        { id: "sub_category_1", name: "sub_category_1", children: [] },
-        { id: "sub_category_2", name: "sub_category_2", children: [] },
-        { id: "sub_category_3", name: "sub_category_3", children: [] },
-      ]
-    },
-  ]}
-/>
+Adds all vanilla and custom items. Set `ignore_vanilla` to `true` to keep only custom items.
+
+```yaml
+source:
+  type: all_items
+  ignore_vanilla: false
+```
+
+### Combining Sources
+
+`source` can be a list. Results are appended in declaration order without removing duplicates.
+
+```yaml
+source:
+  - type: list
+    list:
+      - "#default:topaz"
+      - default:palm_log
+  - type: regex
+    regex: "minecraft:.*_sword"
+```
+
+## Legacy Format
+
+The old top level `list` remains supported:
 
 ```yaml
 categories:
-  # Parent — visible on the main menu
-  default:default:
-    priority: 1
-    name: "<!i><white>All Items</white>"
-    icon: default:topaz
+  default:legacy:
+    name: "<!i><gray>Legacy</gray>"
+    icon: minecraft:stone
     list:
-      - "#default:palm_tree"
-      - "#default:topaz"
-      - "#default:misc"
-
-  # Children — hidden, opened through the parent
-  default:palm_tree:
-    name: "<!i><green>Palm Tree</green>"
-    hidden: true
-    icon: default:palm_log
-    list:
-      - default:palm_sapling
-      - default:palm_leaves
       - default:palm_log
-
-  default:topaz:
-    name: "<!i><#FF8C00>Topaz Gear</#FF8C00>"
-    hidden: true
-    icon: default:topaz
-    list:
-      - default:topaz
-      - default:topaz_sword
-      - default:topaz_pickaxe
-
-  default:misc:
-    name: "<!i><gray>Misc</gray>"
-    hidden: true
-    icon: default:chinese_lantern
-    list:
-      - default:chinese_lantern
-      - default:fairy_flower
+      - "#default:topaz"
 ```
 
-This pattern nests arbitrarily deep — a sub-category's `list` can itself reference further `#`-prefixed categories.
+## Assigning Categories from Items
 
-## Assigning Items to Categories
-
-Instead of (or in addition to) listing items in a category's `list`, you can declare the category on the item itself:
-
-```yaml
-items:
-  default:topaz_sword:
-    material: golden_sword
-    category: default:topaz
-```
-
-An item can belong to multiple categories:
+Items can append themselves to one or more categories:
 
 ```yaml
 items:
@@ -161,21 +112,7 @@ items:
     material: golden_sword
     category:
       - default:swords
-      - default:topaz_gear
+      - default:topaz
 ```
 
-:::caution
-Items assigned this way are appended to the category — their order within the category is not guaranteed. For controlled ordering, use the category's `list` instead.
-:::
-
-## UI Tips
-
-:::tip
-
-Skip the recipe page — use these quick actions directly on any item icon:
-
-- **Shift + Left-click** — take a single item
-- **Shift + Right-click** — take a full stack
-- **Middle-click** — pick up a stack instantly
-
-:::
+These items are appended after source results. Use a category source when exact ordering matters.

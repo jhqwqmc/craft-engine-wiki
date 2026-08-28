@@ -28,11 +28,11 @@ items:
 
 | 字段 | 类型 | 必需 | 默认值 | 说明 |
 |-------|------|----------|---------|-------------|
-| `type` | string | 是 | — | `minecraft:condition` |
-| `property` | string | 是 | — | 布尔谓词类型（见下方） |
-| `on_true` | model | 是 | — | 谓词为真时使用的模型 |
-| `on_false` | model | 是 | — | 谓词为假时使用的模型 |
-| `transformation` | object | 否 | — | 物品模型变换（26.1+） |
+| type | string | 是 | — | `minecraft:condition` |
+| property | string | 是 | — | 布尔谓词类型（见下方） |
+| on_true | model | 是 | — | 谓词为真时使用的模型 |
+| on_false | model | 是 | — | 谓词为假时使用的模型 |
+| transformation | object | 否 | — | 物品模型变换（26.1+） |
 
 ## 谓词
 
@@ -70,8 +70,8 @@ value:
 
 | 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `predicate` | string | 组件谓词类型 |
-| `value` | varies | 与谓词对应的值结构 |
+| predicate | string | 组件谓词类型 |
+| value | varies | 与谓词对应的值结构 |
 
 ### minecraft\:has_component
 
@@ -85,8 +85,8 @@ ignore_default: false
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `component` | string | — | 命名空间组件 ID |
-| `ignore_default` | bool | `false` | 将具有默认值的组件视为不存在 |
+| component | string | — | 命名空间组件 ID |
+| ignore_default | bool | false | 将具有默认值的组件视为不存在 |
 
 ### minecraft\:keybind_down
 
@@ -99,7 +99,7 @@ keybind: key.left
 
 | 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `keybind` | string | 按键标识符（如 `key.left`、`key.sprint`） |
+| keybind | string | 按键标识符（如 `key.left`、`key.sprint`） |
 
 ### minecraft\:custom_model_data
 
@@ -112,4 +112,4 @@ index: 0
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `index` | int | `0` | `flags` 数组中的位置 |
+| index | int | 0 | `flags` 数组中的位置 |

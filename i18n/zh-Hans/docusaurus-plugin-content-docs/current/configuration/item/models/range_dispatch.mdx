@@ -35,19 +35,19 @@ items:
 
 | 字段 | 类型 | 必需 | 默认值 | 说明 |
 |-------|------|----------|---------|-------------|
-| `type` | string | 是 | — | `minecraft:range_dispatch` |
-| `property` | string | 是 | — | 数值属性类型（见下方） |
-| `scale` | float | 否 | `1.0` | 比较前与属性值相乘的系数 |
-| `entries` | list | 是 | — | `{threshold, model}` 配对的列表 |
-| `fallback` | model | 否 | 无效模型 | 数值低于所有阈值时使用的回退模型 |
-| `transformation` | object | 否 | — | 物品模型变换（26.1+） |
+| type | string | 是 | — | `minecraft:range_dispatch` |
+| property | string | 是 | — | 数值属性类型（见下方） |
+| scale | float | 否 | 1.0 | 比较前与属性值相乘的系数 |
+| entries | list | 是 | — | `{threshold, model}` 配对的列表 |
+| fallback | model | 否 | 无效模型 | 数值低于所有阈值时使用的回退模型 |
+| transformation | object | 否 | — | 物品模型变换（26.1+） |
 
 每个条目：
 
 | 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `threshold` | float | 使用此模型的最小属性值 |
-| `model` | model | 属性 ≥ 此阈值（且 < 下一阈值）时使用的模型 |
+| threshold | float | 使用此模型的最小属性值 |
+| model | model | 属性 ≥ 此阈值（且 < 下一阈值）时使用的模型 |
 
 ## 属性
 
@@ -77,8 +77,8 @@ wobble: true
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `target` | string | — | 目标类型：`spawn`、`lodestone`、`recovery`、`none` |
-| `wobble` | bool | `true` | 模拟指南针摆动 |
+| target | string | — | 目标类型：`spawn`、`lodestone`、`recovery`、`none` |
+| wobble | bool | true | 模拟指南针摆动 |
 
 ### minecraft\:count
 
@@ -91,7 +91,7 @@ normalize: true
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `normalize` | bool | `true` | 缩放到 0.0–1.0；false 则返回原始数量 |
+| normalize | bool | true | 缩放到 0.0–1.0；false 则返回原始数量 |
 
 ### minecraft\:damage
 
@@ -104,7 +104,7 @@ normalize: true
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `normalize` | bool | `true` | 缩放到 0.0–1.0；false 则返回原始损坏值 |
+| normalize | bool | true | 缩放到 0.0–1.0；false 则返回原始损坏值 |
 
 ### minecraft\:time
 
@@ -118,8 +118,8 @@ wobble: true
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `source` | string | — | 时间来源：`daytime`、`moon_phase`、`random` |
-| `wobble` | bool | `true` | 平滑摆动 |
+| source | string | — | 时间来源：`daytime`、`moon_phase`、`random` |
+| wobble | bool | true | 平滑摆动 |
 
 ### minecraft\:use_duration
 
@@ -132,7 +132,7 @@ remaining: false
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `remaining` | bool | `false` | 返回剩余而非已过的 tick |
+| remaining | bool | false | 返回剩余而非已过的 tick |
 
 ### minecraft\:custom_model_data
 
@@ -145,4 +145,4 @@ index: 0
 
 | 字段 | 类型 | 默认值 | 说明 |
 |-------|------|---------|-------------|
-| `index` | int | `0` | `floats` 数组中的位置 |
+| index | int | 0 | `floats` 数组中的位置 |
