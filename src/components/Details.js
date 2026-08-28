@@ -62,7 +62,6 @@ export default function Details({
 
   const short = contentHeight != null && contentHeight + PAD_TOP + PAD_BOTTOM_LONG <= effectivePreviewHeight;
   const padBottom = short ? PAD_BOTTOM_SHORT : PAD_BOTTOM_LONG;
-  const fullHeight = contentHeight != null ? contentHeight + PAD_TOP + padBottom : null;
 
   const measure = () => {
     const el = contentRef.current;
@@ -77,29 +76,38 @@ export default function Details({
   }, [short]);
 
   useEffect(() => {
-    // resize can fire well above 60Hz during a window drag; each measure()
-    // reads scrollHeight (forced layout). Coalesce to one read per frame so a
-    // page with many Details doesn't thrash layout on every resize tick.
+    // Images and other embedded content can change size after the initial
+    // layout. Keep the preview measurement current without forcing a layout
+    // read for every ResizeObserver/window resize notification.
     let rafId = 0;
-    const onResize = () => {
+    const scheduleMeasure = () => {
       if (rafId) return;
       rafId = requestAnimationFrame(() => {
         rafId = 0;
         measure();
       });
     };
-    window.addEventListener('resize', onResize);
+
+    const resizeObserver = typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(scheduleMeasure);
+    if (contentRef.current) resizeObserver?.observe(contentRef.current);
+
+    window.addEventListener('resize', scheduleMeasure);
     return () => {
-      window.removeEventListener('resize', onResize);
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', scheduleMeasure);
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
   const bodyStyle = {};
-  if (fullHeight != null) {
-    bodyStyle.maxHeight = short
-        ? (open ? `${fullHeight}px` : '0px')
-        : (open ? `${fullHeight}px` : `${effectivePreviewHeight}px`);
+  if (open) {
+    // An expanded Details must follow its content instead of a height snapshot:
+    // images may finish loading after measure() and would otherwise be clipped.
+    bodyStyle.maxHeight = 'none';
+  } else if (contentHeight != null) {
+    bodyStyle.maxHeight = short ? '0px' : `${effectivePreviewHeight}px`;
   } else if (!defaultOpen) {
     bodyStyle.maxHeight = isAuto ? `${AUTO_FALLBACK}px` : `${previewHeight}px`;
   }
