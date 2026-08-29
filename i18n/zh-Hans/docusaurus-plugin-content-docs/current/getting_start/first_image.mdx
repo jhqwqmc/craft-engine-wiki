@@ -58,11 +58,11 @@ images:
 
 | 字段 | 必需 | 说明 |
 |:---|:---|:---|
-| `file` | 是 | PNG 路径。`.png` 后缀自动补。对应 `textures/font/star.png` |
-| `height` | 否 | 字形高度（像素）。省略则自动读取 PNG 高度 |
-| `ascent` | 否 | 基线偏移。越大越靠上。默认 `height - 1` |
-| `font` | 否 | 所属字体。默认 `命名空间:default` |
-| `char` | 否 | 映射到的码点。**建议留空**，由 CraftEngine 自动分配空闲码点，避免冲突 |
+| file | 是 | PNG 路径。`.png` 后缀自动补。对应 `textures/font/star.png` |
+| height | 否 | 字形高度（像素）。省略则自动读取 PNG 高度 |
+| ascent | 否 | 基线偏移。越大越靠上。默认 `height - 1` |
+| font | 否 | 所属字体。默认 `命名空间:default` |
+| char | 否 | 映射到的码点。**建议留空**，由 CraftEngine 自动分配空闲码点，避免冲突 |
 
 > ⚠️ 受 Minecraft 限制，`height` 必须大于或等于 `ascent`。如果需要提高 `ascent`，可以在 PNG 底部添加透明像素来增大 `height`。
 

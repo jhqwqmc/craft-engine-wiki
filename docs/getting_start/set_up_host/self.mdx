@@ -38,14 +38,14 @@ resource-pack:
 
 | Field | Default | Description |
 |:---|:---|:---|
-| `ip` | `"auto"` | IP the HTTP server binds to. `"auto"` detects the public IP via Cloudflare trace. Set `"127.0.0.1"` or `"0.0.0.0"` to bind locally. |
-| `port` | `"auto"` | Port the HTTP server listens on. `"auto"` shares the Minecraft server port (piggybacks on its Netty pipeline). Set a number (e.g. `8163`) for a dedicated port. |
-| `url` | (auto) | If set, overrides the auto-generated URL sent to clients. See below. Must start with `http://` or `https://`. Trailing `/` auto-appended. |
-| `protocol` | `"http"` | Protocol for the auto-generated URL. Ignored when `url` is set. |
-| `deny_non_minecraft_request` | `true` | Rejects requests whose `User-Agent` doesn't start with `Minecraft Java/`. |
-| `one_time_token` | `true` | Appends a unique `?token=` to each player's download URL. Tokens expire after 1 minute and are single-use. |
-| `strict_validation` | `false` | Binds the token to the player's UUID via the `X-Minecraft-UUID` header. Do not enable on offline-mode servers. |
-| `rate_limiting.*` | — | IP-based rate limiting. |
+| ip | "auto" | IP the HTTP server binds to. `"auto"` detects the public IP via Cloudflare trace. Set `"127.0.0.1"` or `"0.0.0.0"` to bind locally. |
+| port | "auto" | Port the HTTP server listens on. `"auto"` shares the Minecraft server port (piggybacks on its Netty pipeline). Set a number (e.g. `8163`) for a dedicated port. |
+| url | (auto) | If set, overrides the auto-generated URL sent to clients. See below. Must start with `http://` or `https://`. Trailing `/` auto-appended. |
+| protocol | "http" | Protocol for the auto-generated URL. Ignored when `url` is set. |
+| deny_non_minecraft_request | true | Rejects requests whose `User-Agent` doesn't start with `Minecraft Java/`. |
+| one_time_token | true | Appends a unique `?token=` to each player's download URL. Tokens expire after 1 minute and are single-use. |
+| strict_validation | false | Binds the token to the player's UUID via the `X-Minecraft-UUID` header. Do not enable on offline-mode servers. |
+| rate_limiting.* | — | IP-based rate limiting. |
 
 ## When the public address differs from the bind address
 

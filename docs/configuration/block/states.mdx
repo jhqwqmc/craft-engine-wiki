@@ -37,8 +37,8 @@ Depending on block complexity, there are two modes:
 
 | Mode | Config key | Use case |
 |:---|:---|:---|
-| Single-state | `state` | Block has only one internal state (e.g., lanterns, decorations) |
-| Multi-state | `states` | Block has multiple internal states (e.g., logs with orientation, leaves with distance/waterlogging) |
+| Single-state | state | Block has only one internal state (e.g., lanterns, decorations) |
+| Multi-state | states | Block has multiple internal states (e.g., logs with orientation, leaves with distance/waterlogging) |
 
 Let's start from the simplest single-state and progressively move to multi-state.
 
@@ -70,24 +70,24 @@ Available auto_state groups
 
 | Group | Vanilla blocks used | Notes |
 |:---|:---|:---|
-| `solid` | Note Block + Mushroom Blocks | Most universal solid block group |
-| `note_block` | Note Block | Common, full-block collision box |
-| `mushroom_stem` | Mushroom Stem | Full block |
-| `red_mushroom_block` | Red Mushroom Block | Full block |
-| `brown_mushroom_block` | Brown Mushroom Block | Full block |
-| `mushroom` | All three mushroom blocks above | Any mushroom block |
-| `tintable_leaves` | Oak/Jungle/Acacia/Dark Oak/Mangrove | Tintable leaves, non-waterlogged |
-| `waterlogged_tintable_leaves` | Same as above | Tintable leaves, waterlogged |
-| `non_tintable_leaves` | Spruce/Birch/Cherry/Pale Oak/Azalea | Non-tintable leaves, non-waterlogged |
-| `waterlogged_non_tintable_leaves` | Same as above | Non-tintable leaves, waterlogged |
-| `leaves` | All leaves | Non-waterlogged |
-| `waterlogged_leaves` | All leaves | Waterlogged |
-| `lower_tripwire` | Tripwire (attached=true) | Smaller collision box |
-| `higher_tripwire` | Tripwire (attached=false) | Larger collision box |
-| `tripwire` | Tripwire | Any tripwire |
-| `sapling` | All saplings | — |
-| `pressure_plate` | Weighted Pressure Plates | — |
-| `cactus` / `sugar_cane` / `weeping_vine` / `twisting_vine` / `cave_vine` / `kelp` / `chorus` | Corresponding plants | — |
+| solid | Note Block + Mushroom Blocks | Most universal solid block group |
+| note_block | Note Block | Common, full-block collision box |
+| mushroom_stem | Mushroom Stem | Full block |
+| red_mushroom_block | Red Mushroom Block | Full block |
+| brown_mushroom_block | Brown Mushroom Block | Full block |
+| mushroom | All three mushroom blocks above | Any mushroom block |
+| tintable_leaves | Oak/Jungle/Acacia/Dark Oak/Mangrove | Tintable leaves, non-waterlogged |
+| waterlogged_tintable_leaves | Same as above | Tintable leaves, waterlogged |
+| non_tintable_leaves | Spruce/Birch/Cherry/Pale Oak/Azalea | Non-tintable leaves, non-waterlogged |
+| waterlogged_non_tintable_leaves | Same as above | Non-tintable leaves, waterlogged |
+| leaves | All leaves | Non-waterlogged |
+| waterlogged_leaves | All leaves | Waterlogged |
+| lower_tripwire | Tripwire (attached=true) | Smaller collision box |
+| higher_tripwire | Tripwire (attached=false) | Larger collision box |
+| tripwire | Tripwire | Any tripwire |
+| sapling | All saplings | — |
+| pressure_plate | Weighted Pressure Plates | — |
+| cactus / sugar_cane / weeping_vine / twisting_vine / cave_vine / kelp / chorus | Corresponding plants | — |
 
 :::
 
@@ -231,22 +231,22 @@ Embedded textures are exported as PNGs alongside the model; textures referencing
 
 | Key | Type | Description |
 |:---|:---|:---|
-| `path` | string | Model file path. **Required** when using `textures` (2+ entries) or `generation`, to specify where the generated model is saved |
-| `textures` / `texture` | list or string | Simplified texture config; infers model structure from texture count (mutually exclusive with `generation`). Both key names are equivalent; a single texture can use string shorthand |
-| `generation` | object | Auto-generate the model; requires `parent` and `textures` (mutually exclusive with `textures` list) |
-| `blueprint` | string | Blockbench `.bbmodel` source file — converted into the model JSON at pack generation (may also be set at the appearance level, as a sibling of `model`) |
-| `x` / `y` / `z` | integer | Rotation angle around axis, must be a multiple of 90 (`z` requires 1.21.11+) |
-| `uvlock` | boolean | Lock texture direction, default `false` |
-| `weight` | integer | Only used in `models` lists; selection weight, default `1` |
+| path | string | Model file path. **Required** when using `textures` (2+ entries) or `generation`, to specify where the generated model is saved |
+| textures / texture | list or string | Simplified texture config; infers model structure from texture count (mutually exclusive with `generation`). Both key names are equivalent; a single texture can use string shorthand |
+| generation | object | Auto-generate the model; requires `parent` and `textures` (mutually exclusive with `textures` list) |
+| blueprint | string | Blockbench `.bbmodel` source file — converted into the model JSON at pack generation (may also be set at the appearance level, as a sibling of `model`) |
+| x / y / z | integer | Rotation angle around axis, must be a multiple of 90 (`z` requires 1.21.11+) |
+| uvlock | boolean | Lock texture direction, default `false` |
+| weight | integer | Only used in `models` lists; selection weight, default `1` |
 
 **`textures` auto-inference rules:**
 
-| Texture count | Inferred model | `path` required? | Texture order | Example blocks |
+| Texture count | Inferred model | path required? | Texture order | Example blocks |
 |:---:|:---|:---:|:---|:---|
-| 1 | `cube_all` | No (defaults to texture path) | All six faces same | Netherrack |
-| 2 | `cube_column` | **Yes** | End faces, side | Log |
-| 3 | `cube_bottom_top` | **Yes** | Bottom, top, side | Grass Block |
-| 4 | `orientable` | **Yes** | Bottom, top, front, side | Furnace |
+| 1 | cube_all | No (defaults to texture path) | All six faces same | Netherrack |
+| 2 | cube_column | **Yes** | End faces, side | Log |
+| 3 | cube_bottom_top | **Yes** | Bottom, top, side | Grass Block |
+| 4 | orientable | **Yes** | Bottom, top, front, side | Furnace |
 | 5+ | Five-face independent | **Yes** | Bottom, top, north, east, south, west | Crafter |
 
 Prefix a texture with `^` to also use it as the particle texture (particles emitted when breaking the block):
@@ -263,11 +263,11 @@ textures:
 
 Both are under `model` and mutually exclusive:
 
-| | `textures` (list) | `generation` (object) |
+| | textures (list) | generation (object) |
 |:---|:---|:---|
 | Syntax | `model` with `path` + `textures` | `model` with `path` + `generation` |
 | Use case | Simple blocks, textures only | Blocks needing a specific `parent` (e.g., `leaves`, `cross`, `stairs`) |
-| `path` | Optional for 1 texture, required for 2+ | Required |
+| path | Optional for 1 texture, required for 2+ | Required |
 
 ```yaml
 # textures list (auto-infer model structure)
@@ -556,11 +556,11 @@ Some property names trigger hardcoded placement behaviors:
 
 | Property name | Triggered behavior |
 |:---|:---|
-| `axis` | Auto-align to player's facing axis on placement |
-| `facing` | Auto-align to player's facing direction (6 directions) |
-| `facing_clockwise` | Auto-align to player's facing direction (4 directions, rotated 90°) |
-| `rotation` | Precise rotation control (`type: int`, `range: 0~7` or `0~15`) |
-| `waterlogged` | Determines whether the block is waterlogged |
+| axis | Auto-align to player's facing axis on placement |
+| facing | Auto-align to player's facing direction (6 directions) |
+| facing_clockwise | Auto-align to player's facing direction (4 directions, rotated 90°) |
+| rotation | Precise rotation control (`type: int`, `range: 0~7` or `0~15`) |
+| waterlogged | Determines whether the block is waterlogged |
 
 If you don't use these special names (e.g., `custom_axis`), no automatic rotation is triggered — the block always uses the default value.
 :::

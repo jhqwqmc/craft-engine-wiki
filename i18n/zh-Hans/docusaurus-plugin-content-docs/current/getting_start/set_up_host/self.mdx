@@ -38,14 +38,14 @@ resource-pack:
 
 | 字段 | 默认 | 说明 |
 |:---|:---|:---|
-| `ip` | `"auto"` | HTTP 服务器绑定 IP。`"auto"` 通过 Cloudflare trace 自动检测公网 IP。设为 `"127.0.0.1"` 或 `"0.0.0.0"` 仅本地绑定。 |
-| `port` | `"auto"` | HTTP 服务器监听端口。`"auto"` 共享 Minecraft 服务器端口（注入其 Netty 管线）。设具体数字（如 `8163`）使用独立端口。 |
-| `url` | 自动生成 | 设后覆盖自动生成的下载链接，见下方说明。须以 `http://` 或 `https://` 开头，末尾 `/` 自动补。 |
-| `protocol` | `"http"` | 自动生成 URL 的协议。设 `url` 后忽略。 |
-| `deny_non_minecraft_request` | `true` | 拒绝 `User-Agent` 不以 `Minecraft Java/` 开头的请求。 |
-| `one_time_token` | `true` | 为每位玩家生成一次性 `?token=`，有效期 1 分钟。 |
-| `strict_validation` | `false` | 将 token 绑定到玩家 UUID（通过 `X-Minecraft-UUID` 头验证）。离线模式服务器切勿启用。 |
-| `rate_limiting.*` | — | 基于 IP 的限流。 |
+| ip | "auto" | HTTP 服务器绑定 IP。`"auto"` 通过 Cloudflare trace 自动检测公网 IP。设为 `"127.0.0.1"` 或 `"0.0.0.0"` 仅本地绑定。 |
+| port | "auto" | HTTP 服务器监听端口。`"auto"` 共享 Minecraft 服务器端口（注入其 Netty 管线）。设具体数字（如 `8163`）使用独立端口。 |
+| url | 自动生成 | 设后覆盖自动生成的下载链接，见下方说明。须以 `http://` 或 `https://` 开头，末尾 `/` 自动补。 |
+| protocol | "http" | 自动生成 URL 的协议。设 `url` 后忽略。 |
+| deny_non_minecraft_request | true | 拒绝 `User-Agent` 不以 `Minecraft Java/` 开头的请求。 |
+| one_time_token | true | 为每位玩家生成一次性 `?token=`，有效期 1 分钟。 |
+| strict_validation | false | 将 token 绑定到玩家 UUID（通过 `X-Minecraft-UUID` 头验证）。离线模式服务器切勿启用。 |
+| rate_limiting.* | — | 基于 IP 的限流。 |
 
 ## 内外地址不一致时
 

@@ -100,10 +100,10 @@ items:
 
 | 字段 | 必需 | 说明 |
 |:---|:---|:---|
-| `parent` | 是 | 要继承的父模型，同时决定可用的贴图变量名 |
-| `textures` | 否 | 为父模型定义的贴图变量赋值 |
-| `display` | 否 | 各场景的旋转/平移/缩放 |
-| `gui_light` | 否 | GUI 光照：`front`（扁平）或 `side`（3D 光照，默认） |
+| parent | 是 | 要继承的父模型，同时决定可用的贴图变量名 |
+| textures | 否 | 为父模型定义的贴图变量赋值 |
+| display | 否 | 各场景的旋转/平移/缩放 |
+| gui_light | 否 | GUI 光照：`front`（扁平）或 `side`（3D 光照，默认） |
 
 ### 常用 parent
 
@@ -152,11 +152,11 @@ items:
 
 | material | 槽位 | 说明 |
 |:---|:---|:---|
-| `bow` | 4 | 待机 + 拉弓 0/1/2 |
-| `crossbow` | 6 | 待机 + 拉弦 0/1/2 + 装箭 + 装烟花 |
-| `fishing_rod` | 2 | 待机 + 已抛竿 |
-| `shield` | 2 | 待机 + 格挡中 |
-| `elytra` | 2 | 完好 + 破损 |
+| bow | 4 | 待机 + 拉弓 0/1/2 |
+| crossbow | 6 | 待机 + 拉弦 0/1/2 + 装箭 + 装烟花 |
+| fishing_rod | 2 | 待机 + 已抛竿 |
+| shield | 2 | 待机 + 格挡中 |
+| elytra | 2 | 完好 + 破损 |
 
 多状态物品通常使用 `textures:` 简化写法即可。只有在各状态需要使用不同的 parent 或 display 时，才需要完整的 `model:` + `generation:` 写法，详见[简化模型参考](../configuration/item/models.mdx#简化模型)。
 

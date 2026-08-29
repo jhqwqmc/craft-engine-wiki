@@ -28,11 +28,11 @@ items:
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
-| `type` | string | Yes | — | `minecraft:condition` |
-| `property` | string | Yes | — | Boolean property type (see below) |
-| `on_true` | model | Yes | — | Model when property is `true` |
-| `on_false` | model | Yes | — | Model when property is `false` |
-| `transformation` | object | No | — | Display transform overlay (26.1+) |
+| type | string | Yes | — | `minecraft:condition` |
+| property | string | Yes | — | Boolean property type (see below) |
+| on_true | model | Yes | — | Model when property is `true` |
+| on_false | model | Yes | — | Model when property is `false` |
+| transformation | object | No | — | Display transform overlay (26.1+) |
 
 ## Properties
 
@@ -70,8 +70,8 @@ value:                        # Structure depends on the predicate
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `predicate` | string | Component predicate type from `minecraft:data_component_predicate_type` registry |
-| `value` | varies | Predicate-specific value |
+| predicate | string | Component predicate type from `minecraft:data_component_predicate_type` registry |
+| value | varies | Predicate-specific value |
 
 ### minecraft\:has_component
 
@@ -85,8 +85,8 @@ ignore_default: false   # If true, default-valued components count as absent
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `component` | string | — | Namespaced component ID |
-| `ignore_default` | bool | `false` | Treat default-valued components as absent |
+| component | string | — | Namespaced component ID |
+| ignore_default | bool | false | Treat default-valued components as absent |
 
 ### minecraft\:keybind_down
 
@@ -99,7 +99,7 @@ keybind: key.left   # Keybind ID from Controls menu
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `keybind` | string | Keybind identifier (e.g. `key.left`, `key.sprint`) |
+| keybind | string | Keybind identifier (e.g. `key.left`, `key.sprint`) |
 
 ### minecraft\:custom_model_data
 
@@ -112,4 +112,4 @@ index: 0   # Position in the flags array
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `index` | int | `0` | Position in the `flags` array |
+| index | int | 0 | Position in the `flags` array |

@@ -37,8 +37,8 @@ import Highlight from '@site/src/components/Highlight';
 
 | 模式  | 配置键      | 适用场景                       |
 |:----|:---------|:---------------------------|
-| 单状态 | `state`  | 方块只有一种内部状态（如灯笼、装饰品）        |
-| 多状态 | `states` | 方块有多种内部状态（如原木有朝向、树叶有距离和含水） |
+| 单状态 | state  | 方块只有一种内部状态（如灯笼、装饰品）        |
+| 多状态 | states | 方块有多种内部状态（如原木有朝向、树叶有距离和含水） |
 
 下面从最简单的单状态开始，逐步深入到多状态。
 
@@ -71,30 +71,30 @@ auto_state: note_block
 
 | 组名                                | 包含的原版方块                            | 说明          |
 |:----------------------------------|:-----------------------------------|:------------|
-| `solid`                           | 音符盒 + 蘑菇方块                         | 最通用的实心方块组   |
-| `note_block`                      | 音符盒                                | 完整方块，可用数量最多 |
-| `mushroom_stem`                   | 蘑菇柄                                | 完整方块        |
-| `red_mushroom_block`              | 红色蘑菇方块                             | 完整方块        |
-| `brown_mushroom_block`            | 棕色蘑菇方块                             | 完整方块        |
-| `mushroom`                        | 所有蘑菇方块                             | 完整方块        |
-| `tintable_leaves`                 | 橡树树叶、深色橡树树叶、丛林树叶、金合欢树叶、红树树叶        | 可着色树叶，不含水   |
-| `waterlogged_tintable_leaves`     | 橡树树叶、深色橡树树叶、丛林树叶、金合欢树叶、红树树叶        | 可着色树叶，含水    |
-| `non_tintable_leaves`             | 云杉树叶、白桦树叶、杜鹃树叶、盛开的杜鹃树叶、樱花树叶、苍白橡树树叶 | 不可着色树叶，不含水  |
-| `waterlogged_non_tintable_leaves` | 云杉树叶、白桦树叶、杜鹃树叶、盛开的杜鹃树叶、樱花树叶、苍白橡树树叶 | 不可着色树叶，含水   |
-| `leaves`                          | 所有树叶                               | 不含水         |
-| `waterlogged_leaves`              | 所有树叶                               | 含水          |
-| `lower_tripwire`                  | 绊线                                 | 碰撞箱更矮       |
-| `higher_tripwire`                 | 绊线                                 | 碰撞箱更高       |
-| `tripwire`                        | 所有绊线                               | -           |
-| `sapling`                         | 所有树苗                               | -           |
-| `pressure_plate`                  | 所有测重压力板                            | -           |
-| `cactus`                          | 仙人掌                                | -           |
-| `sugar_cane`                      | 甘蔗                                 | -           |
-| `weeping_vine`                    | 垂泪藤                                | -           |
-| `twisting_vine`                   | 缠怨藤                                | -           |
-| `cave_vine`                       | 洞穴藤蔓                               | -           |
-| `kelp`                            | 海带                                 | -           |
-| `chorus`                          | 紫颂植株                               | -           |
+| solid                           | 音符盒 + 蘑菇方块                         | 最通用的实心方块组   |
+| note_block                      | 音符盒                                | 完整方块，可用数量最多 |
+| mushroom_stem                   | 蘑菇柄                                | 完整方块        |
+| red_mushroom_block              | 红色蘑菇方块                             | 完整方块        |
+| brown_mushroom_block            | 棕色蘑菇方块                             | 完整方块        |
+| mushroom                        | 所有蘑菇方块                             | 完整方块        |
+| tintable_leaves                 | 橡树树叶、深色橡树树叶、丛林树叶、金合欢树叶、红树树叶        | 可着色树叶，不含水   |
+| waterlogged_tintable_leaves     | 橡树树叶、深色橡树树叶、丛林树叶、金合欢树叶、红树树叶        | 可着色树叶，含水    |
+| non_tintable_leaves             | 云杉树叶、白桦树叶、杜鹃树叶、盛开的杜鹃树叶、樱花树叶、苍白橡树树叶 | 不可着色树叶，不含水  |
+| waterlogged_non_tintable_leaves | 云杉树叶、白桦树叶、杜鹃树叶、盛开的杜鹃树叶、樱花树叶、苍白橡树树叶 | 不可着色树叶，含水   |
+| leaves                          | 所有树叶                               | 不含水         |
+| waterlogged_leaves              | 所有树叶                               | 含水          |
+| lower_tripwire                  | 绊线                                 | 碰撞箱更矮       |
+| higher_tripwire                 | 绊线                                 | 碰撞箱更高       |
+| tripwire                        | 所有绊线                               | -           |
+| sapling                         | 所有树苗                               | -           |
+| pressure_plate                  | 所有测重压力板                            | -           |
+| cactus                          | 仙人掌                                | -           |
+| sugar_cane                      | 甘蔗                                 | -           |
+| weeping_vine                    | 垂泪藤                                | -           |
+| twisting_vine                   | 缠怨藤                                | -           |
+| cave_vine                       | 洞穴藤蔓                               | -           |
+| kelp                            | 海带                                 | -           |
+| chorus                          | 紫颂植株                               | -           |
 
 :::
 
@@ -238,22 +238,22 @@ model:
 
 | 子选项                  | 类型     | 说明                                                               |
 |:---------------------|:-------|:-----------------------------------------------------------------|
-| `path`               | 字符串    | 模型文件路径。当使用 2 张及以上 `textures` 或 `generation` 时，**必须**指定生成的模型的存放位置 |
-| `textures`、`texture` | 列表或字符串 | 简化纹理配置，根据数量自动推断模型结构（与 `generation` 冲突）。两个键名效果相同，单张纹理可用字符串简写      |
-| `generation`         | 配置部分   | 自动生成模型，需指定 `parent` 和 `textures`（与 `textures` 列表冲突）              |
-| `blueprint`          | 字符串    | Blockbench `.bbmodel` 源文件，生成资源包时转换为模型 JSON（也可写在外观层级，与 `model` 同级） |
-| `x`、`y`、`z`          | 整数     | 绕轴旋转角度，必须为 90 的倍数（`z` 需要 1.21.11+）                               |
-| `uvlock`             | 布尔     | 是否锁定纹理方向，默认为 `false`                                             |
-| `weight`             | 整数     | 仅在 `models` 列表中使用，被选用的权重，默认为 `1`                                 |
+| path               | 字符串    | 模型文件路径。当使用 2 张及以上 `textures` 或 `generation` 时，**必须**指定生成的模型的存放位置 |
+| textures、texture | 列表或字符串 | 简化纹理配置，根据数量自动推断模型结构（与 `generation` 冲突）。两个键名效果相同，单张纹理可用字符串简写      |
+| generation         | 配置部分   | 自动生成模型，需指定 `parent` 和 `textures`（与 `textures` 列表冲突）              |
+| blueprint          | 字符串    | Blockbench `.bbmodel` 源文件，生成资源包时转换为模型 JSON（也可写在外观层级，与 `model` 同级） |
+| x、y、z          | 整数     | 绕轴旋转角度，必须为 90 的倍数（`z` 需要 1.21.11+）                               |
+| uvlock             | 布尔     | 是否锁定纹理方向，默认为 `false`                                             |
+| weight             | 整数     | 仅在 `models` 列表中使用，被选用的权重，默认为 `1`                                 |
 
 **`textures` 的自动推断规则：**
 
-| 纹理数量 | 推断模型              | `path` 是否必填 | 纹理顺序                          | 示例方块 |
+| 纹理数量 | 推断模型              | path 是否必填 | 纹理顺序                          | 示例方块 |
 |:----:|:------------------|:-----------:|:------------------------------|:-----|
-|  1   | `cube_all`        |      否      | all                           | 下界岩  |
-|  2   | `cube_column`     |    **是**    | end、side                      | 原木   |
-|  3   | `cube_bottom_top` |    **是**    | bottom、side、top               | 草方块  |
-|  4   | `orientable`      |    **是**    | bottom、front、side、top         | 熔炉   |
+|  1   | cube_all        |      否      | all                           | 下界岩  |
+|  2   | cube_column     |    **是**    | end、side                      | 原木   |
+|  3   | cube_bottom_top |    **是**    | bottom、side、top               | 草方块  |
+|  4   | orientable      |    **是**    | bottom、front、side、top         | 熔炉   |
 |  5+  | `block/cube`      |    **是**    | down、up、north、south、west、east | 合成器  |
 
 > 仅单张纹理时 `path` 可省略，此时模型路径自动取纹理路径。2 张及以上**必须**显式指定 `path`，用于确定生成的模型文件存放位置。
@@ -290,11 +290,11 @@ textures:
 
 两者都在 `model` 下，互相冲突：
 
-|        | `textures`（列表）                 | `generation`（配置部分）                         |
+|        | textures（列表）                 | generation（配置部分）                         |
 |:-------|:-------------------------------|:-------------------------------------------|
 | 语法     | `model` 下配 `path` + `textures` | `model` 下配 `path` + `generation`           |
 | 适用场景   | 简单方块，只需纹理                      | 需要特定 `parent`（如 `leaves`、`cross`、`stairs`） |
-| `path` | 单张纹理可省略，2 张或更多必填               | 必填                                         |
+| path | 单张纹理可省略，2 张或更多必填               | 必填                                         |
 
 ```yaml
 # textures 列表（自动推断模型结构）
@@ -594,11 +594,11 @@ properties:
 
 | 属性名                | 触发的行为                                      |
 |:-------------------|:-------------------------------------------|
-| `axis`             | 放置时自动对齐玩家朝向的轴向                             |
-| `facing`           | 放置时自动对齐玩家朝向（上下东南西北方向）                      |
-| `facing_clockwise` | 放置时自动对齐玩家朝向（东南西北方向，旋转 90 度）                |
-| `rotation`         | 精确控制旋转（`type: int`, `range: 0~7` 或 `0~15`） |
-| `waterlogged`      | 决定方块是否含水                                   |
+| axis             | 放置时自动对齐玩家朝向的轴向                             |
+| facing           | 放置时自动对齐玩家朝向（上下东南西北方向）                      |
+| facing_clockwise | 放置时自动对齐玩家朝向（东南西北方向，旋转 90 度）                |
+| rotation         | 精确控制旋转（`type: int`, `range: 0~7` 或 `0~15`） |
+| waterlogged      | 决定方块是否含水                                   |
 
 如果不使用这些特殊名称（如 `custom_axis`），则不会触发任何自动旋转——方块始终使用默认值。
 :::
