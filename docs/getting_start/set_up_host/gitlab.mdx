@@ -5,22 +5,6 @@ id: gitlab
 
 import Details from '@site/src/components/Details';
 
-```yaml
-resource-pack:
-  delivery:
-    hosting:
-      - type: gitlab
-        gitlab_url: ""
-        access_token: ""
-        project_id: ""
-        # Optional options
-        use_environment_variables: false
-```
-
-<Details summary="Enviroment Variables">
-  - CE_GITLAB_ACCESS_TOKEN
-</Details>
-
 :::warning
 
 According to GitLab's Terms of Service, you are not permitted to use GitLab's servers for content distribution. You must set up your own GitLab server.
@@ -34,3 +18,22 @@ https://handbook.gitlab.com/handbook/legal/acceptable-use-policy/
 > Do anything to compromise, overburden, or otherwise impair our services or those of others, including using our services to mine or demonstrate proof-of-work for a cryptocurrency or blockchain, or for the primary purpose of distributing content.
 
 :::
+
+```yaml
+resource-pack:
+  packs:
+    default:
+      default: true
+      type: gitlab
+      gitlab_url: ""
+      access_token: ""
+      project_id: ""
+      # Optional options
+      use_environment_variables: false
+```
+
+Fill in the settings and run `/ce reload host`. See [workflows](../workflows) for uploading and sending.
+
+<Details summary="Enviroment Variables">
+  - CE_GITLAB_ACCESS_TOKEN
+</Details>
