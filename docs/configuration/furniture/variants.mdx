@@ -371,14 +371,30 @@ seats:
 ```
 
 :::info
-A seat position is written as `x,y,z` with an optional yaw rotation separated by a space. When yaw is given, the player's body rotation is limited and cannot turn a full 360°. Without it, the body can rotate freely.
+Seat format: `x,y,z [yaw] [force_player_rotation]`. Angles are relative to the furniture's direction.
 
-A single hitbox can hold multiple seats. If seats from different hitboxes overlap at the same position, only one will work.
+- `yaw`: seat direction (default: `0`). Providing it limits body rotation; omitting it allows free rotation.
+- `force_player_rotation`: turns the view once after mounting, preserving pitch. `true` uses `yaw`; a number uses that angle (including `0`); `false` or omitted leaves the view unchanged.
 
+```yaml
+seats:
+  - 0,0,-0.1           # free rotation
+  - 1,0,-0.1 90        # limited body rotation, view unchanged
+  - 2,0,-0.1 90 true   # also turn the view toward 90°
+  - 3,0,-0.1 90 45.5   # turn the view toward 45.5° instead
 ```
-0,0,0 0    # body rotation limited
-0,0,0      # body can rotate freely
+
+Use a section to control body rotation separately:
+
+```yaml
+seats:
+  - position: 0,0,-0.1
+    yaw: 90
+    limit_player_rotation: false  # default: true if yaw is present, otherwise false
+    force_player_rotation: true
 ```
+
+A hitbox can contain multiple seats. Seats at the same position across hitboxes share one seat.
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/furniture_variants_2.gif').default} alt="" />
