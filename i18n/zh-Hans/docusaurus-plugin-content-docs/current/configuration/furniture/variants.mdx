@@ -374,14 +374,30 @@ seats:
 ```
 
 :::info
-座位格式为 `x,y,z`，后面可接空格和水平旋转角度角度。有水平旋转角度时身体旋转受限，不能 360° 转。不写则自由旋转。
+座位格式：`x,y,z [yaw] [force_player_rotation]`，角度均相对家具朝向计算。
 
-一个碰撞箱可以添加多个座位。如果不同碰撞箱的座位位置重叠，只有一个会生效。
+- `yaw`：座位朝向，默认 `0`。填写时限制身体旋转，省略时可自由旋转。
+- `force_player_rotation`：入座时调整视角一次，保留俯仰角。`true` 跟随 `yaw`；数值使用自定义角度（包括 `0`）；`false` 或省略则不调整。
 
+```yaml
+seats:
+  - 0,0,-0.1           # 自由旋转
+  - 1,0,-0.1 90        # 限制身体旋转，不调整视角
+  - 2,0,-0.1 90 true   # 同时将视角转向 90°
+  - 3,0,-0.1 90 45.5   # 改为将视角转向 45.5°
 ```
-0,0,0 0    # 身体旋转受限
-0,0,0      # 身体可自由旋转
+
+使用配置段写法可单独控制身体旋转限制：
+
+```yaml
+seats:
+  - position: 0,0,-0.1
+    yaw: 90
+    limit_player_rotation: false  # 填写 yaw 时默认 true，否则默认 false
+    force_player_rotation: true
 ```
+
+一个碰撞箱可设置多个座位，不同碰撞箱中位置重叠的座位会合并为一个。
 
 <div style={{textAlign: 'center'}}>
     <img src={require('/img/furniture_variants_2.gif').default} alt="" />
