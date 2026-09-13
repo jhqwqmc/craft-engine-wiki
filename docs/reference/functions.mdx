@@ -601,6 +601,16 @@ type: close_inventory
 target: "self" # optional; enum[all, self]/player selector; default: self
 ```
 
+### discover\_recipe
+
+Unlock a recipe for the player. Supports vanilla recipes and custom recipes registered on the server.
+
+```yaml
+type: discover_recipe
+recipe: "mypack:custom_recipe" # required; string; recipe ID; alias: id
+target: "self" # optional; enum[all, self]/player selector; defaults to the context player
+```
+
 ### clear\_item
 
 Clear items from the player's inventory

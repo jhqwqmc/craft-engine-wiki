@@ -222,6 +222,15 @@ type: permission
 permission: "craftengine.admin"
 ```
 
+### has\_discovered\_recipe
+
+Check whether the context player has unlocked a recipe. Returns `false` when the context has no player. Use [`discover_recipe`](functions.mdx#discover_recipe) to unlock a recipe.
+
+```yaml
+type: has_discovered_recipe
+recipe: "mypack:custom_recipe" # required; string; recipe ID; alias: id
+```
+
 ### expression
 
 Checks if the expression returns `true`
