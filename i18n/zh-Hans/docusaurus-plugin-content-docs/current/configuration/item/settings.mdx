@@ -86,6 +86,24 @@ equipment:
   equip_on_interact: true
 ```
 
+### equipment_lod（装备距离回退）
+
+根据观察者与装备实体之间的距离切换装备外观。例如，近处显示 3D 盔甲，远处显示更简单的 2D 盔甲贴图。
+
+```yaml
+items:
+  your_namespace:custom_chestplate:
+    material: iron_chestplate
+    data:
+      equippable:
+        slot: chest
+        asset_id: your_namespace:armor_3d
+    settings:
+      equipment_lod:
+        asset_id: your_namespace:armor_2d
+        distance: 32
+```
+
 ### attribute_modifiers（自定义属性修饰符）
 
 物品位于匹配槽位时，为持有者提供 CraftEngine 自定义属性修饰符。它与 `data.attribute_modifiers` 对应的原版属性组件不是同一套系统。
