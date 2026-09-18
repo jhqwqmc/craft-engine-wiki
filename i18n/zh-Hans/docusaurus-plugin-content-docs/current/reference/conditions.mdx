@@ -222,6 +222,15 @@ type: permission
 permission: "craftengine.admin"
 ```
 
+### has\_discovered\_recipe
+
+检查上下文玩家是否已解锁指定配方。上下文中没有玩家时返回 `false`。可以使用 [`discover_recipe`](functions.mdx#解锁配方) 函数解锁配方。
+
+```yaml
+type: has_discovered_recipe
+recipe: "mypack:custom_recipe" # 必填; 字符串; 配方 ID; 别名: id
+```
+
 ### expression
 
 检查表达式是否返回 `true`

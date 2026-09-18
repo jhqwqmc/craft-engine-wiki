@@ -80,6 +80,24 @@ equipment:
   equip_on_interact: true
 ```
 
+### equipment_lod
+
+Switches the equipment appearance for each viewer based on their distance from the equipped entity. For example, nearby viewers can see a 3D armor model while distant viewers see a simpler 2D armor texture.
+
+```yaml
+items:
+  your_namespace:custom_chestplate:
+    material: iron_chestplate
+    data:
+      equippable:
+        slot: chest
+        asset_id: your_namespace:armor_3d
+    settings:
+      equipment_lod:
+        asset_id: your_namespace:armor_2d
+        distance: 32
+```
+
 ### attribute_modifiers
 
 Provides CraftEngine custom attribute modifiers to the holder while the item occupies a matching slot. This system is separate from the vanilla attribute component represented by `data.attribute_modifiers`.

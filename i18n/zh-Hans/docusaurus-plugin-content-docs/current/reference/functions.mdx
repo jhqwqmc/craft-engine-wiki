@@ -602,6 +602,16 @@ type: close_inventory
 target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认值: self
 ```
 
+### 解锁配方
+
+为玩家解锁配方，支持原版配方和已注册到服务器的自定义配方。
+
+```yaml
+type: discover_recipe
+recipe: "mypack:custom_recipe" # 必填; 字符串; 配方 ID; 别名: id
+target: "self" # 可选; 枚举[all, self]/玩家选择器; 默认作用于上下文玩家
+```
+
 ### 清理物品
 
 清理玩家背包中的物品
