@@ -1,4 +1,8 @@
 {
+  "minecraftWindow.inventory": {
+    "message": "物品栏",
+    "description": "Minecraft 容器的玩家物品栏标题"
+  },
   "theme.ErrorPageContent.title": {
     "message": "页面已崩溃。",
     "description": "页面崩溃时显示的备用页面标题"

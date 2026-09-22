@@ -4,6 +4,10 @@ id: recipe
 ---
 
 import Highlight from '@site/src/components/Highlight';
+import MinecraftRecipe, {MinecraftRecipeRow, MinecraftBrewingRecipe} from '@site/src/components/MinecraftRecipe';
+import McSprite from '@site/src/components/McSprite';
+import {recipeItems as items, recipeBookRecipes} from '@site/src/components/minecraftRecipeItems';
+import MinecraftRecipeBook from '@site/src/components/MinecraftRecipeBook';
 
 ## 准备工作
 
@@ -34,15 +38,28 @@ items:
       item_name: "<!i>棕榈木板"
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_1.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>#minecraft:planks</p>
-</div>
+<MinecraftRecipeRow>
+<MinecraftRecipe
+  pattern={['PPP', 'P O', 'POO']}
+  ingredients={{
+    P: {...items.palmPlanks, tags: ['minecraft:planks']},
+    O: {...items.oakPlanks, tags: ['minecraft:planks']},
+  }}
+  result={items.chest}
+  caption={<code>#minecraft:planks</code>}
+/>
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_2.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>#minecraft:wooden_tool_materials</p>
-</div>
+<MinecraftRecipe
+  pattern={['PPO', ' S ', ' S ']}
+  ingredients={{
+    P: {...items.palmPlanks, tags: ['minecraft:wooden_tool_materials']},
+    O: {...items.oakPlanks, tags: ['minecraft:wooden_tool_materials']},
+    S: items.stick,
+  }}
+  result={items.woodenPickaxe}
+  caption={<code>#minecraft:wooden_tool_materials</code>}
+/>
+</MinecraftRecipeRow>
 
 ### 数据组件谓词
 
@@ -65,9 +82,14 @@ recipes:
       count: 1
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/recipe_15.png').default} alt="" />
-</div>
+<MinecraftRecipe
+  pattern={['SP ', '   ', '   ']}
+  ingredients={{
+    S: {...items.diamondSword, lore: [{text: '源物品：source: true', color: '#ffaa00'}]},
+    P: {...items.paper, enchanted: true, lore: [{text: '条件：锋利 V', color: '#ffaa00'}]},
+  }}
+  result={items.topazSword}
+/>
 
 可用谓词类型：
 
@@ -106,17 +128,15 @@ recipes:
 
 `group` 指定配方在客户端解锁后所属的分组。分组名可以自定义，但不能包含中文等非法字符。
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_3.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>group</p>
-</div>
+同一标签栏中，使用相同 `group` 的配方会合并为一个配方格，并轮换显示组内的物品。下面的棕榈木板和橡木木板都属于 `planks`：左键选择当前配方，右键展开组内的原料布局，再点击具体配方查看合成预览。触屏可点按展开；键盘聚焦配方格后按 ↓ 展开，Esc 关闭。
+
+<MinecraftRecipeBook recipes={recipeBookRecipes} initialCategory="building" label="配方分组示例" />
 
 `category` 决定该配方在配方书中所属的标签栏，可选类型有限。
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/recipe_4.png').default} alt="" />
-  <p style={{fontSize: '0.9em', color: '#666', marginTop: '0.5em'}}>category</p>
-</div>
+点击配方书左侧的标签，查看建筑、装备、杂项和红石配方。选中配方后，下方会显示它的 `category` 和 `group`。
+
+<MinecraftRecipeBook recipes={recipeBookRecipes} label="配方标签栏示例" />
 
 * 烧炼配方可选：`food`（食物）、`blocks`（方块）、`misc`（杂项）。
 * 合成配方可选：`building`（建筑）、`redstone`（红石）、`equipment`（装备）、`misc`（杂项）。
@@ -339,9 +359,11 @@ recipes:
       count: 1
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_5.png').default} alt="" />
-</div>
+<MinecraftRecipe
+  pattern={[' T ', ' S ', ' S ']}
+  ingredients={{T: items.topaz, S: items.stick}}
+  result={items.topazShovel}
+/>
 
 ```yaml
 recipes:
@@ -360,9 +382,16 @@ recipes:
       count: 1
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_6.png').default} alt="" />
-</div>
+<MinecraftRecipe
+  pattern={['PSO', 'STS', 'OSP']}
+  ingredients={{
+    P: {...items.palmPlanks, tags: ['minecraft:planks']},
+    O: {...items.oakPlanks, tags: ['minecraft:planks']},
+    S: items.stick,
+    T: items.torch,
+  }}
+  result={items.chineseLantern}
+/>
 
 ```yaml
 recipes:
@@ -381,9 +410,11 @@ recipes:
       count: 1
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_13.png').default} alt="" />
-</div>
+<MinecraftRecipe
+  pattern={[' C ', 'CCC', ' C ']}
+  ingredients={{C: {...items.cobblestone, count: 32}}}
+  result={items.enchantedCobblestone}
+/>
 
 ### 有序合成转化配方
 
@@ -408,9 +439,14 @@ default:topaz_crossbow_transform:
         - enchantments
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/shaped_transform.png').default} alt="" />
-</div>
+<MinecraftRecipe
+  pattern={['TTT', 'T  ', 'C  ']}
+  ingredients={{
+    T: items.topaz,
+    C: {...items.crossbow, lore: [{text: '源物品：source: true', color: '#ffaa00'}]},
+  }}
+  result={{...items.topazCrossbow, lore: [{text: '保留源物品的魔咒', color: '#ffaa00'}]}}
+/>
 
 ### 无序合成配方
 
@@ -430,12 +466,28 @@ recipes:
       count: 4
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_7.png').default} alt="" />
-</div>
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_8.png').default} alt="" />
-</div>
+<MinecraftRecipeRow>
+<MinecraftRecipe
+  pattern={['LX ', '   ', '   ']}
+  ingredients={{
+    L: {...items.palmLog, tags: ['default:palm_logs']},
+    X: {icon: 'paper', name: '测试原料 1', id: 'test:ingredient1', lore: [{text: '图标仅作示意', color: '#ffaa00'}]},
+  }}
+  result={{...items.palmPlanks, count: 4}}
+  caption="原料选择示例 1"
+/>
+<MinecraftRecipe
+  pattern={['   ', ' X ', '  L']}
+  ingredients={{
+    L: {...items.strippedPalmLog, tags: ['default:palm_logs']},
+    X: {icon: 'paper', name: '测试原料 2', id: 'test:ingredient2', lore: [{text: '图标仅作示意', color: '#ffaa00'}]},
+  }}
+  result={{...items.palmPlanks, count: 4}}
+  caption="原料选择示例 2"
+/>
+</MinecraftRecipeRow>
+
+原料摆放位置不限。第二份原料可从嵌套列表中任选一个，图中的纸张仅用于示意测试物品。
 
 ```yaml
 recipes:
@@ -457,9 +509,11 @@ recipes:
       count: 1
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_14.png').default} alt="" />
-</div>
+<MinecraftRecipe
+  pattern={['CCC', 'CC ', '   ']}
+  ingredients={{C: {...items.cobblestone, count: 32}}}
+  result={items.enchantedCobblestone}
+/>
 
 ### 无序合成转化配方
 
@@ -483,6 +537,15 @@ recipes:
         components:
           - enchantments
 ```
+
+<MinecraftRecipe
+  pattern={['ST ', '   ', '   ']}
+  ingredients={{
+    S: {...items.diamondSword, lore: [{text: '源物品：source: true', color: '#ffaa00'}]},
+    T: items.topaz,
+  }}
+  result={{...items.topazSword, lore: [{text: '保留源物品的魔咒', color: '#ffaa00'}]}}
+/>
 
 ### 烧炼配方
 
@@ -512,9 +575,28 @@ recipes:
       count: 1
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_9.png').default} alt="" />
-</div>
+<MinecraftRecipeRow>
+<MinecraftRecipe
+  type="furnace"
+  pattern={['OF']}
+  ingredients={{O: items.topazOre, F: items.blazeRod}}
+  result={items.topaz}
+  caption="黄玉矿石 · 200 tick · 1.0 经验"
+>
+  <McSprite name="furnace/lit_progress" x={56} y={36} width={14} height={14} />
+  <McSprite name="furnace/burn_progress" x={79} y={34} width={24} height={16} />
+</MinecraftRecipe>
+<MinecraftRecipe
+  type="furnace"
+  pattern={['OF']}
+  ingredients={{O: items.deepslateTopazOre, F: items.blazeRod}}
+  result={items.topaz}
+  caption="深层黄玉矿石 · 200 tick · 1.0 经验"
+>
+  <McSprite name="furnace/lit_progress" x={56} y={36} width={14} height={14} />
+  <McSprite name="furnace/burn_progress" x={79} y={34} width={24} height={16} />
+</MinecraftRecipe>
+</MinecraftRecipeRow>
 
 ### 切石机配方
 
@@ -535,6 +617,13 @@ recipes:
 
 :::
 
+<MinecraftRecipe
+  type="stonecutter"
+  pattern={['ST']}
+  ingredients={{S: items.stone, T: items.topaz}}
+  result={items.topaz}
+/>
+
 ### 锻造升级配方
 
 ```yaml
@@ -552,9 +641,12 @@ default:topaz_bow:
   transform_processors: []
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_10.png').default} alt="" />
-</div>
+<MinecraftRecipe
+  type="smithing"
+  pattern={['TBT']}
+  ingredients={{T: items.topaz, B: items.bow}}
+  result={items.topazBow}
+/>
 
 ### 盔甲纹饰配方
 
@@ -567,9 +659,16 @@ default:bolt_tool_trims:
   pattern: minecraft:bolt # 需要在 1.21.5+
 ```
 
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/i18n/zh-Hans/recipe_11.png').default} alt="" />
-</div>
+<MinecraftRecipe
+  type="smithing"
+  pattern={['TPG']}
+  ingredients={{
+    T: items.boltTemplate,
+    P: {...items.topazPickaxe, tags: ['minecraft:trimmable_tool']},
+    G: {...items.goldIngot, tags: ['minecraft:trim_materials']},
+  }}
+  result={{...items.topazPickaxe, lore: [{text: '镶铆盔甲纹饰', color: '#ffaa00'}, {text: '材质：金', color: '#ffaa00'}]}}
+/>
 
 ### 酿造配方
 
@@ -584,6 +683,10 @@ tea_art:tea:
     id: tea_art:cup_of_tea
     count: 1
 ```
-<div style={{textAlign: 'center'}}>
-  <img src={require('/img/recipe_12.png').default} alt="" />
-</div>
+<MinecraftBrewingRecipe
+  ingredient={{icon: 'oak_leaves', name: '茶叶', id: 'tea_art:tea_leaf'}}
+  container={{icon: 'glass_bottle', name: '茶杯', id: 'tea_art:cup'}}
+  result={{icon: 'water_bottle', name: '一杯茶', id: 'tea_art:cup_of_tea'}}
+/>
+
+这里用原版树叶、玻璃瓶和水瓶示意茶叶、茶杯和茶水，实际外观由你的资源包决定。

@@ -1,0 +1,206 @@
+@font-face {
+  font-family: 'Minecraft';
+  src: url('../fonts/minecraft.woff2') format('woff2');
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0-00FF;
+}
+
+@font-face {
+  font-family: 'Minecraft Chinese';
+  src: url('../fonts/minecraft-zh.woff2') format('woff2');
+  font-display: swap;
+}
+
+/* MinecraftWindow.module.css
+   全部尺寸都是「贴图原始像素 × --mcw-scale」，所以任何倍数下像素都对得齐。
+   贴图一律 image-rendering: pixelated，放大不糊。
+   游戏 GUI 没有深浅色模式，任何文档主题下都是同一套配色。 */
+
+.wrapper {
+  --mc-font: 'Minecraft', 'Minecraft Chinese', monospace;
+  margin: 1.2rem 0;
+  overflow-x: auto;
+}
+
+.stage {
+  --mcw-scale: 2;
+  position: relative;
+  display: inline-block;
+}
+
+.frame {
+  position: relative;
+  image-rendering: pixelated;
+  user-select: none;
+}
+
+/* 窗口本体的一段贴图。定位与背景偏移由组件按 mcWindows.js 的 parts 算好传进来。 */
+.part {
+  position: absolute;
+  left: 0;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+/* 容器标题。原版画在 (8,6) 处，颜色 #404040。 */
+.title {
+  position: absolute;
+  font-family: var(--mc-font);
+  font-size: calc(8px * var(--mcw-scale));
+  font-synthesis: none;
+  line-height: 1;
+  color: #404040;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.slot {
+  position: absolute;
+  image-rendering: pixelated;
+  cursor: default;
+}
+
+/* 图例联动：同标志符的格子描一圈白边，压在槽位边框上，不遮物品 */
+.slotMarked {
+  outline: calc(1px * var(--mcw-scale)) solid #ffffff;
+  outline-offset: calc(1px * var(--mcw-scale));
+  z-index: 1;
+}
+
+.slot:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+}
+
+.slot .icon {
+  border-radius: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+/* 物品数量：原版右对齐画在物品区右下，文字右缘超出物品区 1 像素、顶端在 y=9，白字加深色阴影 */
+.count {
+  position: absolute;
+  top: calc(9px * var(--mcw-scale));
+  right: calc(-1px * var(--mcw-scale));
+  font-family: var(--mc-font);
+  font-size: calc(8px * var(--mcw-scale));
+  font-synthesis: none;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: calc(1px * var(--mcw-scale)) calc(1px * var(--mcw-scale)) 0 #3f3f3f;
+  pointer-events: none;
+}
+
+/* 悬停盖白：原版是 0x80FFFFFF 覆在 16×16 的物品区上 */
+.highlight {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(255 255 255 / 50%);
+  pointer-events: none;
+}
+
+/* 深色底、单像素紫色内框和阶梯外沿；尺寸随 GUI 倍数一起变化。 */
+.tooltip {
+  --mc-font: 'Minecraft', 'Minecraft Chinese', monospace;
+  position: fixed;
+  z-index: 1000;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  padding: calc(3px * var(--mcw-scale));
+  border: calc(1px * var(--mcw-scale)) solid;
+  border-image: linear-gradient(rgb(80 0 255 / 50%), rgb(40 0 127 / 50%)) 1;
+  background: rgb(16 0 16 / 94%);
+  box-shadow:
+    calc(-1px * var(--mcw-scale)) 0 0 rgb(16 0 16 / 94%),
+    calc(1px * var(--mcw-scale)) 0 0 rgb(16 0 16 / 94%),
+    0 calc(-1px * var(--mcw-scale)) 0 rgb(16 0 16 / 94%),
+    0 calc(1px * var(--mcw-scale)) 0 rgb(16 0 16 / 94%);
+  font-family: var(--mc-font);
+  font-size: calc(8px * var(--mcw-scale));
+  font-weight: normal;
+  font-style: normal;
+  font-synthesis: none;
+  line-height: calc(10px * var(--mcw-scale));
+  text-align: left;
+  text-shadow: calc(1px * var(--mcw-scale)) calc(1px * var(--mcw-scale)) 0 #3f3f3f;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+
+.tooltipName,
+.tooltipId,
+.tooltipTag,
+.tooltipLore {
+  display: block;
+}
+
+.tooltipName:has(+ span) {
+  margin-bottom: calc(2px * var(--mcw-scale));
+}
+
+.tooltipLore {
+  color: #aaaaaa;
+}
+
+.itemArt {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+  pointer-events: none;
+}
+
+/* 用图标自身的 alpha 裁切光效，背景位移只改变纹理，不移动遮罩。 */
+.glint {
+  position: absolute;
+  inset: 0;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  opacity: 0.85;
+}
+
+.glint::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: #b18cff;
+  mask-image: url('../../static/img/mc/enchanted_glint_item.png');
+  mask-mode: luminance;
+  mask-size: calc(64px * var(--mcw-scale)) calc(64px * var(--mcw-scale));
+  animation: enchantmentGlint 6s linear infinite;
+}
+
+@keyframes enchantmentGlint {
+  from { mask-position: 0 0; }
+  to { mask-position: calc(64px * var(--mcw-scale)) calc(64px * var(--mcw-scale)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glint::before { animation: none; }
+}
+
+.tooltipId {
+  color: #a6b3cc;
+}
+
+.tooltipTag {
+  color: #55ffff;
+}
+
+.error {
+  margin: 1.2rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85rem;
+  color: color-mix(in srgb, hsl(0 70% 40%) 85%, var(--ifm-font-color-base));
+  background-color: color-mix(in srgb, hsl(0 70% 50%) 8%, var(--ifm-background-surface-color));
+  border: 1px solid color-mix(in srgb, hsl(0 70% 50%) 35%, var(--ifm-background-surface-color));
+}
+
+[data-theme='dark'] .error {
+  color: color-mix(in srgb, hsl(0 70% 70%) 85%, var(--ifm-font-color-base));
+}

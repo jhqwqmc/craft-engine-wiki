@@ -1,0 +1,170 @@
+.wrapper {
+  container-type: inline-size;
+  margin: 1.5rem 0;
+}
+
+.workspace {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.book {
+  --book-scale: 2;
+  position: relative;
+  flex: none;
+  width: calc(179px * var(--book-scale));
+  height: calc(166px * var(--book-scale));
+  font-family: 'Minecraft', 'Minecraft Chinese', monospace;
+  font-size: calc(8px * var(--book-scale));
+  line-height: 1.2;
+  color: white;
+  image-rendering: pixelated;
+}
+
+.page {
+  position: absolute;
+  left: calc(32px * var(--book-scale));
+  width: calc(147px * var(--book-scale));
+  height: 100%;
+  background: url('../../static/img/mc/gui/recipe_book.png') no-repeat;
+  background-size: calc(256px * var(--book-scale)) calc(256px * var(--book-scale));
+  background-position: calc(-1px * var(--book-scale)) calc(-1px * var(--book-scale));
+}
+
+.search {
+  position: absolute;
+  left: calc(25px * var(--book-scale));
+  top: calc(12px * var(--book-scale));
+  width: calc(107px * var(--book-scale));
+  height: calc(14px * var(--book-scale));
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: white;
+  font: inherit;
+}
+
+.search::placeholder { color: #aaa; }
+.search:focus-visible { outline: 1px solid #aaa; }
+
+.recipes {
+  position: absolute;
+  left: calc(11px * var(--book-scale));
+  top: calc(31px * var(--book-scale));
+  display: grid;
+  grid-template-columns: repeat(5, calc(25px * var(--book-scale)));
+}
+
+.recipe {
+  position: relative;
+  width: calc(25px * var(--book-scale));
+  height: calc(25px * var(--book-scale));
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: url('../../static/img/mc/sprites/recipe_book/slot_craftable.png') center / 100% 100% no-repeat;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  image-rendering: pixelated;
+}
+
+.recipe img,
+.variantButton img,
+.tab img {
+  position: absolute;
+  width: calc(16px * var(--book-scale));
+  height: calc(16px * var(--book-scale));
+  border-radius: 0;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.recipe img {
+  left: calc(4px * var(--book-scale));
+  top: calc(4px * var(--book-scale));
+}
+
+.recipe:hover,
+.recipe:focus-visible {
+  outline: calc(1px * var(--book-scale)) solid white;
+  outline-offset: calc(-2px * var(--book-scale));
+  z-index: 1;
+}
+
+.tabs {
+  position: absolute;
+  left: 0;
+  top: calc(3px * var(--book-scale));
+  display: flex;
+  flex-direction: column;
+}
+
+.tab {
+  position: relative;
+  width: calc(35px * var(--book-scale));
+  height: calc(27px * var(--book-scale));
+  border: 0;
+  padding: 0;
+  background: url('../../static/img/mc/sprites/recipe_book/tab.png') center / 100% 100%;
+  image-rendering: pixelated;
+  cursor: pointer;
+}
+
+.activeTab { background-image: url('../../static/img/mc/sprites/recipe_book/tab_selected.png'); }
+.tab:focus-visible { outline: 2px solid white; z-index: 1; }
+.tab img { top: calc(5px * var(--book-scale)); }
+
+.variants {
+  position: absolute;
+  z-index: 2;
+  width: calc((25px * var(--variant-columns) + 8px) * var(--book-scale));
+  border: calc(4px * var(--book-scale)) solid transparent;
+  border-image: url('../../static/img/mc/sprites/recipe_book/overlay_recipe.png') 4 fill / calc(4px * var(--book-scale)) / 0 stretch;
+  image-rendering: pixelated;
+}
+
+.variantRow { display: grid; grid-template-columns: repeat(var(--variant-columns), calc(25px * var(--book-scale))); grid-auto-rows: calc(25px * var(--book-scale)); }
+.variantButton {
+  position: relative;
+  width: calc(24px * var(--book-scale));
+  height: calc(24px * var(--book-scale));
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  image-rendering: pixelated;
+  background: url('../../static/img/mc/sprites/recipe_book/crafting_overlay.png') center / 100% 100%;
+}
+.variantButton:hover,
+.variantButton:focus-visible {
+  outline: none;
+  background-image: url('../../static/img/mc/sprites/recipe_book/crafting_overlay_highlighted.png');
+}
+.variantButton img { width: calc(6px * var(--book-scale)); height: calc(6px * var(--book-scale)); }
+.total,
+.empty { position: absolute; left: calc(11px * var(--book-scale)); color: #ccc; }
+.total { bottom: calc(9px * var(--book-scale)); }
+.empty { top: calc(35px * var(--book-scale)); }
+
+.preview { width: 352px; max-width: 100%; }
+.placeholder { visibility: hidden; }
+.preview > div:first-child { margin: 0; }
+.details { display: flex; flex-direction: column; align-items: center; gap: .25rem; margin-top: 1rem; font-size: .85rem; }
+
+@container (max-width: 759px) {
+  .book { --book-scale: 1.5; }
+  .preview { zoom: .85; }
+}
+
+@container (max-width: 599px) {
+  .book { --book-scale: 1.75; }
+}
+
+@container (max-width: 329px) {
+  .book { --book-scale: 1.5; }
+  .preview { zoom: .75; }
+}
