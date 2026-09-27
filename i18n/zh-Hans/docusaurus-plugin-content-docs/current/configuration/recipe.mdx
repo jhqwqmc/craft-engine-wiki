@@ -674,6 +674,10 @@ default:bolt_tool_trims:
 
 <Highlight color="#0dda4aff">**1.20.2+**</Highlight>
 
+酿造配置也支持与数据包一致的键名：`reagent` 对应 `ingredient`/`ingredients`，`input` 对应 `container`，`output` 对应 `result`。值仍使用相同的 CraftEngine 配置格式。两种键名同时存在时，原有键名优先。
+
+Minecraft 26.3 及以上版本的酿造配方与工作台配方使用统一的原生注册和重载流程。原版和数据包酿造配方也会被注入：物品 tag 和材料替代可以包含自定义物品，同时保留药水类型、药水 tag、效果条件和产物组件。Paper 1.20.2–26.2 继续使用旧的 PotionMix 注册方案。
+
 ```yaml
 tea_art:tea:
   type: brewing
