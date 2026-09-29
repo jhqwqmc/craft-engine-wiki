@@ -1,0 +1,119 @@
+---
+title: 方块实体
+---
+
+如果每个方块需要记住自己的物品、进度，或者定期执行逻辑，就可以使用方块实体。这里说的是 CE 的 `BlockEntity`，不需要自己注册原版方块实体类型。
+
+`BlockEntity` 保存位置、世界和方块状态；你通常编写的是 `BlockEntityController`，负责具体数据和逻辑。**有方块实体不等于必须每 tick 执行。** 内置物品展示方块主要在放入、取出物品时更新，不需要为了保存物品而增加 ticker。
+
+## 行为怎么接上控制器
+
+行为实现 `EntityBlock`，在 `createBlockEntityController()` 中为每个方块创建控制器。下面摘自内置粒子方块，省略了构造器和配置工厂：
+
+```java
+public final class SimpleParticleBlockBehavior extends BukkitBlockBehavior implements EntityBlock {
+    @Override
+    public BlockEntityController createBlockEntityController(BlockEntity entity) {
+        return new SimpleParticleBlockEntityController(entity, this);
+    }
+
+    @Override
+    public void initControllerId(int id) {
+        // 这个行为不需要主动查找自己的控制器，因此不保存编号。
+    }
+}
+```
+
+粒子配置和播放间隔在行为里；每个方块自己的 `tickCount` 在控制器里。放下两个方块，就有两个独立计数器。
+
+如果行为需要在交互时找到控制器，可以参照 `DisplayItemBlockBehavior`，保存 CE 传入的编号：
+
+```java
+private int controllerId;
+
+@Override
+public void initControllerId(int id) {
+    this.controllerId = id;
+}
+
+// 下面放在交互方法中，context 来自该回调。
+BlockEntity entity = context.getLevel().storageWorld()
+        .getBlockEntityAtIfLoaded(context.getClickedPos());
+if (entity != null) {
+    entity.controller.let(DisplayItemBlockEntityController.class, this.controllerId, controller -> {
+        Item displayedItem = controller.displayItem();
+        // 使用这个位置实际存放的物品。
+    });
+}
+```
+
+一个方块可以组合多个控制器。用类型和编号查找，不要直接强转 `entity.controller`。
+
+## 保存每个方块的数据
+
+内置 `DisplayItemBlockEntityController` 在 `saveCustomData()` 写入展示物品，在 `loadCustomData()` 读回来；放入或取出物品后，调用 `world.blockEntityChanged(pos)` 标记需要保存。
+
+下面用整数进度演示同一套流程。这是控制器内的代码片段，`CompoundTag` 来自 `net.momirealms.sparrow.nbt`：
+
+```java
+private int progress;
+
+public void setProgress(int progress) {
+    this.progress = progress;
+    this.blockEntity.world.blockEntityChanged(this.blockEntity.pos);
+}
+
+@Override
+public void saveCustomData(CompoundTag tag) {
+    CompoundTag data = new CompoundTag();
+    data.putInt("progress", this.progress);
+    tag.put("myplugin:machine", data);
+}
+
+@Override
+public void loadCustomData(CompoundTag tag) {
+    CompoundTag data = tag.getCompound("myplugin:machine");
+    this.progress = data == null ? 0 : data.getInt("progress", 0);
+}
+```
+
+修改数据的方法在方块加载后调用。读取存档时直接恢复字段即可，不必再标记一次修改。给自己的数据使用独立键，避免与同一方块的其他控制器重名；同一种控制器配置多次时，也要区分存储键。
+
+常用生命周期：
+
+| 方法 | 适合做什么 |
+| --- | --- |
+| 构造器 | 创建字段和本地对象，此时不要依赖世界已经可用 |
+| `onLoad()` | 方块激活后初始化需要世界的逻辑、建立订阅 |
+| `onUnload()` | 停止任务、关闭界面；卸载不是被玩家拆掉 |
+| `onRemove()` | 方块被移除时处理内容，例如掉落存放的物品 |
+| `preBlockStateChange(newState)` | 方向等状态改变前更新缓存，使用传入的新状态 |
+
+## 需要定期执行时再加 ticker
+
+内置粒子控制器的核心逻辑如下（摘录）：
+
+```java
+@Override
+public <C extends BlockEntityController> BlockEntityTicker<C> createAsyncBlockEntityTicker(
+        CEWorld world, ImmutableBlockState state) {
+    return createTickerHelper(SimpleParticleBlockEntityController::tick);
+}
+
+public static void tick(CEWorld world, BlockPos pos, ImmutableBlockState state,
+                        SimpleParticleBlockEntityController particle) {
+    particle.tickCount++;
+    if (particle.tickCount % particle.behavior.tickInterval != 0) return;
+    particle.animateTick(world.world(), pos);
+}
+```
+
+它使用异步 ticker 播放粒子。**不要照搬异步入口去操作背包或修改世界。** 这类逻辑通常使用 `createBlockEntityTicker()`：Paper 在主线程，Folia 在所属区域线程执行。没有定期工作就不覆写 ticker 方法，默认返回 `null`。
+
+空闲时可以暂停 ticker，具体见[睡眠与唤醒](block_entity_ticker.mdx)。用 `/ce debug targetblock` 可以查看控制器，以及同步、异步 ticker 的 `Sleeping`、`Awake` 或 `None` 状态。
+
+## 建议对照的内置实现
+
+- [SimpleParticleBlockEntityController](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/entity/SimpleParticleBlockEntityController.java)：很短，适合看 ticker 怎么接。
+- [DisplayItemBlockEntityController](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/entity/DisplayItemBlockEntityController.java)：物品存取、保存和移除时掉落。
+- [SimpleStorageBlockEntityController](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/entity/SimpleStorageBlockEntityController.java)：需要实际容器和界面时再参考。

@@ -999,6 +999,21 @@ const sidebars: SidebarsConfig = {
         id: "api",
       },
       items: [
+        {
+          type: 'doc',
+          id: "api/block_behavior",
+          label: 'Block Behaviors',
+        },
+        {
+          type: 'doc',
+          id: "api/block_entity",
+          label: 'Block Entities',
+        },
+        {
+          type: 'doc',
+          id: "api/block_entity_ticker",
+          label: 'Ticker Sleep and Wakeup',
+        },
       ]
     },
   ],

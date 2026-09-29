@@ -1,0 +1,66 @@
+---
+title: 方块行为
+---
+
+方块行为决定“这个方块遇到操作时做什么”：右键开灯、放置时选择朝向、邻居变化时检查支撑等。Bukkit 端通常继承 `BukkitBlockBehavior`，只覆写需要的回调。
+
+**行为对象会被同一定义的方块共用。** 粒子类型、播放间隔这类配置可以放在行为里；某一个方块的库存、进度、计数器应放在[方块实体控制器](block_entity.mdx)里。灯的开关、方块朝向这种有限状态，则使用方块属性。
+
+## 先看一个现成例子：可切换灯
+
+内置 `ToggleableLampBlockBehavior` 的 `useWithoutItem()` 大致做四件事：检查是否允许手动切换、检查交互权限、翻转 `lit` 属性、返回 `SUCCESS_AND_CANCEL`。
+
+其中改变状态的关键是：
+
+```java
+// state 是当前状态，litProperty 是行为从方块定义中取得的布尔属性。
+ImmutableBlockState nextState = state.cycle(this.litProperty);
+```
+
+`ImmutableBlockState` 不会被原地修改。得到新状态后，还需要写回世界，灯才会变化。完整实现见 [ToggleableLampBlockBehavior](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/behavior/ToggleableLampBlockBehavior.java)。它也演示了权限检查和红石响应。
+
+常用入口：
+
+| 方法 | 用来做什么 |
+| --- | --- |
+| `updateStateForPlacement(context, state)` | 放置时确定朝向等初始状态，返回新状态 |
+| `useOnBlock(context, state)` | 处理物品对方块的使用 |
+| `useWithoutItem(context, state)` | 处理方块自身的交互；不要只按“玩家空手”理解 |
+
+没有处理时通常返回 `InteractionResult.PASS`；已经处理并要阻止后续默认操作时，可返回 `SUCCESS_AND_CANCEL`。`neighborChanged` 等底层回调使用 `Object[]` 参数，写这类逻辑时直接对照相近的内置行为。
+
+## 注册行为，让配置能使用它
+
+注册的是 **ID 和工厂**。CE 解析方块配置时，调用工厂的 `create(BlockDefinition, ConfigSection)`，由它读取配置并创建行为。
+
+下面复用内置粒子行为的工厂，给它注册一个新 ID，展示最小接入方式：
+
+```java
+import net.momirealms.craftengine.bukkit.block.behavior.SimpleParticleBlockBehavior;
+import net.momirealms.craftengine.core.block.behavior.BlockBehaviors;
+import net.momirealms.craftengine.core.util.Key;
+
+// 在 CE 解析使用该 ID 的方块配置之前注册一次。
+BlockBehaviors.register(Key.of("myplugin:particles"), SimpleParticleBlockBehavior.FACTORY);
+```
+
+然后在已有方块配置中使用它（模型等配置省略）：
+
+```yaml
+blocks:
+  myplugin:smoke_block:
+    behavior:
+      type: myplugin:particles
+      tick_interval: 20
+      particles:
+        - particle: smoke
+          x: 0.5
+          y: 1
+          z: 0.5
+```
+
+这和内置 `simple_particle_block` 的功能相同。自己写行为时，把工厂换成自己的即可。[SimpleParticleBlockBehavior](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/behavior/SimpleParticleBlockBehavior.java) 很短，适合照着理解构造器、配置读取和工厂的关系。
+
+需要多个行为时，配置使用 `behaviors` 列表。查询其中一种行为可用 `state.behavior().getFirst(YourBehavior.class)`，不要直接把整个组合强转为自己的类。
+
+如果只是给现有方块增加粒子或开关效果，直接用[内置行为配置](../configuration/block/behaviors.mdx)即可，无需写插件。
