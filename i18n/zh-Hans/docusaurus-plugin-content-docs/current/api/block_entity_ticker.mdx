@@ -1,0 +1,142 @@
+---
+title: Block entity ticker 的睡眠与唤醒
+---
+
+没有工作可做时，可以让方块实体的 ticker 睡眠。睡眠期间，CraftEngine 会跳过它的 `tick()`；方块实体和其中的数据仍然保留。
+
+使用 `SleepingBlockEntityTicker` 包装原来的 ticker：没活时调用 `sleep()`，有活时调用 `wakeUp()`。`wakeUp()` 只是恢复调度，不会在调用处立即执行 `tick()`。需要查询状态时，可以用 `isSleeping()`。
+
+## 一个简单例子
+
+假设一个方块每 tick 处理一份工作，全部做完后睡眠。下面只展示 controller；方块行为的注册和工作数据的保存省略。
+
+```java
+import net.momirealms.craftengine.core.block.ImmutableBlockState;
+import net.momirealms.craftengine.core.block.entity.BlockEntity;
+import net.momirealms.craftengine.core.block.entity.BlockEntityController;
+import net.momirealms.craftengine.core.block.entity.tick.BlockEntityTicker;
+import net.momirealms.craftengine.core.block.entity.tick.SleepingBlockEntityTicker;
+import net.momirealms.craftengine.core.world.BlockPos;
+import net.momirealms.craftengine.core.world.CEWorld;
+
+public final class WorkController extends BlockEntityController {
+    private final SleepingBlockEntityTicker<WorkController> ticker =
+            new SleepingBlockEntityTicker<>(WorkController::tick);
+    private int pendingJobs;
+
+    public WorkController(BlockEntity blockEntity) {
+        super(blockEntity);
+    }
+
+    @Override
+    public <C extends BlockEntityController> BlockEntityTicker<C> createBlockEntityTicker(
+            CEWorld world, ImmutableBlockState state) {
+        return createTickerHelper(this.ticker);
+    }
+
+    // 在这个方块所属的 tick 线程上调用。
+    public void submitJob() {
+        this.pendingJobs++;
+        this.ticker.wakeUp();
+    }
+
+    @Override
+    public void onLoad() {
+        // 区块重新加载后，让 ticker 再检查一次是否有工作。
+        this.ticker.wakeUp();
+    }
+
+    private static void tick(CEWorld world, BlockPos pos,
+                             ImmutableBlockState state, WorkController controller) {
+        if (controller.pendingJobs == 0) {
+            controller.ticker.sleep();
+            return;
+        }
+
+        // 在这里执行一份工作。
+        controller.pendingJobs--;
+        if (controller.pendingJobs == 0) {
+            controller.ticker.sleep();
+        }
+    }
+}
+```
+
+**把 ticker 存成 controller 的字段，每次返回同一个实例。** 不要在 `createBlockEntityTicker()` 中临时创建，否则方块状态变化、重新绑定 ticker 时可能丢失原来的睡眠状态。
+
+## 谁来叫醒它？
+
+睡着以后，`tick()` 就不会继续检查条件了。唤醒必须来自外部，例如：
+
+| 睡眠原因 | 唤醒入口 |
+| --- | --- |
+| 输入为空 | 玩家、漏斗或其他机器放入物品后 |
+| 输出容器已满 | 输出容器的物品被取走后 |
+| 缺少相邻容器 | 相邻方块变化或相关区块重新加载后 |
+| 等待冷却结束 | 计时到期后 |
+
+这些入口需要你的代码接上，CraftEngine 不会自动替你监听库存变化。尤其要注意：**箱子放下来了和箱子里的物品变了，是两回事。** 只监听邻居方块更新，未必能发现库存变化。玩家操作、漏斗和插件写入等路径都要考虑到。
+
+如果暂时没有可靠的变化通知，就保留定期检查。比如检测进入范围的掉落物，可以隔一段时间唤醒扫描一次。
+
+## 等待另一个区块加载
+
+假设你实现了一个**物品管道方块实体**，由 `PipeController` 控制，每 tick 从输入端相邻的容器抽取物品。管道位于区块边界时，输入容器可能在另一个区块：管道仍然加载着，输入容器所在区块却卸载了。此时管道可以调用 `ticker.sleep()`，等输入端区块加载后再检查。
+
+为此，在管道的 `onLoad()` 中调用 `subscribeChunkLoad(target, callback)`，订阅输入端所在区块。下面是 `PipeController` 中相关的代码；`ticker` 是它自己的同步 `SleepingBlockEntityTicker`，创建方式与前面的例子相同：
+
+```java
+import net.momirealms.craftengine.core.util.Direction;
+import net.momirealms.craftengine.core.world.chunk.ChunkSubscription;
+
+private Direction inputDirection = Direction.NORTH;
+private ChunkSubscription inputSubscription;
+
+@Override
+public void onLoad() {
+    subscribeInputChunk();
+    this.ticker.wakeUp();
+}
+
+// 玩家调整输入方向后，在管道所属的同步线程调用。
+public void setInputDirection(Direction direction) {
+    this.inputSubscription.cancel();
+    this.inputDirection = direction;
+    subscribeInputChunk();
+    this.ticker.wakeUp();
+}
+
+private void subscribeInputChunk() {
+    BlockPos inputPos = this.blockEntity.pos.relative(this.inputDirection);
+    this.inputSubscription = subscribeChunkLoad(inputPos, this.ticker::wakeUp);
+}
+```
+
+这样，输入端区块加载完成时会唤醒管道。管道恢复 tick 后，再检查输入容器是否存在、是否有物品，然后决定继续传输还是再次睡眠。回调本身不搬运物品。订阅的是同一世界中的整个目标区块，不是某个容器。
+
+目标区块完成 CE 初始化后，按以下方式通知：
+
+| 平台 | 加载回调如何执行 |
+| --- | --- |
+| Paper | 直接在主线程执行，不额外安排调度任务 |
+| Folia | 投递到订阅者所在的区域线程 |
+
+如果订阅时目标已经加载，**两端都会延迟首次回调**，让你先拿到返回的 `ChunkSubscription`，再执行回调。订阅不会主动加载区块。
+
+睡眠不会取消订阅，输入端区块每次重新加载都可以唤醒管道。管道自身卸载或被移除时，CE 自动取消订阅，并跳过尚未执行的回调；重新加载时，上面的 `onLoad()` 会重新订阅，不需要在 `onUnload()` 中调用 `super`。调整输入方向时，`setInputDirection()` 会取消旧订阅、订阅新目标，并唤醒管道检查新的输入端。
+
+订阅、手动取消和 `cancelled()` 查询都在订阅者所属的同步线程进行。回调只是提醒你重新检查：目标可能已经再次卸载；在 Folia 上，回调也不代表可以直接操作另一个区域的容器。它适合唤醒同步 ticker，异步 ticker 仍需由你安排交接。**如果管道因为输入容器为空而睡眠，仍需在放入物品时另行唤醒，或保留定期检查**，区块加载订阅不会通知库存变化。
+
+## 想睡一会儿再醒
+
+`sleep()` 没有时长参数。你需要另外安排计时，到期后调用 `wakeUp()`；卸载或移除方块实体时，取消还没执行的唤醒任务。
+
+少量方块可以使用调度器，数量多时可以共用一个计时器。冷却时间也要按实际经过的 tick 计算：睡眠期间 `tick()` 不执行，放在里面的 `counter++` 也会停住。
+
+## 同步和异步 ticker
+
+异步 ticker 的用法一样，从 `createAsyncBlockEntityTicker()` 返回包装后的 ticker 即可。**同步和异步各用一个实例**，睡眠状态互不影响。
+
+`sleep()`、`wakeUp()` 和 `isSleeping()` 都由调用者保证线程正确，CraftEngine 不会自动切换线程。同步 ticker 在 Paper 主线程或 Folia 对应的区域线程操作；异步 ticker 则在所属世界的异步 tick 执行期间操作，不能随便换成另一个异步任务。外部事件涉及跨线程时，需要你自己安排交接，库存和队列等数据也一样。
+
+如果一个方块有多个 controller，一个 ticker 睡眠不会停掉其他仍需工作的 ticker。

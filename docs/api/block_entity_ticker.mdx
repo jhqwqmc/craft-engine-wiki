@@ -1,0 +1,142 @@
+---
+title: Block Entity Ticker Sleep and Wakeup
+---
+
+When a block entity has no work to do, its ticker can sleep. CraftEngine skips its `tick()` while it sleeps; the block entity and its data stay in place.
+
+Wrap your ticker in `SleepingBlockEntityTicker`. Call `sleep()` when there is no work and `wakeUp()` when work becomes available. Waking restores scheduling; it does not run `tick()` immediately at the call site. Use `isSleeping()` to check the state.
+
+## A simple example
+
+This block processes one job per tick and sleeps when it finishes. The example only shows the controller; registering the block behavior and saving job data are omitted.
+
+```java
+import net.momirealms.craftengine.core.block.ImmutableBlockState;
+import net.momirealms.craftengine.core.block.entity.BlockEntity;
+import net.momirealms.craftengine.core.block.entity.BlockEntityController;
+import net.momirealms.craftengine.core.block.entity.tick.BlockEntityTicker;
+import net.momirealms.craftengine.core.block.entity.tick.SleepingBlockEntityTicker;
+import net.momirealms.craftengine.core.world.BlockPos;
+import net.momirealms.craftengine.core.world.CEWorld;
+
+public final class WorkController extends BlockEntityController {
+    private final SleepingBlockEntityTicker<WorkController> ticker =
+            new SleepingBlockEntityTicker<>(WorkController::tick);
+    private int pendingJobs;
+
+    public WorkController(BlockEntity blockEntity) {
+        super(blockEntity);
+    }
+
+    @Override
+    public <C extends BlockEntityController> BlockEntityTicker<C> createBlockEntityTicker(
+            CEWorld world, ImmutableBlockState state) {
+        return createTickerHelper(this.ticker);
+    }
+
+    // Call this on the tick thread that owns this block.
+    public void submitJob() {
+        this.pendingJobs++;
+        this.ticker.wakeUp();
+    }
+
+    @Override
+    public void onLoad() {
+        // Check for work again after the chunk loads.
+        this.ticker.wakeUp();
+    }
+
+    private static void tick(CEWorld world, BlockPos pos,
+                             ImmutableBlockState state, WorkController controller) {
+        if (controller.pendingJobs == 0) {
+            controller.ticker.sleep();
+            return;
+        }
+
+        // Perform one job here.
+        controller.pendingJobs--;
+        if (controller.pendingJobs == 0) {
+            controller.ticker.sleep();
+        }
+    }
+}
+```
+
+**Store the ticker in a controller field and return the same instance each time.** Creating a new one inside `createBlockEntityTicker()` can lose the sleep state when a block state change causes the ticker to be rebound.
+
+## What wakes it up?
+
+A sleeping ticker no longer checks conditions in `tick()`. Something outside that method must wake it:
+
+| Reason for sleeping | Where to wake it |
+| --- | --- |
+| Empty input | After a player, hopper or another machine inserts an item |
+| Full output container | After items are removed from the output |
+| Missing neighboring container | After a neighbor changes or a relevant chunk loads again |
+| Waiting for a cooldown | When the timer expires |
+
+Your code must connect these wakeup paths. CraftEngine does not automatically watch inventories for you. **Placing a chest and changing its contents are separate events.** Neighbor updates alone may miss inventory changes. Consider player actions, hoppers and plugin writes.
+
+If you do not have a reliable change notification, keep periodic checks. For example, wake an item collector at intervals to scan for dropped items moving into range.
+
+## Waiting for another chunk to load
+
+Suppose you implement an **item pipe block entity**, controlled by `PipeController`, that extracts items from an adjacent input container each tick. At a chunk boundary, the pipe can stay loaded while the input container's chunk unloads. The pipe can then call `ticker.sleep()` and check again when that chunk loads.
+
+Subscribe to the input chunk with `subscribeChunkLoad(target, callback)` in the pipe's `onLoad()`. The following excerpt belongs to `PipeController`; `ticker` is its own synchronous `SleepingBlockEntityTicker`, created as in the earlier example:
+
+```java
+import net.momirealms.craftengine.core.util.Direction;
+import net.momirealms.craftengine.core.world.chunk.ChunkSubscription;
+
+private Direction inputDirection = Direction.NORTH;
+private ChunkSubscription inputSubscription;
+
+@Override
+public void onLoad() {
+    subscribeInputChunk();
+    this.ticker.wakeUp();
+}
+
+// Call on the pipe's owning synchronous thread when a player changes its input direction.
+public void setInputDirection(Direction direction) {
+    this.inputSubscription.cancel();
+    this.inputDirection = direction;
+    subscribeInputChunk();
+    this.ticker.wakeUp();
+}
+
+private void subscribeInputChunk() {
+    BlockPos inputPos = this.blockEntity.pos.relative(this.inputDirection);
+    this.inputSubscription = subscribeChunkLoad(inputPos, this.ticker::wakeUp);
+}
+```
+
+When the input chunk finishes loading, the callback wakes the pipe. Its ticker then checks whether the container exists and has items, and decides whether to transfer items or sleep again. The callback itself does not move items. The subscription watches the whole target chunk in the same world, not a specific container.
+
+Notifications arrive after the target chunk finishes CE initialization:
+
+| Platform | How load callbacks run |
+| --- | --- |
+| Paper | Directly on the main thread, without scheduling another task |
+| Folia | Scheduled on the subscriber's region thread |
+
+If the target is already loaded when you subscribe, **both platforms defer the first callback**. This lets the method return the `ChunkSubscription` before your callback runs. Subscribing does not load chunks.
+
+Sleeping does not cancel the subscription: each input chunk reload can wake the pipe. When the pipe itself unloads or is removed, CE automatically cancels its subscriptions and skips queued callbacks. The `onLoad()` above subscribes again when the pipe reloads; calling `super.onUnload()` is not required. When its input direction changes, `setInputDirection()` cancels the old subscription, subscribes to the new target, and wakes the pipe to check its new input.
+
+Subscribe, cancel and query `cancelled()` on the subscriber's owning synchronous thread. A notification is a reason to recheck: the target may have unloaded again. On Folia, the callback does not grant access to containers in another region. You can wake a synchronous ticker directly; asynchronous tickers still need your own handoff. **If the pipe sleeps because its input container is empty, wake it separately when items arrive or keep periodic checks.** Chunk-load subscriptions do not notify you of inventory changes.
+
+## Sleeping for a while
+
+`sleep()` has no duration parameter. Arrange a timer separately and call `wakeUp()` when it expires. Cancel pending wakeups when the block entity unloads or is removed.
+
+Scheduler tasks work for a few blocks; many blocks can share a timer. Track cooldowns using elapsed ticks: a `counter++` inside `tick()` stops advancing while the ticker sleeps.
+
+## Synchronous and asynchronous tickers
+
+For an asynchronous ticker, return the wrapper from `createAsyncBlockEntityTicker()`. **Use separate instances for synchronous and asynchronous ticking.** Their sleep states are independent.
+
+The caller must use `sleep()`, `wakeUp()` and `isSleeping()` on the correct thread. CraftEngine does not switch threads for you. Use the Paper main thread or the owning Folia region thread for synchronous tickers. For asynchronous tickers, operate during that world's asynchronous tick; an unrelated async task is not sufficient. Arrange your own handoff for events from other threads, including access to inventory and queue data.
+
+If a block has multiple controllers, sleeping one ticker does not stop the others that still have work.

@@ -1,0 +1,66 @@
+---
+title: Block Behaviors
+---
+
+A block behavior decides what a block does when something happens: toggle a lamp on interaction, choose a facing on placement, or check its support when a neighbor changes. On Bukkit, extend `BukkitBlockBehavior` and override the callbacks you need.
+
+**Behavior instances are shared by blocks of the same definition.** Configuration such as particle types and intervals belongs here. A particular block's inventory, progress or counter belongs in its [block entity controller](block_entity.mdx). Small, finite states such as a lamp's on/off state or facing belong in block properties.
+
+## An existing example: the toggleable lamp
+
+The built-in `ToggleableLampBlockBehavior.useWithoutItem()` checks whether hand interaction is enabled, checks permission, flips the `lit` property, and returns `SUCCESS_AND_CANCEL`.
+
+The key state change is:
+
+```java
+// state is the current state; litProperty comes from the block definition.
+ImmutableBlockState nextState = state.cycle(this.litProperty);
+```
+
+`ImmutableBlockState` does not change in place. You must also write the new state back to the world. See [ToggleableLampBlockBehavior](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/behavior/ToggleableLampBlockBehavior.java) for the complete implementation, including permission checks and redstone handling.
+
+Common callbacks:
+
+| Method | Purpose |
+| --- | --- |
+| `updateStateForPlacement(context, state)` | Return the initial state, such as its facing |
+| `useOnBlock(context, state)` | Handle using an item on the block |
+| `useWithoutItem(context, state)` | Handle the block's own interaction; this does not simply mean the player has an empty hand |
+
+Usually return `InteractionResult.PASS` if you did not handle an interaction, or `SUCCESS_AND_CANCEL` if you handled it and want to stop the default action. Lower-level callbacks such as `neighborChanged` use `Object[]` arguments; follow a similar built-in behavior when implementing those.
+
+## Register a behavior for use in configuration
+
+Register an **ID and a factory**. When CE parses a block configuration, it calls the factory's `create(BlockDefinition, ConfigSection)` to read the settings and construct the behavior.
+
+This minimal example registers the existing particle behavior factory under a new ID:
+
+```java
+import net.momirealms.craftengine.bukkit.block.behavior.SimpleParticleBlockBehavior;
+import net.momirealms.craftengine.core.block.behavior.BlockBehaviors;
+import net.momirealms.craftengine.core.util.Key;
+
+// Register once, before CE parses block configurations that use this ID.
+BlockBehaviors.register(Key.of("myplugin:particles"), SimpleParticleBlockBehavior.FACTORY);
+```
+
+Use it in an existing block configuration (model settings omitted):
+
+```yaml
+blocks:
+  myplugin:smoke_block:
+    behavior:
+      type: myplugin:particles
+      tick_interval: 20
+      particles:
+        - particle: smoke
+          x: 0.5
+          y: 1
+          z: 0.5
+```
+
+This behaves exactly like the built-in `simple_particle_block`. For your own behavior, supply your own factory. [SimpleParticleBlockBehavior](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/behavior/SimpleParticleBlockBehavior.java) is a short example of how the constructor, configuration and factory fit together.
+
+To combine behaviors, use a `behaviors` list. Find a particular one with `state.behavior().getFirst(YourBehavior.class)` instead of casting the whole composite to your class.
+
+If you only need existing particle or lamp effects, use the [built-in behavior configuration](../configuration/block/behaviors.mdx); no plugin code is needed.

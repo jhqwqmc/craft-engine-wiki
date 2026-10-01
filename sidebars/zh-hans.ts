@@ -999,6 +999,21 @@ const sidebars: SidebarsConfig = {
         id: "api",
       },
       items: [
+        {
+          type: 'doc',
+          id: "api/block_behavior",
+          label: '方块行为',
+        },
+        {
+          type: 'doc',
+          id: "api/block_entity",
+          label: '方块实体',
+        },
+        {
+          type: 'doc',
+          id: "api/block_entity_ticker",
+          label: 'Ticker 睡眠与唤醒',
+        },
       ]
     },
   ],

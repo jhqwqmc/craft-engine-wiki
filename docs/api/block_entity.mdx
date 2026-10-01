@@ -1,0 +1,119 @@
+---
+title: Block Entities
+---
+
+Use a block entity when each block needs its own items, progress or periodic work. This is CE's `BlockEntity`; you do not need to register a vanilla block entity type.
+
+`BlockEntity` holds the position, world and block state. You usually implement a `BlockEntityController` for the data and logic. **Having a block entity does not require ticking.** The built-in display-item block updates when items are inserted or removed; storing an item alone does not need a ticker.
+
+## Connect a behavior to a controller
+
+Implement `EntityBlock` on the behavior and create a controller for each block in `createBlockEntityController()`. This excerpt comes from the built-in particle behavior; its constructor and configuration factory are omitted:
+
+```java
+public final class SimpleParticleBlockBehavior extends BukkitBlockBehavior implements EntityBlock {
+    @Override
+    public BlockEntityController createBlockEntityController(BlockEntity entity) {
+        return new SimpleParticleBlockEntityController(entity, this);
+    }
+
+    @Override
+    public void initControllerId(int id) {
+        // This behavior does not look up its controller, so it does not keep the ID.
+    }
+}
+```
+
+The behavior holds the particle settings and interval; the controller holds each block's `tickCount`. Two placed blocks have independent counters.
+
+If the behavior needs its controller during interaction, follow `DisplayItemBlockBehavior` and keep the ID supplied by CE:
+
+```java
+private int controllerId;
+
+@Override
+public void initControllerId(int id) {
+    this.controllerId = id;
+}
+
+// Place this part inside an interaction callback, which supplies context.
+BlockEntity entity = context.getLevel().storageWorld()
+        .getBlockEntityAtIfLoaded(context.getClickedPos());
+if (entity != null) {
+    entity.controller.let(DisplayItemBlockEntityController.class, this.controllerId, controller -> {
+        Item displayedItem = controller.displayItem();
+        // Use the item actually stored at this position.
+    });
+}
+```
+
+A block can combine several controllers. Look up by type and ID instead of casting `entity.controller` directly.
+
+## Save each block's data
+
+The built-in `DisplayItemBlockEntityController` writes its item in `saveCustomData()` and restores it in `loadCustomData()`. After inserting or removing an item, it calls `world.blockEntityChanged(pos)` to mark the data for saving.
+
+Here is the same pattern with an integer progress value. These methods belong inside your controller; `CompoundTag` is from `net.momirealms.sparrow.nbt`:
+
+```java
+private int progress;
+
+public void setProgress(int progress) {
+    this.progress = progress;
+    this.blockEntity.world.blockEntityChanged(this.blockEntity.pos);
+}
+
+@Override
+public void saveCustomData(CompoundTag tag) {
+    CompoundTag data = new CompoundTag();
+    data.putInt("progress", this.progress);
+    tag.put("myplugin:machine", data);
+}
+
+@Override
+public void loadCustomData(CompoundTag tag) {
+    CompoundTag data = tag.getCompound("myplugin:machine");
+    this.progress = data == null ? 0 : data.getInt("progress", 0);
+}
+```
+
+Call the mutation method after the block loads. Restore fields directly when reading saved data; there is no need to mark them changed again. Give your data its own key so it does not overwrite another controller's data. Multiple instances of the same controller also need distinct storage keys.
+
+Useful lifecycle methods:
+
+| Method | Typical use |
+| --- | --- |
+| Constructor | Initialize fields and local objects; do not assume the world is available yet |
+| `onLoad()` | Initialize world-dependent logic and subscriptions when the block activates |
+| `onUnload()` | Stop tasks and close menus; unloading is not breaking the block |
+| `onRemove()` | Handle removal, such as dropping stored items |
+| `preBlockStateChange(newState)` | Update caches before facing or other state changes, using the supplied new state |
+
+## Add a ticker only for periodic work
+
+The particle controller's core logic is short (excerpt):
+
+```java
+@Override
+public <C extends BlockEntityController> BlockEntityTicker<C> createAsyncBlockEntityTicker(
+        CEWorld world, ImmutableBlockState state) {
+    return createTickerHelper(SimpleParticleBlockEntityController::tick);
+}
+
+public static void tick(CEWorld world, BlockPos pos, ImmutableBlockState state,
+                        SimpleParticleBlockEntityController particle) {
+    particle.tickCount++;
+    if (particle.tickCount % particle.behavior.tickInterval != 0) return;
+    particle.animateTick(world.world(), pos);
+}
+```
+
+This uses an asynchronous ticker for particles. **Do not copy the async entry point for inventory or world mutations.** Those usually belong in `createBlockEntityTicker()`, which runs on Paper's main thread or the owning Folia region thread. If there is no periodic work, leave the ticker methods unmodified; they return `null` by default.
+
+To pause idle tickers, see [Sleep and Wakeup](block_entity_ticker.mdx). `/ce debug targetblock` shows controllers and the synchronous/asynchronous ticker states: `Sleeping`, `Awake` or `None`.
+
+## Built-in implementations to read
+
+- [SimpleParticleBlockEntityController](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/entity/SimpleParticleBlockEntityController.java): a short ticker example.
+- [DisplayItemBlockEntityController](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/entity/DisplayItemBlockEntityController.java): item insertion, removal, persistence and drops.
+- [SimpleStorageBlockEntityController](https://github.com/Xiao-MoMi/craft-engine/blob/main/bukkit/src/main/java/net/momirealms/craftengine/bukkit/block/entity/SimpleStorageBlockEntityController.java): consult this when you need an actual container and menu.

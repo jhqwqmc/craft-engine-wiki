@@ -126,6 +126,22 @@ item_name: "<!i><red><image:default:icons:'<!shadow><white>'> 黄玉钓竿"
 item_name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> 黄玉钓竿"
 ```
 
+### \<head\_texture:\_哈希\_>
+
+`head_texture` 用于在物品名称、Lore 等文本中插入指定皮肤的头像。需要 **Minecraft 1.21.9+ 客户端**，头像会包含皮肤的帽子层。
+
+必填参数 `哈希` 是皮肤地址 `https://textures.minecraft.net/texture/<哈希>` 的最后一部分，接受 1–64 个十六进制字符（`0–9`、`a–f`，不区分大小写）。使用时只填写哈希，不包含 URL 前缀。该标签只接受一个参数，无需闭合标签。
+
+```yaml
+items:
+  custom:head_texture_test:
+    material: paper
+    data:
+      item_name: "<!i><white><head_texture:ab881d0474ef98a6053ef621f4bb96900b21d10d1f2198d76d3f0f6302021d52> 头像标签测试"
+      lore:
+        - "<!i><white><head_texture:ab881d0474ef98a6053ef621f4bb96900b21d10d1f2198d76d3f0f6302021d52> <gray>皮肤头像"
+```
+
 ### \<i18n:\_标识符\_>
 
 查找适用于当前服务端语言的翻译。

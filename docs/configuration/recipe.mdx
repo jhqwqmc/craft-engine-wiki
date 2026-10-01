@@ -674,6 +674,10 @@ default:bolt_tool_trims:
 
 <Highlight color="#0dda4aff">**1.20.2+**</Highlight>
 
+Brewing configuration also accepts the data pack key names: `reagent` for `ingredient`/`ingredients`, `input` for `container`, and `output` for `result`. Values use the same CraftEngine configuration format. If both names are present, the existing key takes precedence.
+
+On Minecraft 26.3 and newer, brewing recipes use the same native registration and reload flow as crafting recipes. Vanilla and data pack brewing recipes are also injected: item tags and ingredient substitutes can include custom items, while potion types, potion tags, effect predicates, and output components are preserved. On Paper 1.20.2–26.2, brewing recipes continue to use the legacy PotionMix registration.
+
 ```yaml
 tea_art:tea:
   type: brewing

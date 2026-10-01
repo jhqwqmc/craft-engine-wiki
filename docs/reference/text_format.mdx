@@ -103,6 +103,22 @@ item_name: "<!i><red><image:default:icons:'<!shadow><white>'> Topaz Rod"
 item_name: "<!i><red><image:default:icons:0:1:'<!shadow><white>'> Topaz Rod"
 ```
 
+### \<head\_texture:\_hash\_>
+
+`head_texture` inserts a skin's head icon into text, including item names and lore. It requires a **Minecraft 1.21.9+ client** and includes the skin's hat layer.
+
+The required `hash` argument is the final part of a skin URL in the form `https://textures.minecraft.net/texture/<hash>`. It accepts 1–64 hexadecimal characters (`0–9`, `a–f`, case-insensitive). Pass only the hash, without the URL prefix. This tag takes one argument and does not need a closing tag.
+
+```yaml
+items:
+  custom:head_texture_test:
+    material: paper
+    data:
+      item_name: "<!i><white><head_texture:ab881d0474ef98a6053ef621f4bb96900b21d10d1f2198d76d3f0f6302021d52> Head Texture Test"
+      lore:
+        - "<!i><white><head_texture:ab881d0474ef98a6053ef621f4bb96900b21d10d1f2198d76d3f0f6302021d52> <gray>Skin head icon"
+```
+
 ### \<i18n:\_id\_>
 
 Searching for translations applicable to the serverside language.
