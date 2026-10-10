@@ -64,7 +64,7 @@ The following parameters apply to `item_display`, `text_display`, and `block_dis
 ```yaml
 # Position & transform
 translation: 0,0.5,0       # Offset (x,y,z). Recommended over position
-position: 0.5,0.5,0.5      # Absolute position (x,y,z), default block center
+position: 0.5,0.5,0.5      # Position relative to the block origin (x,y,z)
 scale: 1,1,1               # Scale (x,y,z). Single number like scale: 1.5 also works
 
 # Rotation (choose one, rotation recommended)
@@ -96,11 +96,36 @@ shadow_strength: 1         # Shadow strength
     collapsedLabel="Expand"
 />
 
-`position`, `yaw`, and `pitch` also apply to `armor_stand`; `item` (dropped item) only supports `position`.
+`position`, `yaw`, and `pitch` also apply to `armor_stand`; `item` (dropped item) supports `position` and the [random offset](#random-offset) described below. The default `position` is `0,0,0` for `block_display` and `0.5,0.5,0.5` for the other rendering element types.
 
 :::tip
 Use `translation` instead of `position`, and `rotation` instead of `yaw`/`pitch`. This avoids sending position synchronization packets and ensures the best visual performance.
 :::
+
+## Random Offset
+
+Use `offset` to give rendering elements a small, coordinate-based displacement, similar to vanilla flowers and grass. It supports all seven element types: `item_display`, `text_display`, `block_display`, `item`, `armor_stand`, `better_model`, and `model_engine`.
+
+Place `offset` inside each rendering element, alongside `type` and `position`:
+
+```yaml
+entity_renderer:
+  type: item_display
+  item: example:flower
+  position: 0.5,0.5,0.5
+  offset:
+    type: xz
+    horizontal: 0.25
+```
+
+To enable vertical displacement as well:
+
+```yaml
+offset:
+  type: xyz
+  horizontal: 0.25
+  vertical: 0.2
+```
 
 ## Render Element Types
 
@@ -234,7 +259,7 @@ item: default:sleeper_sofa         # Required: item ID
 position: 0.5,0.5,0.5              # Optional: position (x,y,z), default block center
 ```
 
-`item` only supports `position`; other display parameters do not apply. Dropped items automatically have a spinning animation, suitable for simple item display.
+For positioning, `item` supports `position` and [random offset](#random-offset); display transforms such as `translation` and `rotation` do not apply. Dropped items automatically have a spinning animation, suitable for simple item display.
 
 <Details summary="Example with tint source">
 ```yaml

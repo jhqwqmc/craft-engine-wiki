@@ -64,7 +64,7 @@ entity_renderer:
 ```yaml
 # 平移、位置与缩放
 translation: 0,0.5,0       # 偏移量 (x,y,z)，推荐使用此方式调整位置
-position: 0.5,0.5,0.5      # 相对位置 (x,y,z)，默认方块中心
+position: 0.5,0.5,0.5      # 相对于方块原点的位置 (x,y,z)
 scale: 1,1,1               # 缩放 (x,y,z)，也支持单个数字如 scale: 1.5
 
 # 旋转（推荐使用 rotation）
@@ -100,6 +100,33 @@ shadow_strength: 1         # 阴影的不透明度
 :::tip
 建议使用 `translation` 代替 `position`，使用 `rotation` 代替 `yaw`/`pitch`。这样插件可以在不发送位置同步包的情况下更新渲染，保证最佳视觉效果。
 :::
+
+`position` 默认为 `0.5,0.5,0.5`，但 `block_display` 默认为 `0,0,0`。
+
+## 随机偏移
+
+使用 `offset` 可以让渲染元素根据方块坐标产生小幅位置偏移，类似原版花草的效果。七种元素类型均支持此配置：`item_display`、`text_display`、`block_display`、`item`、`armor_stand`、`better_model` 和 `model_engine`。
+
+将 `offset` 放在每个渲染元素内部，与 `type`、`position` 同级：
+
+```yaml
+entity_renderer:
+  type: item_display
+  item: example:flower
+  position: 0.5,0.5,0.5
+  offset:
+    type: xz
+    horizontal: 0.25
+```
+
+如需同时启用垂直偏移：
+
+```yaml
+offset:
+  type: xyz
+  horizontal: 0.25
+  vertical: 0.2
+```
 
 ## 渲染元素类型
 
@@ -244,7 +271,7 @@ item: default:sleeper_sofa         # 必填：物品命名空间 ID
 position: 0.5,0.5,0.5              # 可选：位置 (x,y,z)，默认方块中心
 ```
 
-物品实体会自动带有旋转动画，适合简单的物品展示场景。
+物品实体支持使用 `position` 和[随机偏移](#随机偏移)调整位置，不支持展示实体的 `translation`、`rotation` 等模型变换。物品实体会自动带有旋转动画，适合简单的物品展示场景。
 
 <Details summary="带有颜色提供器的示例">
 ```yaml
