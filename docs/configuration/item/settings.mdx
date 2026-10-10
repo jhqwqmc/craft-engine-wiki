@@ -181,7 +181,7 @@ repairable:
 
 ### anvil_repair_item
 
-Determines how much durability a given item provides when repairing.
+Configure this on the **repair material** to specify which items it can repair in an anvil and how much durability each material restores. `target` accepts a single ID or a list of IDs, including vanilla items, custom items, and `#tags`. If multiple entries match, the last matching entry is used.
 
 ```yaml
 anvil_repair_item:
@@ -193,9 +193,30 @@ anvil_repair_item:
     percent: 0.25  # 0.25 = 25%, restores n% total durability
 ```
 
+`amount` and `percent` default to `0` and can be combined: each material restores `amount + percent × max durability` points of durability, rounded down. Both fields support [number formats](../../reference/number_format.mdx).
+
+### anvil_repair_material
+
+Configure this on the **item being repaired** to specify which materials can repair it in an anvil and how much durability each material restores. Unlike `anvil_repair_item`, this setting also lets you use vanilla repair materials without configuring a custom material item.
+
+```yaml
+anvil_repair_material:
+  - material: "minecraft:diamond"
+    amount: 100
+  - material:
+      - "example:topaz"
+      - "#example:repair_materials"
+    amount: 20
+    percent: 0.25
+```
+
+`material` accepts a single ID or a list of IDs: vanilla item IDs, custom item IDs, or `#tags` (vanilla or custom item tags). `amount` and `percent` use the same formula and number formats as `anvil_repair_item` and default to `0`. In the second entry above, each material restores `20 + 25% of max durability`.
+
+The last matching `anvil_repair_material` entry takes priority. Only when no entry matches does CraftEngine check the material's `anvil_repair_item`; if neither matches, existing anvil handling continues. These entries do not disable other repair methods. Setting `repairable.anvil_repair` to `false` on the item being repaired still prevents material repairs in an anvil.
+
 ### drag_repair_item
 
-Determines how much durability this item provides when dragged onto another item to repair it. Pick up this item with your cursor and drop it onto a damaged item in your inventory to repair it. Left-click repairs as much as possible (consuming as many materials as needed), while right-click consumes only one material at a time. If the target item is fully repaired or not a valid target, the vanilla swap behavior is kept.
+Configure this on the **repair material** to specify which items it can repair by dragging. Pick up this item with your cursor and drop it onto a damaged item in your inventory to repair it. Left-click repairs as much as possible (consuming as many materials as needed), while right-click consumes only one material at a time. If the target item is fully repaired or neither side has a matching repair rule, the vanilla swap behavior is kept. `target` accepts the same IDs and tags as `anvil_repair_item`, but the first matching `drag_repair_item` entry is used.
 
 ```yaml
 drag_repair_item:
@@ -212,7 +233,30 @@ drag_repair_item:
 #     pitch: 0.9~1
 ```
 
-`amount` and `percent` can be combined: each material restores `amount + percent × max durability` points of durability.
+`amount` and `percent` default to `0` and can be combined: each material restores `amount + percent × max durability` points of durability, rounded down. Both fields support [number formats](../../reference/number_format.mdx).
+
+### drag_repair_material
+
+Configure this on the **item being repaired** to specify which materials can repair it when dragged onto it. The cursor material can be a vanilla item or a custom item.
+
+```yaml
+drag_repair_material:
+  - material: "minecraft:diamond"
+    amount: 100
+  - material:
+      - "example:topaz"
+      - "#example:repair_materials"
+    amount: 20
+    percent: 0.25
+    sound:
+      id: minecraft:item.armor.equip_iron
+      volume: 1
+      pitch: 0.9~1
+```
+
+`material`, `amount`, and `percent` have the same format as `anvil_repair_material`. `sound` is optional and accepts a sound ID or the map form shown above, just like `drag_repair_item`.
+
+The last matching `drag_repair_material` entry takes priority. Only when no entry matches does CraftEngine check the cursor material's `drag_repair_item`, using its first matching entry. Left-click consumes as many materials as needed, and right-click consumes one. If neither side matches, the target has no durability, or it is already fully repaired, the vanilla swap behavior is kept. `repairable` controls crafting table, anvil, and grindstone repairs; it does not control drag repairs.
 
 ### renameable
 

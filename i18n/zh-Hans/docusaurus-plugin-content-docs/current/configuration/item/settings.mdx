@@ -188,7 +188,7 @@ repairable:
 
 ### anvil_repair_item（铁砧材料修复）
 
-控制指定物品在铁砧修复时提供的耐久度。
+配置在**修复材料**的物品设置中，指定此材料可以在铁砧中修复哪些物品，以及每个材料恢复的耐久度。`target` 支持单个 ID 或列表，可填写原版物品 ID、自定义物品 ID 或 `#标签`。同一列表有多条匹配时，使用最后一条。
 
 ```yaml
 anvil_repair_item:
@@ -200,9 +200,30 @@ anvil_repair_item:
     percent: 0.25  # 0.25 = 25%, 恢复 n% 总耐久度
 ```
 
+`amount` 与 `percent` 默认均为 `0`，可同时使用：每个材料恢复 `amount + percent × 最大耐久` 点耐久度，结果向下取整。两个字段都支持[数字格式](../../reference/number_format.mdx)。
+
+### anvil_repair_material（铁砧反向修复）
+
+配置在**被修复物品**的物品设置中，指定哪些材料可以在铁砧中修复此物品，以及每个材料恢复的耐久度。与 `anvil_repair_item` 相比，此设置也可以直接使用原版物品作为材料，无需为材料创建自定义物品配置。
+
+```yaml
+anvil_repair_material:
+  - material: "minecraft:diamond"
+    amount: 100
+  - material:
+      - "example:topaz"
+      - "#example:repair_materials"
+    amount: 20
+    percent: 0.25
+```
+
+`material` 支持单个 ID 或列表，可填写原版物品 ID、自定义物品 ID 或 `#标签`（原版或自定义物品标签）。`amount` 和 `percent` 的计算方式、数字格式与 `anvil_repair_item` 相同，默认均为 `0`。上例第二条规则中，每个材料恢复 `20 + 最大耐久的 25%`。
+
+优先使用最后一条匹配的 `anvil_repair_material` 规则；没有匹配时，才检查材料上的 `anvil_repair_item`。两侧都不匹配时，继续原有铁砧处理流程，因此这些规则不会禁用其他修复方式。被修复物品的 `repairable.anvil_repair` 为 `false` 时，仍会阻止铁砧材料修复。
+
 ### drag_repair_item（拖拽修复）
 
-控制此物品被拖拽到其他物品上时提供的耐久度。用光标拿起此物品并放到背包中受损的物品上即可修复。左键会尽可能修复（按需消耗多个材料），右键一次只消耗一个材料。若目标物品已修满或不在修复目标列表中，则保持原版的物品交换行为。
+配置在**修复材料**的物品设置中，指定此材料可以通过拖拽修复哪些物品。用光标拿起此物品并放到背包中受损的物品上即可修复。左键会尽可能修复（按需消耗多个材料），右键一次只消耗一个材料。若目标物品已修满或两侧都没有匹配的修复规则，则保持原版的物品交换行为。`target` 支持的 ID 和标签格式与 `anvil_repair_item` 相同，但 `drag_repair_item` 列表有多条匹配时，使用第一条。
 
 ```yaml
 drag_repair_item:
@@ -219,7 +240,30 @@ drag_repair_item:
 #     pitch: 0.9~1
 ```
 
-`amount` 与 `percent` 可同时使用：每个材料恢复 `amount + percent × 最大耐久` 点耐久度。
+`amount` 与 `percent` 默认均为 `0`，可同时使用：每个材料恢复 `amount + percent × 最大耐久` 点耐久度，结果向下取整。两个字段都支持[数字格式](../../reference/number_format.mdx)。
+
+### drag_repair_material（拖拽反向修复）
+
+配置在**被修复物品**的物品设置中，指定哪些材料可以通过拖拽修复此物品。光标上的材料可以是原版物品，也可以是自定义物品。
+
+```yaml
+drag_repair_material:
+  - material: "minecraft:diamond"
+    amount: 100
+  - material:
+      - "example:topaz"
+      - "#example:repair_materials"
+    amount: 20
+    percent: 0.25
+    sound:
+      id: minecraft:item.armor.equip_iron
+      volume: 1
+      pitch: 0.9~1
+```
+
+`material`、`amount` 和 `percent` 的格式与 `anvil_repair_material` 相同。`sound` 为可选项，与 `drag_repair_item` 一样，支持声音 ID 或上例中的完整格式。
+
+优先使用最后一条匹配的 `drag_repair_material` 规则；没有匹配时，才检查光标材料上的 `drag_repair_item`，并使用其中第一条匹配规则。左键按需消耗多个材料，右键只消耗一个。两侧都不匹配、目标没有耐久度或已经修满时，保持原版的物品交换行为。`repairable` 控制工作台、铁砧和砂轮修复，不控制拖拽修复。
 
 ### renameable（可重命名）
 
